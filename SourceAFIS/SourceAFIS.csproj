@@ -41,9 +41,12 @@
     <Compile Include="Extraction\Equalizer.cs" />
     <Compile Include="General\BlockMap.cs" />
     <Compile Include="General\Calc.cs" />
-    <Compile Include="General\ImageIO.cs" />
+    <Compile Include="Visualization\ColorB.cs" />
+    <Compile Include="Visualization\ImageIO.cs" />
     <Compile Include="General\RectangleC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Visualization\ColorF.cs" />
+    <Compile Include="Visualization\PixelFormat.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
