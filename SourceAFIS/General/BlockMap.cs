@@ -16,8 +16,8 @@ namespace SourceAFIS.General
         public RectangleC[,] BlockAreas;
         public Point[,] BlockCenters;
         public RectangleC[,] CornerAreas;
-        public Point[,] BlockList;
-        public Point[,] CornerList;
+        public Point[] BlockList;
+        public Point[] CornerList;
 
         public void Initialize(int maxBlockSize)
         {
@@ -120,10 +120,10 @@ namespace SourceAFIS.General
         {
             if (BlockList == null)
             {
-                BlockList = new Point[BlockCount.Height, BlockCount.Width];
+                BlockList = new Point[BlockCount.Height * BlockCount.Width];
                 for (int y = 0; y < BlockCount.Height; ++y)
                     for (int x = 0; x < BlockCount.Width; ++x)
-                        BlockList[y, x] = new Point(x, y);
+                        BlockList[y * BlockCount.Width + x] = new Point(x, y);
             }
         }
 
@@ -131,10 +131,10 @@ namespace SourceAFIS.General
         {
             if (CornerList == null)
             {
-                CornerList = new Point[CornerCount.Height, CornerCount.Width];
+                CornerList = new Point[CornerCount.Height * CornerCount.Width];
                 for (int y = 0; y < CornerCount.Height; ++y)
                     for (int x = 0; x < CornerCount.Width; ++x)
-                        CornerList[y, x] = new Point(x, y);
+                        CornerList[y * CornerCount.Width + x] = new Point(x, y);
             }
         }
     }
