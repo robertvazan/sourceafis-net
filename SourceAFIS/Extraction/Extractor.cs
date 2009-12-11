@@ -18,8 +18,7 @@ namespace SourceAFIS.Extraction
 
         public void Extract(byte[,] invertedImage)
         {
-            byte[,] image = (byte[,])invertedImage.Clone();
-            GrayscaleInverter.Invert(image);
+            byte[,] image = GrayscaleInverter.GetInverted(invertedImage);
 
             BlockMap blocks = new BlockMap();
             blocks.PixelCount = new Size(image.GetLength(1), image.GetLength(0));

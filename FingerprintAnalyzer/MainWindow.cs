@@ -1,27 +1,41 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 using System.Windows.Forms;
+using SourceAFIS.Visualization;
 
 namespace FingerprintAnalyzer
 {
     class MainWindow : Form
     {
+        LogCollector Logs = new LogCollector();
+        Blender Blender = new Blender();
+
         MenuStrip MainMenu;
         PictureBox WindowCanvas;
 
         public MainWindow()
         {
+            Blender.Logs = Logs;
+            Blender.Probe.OriginalImage = true;
+            InitializeLayout();
+        }
+
+        void InitializeLayout()
+        {
             MainMenu = new MenuStrip();
             WindowCanvas = new PictureBox();
-            
+
             MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)WindowCanvas).BeginInit();
             SuspendLayout();
 
             MainMenu.Dock = DockStyle.Top;
             MainMenu.Items.AddRange(BuildMenu());
+            
             WindowCanvas.Dock = DockStyle.Fill;
+            WindowCanvas.SizeMode = PictureBoxSizeMode.Zoom;
 
             ClientSize = new System.Drawing.Size(800, 600);
             Name = "FingerprintAnalyzerWindow";
@@ -55,15 +69,63 @@ namespace FingerprintAnalyzer
             return menu;
         }
 
+        bool SwitchFlag(ref bool flag)
+        {
+            flag = !flag;
+            return flag;
+        }
+
+        delegate bool BoolFunction();
+
+        ToolStripMenuItem CreateCheckMenu(string text, BoolFunction switcher)
+        {
+            ToolStripMenuItem menu = new ToolStripMenuItem();
+            menu.Text = text;
+            menu.Click += delegate(object sender, EventArgs e)
+            {
+                menu.Checked = switcher();
+                RefreshCanvas();
+            };
+            switcher();
+            menu.Checked = switcher();
+            return menu;
+        }
+
         ToolStripItem[] BuildMenu()
         {
             return new ToolStripItem[] {
                 CreateSubMenu("File", new ToolStripItem[] {
-                    CreateMenuItem("Open Probe...", delegate() { /* ...TODO... */ }),
+                    CreateMenuItem("Open Probe...", OpenProbe),
                     new ToolStripSeparator(),
                     CreateMenuItem("Exit", delegate() { Close(); })
+                }),
+                CreateSubMenu("Probe", new ToolStripItem[] {
+                    CreateCheckMenu("Original Image", delegate() { return SwitchFlag(ref Blender.Probe.OriginalImage); }),
+                    CreateCheckMenu("Equalized", delegate() { return SwitchFlag(ref Blender.Probe.Equalized); })
                 })
             };
+        }
+
+        void RefreshCanvas()
+        {
+            if (Logs.Probe.InputImage != null)
+            {
+                Logs.Collect();
+                Blender.Blend();
+                WindowCanvas.Image = Blender.OutputImage;
+            }
+            else
+                WindowCanvas.Image = null;
+        }
+
+        void OpenProbe()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                Logs.Probe.InputImage = PixelFormat.ToByte(ImageIO.Load(dialog.FileName));
+                RefreshCanvas();
+            }
         }
     }
 }

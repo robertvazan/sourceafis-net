@@ -13,7 +13,7 @@ namespace SourceAFIS.Visualization
             else if (gray <= 0)
                 return 0;
             else
-                return Convert.ToByte(gray * 255);
+                return (byte)Convert.ToInt32(gray * 255);
         }
 
         public static byte ToByte(ColorB color)

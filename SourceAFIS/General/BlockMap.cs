@@ -63,7 +63,7 @@ namespace SourceAFIS.General
                         BlockAreas[y, x].X = Corners[y, x].X;
                         BlockAreas[y, x].Y = Corners[y, x].Y;
                         BlockAreas[y, x].Right = Corners[y, x + 1].X;
-                        BlockAreas[y, x].Top = Corners[y + 1, x].X;
+                        BlockAreas[y, x].Top = Corners[y + 1, x].Y;
                     }
             }
         }
@@ -90,19 +90,19 @@ namespace SourceAFIS.General
                     for (int x = 0; x < CornerCount.Width; ++x)
                     {
                         if (x > 0)
-                            CornerAreas[y, x].X = BlockCenters[y, x - 1].X;
+                            CornerAreas[y, x].X = BlockCenters[0, x - 1].X;
                         else
                             CornerAreas[y, x].X = 0;
                         if (y > 0)
-                            CornerAreas[y, x].Y = BlockCenters[y - 1, x].Y;
+                            CornerAreas[y, x].Y = BlockCenters[y - 1, 0].Y;
                         else
                             CornerAreas[y, x].Y = 0;
                         if (x < BlockCount.Width)
-                            CornerAreas[y, x].Right = BlockCenters[y, x].X;
+                            CornerAreas[y, x].Right = BlockCenters[0, x].X;
                         else
                             CornerAreas[y, x].Right = PixelCount.Width;
                         if (y < BlockCount.Height)
-                            CornerAreas[y, x].Top = BlockCenters[y, x].Y;
+                            CornerAreas[y, x].Top = BlockCenters[y, 0].Y;
                         else
                             CornerAreas[y, x].Top = PixelCount.Height;
                     }
