@@ -22,7 +22,7 @@ namespace SourceAFIS.Extraction
             {
                 float widthLimit = ScalingLimit / 256f * (UpperEqualizerBound - LowerEqualizerBound);
                 int area = blocks.CornerAreas[corner.Y, corner.X].TotalArea;
-                float top = -1;
+                float top = LowerEqualizerBound;
                 for (int i = 0; i < 256; ++i)
                 {
                     float width = histogram[corner.Y, corner.X, i] * ((UpperEqualizerBound - LowerEqualizerBound) / area);
@@ -31,9 +31,6 @@ namespace SourceAFIS.Extraction
                     equalization[corner.Y, corner.X, i] = top + width / 2;
                     top += width;
                 }
-                float shift = (UpperEqualizerBound - top) / 2;
-                for (int i = 0; i < 256; ++i)
-                    equalization[corner.Y, corner.X, i] += shift;
             }
             return equalization;
         }
