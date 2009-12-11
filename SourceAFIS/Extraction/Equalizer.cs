@@ -15,8 +15,6 @@ namespace SourceAFIS.Extraction
 
         float[, ,] ComputeEqualization(BlockMap blocks, short[, ,] histogram)
         {
-            blocks.InitCornerList();
-            blocks.InitCornerAreas();
             float[, ,] equalization = new float[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
             foreach (Point corner in blocks.CornerList)
             {
@@ -37,8 +35,6 @@ namespace SourceAFIS.Extraction
 
         float[,] PerformEqualization(BlockMap blocks, byte[,] image, float[, ,] equalization)
         {
-            blocks.InitBlockList();
-            blocks.InitBlockAreas();
             float[,] result = new float[blocks.PixelCount.Height, blocks.PixelCount.Width];
             foreach (Point block in blocks.BlockList)
             {
