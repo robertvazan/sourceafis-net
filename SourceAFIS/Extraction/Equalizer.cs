@@ -58,6 +58,7 @@ namespace SourceAFIS.Extraction
                         result[y, x] = Calc.Interpolate(topLeft, topRight, bottomLeft, bottomRight, fraction);
                     }
             }
+            Logger.Log(this, result);
             return result;
         }
 

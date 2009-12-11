@@ -10,7 +10,9 @@ namespace SourceAFIS.Extraction
     {
         public int BlockSize = 16;
 
+        [Nested]
         public LocalHistogram Histogram = new LocalHistogram();
+        [Nested]
         public Equalizer Equalizer = new Equalizer();
 
         public void Extract(byte[,] image)
