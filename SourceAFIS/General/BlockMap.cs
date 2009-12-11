@@ -25,6 +25,13 @@ namespace SourceAFIS.General
                 Calc.DivRoundUp(PixelCount.Width, maxBlockSize),
                 Calc.DivRoundUp(PixelCount.Height, maxBlockSize));
             CornerCount = BlockToCornerCount(BlockCount);
+
+            InitCorners();
+            InitBlockAreas();
+            InitBlockCenters();
+            InitCornerAreas();
+            InitBlockList();
+            InitCornerList();
         }
 
         static Size BlockToCornerCount(Size BlockCount)

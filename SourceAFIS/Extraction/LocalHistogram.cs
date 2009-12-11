@@ -10,8 +10,6 @@ namespace SourceAFIS.Extraction
     {
         public short[, ,] Analyze(BlockMap blocks, byte[,] image)
         {
-            blocks.InitCornerList();
-            blocks.InitCornerAreas();
             short[, ,] histogram = new short[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
             foreach (Point corner in blocks.CornerList)
             {
