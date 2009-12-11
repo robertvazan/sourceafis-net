@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
+using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Extraction
 {
@@ -15,8 +16,11 @@ namespace SourceAFIS.Extraction
         [Nested]
         public Equalizer Equalizer = new Equalizer();
 
-        public void Extract(byte[,] image)
+        public void Extract(byte[,] invertedImage)
         {
+            byte[,] image = (byte[,])invertedImage.Clone();
+            GrayscaleInverter.Invert(image);
+
             BlockMap blocks = new BlockMap();
             blocks.PixelCount = new Size(image.GetLength(1), image.GetLength(0));
             blocks.Initialize(BlockSize);
