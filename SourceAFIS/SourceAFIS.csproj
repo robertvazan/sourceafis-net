@@ -44,7 +44,9 @@
     <Compile Include="General\Logger.cs" />
     <Compile Include="General\NestedAttribute.cs" />
     <Compile Include="General\ObjectTree.cs" />
+    <Compile Include="General\Range.cs" />
     <Compile Include="General\RangeF.cs" />
+    <Compile Include="General\Threader.cs" />
     <Compile Include="Visualization\ColorB.cs" />
     <Compile Include="Visualization\GlobalContrast.cs" />
     <Compile Include="Visualization\GrayscaleInverter.cs" />

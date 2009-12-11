@@ -16,7 +16,7 @@ namespace SourceAFIS.Extraction
         float[, ,] ComputeEqualization(BlockMap blocks, short[, ,] histogram)
         {
             float[, ,] equalization = new float[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
-            foreach (Point corner in blocks.CornerList)
+            Threader.Split<Point>(blocks.CornerList, delegate(Point corner)
             {
                 float widthLimit = ScalingLimit / 256f * (UpperEqualizerBound - LowerEqualizerBound);
                 int area = blocks.CornerAreas[corner.Y, corner.X].TotalArea;
@@ -29,14 +29,14 @@ namespace SourceAFIS.Extraction
                     equalization[corner.Y, corner.X, i] = top + width / 2;
                     top += width;
                 }
-            }
+            });
             return equalization;
         }
 
         float[,] PerformEqualization(BlockMap blocks, byte[,] image, float[, ,] equalization)
         {
             float[,] result = new float[blocks.PixelCount.Height, blocks.PixelCount.Width];
-            foreach (Point block in blocks.BlockList)
+            Threader.Split<Point>(blocks.BlockList, delegate(Point block)
             {
                 RectangleC area = blocks.BlockAreas[block.Y, block.X];
                 for (int y = area.Bottom; y < area.Top; ++y)
@@ -50,7 +50,7 @@ namespace SourceAFIS.Extraction
                         PointF fraction = area.GetFraction(new Point(x, y));
                         result[y, x] = Calc.Interpolate(topLeft, topRight, bottomLeft, bottomRight, fraction);
                     }
-            }
+            });
             Logger.Log(this, result);
             return result;
         }
