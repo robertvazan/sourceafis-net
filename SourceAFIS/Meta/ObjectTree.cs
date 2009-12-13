@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Meta
 {
     public class ObjectTree
     {
@@ -40,5 +40,7 @@ namespace SourceAFIS.General
         public string GetPath(object reference) { return ByReference[reference].Path; }
         public bool Contains(string path) { return ByPath.ContainsKey(path); }
         public bool Contains(object reference) { return ByReference.ContainsKey(reference); }
+        public object[] GetAllObjects() { return new List<object>(ByReference.Keys).ToArray(); }
+        public string[] GetAllPaths() { return new List<string>(ByPath.Keys).ToArray(); }
     }
 }

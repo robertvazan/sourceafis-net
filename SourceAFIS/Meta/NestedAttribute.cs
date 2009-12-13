@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Meta
 {
     [AttributeUsage(AttributeTargets.Field)]
-    class NestedAttribute : Attribute
+    public class NestedAttribute : Attribute
     {
     }
 }
