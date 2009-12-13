@@ -26,7 +26,7 @@ namespace FingerprintAnalyzer
 
         public void Collect()
         {
-            Extractor.Extract(Probe.InputImage);
+            Extractor.Extract(Probe.InputImage, 500);
             Probe.Equalized = Logger.Retrieve<float[,]>("Extractor.Equalizer");
             Logger.Clear();
         }

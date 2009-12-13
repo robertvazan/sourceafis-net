@@ -8,7 +8,6 @@ namespace SourceAFIS.Extraction
 {
     public class LocalHistogram
     {
-        //public 
         public short[, ,] Analyze(BlockMap blocks, byte[,] image)
         {
             short[, ,] histogram = new short[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
