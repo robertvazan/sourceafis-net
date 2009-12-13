@@ -23,5 +23,10 @@ namespace SourceAFIS.General
             float right = Interpolate(bottomRight, topRight, fraction.Y);
             return Interpolate(left, right, fraction.X);
         }
+
+        public static Point Add(Point left, Point right)
+        {
+            return left + new Size(right);
+        }
     }
 }

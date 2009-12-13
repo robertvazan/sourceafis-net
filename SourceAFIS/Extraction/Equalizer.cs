@@ -19,7 +19,9 @@ namespace SourceAFIS.Extraction
             Threader.Split<Point>(blocks.CornerList, delegate(Point corner)
             {
                 float widthLimit = ScalingLimit / 256f * (UpperEqualizerBound - LowerEqualizerBound);
-                int area = blocks.CornerAreas[corner.Y, corner.X].TotalArea;
+                int area = 0;
+                for (int i = 0; i < 256; ++i)
+                    area += histogram[corner.Y, corner.X, i];
                 float top = LowerEqualizerBound;
                 for (int i = 0; i < 256; ++i)
                 {

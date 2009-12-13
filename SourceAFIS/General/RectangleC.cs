@@ -21,6 +21,19 @@ namespace SourceAFIS.General
         public Point Center { get { return new Point((Right + Left) / 2, (Bottom + Top) / 2); } }
         public int TotalArea { get { return Width * Height; } }
 
+        public RectangleC(Point at, Size size)
+        {
+            X = at.X;
+            Y = at.Y;
+            Width = size.Width;
+            Height = size.Height;
+        }
+
+        public bool Contains(Point point)
+        {
+            return point.X >= Left && point.Y >= Bottom && point.X < Right && point.Y < Top;
+        }
+
         public Point GetRelative(Point absolute)
         {
             return new Point(absolute.X - X, absolute.Y - Y);

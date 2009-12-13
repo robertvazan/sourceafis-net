@@ -25,6 +25,7 @@ namespace SourceAFIS.Extraction
             blocks.Initialize(BlockSize);
 
             short[, ,] histogram = Histogram.Analyze(blocks, image);
+            histogram = Histogram.Smooth(blocks, histogram);
             float[,] equalized = Equalizer.Equalize(blocks, image, histogram);
         }
     }

@@ -42,6 +42,7 @@
     <Compile Include="General\BlockMap.cs" />
     <Compile Include="General\Calc.cs" />
     <Compile Include="General\Logger.cs" />
+    <Compile Include="General\Neighborhood.cs" />
     <Compile Include="General\NestedAttribute.cs" />
     <Compile Include="General\ObjectTree.cs" />
     <Compile Include="General\Range.cs" />
