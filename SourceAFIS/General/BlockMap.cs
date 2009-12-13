@@ -58,7 +58,7 @@ namespace SourceAFIS.General
                     for (int x = 0; x < CornerCount.Width; ++x)
                     {
                         Corners[y, x].X = x * PixelCount.Width / BlockCount.Width;
-                        Corners[y, x].Y = y * PixelCount.Width / BlockCount.Width;
+                        Corners[y, x].Y = y * PixelCount.Height / BlockCount.Height;
                     }
             }
         }

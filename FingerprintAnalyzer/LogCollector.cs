@@ -11,6 +11,8 @@ namespace FingerprintAnalyzer
         public struct ExtractionData
         {
             public byte[,] InputImage;
+            public BlockMap Blocks;
+            public byte[,] BlockContrast;
             public float[,] Equalized;
         }
 
@@ -27,6 +29,8 @@ namespace FingerprintAnalyzer
         public void Collect()
         {
             Extractor.Extract(Probe.InputImage, 500);
+            Probe.Blocks = Logger.Retrieve<BlockMap>("Extractor.BlockMap");
+            Probe.BlockContrast = Logger.Retrieve<byte[,]>("Extractor.Contrast");
             Probe.Equalized = Logger.Retrieve<float[,]>("Extractor.Equalizer");
             Logger.Clear();
         }

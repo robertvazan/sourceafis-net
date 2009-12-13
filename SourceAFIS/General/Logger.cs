@@ -24,22 +24,27 @@ namespace SourceAFIS.General
             return (T)History[path];
         }
 
-        public static void Log(string path, float[,] image)
+        public static void Log(string path, object data)
         {
             if (Filter(path))
-                History[path] = image.Clone();
+            {
+                if (data is ICloneable)
+                    History[path] = ((ICloneable)data).Clone();
+                else
+                    History[path] = data;
+            }
         }
 
-        public static void Log(object source, float[,] image)
+        public static void Log(object source, object data)
         {
             if (Resolver.Contains(source))
-                Log(Resolver.GetPath(source), image);
+                Log(Resolver.GetPath(source), data);
         }
 
-        public static void Log(object source, string part, float[,] image)
+        public static void Log(object source, string part, object data)
         {
             if (Resolver.Contains(source))
-                Log(Resolver.GetPath(source) + "." + part, image);
+                Log(Resolver.GetPath(source) + "." + part, data);
         }
     }
 }

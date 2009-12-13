@@ -18,6 +18,8 @@ namespace SourceAFIS.Extraction
         public LocalHistogram Histogram = new LocalHistogram();
         [Nested]
         public Equalizer Equalizer = new Equalizer();
+        [Nested]
+        public ClippedContrast Contrast = new ClippedContrast();
 
         public void Extract(byte[,] invertedImage, int dpi)
         {
@@ -28,9 +30,13 @@ namespace SourceAFIS.Extraction
                 BlockMap blocks = new BlockMap();
                 blocks.PixelCount = new Size(image.GetLength(1), image.GetLength(0));
                 blocks.Initialize(BlockSize);
+                Logger.Log(this, "BlockMap", blocks);
 
                 short[, ,] histogram = Histogram.Analyze(blocks, image);
                 histogram = Histogram.Smooth(blocks, histogram);
+
+                byte[,] contrast = Contrast.Compute(blocks, histogram);
+
                 float[,] equalized = Equalizer.Equalize(blocks, image, histogram);
             });
         }
