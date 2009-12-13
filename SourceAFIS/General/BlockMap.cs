@@ -12,6 +12,8 @@ namespace SourceAFIS.General
         public Size PixelCount;
         public Size BlockCount;
         public Size CornerCount;
+        public RectangleC BlockRect;
+        public RectangleC CornerRect;
         public Point[,] Corners;
         public RectangleC[,] BlockAreas;
         public Point[,] BlockCenters;
@@ -25,6 +27,9 @@ namespace SourceAFIS.General
                 Calc.DivRoundUp(PixelCount.Width, maxBlockSize),
                 Calc.DivRoundUp(PixelCount.Height, maxBlockSize));
             CornerCount = BlockToCornerCount(BlockCount);
+
+            BlockRect = new RectangleC(new Point(0, 0), BlockCount);
+            CornerRect = new RectangleC(new Point(0, 0), CornerCount);
 
             InitCorners();
             InitBlockAreas();
