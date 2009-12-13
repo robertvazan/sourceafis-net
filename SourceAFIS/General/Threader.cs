@@ -116,7 +116,7 @@ namespace SourceAFIS.General
             {
                 Finished.WaitOne();
                 if (TaskException != null)
-                    throw TaskException;
+                    throw new Exception("Threaded task failed", TaskException);
             }
         }
 

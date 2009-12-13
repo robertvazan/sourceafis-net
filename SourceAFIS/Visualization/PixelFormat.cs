@@ -35,6 +35,15 @@ namespace SourceAFIS.Visualization
             return gray * (1f / 255);
         }
 
+        public static float[,] ToFloat(byte[,] input)
+        {
+            float[,] output = new float[input.GetLength(0), input.GetLength(1)];
+            for (int y = 0; y < input.GetLength(0); ++y)
+                for (int x = 0; x < input.GetLength(1); ++x)
+                    output[y, x] = ToFloat(input[y, x]);
+            return output;
+        }
+
         public static float ToFloat(ColorF color)
         {
             return (color.R + color.G + color.B) / 3;

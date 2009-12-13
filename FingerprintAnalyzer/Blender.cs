@@ -14,6 +14,7 @@ namespace FingerprintAnalyzer
         {
             public bool OriginalImage;
             public bool Equalized;
+            public bool Contrast;
         }
 
         public ExtractionOptions Probe;
@@ -36,6 +37,14 @@ namespace FingerprintAnalyzer
                 for (int y = 0; y < output.GetLength(0); ++y)
                     for (int x = 0; x < output.GetLength(1); ++x)
                         output[y, x] = new ColorF(1, 1, 1, 1);
+            }
+
+            if (Probe.Contrast)
+            {
+                float[,] contrast = BlockFiller.FillCornerAreas(PixelFormat.ToFloat(Logs.Probe.BlockContrast), Logs.Probe.Blocks);
+                ColorF high = new ColorF(0, 1, 0, 0.25f);
+                ColorF low = new ColorF(1, 0, 0, 0.25f);
+                AlphaLayering.Layer(output, ScalarColoring.Interpolate(contrast, low, high));
             }
 
             OutputImage = ImageIO.CreateBitmap(PixelFormat.ToColorB(output));

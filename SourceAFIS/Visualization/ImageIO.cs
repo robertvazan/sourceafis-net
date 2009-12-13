@@ -27,9 +27,9 @@ namespace SourceAFIS.Visualization
                         {
                             byte* scanXY = scanY + x * 3;
                             int invertedY = height - 1 - y;
-                            result[invertedY, x].R = *(scanXY + 0);
+                            result[invertedY, x].B = *(scanXY + 0);
                             result[invertedY, x].G = *(scanXY + 1);
-                            result[invertedY, x].B = *(scanXY + 2);
+                            result[invertedY, x].R = *(scanXY + 2);
                         }
                     }
                 }
@@ -59,9 +59,9 @@ namespace SourceAFIS.Visualization
                         {
                             byte* scanXY = scanY + x * 3;
                             int invertedY = height - 1 - y;
-                            *(scanXY + 0) = pixels[invertedY, x].R;
+                            *(scanXY + 0) = pixels[invertedY, x].B;
                             *(scanXY + 1) = pixels[invertedY, x].G;
-                            *(scanXY + 2) = pixels[invertedY, x].B;
+                            *(scanXY + 2) = pixels[invertedY, x].R;
                         }
                     }
                 }

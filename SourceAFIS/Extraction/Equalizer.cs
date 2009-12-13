@@ -44,10 +44,12 @@ namespace SourceAFIS.Extraction
                 for (int y = area.Bottom; y < area.Top; ++y)
                     for (int x = area.Left; x < area.Right; ++x)
                     {
-                        float bottomLeft = equalization[block.Y, block.X, image[y, x]];
-                        float bottomRight = equalization[block.Y, block.X + 1, image[y, x]];
-                        float topLeft = equalization[block.Y + 1, block.X, image[y, x]];
-                        float topRight = equalization[block.Y + 1, block.X + 1, image[y, x]];
+                        byte pixel = image[y, x];
+
+                        float bottomLeft = equalization[block.Y, block.X, pixel];
+                        float bottomRight = equalization[block.Y, block.X + 1, pixel];
+                        float topLeft = equalization[block.Y + 1, block.X, pixel];
+                        float topRight = equalization[block.Y + 1, block.X + 1, pixel];
 
                         PointF fraction = area.GetFraction(new Point(x, y));
                         result[y, x] = Calc.Interpolate(topLeft, topRight, bottomLeft, bottomRight, fraction);
