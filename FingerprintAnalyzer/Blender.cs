@@ -26,9 +26,9 @@ namespace FingerprintAnalyzer
             ColorF[,] output;
             if (Probe.Equalized)
             {
-                float[,] inverted = GrayscaleInverter.GetInverted(Logs.Probe.Equalized);
-                GlobalContrast.Normalize(inverted);
-                output = PixelFormat.ToColorF(inverted);
+                GrayscaleInverter.Invert(Logs.Probe.Equalized);
+                GlobalContrast.Normalize(Logs.Probe.Equalized);
+                output = PixelFormat.ToColorF(Logs.Probe.Equalized);
             }
             else if (Probe.OriginalImage)
                 output = PixelFormat.ToColorF(Logs.Probe.InputImage);
