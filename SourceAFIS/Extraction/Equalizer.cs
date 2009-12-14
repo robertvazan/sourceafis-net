@@ -3,33 +3,53 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
+using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Extraction
 {
     public class Equalizer
     {
-        public float ScalingLimit = 4f;
+        public float MaxScaling = 4f;
+        public float MinScaling = 0.25f;
 
-        const float LowerEqualizerBound = -1f;
-        const float UpperEqualizerBound = 1f;
+        const float RangeMin = 0;
+        const float RangeMax = 1;
+        const float RangeSize = RangeMax - RangeMin;
 
         float[, ,] ComputeEqualization(BlockMap blocks, short[, ,] histogram)
         {
+            float widthMax = RangeSize / 256f * MaxScaling;
+            float widthMin = RangeSize / 256f * MinScaling;
+
+            float[] limitedMin = new float[256];
+            float[] limitedMax = new float[256];
+            for (int i = 0; i < 256; ++i)
+            {
+                limitedMin[i] = Math.Max(i * widthMin + RangeMin, RangeMax - (255 - i) * widthMax);
+                limitedMax[i] = Math.Min(i * widthMax + RangeMin, RangeMax - (255 - i) * widthMin);
+            }
+
             float[, ,] equalization = new float[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
             Threader.Split<Point>(blocks.CornerList, delegate(Point corner)
             {
-                float widthLimit = ScalingLimit / 256f * (UpperEqualizerBound - LowerEqualizerBound);
                 int area = 0;
                 for (int i = 0; i < 256; ++i)
                     area += histogram[corner.Y, corner.X, i];
-                float top = LowerEqualizerBound;
+                float widthWeigth = RangeSize / area;
+
+                float top = RangeMin;
                 for (int i = 0; i < 256; ++i)
                 {
-                    float width = histogram[corner.Y, corner.X, i] * ((UpperEqualizerBound - LowerEqualizerBound) / area);
-                    if (width > widthLimit)
-                        width = widthLimit;
-                    equalization[corner.Y, corner.X, i] = top + width / 2;
+                    float width = histogram[corner.Y, corner.X, i] * widthWeigth;
+                    float equalized = top + PixelFormat.ToFloat((byte)i) * width;
                     top += width;
+
+                    float limited = equalized;
+                    if (limited < limitedMin[i])
+                        limited = limitedMin[i];
+                    if (limited > limitedMax[i])
+                        limited = limitedMax[i];
+                    equalization[corner.Y, corner.X, i] = limited;
                 }
             });
             return equalization;

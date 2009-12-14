@@ -7,6 +7,11 @@ namespace SourceAFIS.Visualization
 {
     public class GlobalContrast
     {
+        public static void Normalize(float[,] image)
+        {
+            Normalize(image, new RangeF(0, 1));
+        }
+
         public static void Normalize(float[,] image, RangeF newRange)
         {
             RangeF oldRange = GetMinMax(image);

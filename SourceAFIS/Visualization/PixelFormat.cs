@@ -30,9 +30,19 @@ namespace SourceAFIS.Visualization
             return output;
         }
 
+        static readonly float[] ToFloatTable = CreateToFloatTable();
+        
+        static float[] CreateToFloatTable()
+        {
+            float[] result = new float[256];
+            for (int i = 0; i < 256; ++i)
+                result[i] = i / 255f;
+            return result;
+        }
+
         public static float ToFloat(byte gray)
         {
-            return gray * (1f / 255);
+            return ToFloatTable[gray];
         }
 
         public static float[,] ToFloat(byte[,] input)
