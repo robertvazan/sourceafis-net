@@ -19,9 +19,11 @@ namespace SourceAFIS.Visualization
         public static ColorF[,] Interpolate(float[,] input, ColorF from, ColorF to)
         {
             ColorF[,] output = new ColorF[input.GetLength(0), input.GetLength(1)];
-            for (int y = 0; y < input.GetLength(0); ++y)
+            Threader.Split(new Range(0, input.GetLength(0)), delegate(int y)
+            {
                 for (int x = 0; x < input.GetLength(1); ++x)
                     output[y, x] = Interpolate(input[y, x], from, to);
+            });
             return output;
         }
     }

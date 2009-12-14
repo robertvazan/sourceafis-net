@@ -9,6 +9,7 @@ namespace SourceAFIS.General
     {
         public delegate void Task();
         public delegate void RangeFunction(Range range);
+        public delegate void IterationFunction(int at);
         public delegate void ApplyFunction<T>(T value);
 
         public abstract class Ticket
@@ -74,6 +75,15 @@ namespace SourceAFIS.General
                 tickets.Add(Schedule(delegate() { function(subrange); }));
             }
             Wait(tickets);
+        }
+
+        public static void Split(Range range, IterationFunction function)
+        {
+            Split(range, delegate(Range subrange)
+            {
+                for (int i = subrange.Begin; i < subrange.End; ++i)
+                    function(i);
+            });
         }
 
         public static void Split<T>(IList<T> list, ApplyFunction<T> function)

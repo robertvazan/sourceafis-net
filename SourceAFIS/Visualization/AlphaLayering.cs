@@ -9,7 +9,8 @@ namespace SourceAFIS.Visualization
     {
         public static void Layer(ColorF[,] bottom, ColorF[,] top)
         {
-            for (int y = 0; y < bottom.GetLength(0); ++y)
+            Threader.Split(new Range(0, bottom.GetLength(0)), delegate(int y)
+            {
                 for (int x = 0; x < bottom.GetLength(1); ++x)
                 {
                     bottom[y, x].R = Calc.Interpolate(bottom[y, x].R, top[y, x].R, top[y, x].A);
@@ -17,6 +18,7 @@ namespace SourceAFIS.Visualization
                     bottom[y, x].B = Calc.Interpolate(bottom[y, x].B, top[y, x].B, top[y, x].A);
                     bottom[y, x].A = Calc.Interpolate(bottom[y, x].A, top[y, x].A, top[y, x].A);
                 }
+            });
         }
     }
 }

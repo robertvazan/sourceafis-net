@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SourceAFIS.General;
 
 namespace SourceAFIS.Visualization
 {
@@ -8,9 +9,11 @@ namespace SourceAFIS.Visualization
     {
         public static void Invert(byte[,] image)
         {
-            for (int y = 0; y < image.GetLength(0); ++y)
+            Threader.Split(new Range(0, image.GetLength(0)), delegate(int y)
+            {
                 for (int x = 0; x < image.GetLength(1); ++x)
                     image[y, x] = (byte)(255 - image[y, x]);
+            });
         }
 
         public static byte[,] GetInverted(byte[,] image)
@@ -22,9 +25,11 @@ namespace SourceAFIS.Visualization
 
         public static void Invert(float[,] image)
         {
-            for (int y = 0; y < image.GetLength(0); ++y)
+            Threader.Split(new Range(0, image.GetLength(0)), delegate(int y)
+            {
                 for (int x = 0; x < image.GetLength(1); ++x)
                     image[y, x] = -image[y, x];
+            });
         }
 
         public static float[,] GetInverted(float[,] image)
