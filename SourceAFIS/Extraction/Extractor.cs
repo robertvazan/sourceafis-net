@@ -22,6 +22,8 @@ namespace SourceAFIS.Extraction
         public ClippedContrast Contrast = new ClippedContrast();
         [Nested]
         public AbsoluteContrast AbsoluteContrast = new AbsoluteContrast();
+        [Nested]
+        public RelativeContrast RelativeContrast = new RelativeContrast();
 
         public void Extract(byte[,] invertedImage, int dpi)
         {
@@ -39,6 +41,7 @@ namespace SourceAFIS.Extraction
 
                 byte[,] contrast = Contrast.Compute(blocks, histogram);
                 BinaryMap absolutContrastLow = AbsoluteContrast.DetectLowContrast(contrast);
+                BinaryMap relativeContrastLow = RelativeContrast.DetectLowContrast(contrast, blocks);
 
                 float[,] equalized = Equalizer.Equalize(blocks, image, smoothHistogram);
             });
