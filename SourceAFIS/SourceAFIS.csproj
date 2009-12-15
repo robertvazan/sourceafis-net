@@ -41,6 +41,7 @@
     <Compile Include="Extraction\Extractor.cs" />
     <Compile Include="Extraction\LocalHistogram.cs" />
     <Compile Include="Extraction\Equalizer.cs" />
+    <Compile Include="Extraction\RelativeContrast.cs" />
     <Compile Include="General\BinaryMap.cs" />
     <Compile Include="General\BlockMap.cs" />
     <Compile Include="General\Calc.cs" />

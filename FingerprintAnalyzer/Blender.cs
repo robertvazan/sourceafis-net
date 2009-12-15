@@ -17,6 +17,7 @@ namespace FingerprintAnalyzer
             public bool Equalized;
             public bool Contrast;
             public bool AbsoluteContrast;
+            public bool RelativeContrast;
         }
 
         public ExtractionOptions Probe;
@@ -53,6 +54,11 @@ namespace FingerprintAnalyzer
             if (Probe.AbsoluteContrast)
             {
                 BinaryMap scaled = BlockFiller.FillCornerAreas(Logs.Probe.AbsoluteContrast, Logs.Probe.Blocks);
+                AlphaLayering.Layer(output, ScalarColoring.Mask(scaled, ColorF.Transparent, TransparentRed));
+            }
+            if (Probe.RelativeContrast)
+            {
+                BinaryMap scaled = BlockFiller.FillCornerAreas(Logs.Probe.RelativeContrast, Logs.Probe.Blocks);
                 AlphaLayering.Layer(output, ScalarColoring.Mask(scaled, ColorF.Transparent, TransparentRed));
             }
 

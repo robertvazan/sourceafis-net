@@ -28,5 +28,10 @@ namespace SourceAFIS.General
         {
             return left + new Size(right);
         }
+
+        public static int GetArea(Size size)
+        {
+            return size.Width * size.Height;
+        }
     }
 }
