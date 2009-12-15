@@ -5,7 +5,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Visualization
 {
-    public class GrayscaleInverter
+    public sealed class GrayscaleInverter
     {
         public static void Invert(byte[,] image)
         {

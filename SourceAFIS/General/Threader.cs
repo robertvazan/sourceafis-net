@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace SourceAFIS.General
 {
-    public class Threader
+    public sealed class Threader
     {
         public delegate void Task();
         public delegate void RangeFunction(Range range);
@@ -95,7 +95,7 @@ namespace SourceAFIS.General
             });
         }
 
-        class TicketImplementation : Ticket
+        sealed class TicketImplementation : Ticket
         {
             Task Task;
             ManualResetEvent Finished = new ManualResetEvent(false);
@@ -130,7 +130,7 @@ namespace SourceAFIS.General
             }
         }
 
-        class Worker
+        sealed class Worker
         {
             volatile TicketImplementation Ticket;
             volatile Task OnFinished;

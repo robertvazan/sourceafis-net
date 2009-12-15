@@ -5,7 +5,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Visualization
 {
-    public class PixelFormat
+    public sealed class PixelFormat
     {
         public static byte ToByte(float gray)
         {

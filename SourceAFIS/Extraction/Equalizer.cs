@@ -7,7 +7,7 @@ using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Extraction
 {
-    public class Equalizer
+    public sealed class Equalizer
     {
         public float MaxScaling = 4f;
         public float MinScaling = 0.25f;

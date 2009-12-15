@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace SourceAFIS.Meta
 {
-    public class ParameterValue
+    public sealed class ParameterValue
     {
         public string ObjectPath;
         public object ObjectReference;

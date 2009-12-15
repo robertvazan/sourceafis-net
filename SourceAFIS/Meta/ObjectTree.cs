@@ -5,9 +5,9 @@ using System.Reflection;
 
 namespace SourceAFIS.Meta
 {
-    public class ObjectTree
+    public sealed class ObjectTree
     {
-        class Item
+        sealed class Item
         {
             public object Reference;
             public string Path;

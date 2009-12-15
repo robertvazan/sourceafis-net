@@ -5,7 +5,7 @@ using System.Text;
 namespace SourceAFIS.Meta
 {
     [AttributeUsage(AttributeTargets.Field)]
-    public class NestedAttribute : Attribute
+    public sealed class NestedAttribute : Attribute
     {
     }
 }

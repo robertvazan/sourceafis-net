@@ -8,7 +8,7 @@ using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Extraction
 {
-    public class Extractor
+    public sealed class Extractor
     {
         [DpiAdjusted]
         public int BlockSize = 16;

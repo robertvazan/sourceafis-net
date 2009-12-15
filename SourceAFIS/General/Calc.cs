@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace SourceAFIS.General
 {
-    public class Calc
+    public sealed class Calc
     {
         public static int DivRoundUp(int input, int divider)
         {

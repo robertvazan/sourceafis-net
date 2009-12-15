@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace SourceAFIS.General
 {
-    public class BlockMap
+    public sealed class BlockMap
     {
         public delegate void ForEachFunction(Point at);
 

@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace SourceAFIS.Meta
 {
-    public class DpiAdjuster
+    public sealed class DpiAdjuster
     {
         public delegate void VoidFunction();
 

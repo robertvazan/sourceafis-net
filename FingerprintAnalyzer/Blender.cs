@@ -7,7 +7,7 @@ using SourceAFIS.Visualization;
 
 namespace FingerprintAnalyzer
 {
-    class Blender
+    sealed class Blender
     {
         public LogCollector Logs;
 
