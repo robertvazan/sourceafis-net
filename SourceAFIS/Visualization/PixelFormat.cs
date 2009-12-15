@@ -51,11 +51,9 @@ namespace SourceAFIS.Visualization
         public static float[,] ToFloat(byte[,] input)
         {
             float[,] output = new float[input.GetLength(0), input.GetLength(1)];
-            Threader.Split(new Range(0, input.GetLength(0)), delegate(int y)
-            {
+            for (int y = 0; y < input.GetLength(0); ++y)
                 for (int x = 0; x < input.GetLength(1); ++x)
                     output[y, x] = ToFloat(input[y, x]);
-            });
             return output;
         }
 
@@ -88,11 +86,9 @@ namespace SourceAFIS.Visualization
         public static ColorF[,] ToColorF(byte[,] input)
         {
             ColorF[,] output = new ColorF[input.GetLength(0), input.GetLength(1)];
-            Threader.Split(new Range(0, input.GetLength(0)), delegate(int y)
-            {
+            for (int y = 0; y < input.GetLength(0); ++y)
                 for (int x = 0; x < input.GetLength(1); ++x)
                     output[y, x] = ToColorF(input[y, x]);
-            });
             return output;
         }
 
@@ -104,11 +100,9 @@ namespace SourceAFIS.Visualization
         public static ColorF[,] ToColorF(float[,] input)
         {
             ColorF[,] output = new ColorF[input.GetLength(0), input.GetLength(1)];
-            Threader.Split(new Range(0, input.GetLength(0)), delegate(int y)
-            {
+            for (int y = 0; y < input.GetLength(0); ++y)
                 for (int x = 0; x < input.GetLength(1); ++x)
                     output[y, x] = ToColorF(input[y, x]);
-            });
             return output;
         }
 
@@ -120,11 +114,9 @@ namespace SourceAFIS.Visualization
         public static ColorF[,] ToColorF(ColorB[,] input)
         {
             ColorF[,] output = new ColorF[input.GetLength(0), input.GetLength(1)];
-            Threader.Split(new Range(0, input.GetLength(0)), delegate(int y)
-            {
+            for (int y = 0; y < input.GetLength(0); ++y)
                 for (int x = 0; x < input.GetLength(1); ++x)
                     output[y, x] = ToColorF(input[y, x]);
-            });
             return output;
         }
     }
