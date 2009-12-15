@@ -26,5 +26,19 @@ namespace SourceAFIS.Visualization
             });
             return output;
         }
+
+        public static ColorF[,] Mask(BinaryMap input, ColorF zero, ColorF one)
+        {
+            ColorF[,] output = new ColorF[input.Height, input.Width];
+            for (int y = 0; y < input.Height; ++y)
+                for (int x = 0; x < input.Width; ++x)
+                {
+                    if (input.GetBit(x, y))
+                        output[y, x] = one;
+                    else
+                        output[y, x] = zero;
+                }
+            return output;
+        }
     }
 }

@@ -36,10 +36,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extraction\AbsoluteContrast.cs" />
     <Compile Include="Extraction\ClippedContrast.cs" />
     <Compile Include="Extraction\Extractor.cs" />
     <Compile Include="Extraction\LocalHistogram.cs" />
     <Compile Include="Extraction\Equalizer.cs" />
+    <Compile Include="General\BinaryMap.cs" />
     <Compile Include="General\BlockMap.cs" />
     <Compile Include="General\Calc.cs" />
     <Compile Include="General\Logger.cs" />
