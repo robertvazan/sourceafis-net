@@ -6,7 +6,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction
 {
-    public class ClippedContrast
+    public sealed class ClippedContrast
     {
         public float ClipFraction = 0.1f;
 

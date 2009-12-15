@@ -5,7 +5,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction
 {
-    public class AbsoluteContrast
+    public sealed class AbsoluteContrast
     {
         public byte Limit = 15;
 

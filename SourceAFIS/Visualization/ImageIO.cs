@@ -7,7 +7,7 @@ using SystemPixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace SourceAFIS.Visualization
 {
-    public class ImageIO
+    public sealed class ImageIO
     {
         public static ColorB[,] GetPixels(Bitmap bmp)
         {

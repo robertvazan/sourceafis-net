@@ -5,7 +5,7 @@ using System.Text;
 namespace SourceAFIS.Meta
 {
     [AttributeUsage(AttributeTargets.Field)]
-    public class DpiAdjustedAttribute : Attribute
+    public sealed class DpiAdjustedAttribute : Attribute
     {
         double MinValue = 1;
         public double Min

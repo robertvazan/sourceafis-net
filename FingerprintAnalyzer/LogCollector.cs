@@ -6,7 +6,7 @@ using SourceAFIS.General;
 
 namespace FingerprintAnalyzer
 {
-    class LogCollector
+    sealed class LogCollector
     {
         public struct ExtractionData
         {

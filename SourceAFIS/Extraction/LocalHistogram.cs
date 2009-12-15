@@ -6,7 +6,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction
 {
-    public class LocalHistogram
+    public sealed class LocalHistogram
     {
         public short[, ,] Analyze(BlockMap blocks, byte[,] image)
         {

@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace SourceAFIS.General
 {
-    public class BinaryMap
+    public sealed class BinaryMap
     {
         public readonly int WordWidth;
         public readonly int Width;

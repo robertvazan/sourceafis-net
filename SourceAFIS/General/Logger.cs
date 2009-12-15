@@ -5,7 +5,7 @@ using SourceAFIS.Meta;
 
 namespace SourceAFIS.General
 {
-    public class Logger
+    public sealed class Logger
     {
         public delegate bool PathFilter(string path);
 
