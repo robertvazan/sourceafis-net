@@ -11,6 +11,8 @@ namespace SourceAFIS.Visualization
         public float B;
         public float A;
 
+        public static readonly ColorF Transparent = new ColorF(0, 0, 0, 0);
+
         public ColorF(float r, float g, float b, float a)
         {
             R = r;

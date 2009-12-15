@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using SourceAFIS.General;
 using SourceAFIS.Visualization;
 
 namespace FingerprintAnalyzer
@@ -15,11 +16,15 @@ namespace FingerprintAnalyzer
             public bool OriginalImage;
             public bool Equalized;
             public bool Contrast;
+            public bool AbsoluteContrast;
         }
 
         public ExtractionOptions Probe;
 
         public Bitmap OutputImage;
+
+        readonly ColorF TransparentRed = new ColorF(1, 0, 0, 0.25f);
+        readonly ColorF TransparentGreen = new ColorF(0, 1, 0, 0.25f);
 
         public void Blend()
         {
@@ -43,9 +48,12 @@ namespace FingerprintAnalyzer
             if (Probe.Contrast)
             {
                 float[,] contrast = BlockFiller.FillCornerAreas(PixelFormat.ToFloat(Logs.Probe.BlockContrast), Logs.Probe.Blocks);
-                ColorF high = new ColorF(0, 1, 0, 0.25f);
-                ColorF low = new ColorF(1, 0, 0, 0.25f);
-                AlphaLayering.Layer(output, ScalarColoring.Interpolate(contrast, low, high));
+                AlphaLayering.Layer(output, ScalarColoring.Interpolate(contrast, TransparentRed, TransparentGreen));
+            }
+            if (Probe.AbsoluteContrast)
+            {
+                BinaryMap scaled = BlockFiller.FillCornerAreas(Logs.Probe.AbsoluteContrast, Logs.Probe.Blocks);
+                AlphaLayering.Layer(output, ScalarColoring.Mask(scaled, ColorF.Transparent, TransparentRed));
             }
 
             OutputImage = ImageIO.CreateBitmap(PixelFormat.ToColorB(output));
