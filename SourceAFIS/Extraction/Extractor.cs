@@ -20,6 +20,8 @@ namespace SourceAFIS.Extraction
         public SegmentationMask Mask = new SegmentationMask();
         [Nested]
         public Equalizer Equalizer = new Equalizer();
+        [Nested]
+        public HillOrientation Orientation = new HillOrientation();
 
         public void Extract(byte[,] invertedImage, int dpi)
         {
@@ -38,6 +40,7 @@ namespace SourceAFIS.Extraction
                 BinaryMap mask = Mask.ComputeMask(blocks, histogram);
 
                 float[,] equalized = Equalizer.Equalize(blocks, image, smoothHistogram, mask);
+                byte[,] orientation = Orientation.Detect(equalized, mask, blocks);
             });
         }
     }

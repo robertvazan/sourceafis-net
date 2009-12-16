@@ -19,7 +19,7 @@ namespace SourceAFIS.General
 
         public int Interpolate(int index, int count)
         {
-            return index * Length / count + Begin;
+            return Calc.Interpolate(index, count, Length) + Begin;
         }
     }
 }
