@@ -16,7 +16,7 @@ namespace SourceAFIS.Extraction
         const float RangeMax = 1;
         const float RangeSize = RangeMax - RangeMin;
 
-        float[, ,] ComputeEqualization(BlockMap blocks, short[, ,] histogram)
+        float[, ,] ComputeEqualization(BlockMap blocks, short[, ,] histogram, BinaryMap blockMask)
         {
             float widthMax = RangeSize / 256f * MaxScaling;
             float widthMin = RangeSize / 256f * MinScaling;
@@ -32,57 +32,66 @@ namespace SourceAFIS.Extraction
             float[, ,] equalization = new float[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
             Threader.Split<Point>(blocks.CornerList, delegate(Point corner)
             {
-                int area = 0;
-                for (int i = 0; i < 256; ++i)
-                    area += histogram[corner.Y, corner.X, i];
-                float widthWeigth = RangeSize / area;
-
-                float top = RangeMin;
-                for (int i = 0; i < 256; ++i)
+                if (blockMask.GetBitSafe(corner.X, corner.Y, false)
+                    || blockMask.GetBitSafe(corner.X - 1, corner.Y, false)
+                    || blockMask.GetBitSafe(corner.X, corner.Y - 1, false)
+                    || blockMask.GetBitSafe(corner.X - 1, corner.Y - 1, false))
                 {
-                    float width = histogram[corner.Y, corner.X, i] * widthWeigth;
-                    float equalized = top + PixelFormat.ToFloat((byte)i) * width;
-                    top += width;
+                    int area = 0;
+                    for (int i = 0; i < 256; ++i)
+                        area += histogram[corner.Y, corner.X, i];
+                    float widthWeigth = RangeSize / area;
 
-                    float limited = equalized;
-                    if (limited < limitedMin[i])
-                        limited = limitedMin[i];
-                    if (limited > limitedMax[i])
-                        limited = limitedMax[i];
-                    equalization[corner.Y, corner.X, i] = limited;
+                    float top = RangeMin;
+                    for (int i = 0; i < 256; ++i)
+                    {
+                        float width = histogram[corner.Y, corner.X, i] * widthWeigth;
+                        float equalized = top + PixelFormat.ToFloat((byte)i) * width;
+                        top += width;
+
+                        float limited = equalized;
+                        if (limited < limitedMin[i])
+                            limited = limitedMin[i];
+                        if (limited > limitedMax[i])
+                            limited = limitedMax[i];
+                        equalization[corner.Y, corner.X, i] = limited;
+                    }
                 }
             });
             return equalization;
         }
 
-        float[,] PerformEqualization(BlockMap blocks, byte[,] image, float[, ,] equalization)
+        float[,] PerformEqualization(BlockMap blocks, byte[,] image, float[, ,] equalization, BinaryMap blockMask)
         {
             float[,] result = new float[blocks.PixelCount.Height, blocks.PixelCount.Width];
             Threader.Split<Point>(blocks.BlockList, delegate(Point block)
             {
-                RectangleC area = blocks.BlockAreas[block.Y, block.X];
-                for (int y = area.Bottom; y < area.Top; ++y)
-                    for (int x = area.Left; x < area.Right; ++x)
-                    {
-                        byte pixel = image[y, x];
+                if (blockMask.GetBit(block))
+                {
+                    RectangleC area = blocks.BlockAreas[block.Y, block.X];
+                    for (int y = area.Bottom; y < area.Top; ++y)
+                        for (int x = area.Left; x < area.Right; ++x)
+                        {
+                            byte pixel = image[y, x];
 
-                        float bottomLeft = equalization[block.Y, block.X, pixel];
-                        float bottomRight = equalization[block.Y, block.X + 1, pixel];
-                        float topLeft = equalization[block.Y + 1, block.X, pixel];
-                        float topRight = equalization[block.Y + 1, block.X + 1, pixel];
+                            float bottomLeft = equalization[block.Y, block.X, pixel];
+                            float bottomRight = equalization[block.Y, block.X + 1, pixel];
+                            float topLeft = equalization[block.Y + 1, block.X, pixel];
+                            float topRight = equalization[block.Y + 1, block.X + 1, pixel];
 
-                        PointF fraction = area.GetFraction(new Point(x, y));
-                        result[y, x] = Calc.Interpolate(topLeft, topRight, bottomLeft, bottomRight, fraction);
-                    }
+                            PointF fraction = area.GetFraction(new Point(x, y));
+                            result[y, x] = Calc.Interpolate(topLeft, topRight, bottomLeft, bottomRight, fraction);
+                        }
+                }
             });
             Logger.Log(this, result);
             return result;
         }
 
-        public float[,] Equalize(BlockMap blocks, byte[,] image, short[, ,] histogram)
+        public float[,] Equalize(BlockMap blocks, byte[,] image, short[, ,] histogram, BinaryMap blockMask)
         {
-            float[, ,] equalization = ComputeEqualization(blocks, histogram);
-            return PerformEqualization(blocks, image, equalization);
+            float[, ,] equalization = ComputeEqualization(blocks, histogram, blockMask);
+            return PerformEqualization(blocks, image, equalization, blockMask);
         }
     }
 }
