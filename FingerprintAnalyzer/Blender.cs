@@ -18,6 +18,8 @@ namespace FingerprintAnalyzer
             public bool Contrast;
             public bool AbsoluteContrast;
             public bool RelativeContrast;
+            public bool LowContrastMajority;
+            public bool SegmentationMask;
         }
 
         public ExtractionOptions Probe;
@@ -26,6 +28,7 @@ namespace FingerprintAnalyzer
 
         readonly ColorF TransparentRed = new ColorF(1, 0, 0, 0.25f);
         readonly ColorF TransparentGreen = new ColorF(0, 1, 0, 0.25f);
+        readonly ColorF LightFog = new ColorF(0.9f, 0.9f, 0.9f, 0.9f);
 
         public void Blend()
         {
@@ -51,18 +54,23 @@ namespace FingerprintAnalyzer
                 float[,] contrast = BlockFiller.FillBlocks(PixelFormat.ToFloat(Logs.Probe.BlockContrast), Logs.Probe.Blocks);
                 AlphaLayering.Layer(output, ScalarColoring.Interpolate(contrast, TransparentRed, TransparentGreen));
             }
-            if (Probe.AbsoluteContrast)
-            {
-                BinaryMap scaled = BlockFiller.FillBlocks(Logs.Probe.AbsoluteContrast, Logs.Probe.Blocks);
-                AlphaLayering.Layer(output, ScalarColoring.Mask(scaled, ColorF.Transparent, TransparentRed));
-            }
-            if (Probe.RelativeContrast)
-            {
-                BinaryMap scaled = BlockFiller.FillBlocks(Logs.Probe.RelativeContrast, Logs.Probe.Blocks);
-                AlphaLayering.Layer(output, ScalarColoring.Mask(scaled, ColorF.Transparent, TransparentRed));
-            }
+            LayerMask(Probe.AbsoluteContrast, output, Logs.Probe.AbsoluteContrast, TransparentRed);
+            LayerMask(Probe.RelativeContrast, output, Logs.Probe.RelativeContrast, TransparentRed);
+            LayerMask(Probe.LowContrastMajority, output, Logs.Probe.LowContrastMajority, TransparentRed);
+
+            Logs.Probe.SegmentationMask.Invert();
+            LayerMask(Probe.SegmentationMask, output, Logs.Probe.SegmentationMask, LightFog);
 
             OutputImage = ImageIO.CreateBitmap(PixelFormat.ToColorB(output));
+        }
+
+        void LayerMask(bool condition, ColorF[,] output, BinaryMap mask, ColorF color)
+        {
+            if (condition)
+            {
+                BinaryMap scaled = BlockFiller.FillBlocks(mask, Logs.Probe.Blocks);
+                AlphaLayering.Layer(output, ScalarColoring.Mask(scaled, ColorF.Transparent, color));
+            }
         }
     }
 }

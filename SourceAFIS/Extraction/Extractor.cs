@@ -17,13 +17,9 @@ namespace SourceAFIS.Extraction
         [Nested]
         public LocalHistogram Histogram = new LocalHistogram();
         [Nested]
+        public SegmentationMask Mask = new SegmentationMask();
+        [Nested]
         public Equalizer Equalizer = new Equalizer();
-        [Nested]
-        public ClippedContrast Contrast = new ClippedContrast();
-        [Nested]
-        public AbsoluteContrast AbsoluteContrast = new AbsoluteContrast();
-        [Nested]
-        public RelativeContrast RelativeContrast = new RelativeContrast();
 
         public void Extract(byte[,] invertedImage, int dpi)
         {
@@ -39,9 +35,7 @@ namespace SourceAFIS.Extraction
                 short[, ,] histogram = Histogram.Analyze(blocks, image);
                 short[, ,] smoothHistogram = Histogram.SmoothAroundCorners(blocks, histogram);
 
-                byte[,] contrast = Contrast.Compute(blocks, histogram);
-                BinaryMap absolutContrastLow = AbsoluteContrast.DetectLowContrast(contrast);
-                BinaryMap relativeContrastLow = RelativeContrast.DetectLowContrast(contrast, blocks);
+                BinaryMap mask = Mask.ComputeMask(blocks, histogram);
 
                 float[,] equalized = Equalizer.Equalize(blocks, image, smoothHistogram);
             });
