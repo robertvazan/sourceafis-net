@@ -11,6 +11,7 @@ namespace SourceAFIS.General
         public readonly int Width;
         public readonly int Height;
         public Size Size { get { return new Size(Width, Height); } }
+        public RectangleC Rect { get { return new RectangleC(new Point(0, 0), Size); } }
 
         public const int WordShift = 5;
         public const uint WordMask = 31;
@@ -55,9 +56,18 @@ namespace SourceAFIS.General
                 SetBitZero(x, y);
         }
 
+        public bool GetBitSafe(int x, int y, bool defaultValue)
+        {
+            if (Rect.Contains(new Point(x, y)))
+                return GetBit(x, y);
+            else
+                return defaultValue;
+        }
+
         public bool GetBit(Point at) { return GetBit(at.X, at.Y); }
         public void SetBitOne(Point at) { SetBitOne(at.X, at.Y); }
         public void SetBitZero(Point at) { SetBitZero(at.X, at.Y); }
+        public bool GetBitSafe(Point at, bool defaultValue) { return GetBitSafe(at.X, at.Y, defaultValue); }
 
         public void Invert()
         {

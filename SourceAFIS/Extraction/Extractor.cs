@@ -37,7 +37,7 @@ namespace SourceAFIS.Extraction
 
                 BinaryMap mask = Mask.ComputeMask(blocks, histogram);
 
-                float[,] equalized = Equalizer.Equalize(blocks, image, smoothHistogram);
+                float[,] equalized = Equalizer.Equalize(blocks, image, smoothHistogram, mask);
             });
         }
     }
