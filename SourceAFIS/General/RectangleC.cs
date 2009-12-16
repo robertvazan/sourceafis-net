@@ -29,6 +29,14 @@ namespace SourceAFIS.General
             Height = size.Height;
         }
 
+        public RectangleC(Point begin, Point end)
+        {
+            X = begin.X;
+            Y = begin.Y;
+            Width = end.X - begin.X;
+            Height = end.Y - begin.Y;
+        }
+
         public bool Contains(Point point)
         {
             return point.X >= Left && point.Y >= Bottom && point.X < Right && point.Y < Top;

@@ -18,11 +18,15 @@ namespace SourceAFIS.Extraction
         public VotingFilter LowContrastMajority = new VotingFilter();
         [Nested]
         public VotingFilter BlockErrorFilter = new VotingFilter();
+        [Nested]
+        public VotingFilter InnerMaskFilter = new VotingFilter();
 
         public SegmentationMask()
         {
             LowContrastMajority.Radius = 4;
             LowContrastMajority.Majority = 0.6f;
+            InnerMaskFilter.Radius = 5;
+            InnerMaskFilter.BorderDistance = 5;
         }
 
         public BinaryMap ComputeMask(BlockMap blocks, short[, ,] histogram)
@@ -36,6 +40,8 @@ namespace SourceAFIS.Extraction
             mask.Or(BlockErrorFilter.Filter(mask));
             mask.Invert();
             mask.Or(BlockErrorFilter.Filter(mask));
+            mask.Or(BlockErrorFilter.Filter(mask));
+            mask.Or(InnerMaskFilter.Filter(mask));
 
             Logger.Log(this, mask);
             return mask;
