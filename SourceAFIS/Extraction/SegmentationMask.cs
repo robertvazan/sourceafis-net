@@ -16,6 +16,8 @@ namespace SourceAFIS.Extraction
         public RelativeContrast RelativeContrast = new RelativeContrast();
         [Nested]
         public VotingFilter LowContrastMajority = new VotingFilter();
+        [Nested]
+        public VotingFilter BlockErrorFilter = new VotingFilter();
 
         public SegmentationMask()
         {
@@ -30,8 +32,11 @@ namespace SourceAFIS.Extraction
             BinaryMap mask = new BinaryMap(AbsoluteContrast.DetectLowContrast(contrast));
             mask.Or(RelativeContrast.DetectLowContrast(contrast, blocks));
             mask.Or(LowContrastMajority.Filter(mask));
-
+            
+            mask.Or(BlockErrorFilter.Filter(mask));
             mask.Invert();
+            mask.Or(BlockErrorFilter.Filter(mask));
+
             Logger.Log(this, mask);
             return mask;
         }
