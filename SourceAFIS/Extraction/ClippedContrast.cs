@@ -13,7 +13,7 @@ namespace SourceAFIS.Extraction
         public byte[,] Compute(BlockMap blocks, short[, ,] histogram)
         {
             byte[,] result = new byte[blocks.BlockCount.Height, blocks.BlockCount.Width];
-            Threader.Split<Point>(blocks.BlockList, delegate(Point block)
+            Threader.Split<Point>(blocks.AllBlocks, delegate(Point block)
             {
                 int area = 0;
                 for (int i = 0; i < 256; ++i)

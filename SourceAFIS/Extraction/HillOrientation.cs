@@ -38,22 +38,14 @@ namespace SourceAFIS.Extraction
                         neighbor.Position = Calc.Round(Calc.Multiply(distance, Angle.ToVector(angle)));
                     } while (neighbor.Position == new Point() || neighbor.Position.Y < 0);
                     neighbor.Orientation = Angle.ToVector(Angle.Add(Angle.ToOrientation(Angle.Atan(neighbor.Position)), Angle.PI));
-                    //double actualDistance = Math.Sqrt(Calc.DistanceSq(neighbor.Position));
-                    //neighbor.Orientation = Calc.Multiply((float)(actualDistance / MaxHalfDistance), neighbor.Orientation);
                     if (!neighbors.Exists(delegate(NeighborInfo info) { return info.Position == neighbor.Position; }))
                         neighbors.Add(neighbor);
                 }
                 neighbors.Sort(delegate(NeighborInfo left, NeighborInfo right)
                 {
-                    if (left.Position.Y < right.Position.Y)
-                        return -1;
-                    if (left.Position.Y > right.Position.Y)
-                        return 1;
-                    if (left.Position.X < right.Position.X)
-                        return -1;
-                    if (left.Position.X > right.Position.X)
-                        return 1;
-                    return 0;
+                    return Calc.ChainCompare(
+                        Calc.Compare(left.Position.Y, right.Position.Y),
+                        Calc.Compare(left.Position.X, right.Position.X));
                 });
                 allSplits.Add(neighbors);
             }
@@ -84,11 +76,11 @@ namespace SourceAFIS.Extraction
             PointF[,] orientation = new PointF[input.GetLength(0), input.GetLength(1)];
             Threader.Split(new Range(0, mask.Height), delegate(int blockY)
             {
-                Range validXRangeBlocks = GetMaskLineRange(mask, blockY);
-                if (validXRangeBlocks.Length > 0)
+                Range validMaskRange = GetMaskLineRange(mask, blockY);
+                if (validMaskRange.Length > 0)
                 {
-                    Range validXRange = new Range(blocks.BlockAreas[blockY, validXRangeBlocks.Begin].Left,
-                        blocks.BlockAreas[blockY, validXRangeBlocks.End - 1].Right);
+                    Range validXRange = new Range(blocks.BlockAreas[blockY, validMaskRange.Begin].Left,
+                        blocks.BlockAreas[blockY, validMaskRange.End - 1].Right);
                     for (int y = blocks.BlockAreas[blockY, 0].Bottom; y < blocks.BlockAreas[blockY, 0].Top; ++y)
                     {
                         foreach (NeighborInfo neighbor in neighbors[y % neighbors.Count])
@@ -119,12 +111,12 @@ namespace SourceAFIS.Extraction
         PointF[,] SumBlocks(PointF[,] orientation, BlockMap blocks, BinaryMap mask)
         {
             PointF[,] sums = new PointF[blocks.BlockCount.Height, blocks.BlockCount.Width];
-            Threader.Split<Point>(blocks.BlockList, delegate(Point block)
+            Threader.Split<Point>(blocks.AllBlocks, delegate(Point block)
             {
                 if (mask.GetBit(block))
                 {
                     PointF sum = new PointF();
-                    RectangleC area = blocks.BlockAreas[block.Y, block.X];
+                    RectangleC area = blocks.BlockAreas[block];
                     for (int y = area.Bottom; y < area.Top; ++y)
                         for (int x = area.Left; x < area.Right; ++x)
                             sum = Calc.Add(sum, orientation[y, x]);
