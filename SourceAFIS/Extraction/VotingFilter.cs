@@ -10,22 +10,27 @@ namespace SourceAFIS.Extraction
     {
         public int Radius = 1;
         public float Majority = 0.51f;
+        public int BorderDistance = 0;
 
         public BinaryMap Filter(BinaryMap input)
         {
+            RectangleC rect = new RectangleC(new Point(BorderDistance, BorderDistance),
+                new Size(input.Width - 2 * BorderDistance, input.Height - 2 * BorderDistance));
             BinaryMap output = new BinaryMap(input.Size);
-            for (int y = 0; y < output.Height; ++y)
-                for (int x = 0; x < output.Width; ++x)
+            for (int y = rect.Bottom; y < rect.Top; ++y)
+                for (int x = rect.Left; x < rect.Right; ++x)
                 {
-                    Range xRange = new Range(Math.Max(x - Radius, 0), Math.Min(x + Radius, output.Width - 1));
-                    Range yRange = new Range(Math.Max(y - Radius, 0), Math.Min(y + Radius, output.Height - 1));
+                    RectangleC neighborhood = new RectangleC(
+                        new Point(Math.Max(x - Radius, 0), Math.Max(y - Radius, 0)),
+                        new Point(Math.Min(x + Radius + 1, output.Width), Math.Min(y + Radius + 1, output.Height)));
+
                     int ones = 0;
-                    for (int ny = yRange.Begin; ny <= yRange.End; ++ny)
-                        for (int nx = xRange.Begin; nx <= xRange.End; ++nx)
+                    for (int ny = neighborhood.Bottom; ny < neighborhood.Top; ++ny)
+                        for (int nx = neighborhood.Left; nx < neighborhood.Right; ++nx)
                             if (input.GetBit(nx, ny))
                                 ++ones;
 
-                    double voteWeight = 1.0 / (xRange.Length * yRange.Length);
+                    double voteWeight = 1.0 / neighborhood.TotalArea;
                     if (ones * voteWeight >= Majority)
                         output.SetBitOne(x, y);
                 }
