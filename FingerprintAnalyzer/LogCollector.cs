@@ -15,6 +15,8 @@ namespace FingerprintAnalyzer
             public byte[,] BlockContrast;
             public BinaryMap AbsoluteContrast;
             public BinaryMap RelativeContrast;
+            public BinaryMap LowContrastMajority;
+            public BinaryMap SegmentationMask;
             public float[,] Equalized;
         }
 
@@ -32,9 +34,11 @@ namespace FingerprintAnalyzer
         {
             Extractor.Extract(Probe.InputImage, 500);
             Probe.Blocks = Logger.Retrieve<BlockMap>("Extractor.BlockMap");
-            Probe.BlockContrast = Logger.Retrieve<byte[,]>("Extractor.Contrast");
-            Probe.AbsoluteContrast = Logger.Retrieve<BinaryMap>("Extractor.AbsoluteContrast");
-            Probe.RelativeContrast = Logger.Retrieve<BinaryMap>("Extractor.RelativeContrast");
+            Probe.BlockContrast = Logger.Retrieve<byte[,]>("Extractor.Mask.Contrast");
+            Probe.AbsoluteContrast = Logger.Retrieve<BinaryMap>("Extractor.Mask.AbsoluteContrast");
+            Probe.RelativeContrast = Logger.Retrieve<BinaryMap>("Extractor.Mask.RelativeContrast");
+            Probe.LowContrastMajority = Logger.Retrieve<BinaryMap>("Extractor.Mask.LowContrastMajority");
+            Probe.SegmentationMask = Logger.Retrieve<BinaryMap>("Extractor.Mask");
             Probe.Equalized = Logger.Retrieve<float[,]>("Extractor.Equalizer");
             Logger.Clear();
         }
