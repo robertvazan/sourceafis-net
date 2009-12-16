@@ -96,5 +96,22 @@ namespace SourceAFIS.General
         {
             Shuffle(collection, new Random(0));
         }
+
+        public static int Compare(int left, int right)
+        {
+            if (left < right)
+                return -1;
+            if (left > right)
+                return 1;
+            return 0;
+        }
+
+        public static int ChainCompare(int first, int second)
+        {
+            if (first != 0)
+                return first;
+            else
+                return second;
+        }
     }
 }

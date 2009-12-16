@@ -22,7 +22,7 @@ namespace SourceAFIS.Extraction
             sortedContrast.Sort();
             sortedContrast.Reverse();
 
-            int pixelsPerBlock = Calc.GetArea(blocks.PixelCount) / blocks.BlockRect.TotalArea;
+            int pixelsPerBlock = Calc.GetArea(blocks.PixelCount) / blocks.AllBlocks.TotalArea;
             int sampleCount = Math.Min(sortedContrast.Count, SampleSize / pixelsPerBlock);
             int consideredBlocks = Math.Max(Convert.ToInt32(sampleCount * SampleFraction), 1);
             

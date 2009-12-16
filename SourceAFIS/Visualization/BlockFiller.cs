@@ -11,10 +11,10 @@ namespace SourceAFIS.Visualization
         public static T[,] FillBlocks<T>(T[,] input, BlockMap blocks) where T : struct
         {
             T[,] output = new T[blocks.PixelCount.Height, blocks.PixelCount.Width];
-            Threader.Split<Point>(blocks.BlockList, delegate(Point block)
+            Threader.Split<Point>(blocks.AllBlocks, delegate(Point block)
             {
                 T fill = input[block.Y, block.X];
-                RectangleC area = blocks.BlockAreas[block.Y, block.X];
+                RectangleC area = blocks.BlockAreas[block];
                 for (int y = area.Bottom; y < area.Top; ++y)
                     for (int x = area.Left; x < area.Right; ++x)
                         output[y, x] = fill;
@@ -25,10 +25,10 @@ namespace SourceAFIS.Visualization
         public static T[,] FillCornerAreas<T>(T[,] input, BlockMap blocks) where T : struct
         {
             T[,] output = new T[blocks.PixelCount.Height, blocks.PixelCount.Width];
-            Threader.Split<Point>(blocks.CornerList, delegate(Point corner)
+            Threader.Split<Point>(blocks.AllCorners, delegate(Point corner)
             {
                 T fill = input[corner.Y, corner.X];
-                RectangleC area = blocks.CornerAreas[corner.Y, corner.X];
+                RectangleC area = blocks.CornerAreas[corner];
                 for (int y = area.Bottom; y < area.Top; ++y)
                     for (int x = area.Left; x < area.Right; ++x)
                         output[y, x] = fill;
@@ -39,11 +39,11 @@ namespace SourceAFIS.Visualization
         public static BinaryMap FillBlocks(BinaryMap input, BlockMap blocks)
         {
             BinaryMap output = new BinaryMap(blocks.PixelCount.Width, blocks.PixelCount.Height);
-            foreach (Point block in blocks.BlockList)
+            foreach (Point block in blocks.AllBlocks)
             {
                 if (input.GetBit(block))
                 {
-                    RectangleC area = blocks.BlockAreas[block.Y, block.X];
+                    RectangleC area = blocks.BlockAreas[block];
                     for (int y = area.Bottom; y < area.Top; ++y)
                         for (int x = area.Left; x < area.Right; ++x)
                             output.SetBitOne(x, y);
@@ -55,11 +55,11 @@ namespace SourceAFIS.Visualization
         public static BinaryMap FillCornerAreas(BinaryMap input, BlockMap blocks)
         {
             BinaryMap output = new BinaryMap(blocks.PixelCount.Width, blocks.PixelCount.Height);
-            foreach (Point corner in blocks.CornerList)
+            foreach (Point corner in blocks.AllCorners)
             {
                 if (input.GetBit(corner))
                 {
-                    RectangleC area = blocks.CornerAreas[corner.Y, corner.X];
+                    RectangleC area = blocks.CornerAreas[corner];
                     for (int y = area.Bottom; y < area.Top; ++y)
                         for (int x = area.Left; x < area.Right; ++x)
                             output.SetBitOne(x, y);

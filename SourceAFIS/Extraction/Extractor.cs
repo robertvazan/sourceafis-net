@@ -29,9 +29,7 @@ namespace SourceAFIS.Extraction
             {
                 byte[,] image = GrayscaleInverter.GetInverted(invertedImage);
 
-                BlockMap blocks = new BlockMap();
-                blocks.PixelCount = new Size(image.GetLength(1), image.GetLength(0));
-                blocks.Initialize(BlockSize);
+                BlockMap blocks = new BlockMap(new Size(image.GetLength(1), image.GetLength(0)), BlockSize);
                 Logger.Log(this, "BlockMap", blocks);
 
                 short[, ,] histogram = Histogram.Analyze(blocks, image);

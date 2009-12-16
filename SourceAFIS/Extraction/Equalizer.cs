@@ -30,7 +30,7 @@ namespace SourceAFIS.Extraction
             }
 
             float[, ,] equalization = new float[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
-            Threader.Split<Point>(blocks.CornerList, delegate(Point corner)
+            Threader.Split<Point>(blocks.AllCorners, delegate(Point corner)
             {
                 if (blockMask.GetBitSafe(corner.X, corner.Y, false)
                     || blockMask.GetBitSafe(corner.X - 1, corner.Y, false)
@@ -64,11 +64,11 @@ namespace SourceAFIS.Extraction
         float[,] PerformEqualization(BlockMap blocks, byte[,] image, float[, ,] equalization, BinaryMap blockMask)
         {
             float[,] result = new float[blocks.PixelCount.Height, blocks.PixelCount.Width];
-            Threader.Split<Point>(blocks.BlockList, delegate(Point block)
+            Threader.Split<Point>(blocks.AllBlocks, delegate(Point block)
             {
                 if (blockMask.GetBit(block))
                 {
-                    RectangleC area = blocks.BlockAreas[block.Y, block.X];
+                    RectangleC area = blocks.BlockAreas[block];
                     for (int y = area.Bottom; y < area.Top; ++y)
                         for (int x = area.Left; x < area.Right; ++x)
                         {
