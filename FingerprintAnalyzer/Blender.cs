@@ -48,17 +48,17 @@ namespace FingerprintAnalyzer
 
             if (Probe.Contrast)
             {
-                float[,] contrast = BlockFiller.FillCornerAreas(PixelFormat.ToFloat(Logs.Probe.BlockContrast), Logs.Probe.Blocks);
+                float[,] contrast = BlockFiller.FillBlocks(PixelFormat.ToFloat(Logs.Probe.BlockContrast), Logs.Probe.Blocks);
                 AlphaLayering.Layer(output, ScalarColoring.Interpolate(contrast, TransparentRed, TransparentGreen));
             }
             if (Probe.AbsoluteContrast)
             {
-                BinaryMap scaled = BlockFiller.FillCornerAreas(Logs.Probe.AbsoluteContrast, Logs.Probe.Blocks);
+                BinaryMap scaled = BlockFiller.FillBlocks(Logs.Probe.AbsoluteContrast, Logs.Probe.Blocks);
                 AlphaLayering.Layer(output, ScalarColoring.Mask(scaled, ColorF.Transparent, TransparentRed));
             }
             if (Probe.RelativeContrast)
             {
-                BinaryMap scaled = BlockFiller.FillCornerAreas(Logs.Probe.RelativeContrast, Logs.Probe.Blocks);
+                BinaryMap scaled = BlockFiller.FillBlocks(Logs.Probe.RelativeContrast, Logs.Probe.Blocks);
                 AlphaLayering.Layer(output, ScalarColoring.Mask(scaled, ColorF.Transparent, TransparentRed));
             }
 

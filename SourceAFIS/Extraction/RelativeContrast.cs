@@ -22,17 +22,17 @@ namespace SourceAFIS.Extraction
             sortedContrast.Sort();
             sortedContrast.Reverse();
 
-            int sampleCount = SampleSize / (Calc.GetArea(blocks.PixelCount) / Calc.GetArea(blocks.CornerCount));
-            sampleCount = Math.Min(sortedContrast.Count, sampleCount);
-            int consideredCorners = Math.Max(Convert.ToInt32(sampleCount * SampleFraction), 1);
+            int pixelsPerBlock = Calc.GetArea(blocks.PixelCount) / blocks.BlockRect.TotalArea;
+            int sampleCount = Math.Min(sortedContrast.Count, SampleSize / pixelsPerBlock);
+            int consideredBlocks = Math.Max(Convert.ToInt32(sampleCount * SampleFraction), 1);
             
             int averageContrast = 0;
-            for (int i = 0; i < consideredCorners; ++i)
+            for (int i = 0; i < consideredBlocks; ++i)
                 averageContrast += sortedContrast[i];
-            averageContrast /= consideredCorners;
+            averageContrast /= consideredBlocks;
             byte limit = Convert.ToByte(averageContrast * RelativeLimit);
 
-            BinaryMap result = new BinaryMap(blocks.CornerCount.Width, blocks.CornerCount.Height);
+            BinaryMap result = new BinaryMap(blocks.BlockCount.Width, blocks.BlockCount.Height);
             for (int y = 0; y < result.Height; ++y)
                 for (int x = 0; x < result.Width; ++x)
                     if (contrast[y, x] < limit)

@@ -37,7 +37,7 @@ namespace SourceAFIS.Extraction
                 Logger.Log(this, "BlockMap", blocks);
 
                 short[, ,] histogram = Histogram.Analyze(blocks, image);
-                short[, ,] smoothHistogram = Histogram.Smooth(blocks, histogram);
+                short[, ,] smoothHistogram = Histogram.SmoothAroundCorners(blocks, histogram);
 
                 byte[,] contrast = Contrast.Compute(blocks, histogram);
                 BinaryMap absolutContrastLow = AbsoluteContrast.DetectLowContrast(contrast);
