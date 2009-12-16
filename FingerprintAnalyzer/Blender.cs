@@ -20,6 +20,7 @@ namespace FingerprintAnalyzer
             public bool RelativeContrast;
             public bool LowContrastMajority;
             public bool SegmentationMask;
+            public bool Orientation;
         }
 
         public ExtractionOptions Probe;
@@ -49,14 +50,16 @@ namespace FingerprintAnalyzer
                         output[y, x] = new ColorF(1, 1, 1, 1);
             }
 
-            if (Probe.Contrast)
-            {
-                float[,] contrast = BlockFiller.FillBlocks(PixelFormat.ToFloat(Logs.Probe.BlockContrast), Logs.Probe.Blocks);
-                AlphaLayering.Layer(output, ScalarColoring.Interpolate(contrast, TransparentRed, TransparentGreen));
-            }
+            LayerBlocks(Probe.Contrast, output, PixelFormat.ToFloat(Logs.Probe.BlockContrast));
             LayerMask(Probe.AbsoluteContrast, output, Logs.Probe.AbsoluteContrast, TransparentRed);
             LayerMask(Probe.RelativeContrast, output, Logs.Probe.RelativeContrast, TransparentRed);
             LayerMask(Probe.LowContrastMajority, output, Logs.Probe.LowContrastMajority, TransparentRed);
+
+            if (Probe.Orientation)
+            {
+                BinaryMap markers = OrientationMarkers.Draw(Logs.Probe.Orientation, Logs.Probe.Blocks, Logs.Probe.SegmentationMask);
+                AlphaLayering.Layer(output, ScalarColoring.Mask(markers, ColorF.Transparent, ColorF.Red));
+            }
 
             Logs.Probe.SegmentationMask.Invert();
             LayerMask(Probe.SegmentationMask, output, Logs.Probe.SegmentationMask, LightFog);
@@ -70,6 +73,16 @@ namespace FingerprintAnalyzer
             {
                 BinaryMap scaled = BlockFiller.FillBlocks(mask, Logs.Probe.Blocks);
                 AlphaLayering.Layer(output, ScalarColoring.Mask(scaled, ColorF.Transparent, color));
+            }
+        }
+
+        void LayerBlocks(bool condition, ColorF[,] output, float[,] data)
+        {
+            if (condition)
+            {
+                GlobalContrast.Normalize(data);
+                float[,] scaled = BlockFiller.FillBlocks(data, Logs.Probe.Blocks);
+                AlphaLayering.Layer(output, ScalarColoring.Interpolate(scaled, TransparentRed, TransparentGreen));
             }
         }
     }

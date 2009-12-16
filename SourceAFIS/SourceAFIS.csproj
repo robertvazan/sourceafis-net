@@ -39,11 +39,13 @@
     <Compile Include="Extraction\AbsoluteContrast.cs" />
     <Compile Include="Extraction\ClippedContrast.cs" />
     <Compile Include="Extraction\Extractor.cs" />
+    <Compile Include="Extraction\HillOrientation.cs" />
     <Compile Include="Extraction\LocalHistogram.cs" />
     <Compile Include="Extraction\Equalizer.cs" />
     <Compile Include="Extraction\RelativeContrast.cs" />
     <Compile Include="Extraction\SegmentationMask.cs" />
     <Compile Include="Extraction\VotingFilter.cs" />
+    <Compile Include="General\Angle.cs" />
     <Compile Include="General\BinaryMap.cs" />
     <Compile Include="General\BlockMap.cs" />
     <Compile Include="General\Calc.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="General\RectangleC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Visualization\ColorF.cs" />
+    <Compile Include="Visualization\OrientationMarkers.cs" />
     <Compile Include="Visualization\PixelFormat.cs" />
     <Compile Include="Visualization\ScalarColoring.cs" />
   </ItemGroup>

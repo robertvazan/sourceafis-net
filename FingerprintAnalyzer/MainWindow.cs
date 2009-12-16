@@ -107,7 +107,9 @@ namespace FingerprintAnalyzer
                     CreateCheckMenu("Absolute Contrast", delegate() { return SwitchFlag(ref Blender.Probe.AbsoluteContrast); }),
                     CreateCheckMenu("Relative Contrast", delegate() { return SwitchFlag(ref Blender.Probe.RelativeContrast); }),
                     CreateCheckMenu("Majority Filter", delegate() { return SwitchFlag(ref Blender.Probe.LowContrastMajority); }),
-                    CreateCheckMenu("Mask", delegate() { return SwitchFlag(ref Blender.Probe.SegmentationMask); })
+                    CreateCheckMenu("Mask", delegate() { return SwitchFlag(ref Blender.Probe.SegmentationMask); }),
+                    new ToolStripSeparator(),
+                    CreateCheckMenu("Orientation", delegate() { return SwitchFlag(ref Blender.Probe.Orientation); })
                 })
             };
         }

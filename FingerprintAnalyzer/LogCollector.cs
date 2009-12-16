@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.Extraction;
 using SourceAFIS.General;
+using SourceAFIS.Visualization;
 
 namespace FingerprintAnalyzer
 {
@@ -17,6 +18,7 @@ namespace FingerprintAnalyzer
             public BinaryMap RelativeContrast;
             public BinaryMap LowContrastMajority;
             public BinaryMap SegmentationMask;
+            public byte[,] Orientation;
             public float[,] Equalized;
         }
 
@@ -40,6 +42,7 @@ namespace FingerprintAnalyzer
             Probe.LowContrastMajority = Logger.Retrieve<BinaryMap>("Extractor.Mask.LowContrastMajority");
             Probe.SegmentationMask = Logger.Retrieve<BinaryMap>("Extractor.Mask");
             Probe.Equalized = Logger.Retrieve<float[,]>("Extractor.Equalizer");
+            Probe.Orientation = Logger.Retrieve<byte[,]>("Extractor.Orientation");
             Logger.Clear();
         }
     }
