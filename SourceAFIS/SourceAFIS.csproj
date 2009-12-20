@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="Extraction\AbsoluteContrast.cs" />
     <Compile Include="Extraction\ClippedContrast.cs" />
+    <Compile Include="Extraction\CrossRemover.cs" />
     <Compile Include="Extraction\Extractor.cs" />
     <Compile Include="Extraction\HillOrientation.cs" />
     <Compile Include="Extraction\LinesByOrientation.cs" />

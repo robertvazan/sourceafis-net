@@ -11,7 +11,14 @@ namespace FingerprintAnalyzer
     {
         public LogCollector Logs;
 
-        public struct ExtractionOptions
+        public sealed class SkeletonOptions
+        {
+            public bool Binarized;
+            public bool Thinned;
+            public bool RemovedCrosses;
+        }
+
+        public sealed class ExtractionOptions
         {
             public bool OriginalImage;
             public bool Equalized;
@@ -26,9 +33,11 @@ namespace FingerprintAnalyzer
             public bool SegmentationMask;
             public bool Orientation;
             public bool Thinned;
+            public SkeletonOptions Ridges = new SkeletonOptions();
+            public SkeletonOptions Valleys = new SkeletonOptions();
         }
 
-        public ExtractionOptions Probe;
+        public ExtractionOptions Probe = new ExtractionOptions();
 
         public Bitmap OutputImage;
 
@@ -91,11 +100,27 @@ namespace FingerprintAnalyzer
 
             if (Probe.Thinned)
             {
-                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.ThinValleys, ColorF.Transparent, ColorF.Red));
-                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.ThinRidges, ColorF.Transparent, ColorF.Green));
+                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.Valleys.Thinned, ColorF.Transparent, ColorF.Red));
+                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.Ridges.Thinned, ColorF.Transparent, ColorF.Green));
             }
 
+            RenderSkeleton(output, Probe.Ridges, Logs.Probe.Ridges);
+            RenderSkeleton(output, Probe.Valleys, Logs.Probe.Valleys);
+
             OutputImage = ImageIO.CreateBitmap(PixelFormat.ToColorB(output));
+        }
+
+        void RenderSkeleton(ColorF[,] output, SkeletonOptions options, LogCollector.SkeletonData logs)
+        {
+            if (options.Binarized)
+                AlphaLayering.Layer(output, ScalarColoring.Mask(logs.Binarized, ColorF.White, ColorF.Black));
+            if (options.RemovedCrosses)
+            {
+                logs.RemovedCrosses.AndNot(logs.Binarized);
+                AlphaLayering.Layer(output, ScalarColoring.Mask(logs.RemovedCrosses, ColorF.Transparent, ColorF.Green));
+            }
+            if (options.Thinned)
+                AlphaLayering.Layer(output, ScalarColoring.Mask(logs.Thinned, ColorF.Transparent, options.Binarized ? ColorF.Green : ColorF.Black));
         }
 
         ColorF[,] BaseGrayscale(float[,] image)

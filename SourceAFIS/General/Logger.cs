@@ -8,11 +8,15 @@ namespace SourceAFIS.General
     public sealed class Logger
     {
         public delegate bool PathFilter(string path);
+        public delegate void Task();
 
         public static ObjectTree Resolver = new ObjectTree();
         public static PathFilter Filter = delegate(string path) { return false; };
 
         static Dictionary<string, List<object>> History = new Dictionary<string, List<object>>();
+
+        [ThreadStatic]
+        static string ThreadName;
 
         public static void Clear()
         {
@@ -44,16 +48,37 @@ namespace SourceAFIS.General
             }
         }
 
+        static string GetThreadName()
+        {
+            if (ThreadName != null)
+                return "[" + ThreadName + "]";
+            else
+                return "";
+        }
+
         public static void Log(object source, object data)
         {
             if (Resolver.Contains(source))
-                Log(Resolver.GetPath(source), data);
+                Log(Resolver.GetPath(source) + GetThreadName(), data);
         }
 
         public static void Log(object source, string part, object data)
         {
             if (Resolver.Contains(source))
-                Log(Resolver.GetPath(source) + "." + part, data);
+                Log(Resolver.GetPath(source) + "." + part + GetThreadName(), data);
+        }
+
+        public static void RunInContext(string name, Task task)
+        {
+            ThreadName = name;
+            try
+            {
+                task();
+            }
+            finally
+            {
+                ThreadName = null;
+            }
         }
     }
 }
