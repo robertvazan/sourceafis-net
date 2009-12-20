@@ -11,7 +11,7 @@ namespace SourceAFIS.General
         public readonly int Width;
         public readonly int Height;
         public Size Size { get { return new Size(Width, Height); } }
-        public RectangleC Rect { get { return new RectangleC(new Point(0, 0), Size); } }
+        public RectangleC Rect { get { return new RectangleC(Size); } }
 
         public const int WordShift = 5;
         public const uint WordMask = 31;
