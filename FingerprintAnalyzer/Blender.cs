@@ -18,6 +18,7 @@ namespace FingerprintAnalyzer
             public bool SmoothedRidges;
             public bool OrthogonalSmoothing;
             public bool Binarized;
+            public bool BinarySmoothing;
             public bool Contrast;
             public bool AbsoluteContrast;
             public bool RelativeContrast;
@@ -64,6 +65,13 @@ namespace FingerprintAnalyzer
                 }
                 else
                     AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.Binarized, ColorF.Transparent, TransparentGreen));
+            }
+            if (Probe.BinarySmoothing)
+            {
+                Logs.Probe.BinarySmoothingZeroes.And(Logs.Probe.Binarized);
+                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.BinarySmoothingZeroes, ColorF.Transparent, ColorF.Red));
+                Logs.Probe.BinarySmoothingOnes.AndNot(Logs.Probe.Binarized);
+                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.BinarySmoothingOnes, ColorF.Transparent, ColorF.Green));
             }
 
             LayerBlocks(Probe.Contrast, output, PixelFormat.ToFloat(Logs.Probe.BlockContrast));

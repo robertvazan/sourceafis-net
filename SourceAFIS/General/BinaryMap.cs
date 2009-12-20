@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace SourceAFIS.General
 {
-    public sealed class BinaryMap
+    public sealed class BinaryMap : ICloneable
     {
         public readonly int WordWidth;
         public readonly int Width;
@@ -43,6 +43,11 @@ namespace SourceAFIS.General
                     Map[y, x] = other.Map[y, x];
         }
 
+        public object Clone()
+        {
+            return new BinaryMap(this);
+        }
+
         public bool IsWordNonZero(int xw, int y) { return Map[y, xw] != 0; }
         public bool GetBit(int x, int y) { return (Map[y, x >> WordShift] & (1u << (int)((uint)x & WordMask))) != 0; }
         public void SetBitOne(int x, int y) { Map[y, x >> WordShift] |= 1u << (int)((uint)x & WordMask); }
@@ -77,6 +82,18 @@ namespace SourceAFIS.General
             if (((uint)Width & WordMask) != 0u)
                 for (int y = 0; y < Map.GetLength(0); ++y)
                     Map[y, Map.GetLength(1) - 1] &= ~0u >> (WordSize - (int)((uint)Width & WordMask));
+        }
+
+        public BinaryMap GetInverted()
+        {
+            BinaryMap result = new BinaryMap(Size);
+            for (int y = 0; y < Map.GetLength(0); ++y)
+                for (int x = 0; x < Map.GetLength(1); ++x)
+                    result.Map[y, x] = ~Map[y, x];
+            if (((uint)Width & WordMask) != 0u)
+                for (int y = 0; y < Map.GetLength(0); ++y)
+                    result.Map[y, Map.GetLength(1) - 1] &= ~0u >> (WordSize - (int)((uint)Width & WordMask));
+            return result;
         }
 
         static void ShiftLeft(uint[] vector, int shift)
@@ -127,20 +144,23 @@ namespace SourceAFIS.General
 
         void Combine(BinaryMap source, Rectangle area, Point at, CombineFunction function)
         {
-            uint[] vector = new uint[(area.Width >> WordShift) + 2];
-            uint[] srcVector = new uint[vector.Length];
-            for (int y = 0; y < area.Height; ++y)
+            int shift = (int)((uint)area.X & WordMask) - (int)((uint)at.X & WordMask);
+            Threader.Split(area.Height, delegate(Range yRange)
             {
-                LoadLine(vector, new Point(at.X, at.Y + y), area.Width);
-                source.LoadLine(srcVector, new Point(area.X, area.Y + y), area.Width);
-                int shift = (int)((uint)area.X & WordMask) - (int)((uint)at.X & WordMask);
-                if (shift >= 0)
-                    ShiftLeft(srcVector, shift);
-                else
-                    ShiftRight(srcVector, -shift);
-                function(vector, srcVector);
-                SaveLine(vector, new Point(at.X, at.Y + y), area.Width);
-            }
+                uint[] vector = new uint[(area.Width >> WordShift) + 2];
+                uint[] srcVector = new uint[vector.Length];
+                for (int y = yRange.Begin; y < yRange.End; ++y)
+                {
+                    LoadLine(vector, new Point(at.X, at.Y + y), area.Width);
+                    source.LoadLine(srcVector, new Point(area.X, area.Y + y), area.Width);
+                    if (shift >= 0)
+                        ShiftLeft(srcVector, shift);
+                    else
+                        ShiftRight(srcVector, -shift);
+                    function(vector, srcVector);
+                    SaveLine(vector, new Point(at.X, at.Y + y), area.Width);
+                }
+            });
         }
 
         public void Copy(BinaryMap source)
@@ -150,17 +170,20 @@ namespace SourceAFIS.General
 
         public void Copy(BinaryMap source, Rectangle area, Point at)
         {
-            uint[] vector = new uint[(area.Width >> WordShift) + 2];
-            for (int y = 0; y < area.Height; ++y)
+            int shift = (int)((uint)area.X & WordMask) - (int)((uint)at.X & WordMask);
+            Threader.Split(area.Height, delegate(Range yRange)
             {
-                source.LoadLine(vector, new Point(area.X, area.Y + y), area.Width);
-                int shift = (int)((uint)area.X & WordMask) - (int)((uint)at.X & WordMask);
-                if (shift >= 0)
-                    ShiftLeft(vector, shift);
-                else
-                    ShiftRight(vector, -shift);
-                SaveLine(vector, new Point(at.X, at.Y + y), area.Width);
-            }
+                uint[] vector = new uint[(area.Width >> WordShift) + 2];
+                for (int y = yRange.Begin; y < yRange.End; ++y)
+                {
+                    source.LoadLine(vector, new Point(area.X, area.Y + y), area.Width);
+                    if (shift >= 0)
+                        ShiftLeft(vector, shift);
+                    else
+                        ShiftRight(vector, -shift);
+                    SaveLine(vector, new Point(at.X, at.Y + y), area.Width);
+                }
+            });
         }
 
         public void Or(BinaryMap source)

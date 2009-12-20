@@ -28,11 +28,15 @@ namespace SourceAFIS.Extraction
         public OrientedSmoother OrthogonalSmoother = new OrientedSmoother();
         [Nested]
         public ThresholdBinarizer Binarizer = new ThresholdBinarizer();
+        [Nested]
+        public VotingFilter BinarySmoother = new VotingFilter();
 
         public Extractor()
         {
             OrthogonalSmoother.AngleOffset = Angle.PIB;
             OrthogonalSmoother.Lines.Radius = 7;
+            BinarySmoother.Radius = 2;
+            BinarySmoother.Majority = 0.8f;
         }
 
         public void Extract(byte[,] invertedImage, int dpi)
@@ -52,7 +56,10 @@ namespace SourceAFIS.Extraction
                 byte[,] orientation = Orientation.Detect(equalized, mask, blocks);
                 float[,] smoothed = RidgeSmoother.Smooth(equalized, orientation, mask, blocks);
                 float[,] orthogonal = OrthogonalSmoother.Smooth(smoothed, orientation, mask, blocks);
+                
                 BinaryMap binary = Binarizer.Binarize(smoothed, orthogonal, mask, blocks);
+                binary.AndNot(BinarySmoother.Filter(binary.GetInverted()));
+                binary.Or(BinarySmoother.Filter(binary));
             });
         }
     }

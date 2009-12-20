@@ -113,7 +113,8 @@ namespace FingerprintAnalyzer
                     CreateCheckMenu("Orientation", delegate() { return SwitchFlag(ref Blender.Probe.Orientation); }),
                     CreateCheckMenu("Orthogonal Smoothing", delegate() { return SwitchFlag(ref Blender.Probe.OrthogonalSmoothing); }),
                     new ToolStripSeparator(),
-                    CreateCheckMenu("Binarized", delegate() { return SwitchFlag(ref Blender.Probe.Binarized); })
+                    CreateCheckMenu("Binarized", delegate() { return SwitchFlag(ref Blender.Probe.Binarized); }),
+                    CreateCheckMenu("Binary Smoothing", delegate() { return SwitchFlag(ref Blender.Probe.BinarySmoothing); })
                 })
             };
         }

@@ -23,6 +23,8 @@ namespace FingerprintAnalyzer
             public float[,] SmoothedRidges;
             public float[,] OrthogonalSmoothing;
             public BinaryMap Binarized;
+            public BinaryMap BinarySmoothingZeroes;
+            public BinaryMap BinarySmoothingOnes;
         }
 
         public ExtractionData Probe;
@@ -37,6 +39,7 @@ namespace FingerprintAnalyzer
 
         public void Collect()
         {
+            Logger.Clear();
             Extractor.Extract(Probe.InputImage, 500);
             Probe.Blocks = Logger.Retrieve<BlockMap>("Extractor.BlockMap");
             Probe.BlockContrast = Logger.Retrieve<byte[,]>("Extractor.Mask.Contrast");
@@ -49,6 +52,8 @@ namespace FingerprintAnalyzer
             Probe.SmoothedRidges = Logger.Retrieve<float[,]>("Extractor.RidgeSmoother");
             Probe.OrthogonalSmoothing = Logger.Retrieve<float[,]>("Extractor.OrthogonalSmoother");
             Probe.Binarized = Logger.Retrieve<BinaryMap>("Extractor.Binarizer");
+            Probe.BinarySmoothingZeroes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 0);
+            Probe.BinarySmoothingOnes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 1);
             Logger.Clear();
         }
     }
