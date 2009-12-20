@@ -46,6 +46,7 @@
     <Compile Include="Extraction\OrientedSmoother.cs" />
     <Compile Include="Extraction\RelativeContrast.cs" />
     <Compile Include="Extraction\SegmentationMask.cs" />
+    <Compile Include="Extraction\Thinner.cs" />
     <Compile Include="Extraction\ThresholdBinarizer.cs" />
     <Compile Include="Extraction\VotingFilter.cs" />
     <Compile Include="General\Angle.cs" />

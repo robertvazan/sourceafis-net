@@ -43,6 +43,14 @@ namespace SourceAFIS.General
             Height = size.Height;
         }
 
+        public RectangleC(int x, int y, int width, int height)
+        {
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
+        }
+
         public RectangleC(Point begin, Point end)
         {
             X = begin.X;

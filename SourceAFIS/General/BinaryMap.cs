@@ -74,6 +74,13 @@ namespace SourceAFIS.General
         public void SetBitZero(Point at) { SetBitZero(at.X, at.Y); }
         public bool GetBitSafe(Point at, bool defaultValue) { return GetBitSafe(at.X, at.Y, defaultValue); }
 
+        public void Clear()
+        {
+            for (int y = 0; y < Map.GetLength(0); ++y)
+                for (int x = 0; x < Map.GetLength(1); ++x)
+                    Map[y, x] = 0;
+        }
+
         public void Invert()
         {
             for (int y = 0; y < Map.GetLength(0); ++y)
@@ -142,7 +149,7 @@ namespace SourceAFIS.General
 
         delegate void CombineFunction(uint[] target, uint[] source);
 
-        void Combine(BinaryMap source, Rectangle area, Point at, CombineFunction function)
+        void Combine(BinaryMap source, RectangleC area, Point at, CombineFunction function)
         {
             int shift = (int)((uint)area.X & WordMask) - (int)((uint)at.X & WordMask);
             Threader.Split(area.Height, delegate(Range yRange)
@@ -165,10 +172,10 @@ namespace SourceAFIS.General
 
         public void Copy(BinaryMap source)
         {
-            Copy(source, new Rectangle(0, 0, Width, Height), new Point(0, 0));
+            Copy(source, Rect, new Point());
         }
 
-        public void Copy(BinaryMap source, Rectangle area, Point at)
+        public void Copy(BinaryMap source, RectangleC area, Point at)
         {
             int shift = (int)((uint)area.X & WordMask) - (int)((uint)at.X & WordMask);
             Threader.Split(area.Height, delegate(Range yRange)
@@ -188,10 +195,10 @@ namespace SourceAFIS.General
 
         public void Or(BinaryMap source)
         {
-            Or(source, new Rectangle(0, 0, Width, Height), new Point(0, 0));
+            Or(source, Rect, new Point());
         }
 
-        public void Or(BinaryMap source, Rectangle area, Point at)
+        public void Or(BinaryMap source, RectangleC area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -202,10 +209,10 @@ namespace SourceAFIS.General
 
         public void And(BinaryMap source)
         {
-            And(source, new Rectangle(0, 0, Width, Height), new Point(0, 0));
+            And(source, Rect, new Point());
         }
 
-        public void And(BinaryMap source, Rectangle area, Point at)
+        public void And(BinaryMap source, RectangleC area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -216,10 +223,10 @@ namespace SourceAFIS.General
 
         public void Xor(BinaryMap source)
         {
-            Xor(source, new Rectangle(0, 0, Width, Height), new Point(0, 0));
+            Xor(source, Rect, new Point());
         }
 
-        public void Xor(BinaryMap source, Rectangle area, Point at)
+        public void Xor(BinaryMap source, RectangleC area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -230,10 +237,10 @@ namespace SourceAFIS.General
 
         public void OrNot(BinaryMap source)
         {
-            OrNot(source, new Rectangle(0, 0, Width, Height), new Point(0, 0));
+            OrNot(source, Rect, new Point());
         }
 
-        public void OrNot(BinaryMap source, Rectangle area, Point at)
+        public void OrNot(BinaryMap source, RectangleC area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -244,16 +251,93 @@ namespace SourceAFIS.General
 
         public void AndNot(BinaryMap source)
         {
-            AndNot(source, new Rectangle(0, 0, Width, Height), new Point(0, 0));
+            AndNot(source, Rect, new Point());
         }
 
-        public void AndNot(BinaryMap source, Rectangle area, Point at)
+        public void AndNot(BinaryMap source, RectangleC area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
                 for (int i = 0; i < target.Length; ++i)
                     target[i] &= ~srcVector[i];
             });
+        }
+
+        public uint GetNeighborhood(int x, int y)
+        {
+            if ((x & WordMask) >= 1 && (x & WordMask) <= 30)
+            {
+                int xWord = x >> WordShift;
+                int shift = (int)((uint)(x - 1) & WordMask);
+                return ((Map[y + 1, xWord] >> shift) & 7u)
+                    | (((Map[y, xWord] >> shift) & 1u) << 3)
+                    | (((Map[y, xWord] >> shift) & 4u) << 2)
+                    | (((Map[y - 1, xWord] >> shift) & 7u) << 5);
+            }
+            else
+            {
+                uint mask = 0;
+                if (GetBit(x - 1, y + 1))
+                    mask |= 1;
+                if (GetBit(x, y + 1))
+                    mask |= 2;
+                if (GetBit(x + 1, y + 1))
+                    mask |= 4;
+                if (GetBit(x - 1, y))
+                    mask |= 8;
+                if (GetBit(x + 1, y))
+                    mask |= 16;
+                if (GetBit(x - 1, y - 1))
+                    mask |= 32;
+                if (GetBit(x, y - 1))
+                    mask |= 64;
+                if (GetBit(x + 1, y - 1))
+                    mask |= 128;
+                return mask;
+            }
+        }
+
+        public void Fill(RectangleC rect)
+        {
+            if (rect.Width > 0)
+            {
+                int initialWord = (int)((uint)rect.Left >> WordShift);
+                int finalWord = (rect.Right - 1) >> WordShift;
+                int initialShift = (int)((uint)rect.Left & WordMask);
+                int finalShift = 32 - (int)((uint)rect.Right & WordMask);
+                for (int xw = initialWord; xw <= finalWord; ++xw)
+                {
+                    uint mask = ~0u;
+                    if (xw == initialWord && initialShift != 0)
+                        mask = mask << initialShift;
+                    if (xw == finalWord && finalShift != WordSize)
+                        mask = (mask << finalShift) >> finalShift;
+                    for (int y = rect.Bottom; y < rect.Top; ++y)
+                        Map[y, xw] |= mask;
+                }
+            }
+        }
+
+        public BinaryMap FillBlocks(BlockMap blocks)
+        {
+            BinaryMap result = new BinaryMap(blocks.PixelCount);
+            Threader.SplitY(blocks.BlockCount, delegate(Point block)
+            {
+                if (GetBit(block))
+                    result.Fill(blocks.BlockAreas[block]);
+            });
+            return result;
+        }
+
+        public BinaryMap FillCornerAreas(BlockMap blocks)
+        {
+            BinaryMap result = new BinaryMap(blocks.PixelCount);
+            Threader.SplitY(blocks.CornerCount, delegate(Point corner)
+            {
+                if (GetBit(corner))
+                    result.Fill(blocks.CornerAreas[corner]);
+            });
+            return result;
         }
     }
 }

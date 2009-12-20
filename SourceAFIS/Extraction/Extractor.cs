@@ -30,6 +30,8 @@ namespace SourceAFIS.Extraction
         public ThresholdBinarizer Binarizer = new ThresholdBinarizer();
         [Nested]
         public VotingFilter BinarySmoother = new VotingFilter();
+        [Nested]
+        public Thinner Thinner = new Thinner();
 
         public Extractor()
         {
@@ -60,6 +62,11 @@ namespace SourceAFIS.Extraction
                 BinaryMap binary = Binarizer.Binarize(smoothed, orthogonal, mask, blocks);
                 binary.AndNot(BinarySmoother.Filter(binary.GetInverted()));
                 binary.Or(BinarySmoother.Filter(binary));
+
+                BinaryMap ridges = Thinner.Thin(binary);
+                BinaryMap inverted = binary.GetInverted();
+                inverted.And(mask.FillBlocks(blocks));
+                BinaryMap valleys = Thinner.Thin(inverted);
             });
         }
     }

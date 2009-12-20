@@ -12,6 +12,28 @@ namespace SourceAFIS.General
             return (input + divider - 1) / divider;
         }
 
+        public static int CountBits(int value)
+        {
+            int count = 0;
+            while (value != 0)
+            {
+                ++count;
+                value &= value - 1;
+            }
+            return count;
+        }
+
+        public static int CountBits(uint value)
+        {
+            int count = 0;
+            while (value != 0)
+            {
+                ++count;
+                value &= value - 1;
+            }
+            return count;
+        }
+
         public static int Sq(int value)
         {
             return value * value;
