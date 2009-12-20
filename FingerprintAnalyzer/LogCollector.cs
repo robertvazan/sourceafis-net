@@ -18,8 +18,9 @@ namespace FingerprintAnalyzer
             public BinaryMap RelativeContrast;
             public BinaryMap LowContrastMajority;
             public BinaryMap SegmentationMask;
-            public byte[,] Orientation;
             public float[,] Equalized;
+            public byte[,] Orientation;
+            public float[,] SmoothedRidges;
         }
 
         public ExtractionData Probe;
@@ -43,6 +44,7 @@ namespace FingerprintAnalyzer
             Probe.SegmentationMask = Logger.Retrieve<BinaryMap>("Extractor.Mask");
             Probe.Equalized = Logger.Retrieve<float[,]>("Extractor.Equalizer");
             Probe.Orientation = Logger.Retrieve<byte[,]>("Extractor.Orientation");
+            Probe.SmoothedRidges = Logger.Retrieve<float[,]>("Extractor.RidgeSmoother");
             Logger.Clear();
         }
     }

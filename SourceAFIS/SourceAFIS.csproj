@@ -40,8 +40,10 @@
     <Compile Include="Extraction\ClippedContrast.cs" />
     <Compile Include="Extraction\Extractor.cs" />
     <Compile Include="Extraction\HillOrientation.cs" />
+    <Compile Include="Extraction\LinesByOrientation.cs" />
     <Compile Include="Extraction\LocalHistogram.cs" />
     <Compile Include="Extraction\Equalizer.cs" />
+    <Compile Include="Extraction\OrientedSmoother.cs" />
     <Compile Include="Extraction\RelativeContrast.cs" />
     <Compile Include="Extraction\SegmentationMask.cs" />
     <Compile Include="Extraction\VotingFilter.cs" />

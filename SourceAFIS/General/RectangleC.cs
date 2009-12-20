@@ -19,8 +19,18 @@ namespace SourceAFIS.General
         public int Right { get { return X + Width; } set { Width = value - X; } }
         public int Top { get { return Y + Height; } set { Height = value - Y; } }
 
+        public Point BottomLeft { get { return new Point(Left, Bottom); } set { Left = value.X; Bottom = value.Y; } }
+
         public Point Center { get { return new Point((Right + Left) / 2, (Bottom + Top) / 2); } }
         public int TotalArea { get { return Width * Height; } }
+
+        public RectangleC(RectangleC other)
+        {
+            X = other.X;
+            Y = other.Y;
+            Width = other.Width;
+            Height = other.Height;
+        }
 
         public RectangleC(Point at, Size size)
         {
@@ -68,6 +78,30 @@ namespace SourceAFIS.General
         {
             Point relative = GetRelative(absolute);
             return new PointF(relative.X / (float)Width, relative.Y / (float)Height);
+        }
+
+        public void Shift(Point relative)
+        {
+            BottomLeft = Calc.Add(BottomLeft, relative);
+        }
+
+        public RectangleC GetShifted(Point relative)
+        {
+            RectangleC result = new RectangleC(this);
+            result.Shift(relative);
+            return result;
+        }
+
+        public void Clip(RectangleC other)
+        {
+            if (Left < other.Left)
+                Left = other.Left;
+            if (Right > other.Right)
+                Right = other.Right;
+            if (Bottom < other.Bottom)
+                Bottom = other.Bottom;
+            if (Top > other.Top)
+                Top = other.Top;
         }
 
         sealed class RectEnumerator : IEnumerator<Point>

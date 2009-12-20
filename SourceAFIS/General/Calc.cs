@@ -54,6 +54,16 @@ namespace SourceAFIS.General
             return left + new SizeF(right);
         }
 
+        public static Point Difference(Point left, Point right)
+        {
+            return left - new Size(right);
+        }
+
+        public static Point Negate(Point point)
+        {
+            return new Point(-point.X, -point.Y);
+        }
+
         public static PointF Multiply(float scale, PointF point)
         {
             return new PointF(scale * point.X, scale * point.Y);
@@ -112,6 +122,11 @@ namespace SourceAFIS.General
                 return first;
             else
                 return second;
+        }
+
+        public static int CompareYX(Point left, Point right)
+        {
+            return ChainCompare(Compare(left.Y, right.Y), Compare(left.X, right.X));
         }
     }
 }

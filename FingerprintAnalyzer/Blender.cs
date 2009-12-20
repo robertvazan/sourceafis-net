@@ -15,6 +15,7 @@ namespace FingerprintAnalyzer
         {
             public bool OriginalImage;
             public bool Equalized;
+            public bool SmoothedRidges;
             public bool Contrast;
             public bool AbsoluteContrast;
             public bool RelativeContrast;
@@ -34,12 +35,10 @@ namespace FingerprintAnalyzer
         public void Blend()
         {
             ColorF[,] output;
-            if (Probe.Equalized)
-            {
-                GrayscaleInverter.Invert(Logs.Probe.Equalized);
-                GlobalContrast.Normalize(Logs.Probe.Equalized);
-                output = PixelFormat.ToColorF(Logs.Probe.Equalized);
-            }
+            if (Probe.SmoothedRidges)
+                output = BaseGrayscale(Logs.Probe.SmoothedRidges);
+            else if (Probe.Equalized)
+                output = BaseGrayscale(Logs.Probe.Equalized);
             else if (Probe.OriginalImage)
                 output = PixelFormat.ToColorF(Logs.Probe.InputImage);
             else
@@ -65,6 +64,13 @@ namespace FingerprintAnalyzer
             LayerMask(Probe.SegmentationMask, output, Logs.Probe.SegmentationMask, LightFog);
 
             OutputImage = ImageIO.CreateBitmap(PixelFormat.ToColorB(output));
+        }
+
+        ColorF[,] BaseGrayscale(float[,] image)
+        {
+            GrayscaleInverter.Invert(image);
+            GlobalContrast.Normalize(image);
+            return PixelFormat.ToColorF(image);
         }
 
         void LayerMask(bool condition, ColorF[,] output, BinaryMap mask, ColorF color)

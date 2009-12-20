@@ -22,6 +22,8 @@ namespace SourceAFIS.Extraction
         public Equalizer Equalizer = new Equalizer();
         [Nested]
         public HillOrientation Orientation = new HillOrientation();
+        [Nested]
+        public OrientedSmoother RidgeSmoother = new OrientedSmoother();
 
         public void Extract(byte[,] invertedImage, int dpi)
         {
@@ -39,6 +41,8 @@ namespace SourceAFIS.Extraction
 
                 float[,] equalized = Equalizer.Equalize(blocks, image, smoothHistogram, mask);
                 byte[,] orientation = Orientation.Detect(equalized, mask, blocks);
+
+                float[,] smoothed = RidgeSmoother.Smooth(equalized, orientation, mask, blocks);
             });
         }
     }
