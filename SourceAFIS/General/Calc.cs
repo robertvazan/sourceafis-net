@@ -79,6 +79,11 @@ namespace SourceAFIS.General
             return Sq(point.X) + Sq(point.Y);
         }
 
+        public static int DistanceSq(Point point)
+        {
+            return Sq(point.X) + Sq(point.Y);
+        }
+
         public static int GetArea(Size size)
         {
             return size.Width * size.Height;

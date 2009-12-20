@@ -12,7 +12,7 @@ namespace SourceAFIS.General
         public static ObjectTree Resolver = new ObjectTree();
         public static PathFilter Filter = delegate(string path) { return false; };
 
-        static Dictionary<string, object> History = new Dictionary<string, object>();
+        static Dictionary<string, List<object>> History = new Dictionary<string, List<object>>();
 
         public static void Clear()
         {
@@ -21,17 +21,26 @@ namespace SourceAFIS.General
 
         public static T Retrieve<T>(string path)
         {
-            return (T)History[path];
+            return Retrieve<T>(path, 0);
+        }
+
+        public static T Retrieve<T>(string path, int index)
+        {
+            return (T)History[path][index];
         }
 
         public static void Log(string path, object data)
         {
             if (Filter(path))
             {
+                object logged;
                 if (data is ICloneable)
-                    History[path] = ((ICloneable)data).Clone();
+                    logged = ((ICloneable)data).Clone();
                 else
-                    History[path] = data;
+                    logged = data;
+                if (!History.ContainsKey(path))
+                    History[path] = new List<object>();
+                History[path].Add(logged);
             }
         }
 

@@ -17,7 +17,8 @@ namespace SourceAFIS.Extraction
             RectangleC rect = new RectangleC(new Point(BorderDistance, BorderDistance),
                 new Size(input.Width - 2 * BorderDistance, input.Height - 2 * BorderDistance));
             BinaryMap output = new BinaryMap(input.Size);
-            for (int y = rect.Bottom; y < rect.Top; ++y)
+            Threader.Split(rect.RangeY, delegate(int y)
+            {
                 for (int x = rect.Left; x < rect.Right; ++x)
                 {
                     RectangleC neighborhood = new RectangleC(
@@ -34,6 +35,7 @@ namespace SourceAFIS.Extraction
                     if (ones * voteWeight >= Majority)
                         output.SetBitOne(x, y);
                 }
+            });
             Logger.Log(this, output);
             return output;
         }
