@@ -55,8 +55,8 @@ namespace SourceAFIS.General
                 Calc.DivRoundUp(PixelCount.Height, maxBlockSize));
             CornerCount = BlockToCornerCount(BlockCount);
 
-            AllBlocks = new RectangleC(new Point(0, 0), BlockCount);
-            AllCorners = new RectangleC(new Point(0, 0), CornerCount);
+            AllBlocks = new RectangleC(BlockCount);
+            AllCorners = new RectangleC(CornerCount);
 
             Corners = InitCorners();
             BlockAreas = new RectangleGrid(Corners);
