@@ -41,12 +41,7 @@ namespace SourceAFIS.Extraction
                     if (!neighbors.Exists(delegate(NeighborInfo info) { return info.Position == neighbor.Position; }))
                         neighbors.Add(neighbor);
                 }
-                neighbors.Sort(delegate(NeighborInfo left, NeighborInfo right)
-                {
-                    return Calc.ChainCompare(
-                        Calc.Compare(left.Position.Y, right.Position.Y),
-                        Calc.Compare(left.Position.X, right.Position.X));
-                });
+                neighbors.Sort(delegate(NeighborInfo left, NeighborInfo right) { return Calc.CompareYX(left.Position, right.Position); });
                 allSplits.Add(neighbors);
             }
             return allSplits;

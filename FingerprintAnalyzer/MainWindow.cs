@@ -102,6 +102,7 @@ namespace FingerprintAnalyzer
                 CreateSubMenu("Probe", new ToolStripItem[] {
                     CreateCheckMenu("Original Image", delegate() { return SwitchFlag(ref Blender.Probe.OriginalImage); }),
                     CreateCheckMenu("Equalized", delegate() { return SwitchFlag(ref Blender.Probe.Equalized); }),
+                    CreateCheckMenu("Smoothed", delegate() { return SwitchFlag(ref Blender.Probe.SmoothedRidges); }),
                     new ToolStripSeparator(),
                     CreateCheckMenu("Contrast", delegate() { return SwitchFlag(ref Blender.Probe.Contrast); }),
                     CreateCheckMenu("Absolute Contrast", delegate() { return SwitchFlag(ref Blender.Probe.AbsoluteContrast); }),
