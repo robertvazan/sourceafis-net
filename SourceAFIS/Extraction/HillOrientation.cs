@@ -69,7 +69,7 @@ namespace SourceAFIS.Extraction
             List<List<NeighborInfo>> neighbors = PrepareNeighbors();
 
             PointF[,] orientation = new PointF[input.GetLength(0), input.GetLength(1)];
-            Threader.Split(new Range(0, mask.Height), delegate(int blockY)
+            Threader.Split(mask.Height, delegate(int blockY)
             {
                 Range validMaskRange = GetMaskLineRange(mask, blockY);
                 if (validMaskRange.Length > 0)

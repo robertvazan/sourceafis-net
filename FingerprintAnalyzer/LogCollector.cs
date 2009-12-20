@@ -21,6 +21,8 @@ namespace FingerprintAnalyzer
             public float[,] Equalized;
             public byte[,] Orientation;
             public float[,] SmoothedRidges;
+            public float[,] OrthogonalSmoothing;
+            public BinaryMap Binarized;
         }
 
         public ExtractionData Probe;
@@ -45,6 +47,8 @@ namespace FingerprintAnalyzer
             Probe.Equalized = Logger.Retrieve<float[,]>("Extractor.Equalizer");
             Probe.Orientation = Logger.Retrieve<byte[,]>("Extractor.Orientation");
             Probe.SmoothedRidges = Logger.Retrieve<float[,]>("Extractor.RidgeSmoother");
+            Probe.OrthogonalSmoothing = Logger.Retrieve<float[,]>("Extractor.OrthogonalSmoother");
+            Probe.Binarized = Logger.Retrieve<BinaryMap>("Extractor.Binarizer");
             Logger.Clear();
         }
     }

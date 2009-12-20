@@ -21,7 +21,7 @@ namespace SourceAFIS.Extraction
             {
                 if (mask.GetBit(block))
                 {
-                    Point[] line = lines[Angle.Quantize(orientation[block.Y, block.X], lines.Length)];
+                    Point[] line = lines[Angle.Quantize(Angle.Add(orientation[block.Y, block.X], AngleOffset), lines.Length)];
                     foreach (Point linePoint in line)
                     {
                         RectangleC target = blocks.BlockAreas[block];

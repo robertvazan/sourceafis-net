@@ -24,6 +24,16 @@ namespace SourceAFIS.Extraction
         public HillOrientation Orientation = new HillOrientation();
         [Nested]
         public OrientedSmoother RidgeSmoother = new OrientedSmoother();
+        [Nested]
+        public OrientedSmoother OrthogonalSmoother = new OrientedSmoother();
+        [Nested]
+        public ThresholdBinarizer Binarizer = new ThresholdBinarizer();
+
+        public Extractor()
+        {
+            OrthogonalSmoother.AngleOffset = Angle.PIB;
+            OrthogonalSmoother.Lines.Radius = 7;
+        }
 
         public void Extract(byte[,] invertedImage, int dpi)
         {
@@ -36,13 +46,13 @@ namespace SourceAFIS.Extraction
 
                 short[, ,] histogram = Histogram.Analyze(blocks, image);
                 short[, ,] smoothHistogram = Histogram.SmoothAroundCorners(blocks, histogram);
-
                 BinaryMap mask = Mask.ComputeMask(blocks, histogram);
-
                 float[,] equalized = Equalizer.Equalize(blocks, image, smoothHistogram, mask);
-                byte[,] orientation = Orientation.Detect(equalized, mask, blocks);
 
+                byte[,] orientation = Orientation.Detect(equalized, mask, blocks);
                 float[,] smoothed = RidgeSmoother.Smooth(equalized, orientation, mask, blocks);
+                float[,] orthogonal = OrthogonalSmoother.Smooth(smoothed, orientation, mask, blocks);
+                BinaryMap binary = Binarizer.Binarize(smoothed, orthogonal, mask, blocks);
             });
         }
     }

@@ -15,6 +15,8 @@ namespace SourceAFIS.Visualization
         public static readonly ColorF Red = new ColorF(1, 0, 0, 1);
         public static readonly ColorF Green = new ColorF(0, 1, 0, 1);
         public static readonly ColorF Blue = new ColorF(0, 0, 1, 1);
+        public static readonly ColorF White = new ColorF(1, 1, 1, 1);
+        public static readonly ColorF Black = new ColorF(0, 0, 0, 1);
 
         public ColorF(float r, float g, float b, float a)
         {

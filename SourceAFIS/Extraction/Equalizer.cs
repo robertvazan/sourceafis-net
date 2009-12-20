@@ -12,7 +12,7 @@ namespace SourceAFIS.Extraction
         public float MaxScaling = 4f;
         public float MinScaling = 0.25f;
 
-        const float RangeMin = 0;
+        const float RangeMin = -1;
         const float RangeMax = 1;
         const float RangeSize = RangeMax - RangeMin;
 
