@@ -38,34 +38,12 @@ namespace SourceAFIS.Visualization
 
         public static BinaryMap FillBlocks(BinaryMap input, BlockMap blocks)
         {
-            BinaryMap output = new BinaryMap(blocks.PixelCount.Width, blocks.PixelCount.Height);
-            foreach (Point block in blocks.AllBlocks)
-            {
-                if (input.GetBit(block))
-                {
-                    RectangleC area = blocks.BlockAreas[block];
-                    for (int y = area.Bottom; y < area.Top; ++y)
-                        for (int x = area.Left; x < area.Right; ++x)
-                            output.SetBitOne(x, y);
-                }
-            }
-            return output;
+            return input.FillBlocks(blocks);
         }
 
         public static BinaryMap FillCornerAreas(BinaryMap input, BlockMap blocks)
         {
-            BinaryMap output = new BinaryMap(blocks.PixelCount.Width, blocks.PixelCount.Height);
-            foreach (Point corner in blocks.AllCorners)
-            {
-                if (input.GetBit(corner))
-                {
-                    RectangleC area = blocks.CornerAreas[corner];
-                    for (int y = area.Bottom; y < area.Top; ++y)
-                        for (int x = area.Left; x < area.Right; ++x)
-                            output.SetBitOne(x, y);
-                }
-            }
-            return output;
+            return input.FillCornerAreas(blocks);
         }
     }
 }

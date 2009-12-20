@@ -25,6 +25,8 @@ namespace FingerprintAnalyzer
             public BinaryMap Binarized;
             public BinaryMap BinarySmoothingZeroes;
             public BinaryMap BinarySmoothingOnes;
+            public BinaryMap ThinRidges;
+            public BinaryMap ThinValleys;
         }
 
         public ExtractionData Probe;
@@ -54,6 +56,8 @@ namespace FingerprintAnalyzer
             Probe.Binarized = Logger.Retrieve<BinaryMap>("Extractor.Binarizer");
             Probe.BinarySmoothingZeroes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 0);
             Probe.BinarySmoothingOnes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 1);
+            Probe.ThinRidges = Logger.Retrieve<BinaryMap>("Extractor.Thinner", 0);
+            Probe.ThinValleys = Logger.Retrieve<BinaryMap>("Extractor.Thinner", 1);
             Logger.Clear();
         }
     }

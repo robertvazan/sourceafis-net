@@ -25,6 +25,7 @@ namespace FingerprintAnalyzer
             public bool LowContrastMajority;
             public bool SegmentationMask;
             public bool Orientation;
+            public bool Thinned;
         }
 
         public ExtractionOptions Probe;
@@ -87,6 +88,12 @@ namespace FingerprintAnalyzer
 
             Logs.Probe.SegmentationMask.Invert();
             LayerMask(Probe.SegmentationMask, output, Logs.Probe.SegmentationMask, LightFog);
+
+            if (Probe.Thinned)
+            {
+                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.ThinValleys, ColorF.Transparent, ColorF.Red));
+                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.ThinRidges, ColorF.Transparent, ColorF.Green));
+            }
 
             OutputImage = ImageIO.CreateBitmap(PixelFormat.ToColorB(output));
         }
