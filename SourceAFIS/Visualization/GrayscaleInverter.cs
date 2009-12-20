@@ -9,7 +9,7 @@ namespace SourceAFIS.Visualization
     {
         public static void Invert(byte[,] image)
         {
-            Threader.Split(new Range(0, image.GetLength(0)), delegate(int y)
+            Threader.Split(image.GetLength(0), delegate(int y)
             {
                 for (int x = 0; x < image.GetLength(1); ++x)
                     image[y, x] = (byte)(255 - image[y, x]);
@@ -25,7 +25,7 @@ namespace SourceAFIS.Visualization
 
         public static void Invert(float[,] image)
         {
-            Threader.Split(new Range(0, image.GetLength(0)), delegate(int y)
+            Threader.Split(image.GetLength(0), delegate(int y)
             {
                 for (int x = 0; x < image.GetLength(1); ++x)
                     image[y, x] = -image[y, x];

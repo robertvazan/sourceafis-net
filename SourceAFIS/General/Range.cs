@@ -12,6 +12,12 @@ namespace SourceAFIS.General
             End = end;
         }
 
+        public Range(int length)
+        {
+            Begin = 0;
+            End = length;
+        }
+
         public int Length { get { return End - Begin; } }
 
         public int Begin;

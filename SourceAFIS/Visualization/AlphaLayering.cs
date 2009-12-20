@@ -9,7 +9,7 @@ namespace SourceAFIS.Visualization
     {
         public static void Layer(ColorF[,] bottom, ColorF[,] top)
         {
-            Threader.Split(new Range(0, bottom.GetLength(0)), delegate(int y)
+            Threader.Split(bottom.GetLength(0), delegate(int y)
             {
                 for (int x = 0; x < bottom.GetLength(1); ++x)
                 {

@@ -9,6 +9,7 @@ namespace SourceAFIS.General
     {
         public const float PI = (float)Math.PI;
         public const float PI2 = (float)(2 * Math.PI);
+        public const byte PIB = 128;
 
         public static float FromFraction(float fraction)
         {

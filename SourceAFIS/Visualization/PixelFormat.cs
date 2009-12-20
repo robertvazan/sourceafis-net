@@ -25,7 +25,7 @@ namespace SourceAFIS.Visualization
         public static byte[,] ToByte(ColorB[,] input)
         {
             byte[,] output = new byte[input.GetLength(0), input.GetLength(1)];
-            Threader.Split(new Range(0, input.GetLength(0)), delegate(int y)
+            Threader.Split(input.GetLength(0), delegate(int y)
             {
                 for (int x = 0; x < input.GetLength(1); ++x)
                     output[y, x] = ToByte(input[y, x]);
@@ -70,7 +70,7 @@ namespace SourceAFIS.Visualization
         public static ColorB[,] ToColorB(ColorF[,] input)
         {
             ColorB[,] output = new ColorB[input.GetLength(0), input.GetLength(1)];
-            Threader.Split(new Range(0, input.GetLength(0)), delegate(int y)
+            Threader.Split(input.GetLength(0), delegate(int y)
             {
                 for (int x = 0; x < input.GetLength(1); ++x)
                     output[y, x] = ToColorB(input[y, x]);

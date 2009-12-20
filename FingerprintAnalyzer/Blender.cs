@@ -16,6 +16,8 @@ namespace FingerprintAnalyzer
             public bool OriginalImage;
             public bool Equalized;
             public bool SmoothedRidges;
+            public bool OrthogonalSmoothing;
+            public bool Binarized;
             public bool Contrast;
             public bool AbsoluteContrast;
             public bool RelativeContrast;
@@ -35,7 +37,10 @@ namespace FingerprintAnalyzer
         public void Blend()
         {
             ColorF[,] output;
-            if (Probe.SmoothedRidges)
+            bool empty = false;
+            if (Probe.OrthogonalSmoothing)
+                output = BaseGrayscale(Logs.Probe.OrthogonalSmoothing);
+            else if (Probe.SmoothedRidges)
                 output = BaseGrayscale(Logs.Probe.SmoothedRidges);
             else if (Probe.Equalized)
                 output = BaseGrayscale(Logs.Probe.Equalized);
@@ -47,6 +52,18 @@ namespace FingerprintAnalyzer
                 for (int y = 0; y < output.GetLength(0); ++y)
                     for (int x = 0; x < output.GetLength(1); ++x)
                         output[y, x] = new ColorF(1, 1, 1, 1);
+                empty = true;
+            }
+
+            if (Probe.Binarized)
+            {
+                if (empty)
+                {
+                    output = ScalarColoring.Mask(Logs.Probe.Binarized, ColorF.White, ColorF.Black);
+                    empty = false;
+                }
+                else
+                    AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.Binarized, ColorF.Transparent, TransparentGreen));
             }
 
             LayerBlocks(Probe.Contrast, output, PixelFormat.ToFloat(Logs.Probe.BlockContrast));

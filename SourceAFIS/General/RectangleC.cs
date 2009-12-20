@@ -20,6 +20,9 @@ namespace SourceAFIS.General
         public int Top { get { return Y + Height; } set { Height = value - Y; } }
 
         public Point BottomLeft { get { return new Point(Left, Bottom); } set { Left = value.X; Bottom = value.Y; } }
+        
+        public Range RangeX { get { return new Range(Left, Right); } }
+        public Range RangeY { get { return new Range(Bottom, Top); } }
 
         public Point Center { get { return new Point((Right + Left) / 2, (Bottom + Top) / 2); } }
         public int TotalArea { get { return Width * Height; } }

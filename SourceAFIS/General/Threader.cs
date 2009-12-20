@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Drawing;
 
 namespace SourceAFIS.General
 {
@@ -77,6 +78,11 @@ namespace SourceAFIS.General
             Wait(tickets);
         }
 
+        public static void Split(int count, RangeFunction function)
+        {
+            Split(new Range(count), function);
+        }
+
         public static void Split(Range range, IterationFunction function)
         {
             Split(range, delegate(Range subrange)
@@ -86,12 +92,27 @@ namespace SourceAFIS.General
             });
         }
 
+        public static void Split(int count, IterationFunction function)
+        {
+            Split(new Range(count), function);
+        }
+
         public static void Split<T>(IList<T> list, ApplyFunction<T> function)
         {
-            Split(new Range(0, list.Count), delegate(Range subrange)
+            Split(list.Count, delegate(Range subrange)
             {
                 for (int i = subrange.Begin; i < subrange.End; ++i)
                     function(list[i]);
+            });
+        }
+
+        public static void SplitY(Size size, ApplyFunction<Point> function)
+        {
+            Split(size.Height, delegate(Range yRange)
+            {
+                for (int y = yRange.Begin; y < yRange.End; ++y)
+                    for (int x = 0; x < size.Width; ++x)
+                        function(new Point(x, y));
             });
         }
 
