@@ -32,6 +32,8 @@ namespace SourceAFIS.Extraction
         public VotingFilter BinarySmoother = new VotingFilter();
         [Nested]
         public Thinner Thinner = new Thinner();
+        [Nested]
+        public CrossRemover CrossRemover = new CrossRemover();
 
         public Extractor()
         {
@@ -62,11 +64,23 @@ namespace SourceAFIS.Extraction
                 BinaryMap binary = Binarizer.Binarize(smoothed, orthogonal, mask, blocks);
                 binary.AndNot(BinarySmoother.Filter(binary.GetInverted()));
                 binary.Or(BinarySmoother.Filter(binary));
-
-                BinaryMap ridges = Thinner.Thin(binary);
                 BinaryMap inverted = binary.GetInverted();
                 inverted.And(mask.FillBlocks(blocks));
-                BinaryMap valleys = Thinner.Thin(inverted);
+                
+                Threader.Ticket ridgeTicket = Threader.Schedule(delegate() { ProcessSkeleton("Ridges", binary); });
+                Threader.Ticket valleyTicket = Threader.Schedule(delegate() { ProcessSkeleton("Valleys", inverted); });
+                ridgeTicket.Wait();
+                valleyTicket.Wait();
+            });
+        }
+
+        void ProcessSkeleton(string name, BinaryMap binary)
+        {
+            Logger.RunInContext(name, delegate()
+            {
+                Logger.Log(this, "Binarized", binary);
+                CrossRemover.Remove(binary);
+                BinaryMap thinned = Thinner.Thin(binary);
             });
         }
     }

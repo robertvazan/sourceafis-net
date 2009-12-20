@@ -9,7 +9,14 @@ namespace FingerprintAnalyzer
 {
     sealed class LogCollector
     {
-        public struct ExtractionData
+        public sealed class SkeletonData
+        {
+            public BinaryMap Binarized;
+            public BinaryMap Thinned;
+            public BinaryMap RemovedCrosses;
+        }
+
+        public sealed class ExtractionData
         {
             public byte[,] InputImage;
             public BlockMap Blocks;
@@ -25,11 +32,11 @@ namespace FingerprintAnalyzer
             public BinaryMap Binarized;
             public BinaryMap BinarySmoothingZeroes;
             public BinaryMap BinarySmoothingOnes;
-            public BinaryMap ThinRidges;
-            public BinaryMap ThinValleys;
+            public SkeletonData Ridges = new SkeletonData();
+            public SkeletonData Valleys = new SkeletonData();
         }
 
-        public ExtractionData Probe;
+        public ExtractionData Probe = new ExtractionData();
 
         Extractor Extractor = new Extractor();
 
@@ -41,7 +48,6 @@ namespace FingerprintAnalyzer
 
         public void Collect()
         {
-            Logger.Clear();
             Extractor.Extract(Probe.InputImage, 500);
             Probe.Blocks = Logger.Retrieve<BlockMap>("Extractor.BlockMap");
             Probe.BlockContrast = Logger.Retrieve<byte[,]>("Extractor.Mask.Contrast");
@@ -56,9 +62,16 @@ namespace FingerprintAnalyzer
             Probe.Binarized = Logger.Retrieve<BinaryMap>("Extractor.Binarizer");
             Probe.BinarySmoothingZeroes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 0);
             Probe.BinarySmoothingOnes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 1);
-            Probe.ThinRidges = Logger.Retrieve<BinaryMap>("Extractor.Thinner", 0);
-            Probe.ThinValleys = Logger.Retrieve<BinaryMap>("Extractor.Thinner", 1);
+            CollectSkeleton("[Ridges]", Probe.Ridges);
+            CollectSkeleton("[Valleys]", Probe.Valleys);
             Logger.Clear();
+        }
+
+        void CollectSkeleton(string context, SkeletonData data)
+        {
+            data.Binarized = Logger.Retrieve<BinaryMap>("Extractor.Binarized" + context);
+            data.Thinned = Logger.Retrieve<BinaryMap>("Extractor.Thinner" + context);
+            data.RemovedCrosses = Logger.Retrieve<BinaryMap>("Extractor.CrossRemover" + context);
         }
     }
 }
