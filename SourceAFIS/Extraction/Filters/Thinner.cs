@@ -4,7 +4,7 @@ using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
 
-namespace SourceAFIS.Extraction
+namespace SourceAFIS.Extraction.Filters
 {
     public sealed class Thinner
     {

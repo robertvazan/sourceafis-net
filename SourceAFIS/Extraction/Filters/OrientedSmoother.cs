@@ -5,7 +5,7 @@ using System.Drawing;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 
-namespace SourceAFIS.Extraction
+namespace SourceAFIS.Extraction.Filters
 {
     public sealed class OrientedSmoother
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
 
-namespace SourceAFIS.Extraction
+namespace SourceAFIS.Extraction.Filters
 {
     public sealed class AbsoluteContrast
     {

@@ -5,6 +5,7 @@ using System.Drawing;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 using SourceAFIS.Visualization;
+using SourceAFIS.Extraction.Filters;
 
 namespace SourceAFIS.Extraction
 {

@@ -36,20 +36,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extraction\AbsoluteContrast.cs" />
-    <Compile Include="Extraction\ClippedContrast.cs" />
-    <Compile Include="Extraction\CrossRemover.cs" />
+    <Compile Include="Extraction\Filters\AbsoluteContrast.cs" />
+    <Compile Include="Extraction\Filters\ClippedContrast.cs" />
+    <Compile Include="Extraction\Filters\CrossRemover.cs" />
     <Compile Include="Extraction\Extractor.cs" />
-    <Compile Include="Extraction\HillOrientation.cs" />
-    <Compile Include="Extraction\LinesByOrientation.cs" />
-    <Compile Include="Extraction\LocalHistogram.cs" />
-    <Compile Include="Extraction\Equalizer.cs" />
-    <Compile Include="Extraction\OrientedSmoother.cs" />
-    <Compile Include="Extraction\RelativeContrast.cs" />
-    <Compile Include="Extraction\SegmentationMask.cs" />
-    <Compile Include="Extraction\Thinner.cs" />
-    <Compile Include="Extraction\ThresholdBinarizer.cs" />
-    <Compile Include="Extraction\VotingFilter.cs" />
+    <Compile Include="Extraction\Filters\HillOrientation.cs" />
+    <Compile Include="Extraction\Filters\LinesByOrientation.cs" />
+    <Compile Include="Extraction\Filters\LocalHistogram.cs" />
+    <Compile Include="Extraction\Filters\Equalizer.cs" />
+    <Compile Include="Extraction\Filters\OrientedSmoother.cs" />
+    <Compile Include="Extraction\Filters\RelativeContrast.cs" />
+    <Compile Include="Extraction\Filters\SegmentationMask.cs" />
+    <Compile Include="Extraction\Filters\Thinner.cs" />
+    <Compile Include="Extraction\Filters\ThresholdBinarizer.cs" />
+    <Compile Include="Extraction\Filters\VotingFilter.cs" />
     <Compile Include="General\Angle.cs" />
     <Compile Include="General\BinaryMap.cs" />
     <Compile Include="General\BlockMap.cs" />
