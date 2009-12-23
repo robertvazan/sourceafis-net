@@ -5,7 +5,7 @@ using System.Drawing;
 using SourceAFIS.General;
 using SourceAFIS.Visualization;
 
-namespace SourceAFIS.Extraction
+namespace SourceAFIS.Extraction.Filters
 {
     public sealed class Equalizer
     {
