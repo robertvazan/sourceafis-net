@@ -38,6 +38,17 @@ namespace SourceAFIS.Extraction.Filters
             return removable;
         }
 
+        static bool IsFalseEnding(BinaryMap binary, Point ending)
+        {
+            foreach (Point relativeNeighbor in Neighborhood.CornerNeighbors)
+            {
+                Point neighbor = Calc.Add(ending, relativeNeighbor);
+                if (binary.GetBit(neighbor))
+                    return Calc.CountBits(binary.GetNeighborhood(neighbor)) > 2;
+            }
+            return false;
+        }
+
         public BinaryMap Thin(BinaryMap input)
         {
             BinaryMap intermediate = new BinaryMap(input.Size);
@@ -48,29 +59,44 @@ namespace SourceAFIS.Extraction.Filters
             bool removedAnything = true;
             for (int i = 0; i < MaxIterations && removedAnything; ++i)
             {
-                border.Clear();
-                border.OrNot(intermediate, new RectangleC(1, 0, border.Width - 1, border.Height), new Point(0, 0));
-                border.OrNot(intermediate, new RectangleC(0, 0, border.Width - 1, border.Height), new Point(1, 0));
-                border.OrNot(intermediate, new RectangleC(0, 1, border.Width, border.Height - 1), new Point(0, 0));
-                border.OrNot(intermediate, new RectangleC(0, 0, border.Width, border.Height - 1), new Point(0, 1));
-                border.And(intermediate);
-                border.AndNot(skeleton);
-
                 removedAnything = false;
-                for (int y = 1; y < input.Height - 1; ++y)
-                    for (int xw = 0; xw < input.WordWidth; ++xw)
-                        if (border.IsWordNonZero(xw, y))
-                            for (int x = xw << BinaryMap.WordShift; x < (xw << BinaryMap.WordShift) + BinaryMap.WordSize; ++x)
-                                if (x > 0 && x < input.Width - 1 && border.GetBit(x, y))
-                                {
-                                    if (IsRemovable[intermediate.GetNeighborhood(x, y)])
+                for (int j = 0; j < 4; ++j)
+                {
+                    border.Copy(intermediate);
+                    switch (j)
+                    {
+                        case 0:
+                            border.AndNot(intermediate, new RectangleC(1, 0, border.Width - 1, border.Height), new Point(0, 0));
+                            break;
+                        case 1:
+                            border.AndNot(intermediate, new RectangleC(0, 0, border.Width - 1, border.Height), new Point(1, 0));
+                            break;
+                        case 2:
+                            border.AndNot(intermediate, new RectangleC(0, 1, border.Width, border.Height - 1), new Point(0, 0));
+                            break;
+                        case 3:
+                            border.AndNot(intermediate, new RectangleC(0, 0, border.Width, border.Height - 1), new Point(0, 1));
+                            break;
+                    }
+                    border.AndNot(skeleton);
+
+                    for (int y = 1; y < input.Height - 1; ++y)
+                        for (int xw = 0; xw < input.WordWidth; ++xw)
+                            if (border.IsWordNonZero(xw, y))
+                                for (int x = xw << BinaryMap.WordShift; x < (xw << BinaryMap.WordShift) + BinaryMap.WordSize; ++x)
+                                    if (x > 0 && x < input.Width - 1 && border.GetBit(x, y))
                                     {
-                                        removedAnything = true;
-                                        intermediate.SetBitZero(x, y);
+                                        if (IsRemovable[intermediate.GetNeighborhood(x, y)]
+                                            || Calc.CountBits(intermediate.GetNeighborhood(x, y)) == 1
+                                            && IsFalseEnding(intermediate, new Point(x, y)))
+                                        {
+                                            removedAnything = true;
+                                            intermediate.SetBitZero(x, y);
+                                        }
+                                        else
+                                            skeleton.SetBitOne(x, y);
                                     }
-                                    else
-                                        skeleton.SetBitOne(x, y);
-                                }
+                }
             }
 
             Logger.Log(this, skeleton);

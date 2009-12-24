@@ -21,20 +21,6 @@ namespace SourceAFIS.Extraction.Model
             return result;
         }
 
-        void ClearImageBorders(BinaryMap binary)
-        {
-            for (int y = 0; y < binary.Height; ++y)
-            {
-                binary.SetBitZero(0, y);
-                binary.SetBitZero(binary.Width - 1, y);
-            }
-            for (int x = 0; x < binary.Width; ++x)
-            {
-                binary.SetBitZero(x, 0);
-                binary.SetBitZero(x, binary.Height - 1);
-            }
-        }
-
         List<Point> FindMinutiae(BinaryMap binary)
         {
             List<Point> result = new List<Point>();
@@ -158,7 +144,6 @@ namespace SourceAFIS.Extraction.Model
 
         public void Trace(BinaryMap binary, SkeletonBuilder skeleton)
         {
-            ClearImageBorders(binary);
             List<Point> minutiaPoints = FindMinutiae(binary);
             Dictionary<Point, List<Point>> linking = LinkNeighboringMinutiae(minutiaPoints);
             Dictionary<Point, SkeletonBuilder.Minutia> minutiaMap = ComputeMinutiaCenters(linking, skeleton);
