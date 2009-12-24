@@ -263,6 +263,8 @@ namespace SourceAFIS.General
             });
         }
 
+        public uint GetNeighborhood(Point at) { return GetNeighborhood(at.X, at.Y); }
+
         public uint GetNeighborhood(int x, int y)
         {
             if ((x & WordMask) >= 1 && (x & WordMask) <= 30)
