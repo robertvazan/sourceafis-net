@@ -103,6 +103,15 @@ namespace SourceAFIS.General
             return result;
         }
 
+        public bool IsEmpty()
+        {
+            for (int y = 0; y < Map.GetLength(0); ++y)
+                for (int x = 0; x < Map.GetLength(1); ++x)
+                    if (Map[y, x] != 0)
+                        return false;
+            return true;
+        }
+
         static void ShiftLeft(uint[] vector, int shift)
         {
             if (shift > 0)

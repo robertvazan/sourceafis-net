@@ -115,7 +115,9 @@ namespace FingerprintAnalyzer
                     new ToolStripSeparator(),
                     CreateCheckMenu("Binarized", delegate() { return SwitchFlag(ref Blender.Probe.Binarized); }),
                     CreateCheckMenu("Binary Smoothing", delegate() { return SwitchFlag(ref Blender.Probe.BinarySmoothing); }),
+                    CreateCheckMenu("Cross Removal", delegate() { return SwitchFlag(ref Blender.Probe.RemovedCrosses); }),
                     CreateCheckMenu("Thinned", delegate() { return SwitchFlag(ref Blender.Probe.Thinned); }),
+                    new ToolStripSeparator(),
                     CreateSubMenu("Ridges", BuildRidgeValleyMenu(Blender.Probe.Ridges)),
                     CreateSubMenu("Valleys", BuildRidgeValleyMenu(Blender.Probe.Valleys))
                 })
@@ -126,7 +128,6 @@ namespace FingerprintAnalyzer
         {
             return new ToolStripItem[] {
                 CreateCheckMenu("Binarized", delegate() { return SwitchFlag(ref options.Binarized); }),
-                CreateCheckMenu("Cross Removal", delegate() { return SwitchFlag(ref options.RemovedCrosses); }),
                 CreateCheckMenu("Thinned", delegate() { return SwitchFlag(ref options.Thinned); }),
                 CreateCheckMenu("Ridge Tracer", delegate() { return SwitchFlag(ref options.RidgeTracer); })
             };
