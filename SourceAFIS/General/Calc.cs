@@ -58,7 +58,7 @@ namespace SourceAFIS.General
 
         public static int Interpolate(int index, int count, int range)
         {
-            return index * range / count;
+            return (index * range + count / 2) / count;
         }
 
         public static float InterpolateExponential(float value0, float value1, float fraction)
@@ -154,6 +154,45 @@ namespace SourceAFIS.General
         public static int CompareYX(Point left, Point right)
         {
             return ChainCompare(Compare(left.Y, right.Y), Compare(left.X, right.X));
+        }
+
+        public static Point[] ConstructLine(Point from, Point to)
+        {
+            Point[] result;
+            Point relative = Difference(to, from);
+            if (Math.Abs(relative.X) >= Math.Abs(relative.Y))
+            {
+                result = new Point[Math.Abs(relative.X) + 1];
+                if (relative.X > 0)
+                {
+                    for (int i = 0; i <= relative.X; ++i)
+                        result[i] = new Point(from.X + i, from.Y + Convert.ToInt32(i * (relative.Y / (float)relative.X)));
+                }
+                else if (relative.X < 0)
+                {
+                    for (int i = 0; i <= -relative.X; ++i)
+                        result[i] = new Point(from.X - i, from.Y - Convert.ToInt32(i * (relative.Y / (float)relative.X)));
+                }
+                else
+                    result[0] = from;
+            }
+            else
+            {
+                result = new Point[Math.Abs(relative.Y) + 1];
+                if (relative.Y > 0)
+                {
+                    for (int i = 0; i <= relative.Y; ++i)
+                        result[i] = new Point(from.X + Convert.ToInt32(i * (relative.X / (float)relative.Y)), from.Y + i);
+                }
+                else if (relative.Y < 0)
+                {
+                    for (int i = 0; i <= -relative.Y; ++i)
+                        result[i] = new Point(from.X - Convert.ToInt32(i * (relative.X / (float)relative.Y)), from.Y - i);
+                }
+                else
+                    result[0] = from;
+            }
+            return result;
         }
     }
 }

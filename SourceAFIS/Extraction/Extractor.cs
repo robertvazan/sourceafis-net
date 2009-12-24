@@ -6,6 +6,7 @@ using SourceAFIS.General;
 using SourceAFIS.Meta;
 using SourceAFIS.Visualization;
 using SourceAFIS.Extraction.Filters;
+using SourceAFIS.Extraction.Model;
 
 namespace SourceAFIS.Extraction
 {
@@ -35,6 +36,8 @@ namespace SourceAFIS.Extraction
         public Thinner Thinner = new Thinner();
         [Nested]
         public CrossRemover CrossRemover = new CrossRemover();
+        [Nested]
+        public RidgeTracer RidgeTracer = new RidgeTracer();
 
         public Extractor()
         {
@@ -82,6 +85,8 @@ namespace SourceAFIS.Extraction
                 Logger.Log(this, "Binarized", binary);
                 CrossRemover.Remove(binary);
                 BinaryMap thinned = Thinner.Thin(binary);
+                SkeletonBuilder skeleton = new SkeletonBuilder();
+                RidgeTracer.Trace(thinned, skeleton);
             });
         }
     }

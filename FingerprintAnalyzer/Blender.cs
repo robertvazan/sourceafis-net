@@ -16,6 +16,7 @@ namespace FingerprintAnalyzer
             public bool Binarized;
             public bool Thinned;
             public bool RemovedCrosses;
+            public bool RidgeTracer;
         }
 
         public sealed class ExtractionOptions
@@ -121,6 +122,8 @@ namespace FingerprintAnalyzer
             }
             if (options.Thinned)
                 AlphaLayering.Layer(output, ScalarColoring.Mask(logs.Thinned, ColorF.Transparent, options.Binarized ? ColorF.Green : ColorF.Black));
+            if (options.RidgeTracer)
+                AlphaLayering.Layer(output, ScalarColoring.Mask(SkeletonDrawer.Draw(logs.RidgeTracer, logs.Binarized.Size), ColorF.Transparent, ColorF.Black));
         }
 
         ColorF[,] BaseGrayscale(float[,] image)

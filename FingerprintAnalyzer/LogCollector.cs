@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.Extraction;
+using SourceAFIS.Extraction.Model;
 using SourceAFIS.General;
 using SourceAFIS.Visualization;
 
@@ -14,6 +15,7 @@ namespace FingerprintAnalyzer
             public BinaryMap Binarized;
             public BinaryMap Thinned;
             public BinaryMap RemovedCrosses;
+            public SkeletonBuilder RidgeTracer;
         }
 
         public sealed class ExtractionData
@@ -72,6 +74,7 @@ namespace FingerprintAnalyzer
             data.Binarized = Logger.Retrieve<BinaryMap>("Extractor.Binarized" + context);
             data.Thinned = Logger.Retrieve<BinaryMap>("Extractor.Thinner" + context);
             data.RemovedCrosses = Logger.Retrieve<BinaryMap>("Extractor.CrossRemover" + context);
+            data.RidgeTracer = Logger.Retrieve<SkeletonBuilder>("Extractor.RidgeTracer" + context);
         }
     }
 }

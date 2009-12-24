@@ -50,12 +50,17 @@
     <Compile Include="Extraction\Filters\Thinner.cs" />
     <Compile Include="Extraction\Filters\ThresholdBinarizer.cs" />
     <Compile Include="Extraction\Filters\VotingFilter.cs" />
+    <Compile Include="Extraction\Model\RidgeTracer.cs" />
+    <Compile Include="Extraction\Model\SkeletonBuilder.cs" />
+    <Compile Include="Extraction\Model\SkeletonShadow.cs" />
     <Compile Include="General\Angle.cs" />
     <Compile Include="General\BinaryMap.cs" />
     <Compile Include="General\BlockMap.cs" />
     <Compile Include="General\Calc.cs" />
+    <Compile Include="General\CircularArray.cs" />
     <Compile Include="General\Logger.cs" />
     <Compile Include="General\Neighborhood.cs" />
+    <Compile Include="General\ReversedList.cs" />
     <Compile Include="Meta\DpiAdjustedAttribute.cs" />
     <Compile Include="Meta\DpiAdjuster.cs" />
     <Compile Include="Meta\NestedAttribute.cs" />
@@ -66,6 +71,7 @@
     <Compile Include="Meta\ParameterValue.cs" />
     <Compile Include="Visualization\AlphaLayering.cs" />
     <Compile Include="Visualization\BlockFiller.cs" />
+    <Compile Include="Visualization\CircleDrawer.cs" />
     <Compile Include="Visualization\ColorB.cs" />
     <Compile Include="Visualization\GlobalContrast.cs" />
     <Compile Include="Visualization\GrayscaleInverter.cs" />
@@ -76,6 +82,7 @@
     <Compile Include="Visualization\OrientationMarkers.cs" />
     <Compile Include="Visualization\PixelFormat.cs" />
     <Compile Include="Visualization\ScalarColoring.cs" />
+    <Compile Include="Visualization\SkeletonDrawer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
