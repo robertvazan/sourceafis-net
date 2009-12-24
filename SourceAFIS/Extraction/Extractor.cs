@@ -68,6 +68,7 @@ namespace SourceAFIS.Extraction
                 BinaryMap binary = Binarizer.Binarize(smoothed, orthogonal, mask, blocks);
                 binary.AndNot(BinarySmoother.Filter(binary.GetInverted()));
                 binary.Or(BinarySmoother.Filter(binary));
+                CrossRemover.Remove(binary);
                 BinaryMap inverted = binary.GetInverted();
                 inverted.And(mask.FillBlocks(blocks));
                 
@@ -83,7 +84,6 @@ namespace SourceAFIS.Extraction
             Logger.RunInContext(name, delegate()
             {
                 Logger.Log(this, "Binarized", binary);
-                CrossRemover.Remove(binary);
                 BinaryMap thinned = Thinner.Thin(binary);
                 SkeletonBuilder skeleton = new SkeletonBuilder();
                 RidgeTracer.Trace(thinned, skeleton);

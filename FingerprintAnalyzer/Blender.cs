@@ -15,7 +15,6 @@ namespace FingerprintAnalyzer
         {
             public bool Binarized;
             public bool Thinned;
-            public bool RemovedCrosses;
             public bool RidgeTracer;
         }
 
@@ -25,14 +24,15 @@ namespace FingerprintAnalyzer
             public bool Equalized;
             public bool SmoothedRidges;
             public bool OrthogonalSmoothing;
-            public bool Binarized;
-            public bool BinarySmoothing;
             public bool Contrast;
             public bool AbsoluteContrast;
             public bool RelativeContrast;
             public bool LowContrastMajority;
             public bool SegmentationMask;
             public bool Orientation;
+            public bool Binarized;
+            public bool BinarySmoothing;
+            public bool RemovedCrosses;
             public bool Thinned;
             public SkeletonOptions Ridges = new SkeletonOptions();
             public SkeletonOptions Valleys = new SkeletonOptions();
@@ -84,6 +84,15 @@ namespace FingerprintAnalyzer
                 Logs.Probe.BinarySmoothingOnes.AndNot(Logs.Probe.Binarized);
                 AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.BinarySmoothingOnes, ColorF.Transparent, ColorF.Green));
             }
+            if (Probe.RemovedCrosses)
+            {
+                Logs.Probe.RemovedCrosses.Invert();
+                BinaryMap smoothedBinary = new BinaryMap(Logs.Probe.Binarized);
+                smoothedBinary.AndNot(Logs.Probe.BinarySmoothingZeroes);
+                smoothedBinary.Or(Logs.Probe.BinarySmoothingOnes);
+                Logs.Probe.RemovedCrosses.And(smoothedBinary);
+                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.RemovedCrosses, ColorF.Transparent, ColorF.Red));
+            }
 
             LayerBlocks(Probe.Contrast, output, PixelFormat.ToFloat(Logs.Probe.BlockContrast));
             LayerMask(Probe.AbsoluteContrast, output, Logs.Probe.AbsoluteContrast, TransparentRed);
@@ -115,11 +124,6 @@ namespace FingerprintAnalyzer
         {
             if (options.Binarized)
                 AlphaLayering.Layer(output, ScalarColoring.Mask(logs.Binarized, ColorF.White, ColorF.Black));
-            if (options.RemovedCrosses)
-            {
-                logs.RemovedCrosses.AndNot(logs.Binarized);
-                AlphaLayering.Layer(output, ScalarColoring.Mask(logs.RemovedCrosses, ColorF.Transparent, ColorF.Green));
-            }
             if (options.Thinned)
                 AlphaLayering.Layer(output, ScalarColoring.Mask(logs.Thinned, ColorF.Transparent, options.Binarized ? ColorF.Green : ColorF.Black));
             if (options.RidgeTracer)
