@@ -17,6 +17,7 @@ namespace FingerprintAnalyzer
             public bool Thinned;
             public bool RidgeTracer;
             public bool MinutiaMask;
+            public bool ShowEndings;
         }
 
         public sealed class ExtractionOptions
@@ -137,6 +138,8 @@ namespace FingerprintAnalyzer
                 AlphaLayering.Layer(output, ScalarColoring.Mask(SkeletonDrawer.Draw(logs.RidgeTracer, logs.Binarized.Size), ColorF.Transparent, ColorF.Black));
             if (options.MinutiaMask)
                 LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.RidgeTracer, logs.Binarized.Size), SkeletonDrawer.Draw(logs.MinutiaMask, logs.Binarized.Size));
+            if (options.ShowEndings)
+                AlphaLayering.Layer(output, ScalarColoring.Mask(SkeletonDrawer.DrawEndings(logs.MinutiaMask, logs.Binarized.Size), ColorF.Transparent, ColorF.Blue));
         }
 
         ColorF[,] BaseGrayscale(float[,] image)

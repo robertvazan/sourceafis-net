@@ -131,7 +131,8 @@ namespace FingerprintAnalyzer
                 CreateCheckMenu("Binarized", delegate() { return SwitchFlag(ref options.Binarized); }),
                 CreateCheckMenu("Thinned", delegate() { return SwitchFlag(ref options.Thinned); }),
                 CreateCheckMenu("Ridge Tracer", delegate() { return SwitchFlag(ref options.RidgeTracer); }),
-                CreateCheckMenu("Border Minutiae", delegate() { return SwitchFlag(ref options.MinutiaMask); })
+                CreateCheckMenu("Border Minutiae", delegate() { return SwitchFlag(ref options.MinutiaMask); }),
+                CreateCheckMenu("Show Endings", delegate() { return SwitchFlag(ref options.ShowEndings); })
             };
         }
 
