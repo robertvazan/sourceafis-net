@@ -15,6 +15,7 @@ namespace SourceAFIS.Extraction.Model
             public readonly Point Position;
             List<Ridge> AllRidges = new List<Ridge>();
             public IEnumerable<Ridge> Ridges { get { return AllRidges; } }
+            public int RidgeCount { get { return AllRidges.Count; } }
 
             public Minutia(Point position)
             {
