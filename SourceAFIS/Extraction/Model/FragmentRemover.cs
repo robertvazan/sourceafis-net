@@ -1,0 +1,29 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using SourceAFIS.General;
+using SourceAFIS.Meta;
+
+namespace SourceAFIS.Extraction.Model
+{
+    public sealed class FragmentRemover : ISkeletonFilter
+    {
+        public int MinFragmentLength = 25;
+
+        [Nested]
+        public DotRemover DotRemover = new DotRemover();
+
+        public void Filter(SkeletonBuilder skeleton)
+        {
+            foreach (SkeletonBuilder.Minutia minutia in skeleton.Minutiae)
+                if (minutia.Ridges.Count == 1)
+                {
+                    SkeletonBuilder.Ridge ridge = minutia.Ridges[0];
+                    if (ridge.End.Ridges.Count == 1 && ridge.Points.Count < MinFragmentLength)
+                        ridge.Detach();
+                }
+            DotRemover.Filter(skeleton);
+            Logger.Log(this, skeleton);
+        }
+    }
+}

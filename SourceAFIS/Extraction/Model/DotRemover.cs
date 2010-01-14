@@ -11,7 +11,7 @@ namespace SourceAFIS.Extraction.Model
         {
             List<SkeletonBuilder.Minutia> minutiae = new List<SkeletonBuilder.Minutia>(skeleton.Minutiae);
             foreach (SkeletonBuilder.Minutia minutia in minutiae)
-                if (minutia.RidgeCount == 0)
+                if (minutia.Ridges.Count == 0)
                     skeleton.RemoveMinutia(minutia);
             Logger.Log(this, skeleton);
         }

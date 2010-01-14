@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
@@ -13,13 +14,14 @@ namespace SourceAFIS.Extraction.Model
         {
             public bool Valid = true;
             public readonly Point Position;
-            List<Ridge> AllRidges = new List<Ridge>();
-            public IEnumerable<Ridge> Ridges { get { return AllRidges; } }
-            public int RidgeCount { get { return AllRidges.Count; } }
+            readonly List<Ridge> AllRidges = new List<Ridge>();
+            readonly ReadOnlyCollection<Ridge> ReadOnlyRidges;
+            public IList<Ridge> Ridges { get { return ReadOnlyRidges; } }
 
             public Minutia(Point position)
             {
                 Position = position;
+                ReadOnlyRidges = new ReadOnlyCollection<Ridge>(AllRidges);
             }
 
             public void AttachStart(Ridge ridge)
@@ -58,11 +60,13 @@ namespace SourceAFIS.Extraction.Model
                     {
                         if (StartMinutia != null)
                         {
+                            Minutia detachFrom = StartMinutia;
                             StartMinutia = null;
-                            StartMinutia.DetachStart(this);
+                            detachFrom.DetachStart(this);
                         }
                         StartMinutia = value;
-                        StartMinutia.AttachStart(this);
+                        if (StartMinutia != null)
+                            StartMinutia.AttachStart(this);
                         Reversed.EndMinutia = value;
                     }
                 }
@@ -90,6 +94,12 @@ namespace SourceAFIS.Extraction.Model
             {
                 Reversed = reversed;
                 Points = new ReversedList<Point>(reversed.Points);
+            }
+
+            public void Detach()
+            {
+                Start = null;
+                End = null;
             }
         }
 

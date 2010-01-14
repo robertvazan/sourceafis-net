@@ -25,7 +25,7 @@ namespace SourceAFIS.Visualization
         {
             BinaryMap binary = new BinaryMap(size);
             foreach (SkeletonBuilder.Minutia minutia in skeleton.Minutiae)
-                if (minutia.Valid && minutia.RidgeCount == 1)
+                if (minutia.Valid && minutia.Ridges.Count == 1)
                     DrawCircle(binary, minutia.Position);
             return binary;
         }
