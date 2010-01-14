@@ -16,6 +16,7 @@ namespace FingerprintAnalyzer
             public bool Binarized;
             public bool Thinned;
             public bool RidgeTracer;
+            public bool MinutiaMask;
         }
 
         public sealed class ExtractionOptions
@@ -34,6 +35,7 @@ namespace FingerprintAnalyzer
             public bool BinarySmoothing;
             public bool RemovedCrosses;
             public bool Thinned;
+            public bool InnerMask;
             public SkeletonOptions Ridges = new SkeletonOptions();
             public SkeletonOptions Valleys = new SkeletonOptions();
         }
@@ -107,6 +109,11 @@ namespace FingerprintAnalyzer
 
             Logs.Probe.SegmentationMask.Invert();
             LayerMask(Probe.SegmentationMask, output, Logs.Probe.SegmentationMask, LightFog);
+            if (Probe.InnerMask)
+            {
+                Logs.Probe.InnerMask.Invert();
+                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.InnerMask, ColorF.Transparent, LightFog));
+            }
 
             if (Probe.Thinned)
             {
@@ -128,6 +135,8 @@ namespace FingerprintAnalyzer
                 AlphaLayering.Layer(output, ScalarColoring.Mask(logs.Thinned, ColorF.Transparent, options.Binarized ? ColorF.Green : ColorF.Black));
             if (options.RidgeTracer)
                 AlphaLayering.Layer(output, ScalarColoring.Mask(SkeletonDrawer.Draw(logs.RidgeTracer, logs.Binarized.Size), ColorF.Transparent, ColorF.Black));
+            if (options.MinutiaMask)
+                LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.RidgeTracer, logs.Binarized.Size), SkeletonDrawer.Draw(logs.MinutiaMask, logs.Binarized.Size));
         }
 
         ColorF[,] BaseGrayscale(float[,] image)
@@ -135,6 +144,16 @@ namespace FingerprintAnalyzer
             GrayscaleInverter.Invert(image);
             GlobalContrast.Normalize(image);
             return PixelFormat.ToColorF(image);
+        }
+
+        void LayerBinaryDiff(ColorF[,] output, BinaryMap first, BinaryMap second)
+        {
+            BinaryMap removed = new BinaryMap(first);
+            removed.AndNot(second);
+            AlphaLayering.Layer(output, ScalarColoring.Mask(removed, ColorF.Transparent, ColorF.Red));
+            BinaryMap added = new BinaryMap(second);
+            added.AndNot(first);
+            AlphaLayering.Layer(output, ScalarColoring.Mask(added, ColorF.Transparent, ColorF.Green));
         }
 
         void LayerMask(bool condition, ColorF[,] output, BinaryMap mask, ColorF color)

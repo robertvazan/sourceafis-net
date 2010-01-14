@@ -15,6 +15,7 @@ namespace FingerprintAnalyzer
             public BinaryMap Binarized;
             public BinaryMap Thinned;
             public SkeletonBuilder RidgeTracer;
+            public SkeletonBuilder MinutiaMask;
         }
 
         public sealed class ExtractionData
@@ -34,6 +35,7 @@ namespace FingerprintAnalyzer
             public BinaryMap BinarySmoothingZeroes;
             public BinaryMap BinarySmoothingOnes;
             public BinaryMap RemovedCrosses;
+            public BinaryMap InnerMask;
             public SkeletonData Ridges = new SkeletonData();
             public SkeletonData Valleys = new SkeletonData();
         }
@@ -65,6 +67,7 @@ namespace FingerprintAnalyzer
             Probe.BinarySmoothingZeroes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 0);
             Probe.BinarySmoothingOnes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 1);
             Probe.RemovedCrosses = Logger.Retrieve<BinaryMap>("Extractor.CrossRemover");
+            Probe.InnerMask = Logger.Retrieve<BinaryMap>("Extractor.InnerMask");
             CollectSkeleton("[Ridges]", Probe.Ridges);
             CollectSkeleton("[Valleys]", Probe.Valleys);
             Logger.Clear();
@@ -75,6 +78,7 @@ namespace FingerprintAnalyzer
             data.Binarized = Logger.Retrieve<BinaryMap>("Extractor.Binarized" + context);
             data.Thinned = Logger.Retrieve<BinaryMap>("Extractor.Thinner" + context);
             data.RidgeTracer = Logger.Retrieve<SkeletonBuilder>("Extractor.RidgeTracer" + context);
+            data.MinutiaMask = Logger.Retrieve<SkeletonBuilder>("Extractor.MinutiaMask" + context);
         }
     }
 }

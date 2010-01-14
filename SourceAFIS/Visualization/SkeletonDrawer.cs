@@ -16,12 +16,13 @@ namespace SourceAFIS.Visualization
             BinaryMap binary = new BinaryMap(size);
             new SkeletonShadow().Draw(skeleton, binary);
             foreach (SkeletonBuilder.Minutia minutia in skeleton.Minutiae)
-                foreach (Point circleRelative in Circle)
-                {
-                    Point circlePoint = Calc.Add(minutia.Position, circleRelative);
-                    if (binary.Rect.Contains(circlePoint))
-                        binary.SetBitOne(circlePoint);
-                }
+                if (minutia.Valid)
+                    foreach (Point circleRelative in Circle)
+                    {
+                        Point circlePoint = Calc.Add(minutia.Position, circleRelative);
+                        if (binary.Rect.Contains(circlePoint))
+                            binary.SetBitOne(circlePoint);
+                    }
             return binary;
         }
     }
