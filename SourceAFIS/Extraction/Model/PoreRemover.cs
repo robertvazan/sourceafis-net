@@ -9,6 +9,7 @@ namespace SourceAFIS.Extraction.Model
 {
     public sealed class PoreRemover : ISkeletonFilter
     {
+        [DpiAdjusted]
         public int MaxArmLength = 20;
 
         [Nested]

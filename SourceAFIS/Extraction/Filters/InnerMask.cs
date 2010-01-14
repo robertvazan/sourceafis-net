@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
+using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class InnerMask
     {
+        [DpiAdjusted]
         public int MinBorderDistance = 15;
 
         void ShrinkBy(BinaryMap temporary, BinaryMap inner, int amount)
