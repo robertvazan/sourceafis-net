@@ -16,6 +16,7 @@ namespace FingerprintAnalyzer
             public BinaryMap Thinned;
             public SkeletonBuilder RidgeTracer;
             public SkeletonBuilder DotRemover;
+            public SkeletonBuilder FragmentRemover;
             public SkeletonBuilder MinutiaMask;
         }
 
@@ -80,6 +81,7 @@ namespace FingerprintAnalyzer
             data.Thinned = Logger.Retrieve<BinaryMap>("Extractor.Thinner" + context);
             data.RidgeTracer = Logger.Retrieve<SkeletonBuilder>("Extractor.RidgeTracer" + context);
             data.DotRemover = Logger.Retrieve<SkeletonBuilder>("Extractor.DotRemover" + context);
+            data.FragmentRemover = Logger.Retrieve<SkeletonBuilder>("Extractor.FragmentRemover" + context);
             data.MinutiaMask = Logger.Retrieve<SkeletonBuilder>("Extractor.MinutiaMask" + context);
         }
     }

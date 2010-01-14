@@ -17,6 +17,7 @@ namespace FingerprintAnalyzer
             public bool Thinned;
             public bool RidgeTracer;
             public bool DotRemover;
+            public bool FragmentRemover;
             public bool MinutiaMask;
             public bool ShowEndings;
         }
@@ -139,8 +140,10 @@ namespace FingerprintAnalyzer
                 AlphaLayering.Layer(output, ScalarColoring.Mask(SkeletonDrawer.Draw(logs.RidgeTracer, logs.Binarized.Size), ColorF.Transparent, ColorF.Black));
             if (options.DotRemover)
                 LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.RidgeTracer, logs.Binarized.Size), SkeletonDrawer.Draw(logs.DotRemover, logs.Binarized.Size));
+            if (options.FragmentRemover)
+                LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.DotRemover, logs.Binarized.Size), SkeletonDrawer.Draw(logs.FragmentRemover, logs.Binarized.Size));
             if (options.MinutiaMask)
-                LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.DotRemover, logs.Binarized.Size), SkeletonDrawer.Draw(logs.MinutiaMask, logs.Binarized.Size));
+                LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.FragmentRemover, logs.Binarized.Size), SkeletonDrawer.Draw(logs.MinutiaMask, logs.Binarized.Size));
             if (options.ShowEndings)
                 AlphaLayering.Layer(output, ScalarColoring.Mask(SkeletonDrawer.DrawEndings(logs.MinutiaMask, logs.Binarized.Size), ColorF.Transparent, ColorF.Blue));
         }
