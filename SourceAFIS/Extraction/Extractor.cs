@@ -45,6 +45,8 @@ namespace SourceAFIS.Extraction
         [Nested]
         public DotRemover DotRemover = new DotRemover();
         [Nested]
+        public PoreRemover PoreRemover = new PoreRemover();
+        [Nested]
         public TailRemover TailRemover = new TailRemover();
         [Nested]
         public FragmentRemover FragmentRemover = new FragmentRemover();
@@ -102,6 +104,7 @@ namespace SourceAFIS.Extraction
                 SkeletonBuilder skeleton = new SkeletonBuilder();
                 RidgeTracer.Trace(thinned, skeleton);
                 DotRemover.Filter(skeleton);
+                PoreRemover.Filter(skeleton);
                 TailRemover.Filter(skeleton);
                 FragmentRemover.Filter(skeleton);
                 MinutiaMask.Filter(skeleton, innerMask);

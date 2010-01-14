@@ -133,6 +133,7 @@ namespace FingerprintAnalyzer
                 new ToolStripSeparator(),
                 CreateCheckMenu("Ridge Tracer", delegate() { return SwitchFlag(ref options.RidgeTracer); }),
                 CreateCheckMenu("Removed Dots", delegate() { return SwitchFlag(ref options.DotRemover); }),
+                CreateCheckMenu("Removed Pores", delegate() { return SwitchFlag(ref options.PoreRemover); }),
                 CreateCheckMenu("Removed Tails", delegate() { return SwitchFlag(ref options.TailRemover); }),
                 CreateCheckMenu("Removed Fragments", delegate() { return SwitchFlag(ref options.FragmentRemover); }),
                 CreateCheckMenu("Border Minutiae", delegate() { return SwitchFlag(ref options.MinutiaMask); }),
