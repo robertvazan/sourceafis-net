@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
+using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class HillOrientation
     {
+        [DpiAdjusted]
         public float MinHalfDistance = 2;
+        [DpiAdjusted]
         public float MaxHalfDistance = 6;
-        public float DistanceWeightFactor = 10f;
         public int NeighborListSplit = 50;
         public int NeighborsChecked = 20;
         public int SmoothingRadius = 1;

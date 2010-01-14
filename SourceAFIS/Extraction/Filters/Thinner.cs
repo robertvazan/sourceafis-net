@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
+using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class Thinner
     {
+        [DpiAdjusted]
         public int MaxIterations = 15;
 
         static readonly bool[] IsRemovable = ConstructRemovable();
