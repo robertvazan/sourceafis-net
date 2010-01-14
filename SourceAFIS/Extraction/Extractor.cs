@@ -42,6 +42,8 @@ namespace SourceAFIS.Extraction
         public InnerMask InnerMask = new InnerMask();
         [Nested]
         public MinutiaMask MinutiaMask = new MinutiaMask();
+        [Nested]
+        public DotRemover DotRemover = new DotRemover();
 
         public Extractor()
         {
@@ -95,6 +97,7 @@ namespace SourceAFIS.Extraction
                 BinaryMap thinned = Thinner.Thin(binary);
                 SkeletonBuilder skeleton = new SkeletonBuilder();
                 RidgeTracer.Trace(thinned, skeleton);
+                DotRemover.Filter(skeleton);
                 MinutiaMask.Filter(skeleton, innerMask);
             });
         }
