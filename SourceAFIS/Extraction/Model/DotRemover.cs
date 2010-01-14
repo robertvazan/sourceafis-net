@@ -9,10 +9,12 @@ namespace SourceAFIS.Extraction.Model
     {
         public void Filter(SkeletonBuilder skeleton)
         {
-            List<SkeletonBuilder.Minutia> minutiae = new List<SkeletonBuilder.Minutia>(skeleton.Minutiae);
-            foreach (SkeletonBuilder.Minutia minutia in minutiae)
+            List<SkeletonBuilder.Minutia> removed = new List<SkeletonBuilder.Minutia>();
+            foreach (SkeletonBuilder.Minutia minutia in skeleton.Minutiae)
                 if (minutia.Ridges.Count == 0)
-                    skeleton.RemoveMinutia(minutia);
+                    removed.Add(minutia);
+            foreach (SkeletonBuilder.Minutia minutia in removed)
+                skeleton.RemoveMinutia(minutia);
             Logger.Log(this, skeleton);
         }
     }
