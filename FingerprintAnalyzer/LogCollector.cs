@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.Extraction;
 using SourceAFIS.Extraction.Model;
+using SourceAFIS.Extraction.Templates;
 using SourceAFIS.General;
 using SourceAFIS.Visualization;
 
@@ -42,6 +43,7 @@ namespace FingerprintAnalyzer
             public BinaryMap InnerMask;
             public SkeletonData Ridges = new SkeletonData();
             public SkeletonData Valleys = new SkeletonData();
+            public TemplateBuilder MinutiaCollector;
         }
 
         public ExtractionData Probe = new ExtractionData();
@@ -74,6 +76,7 @@ namespace FingerprintAnalyzer
             Probe.InnerMask = Logger.Retrieve<BinaryMap>("Extractor.InnerMask");
             CollectSkeleton("[Ridges]", Probe.Ridges);
             CollectSkeleton("[Valleys]", Probe.Valleys);
+            Probe.MinutiaCollector = Logger.Retrieve<TemplateBuilder>("Extractor.MinutiaCollector");
             Logger.Clear();
         }
 

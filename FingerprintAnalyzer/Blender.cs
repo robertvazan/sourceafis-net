@@ -43,6 +43,7 @@ namespace FingerprintAnalyzer
             public bool InnerMask;
             public SkeletonOptions Ridges = new SkeletonOptions();
             public SkeletonOptions Valleys = new SkeletonOptions();
+            public bool MinutiaCollector;
         }
 
         public ExtractionOptions Probe = new ExtractionOptions();
@@ -128,6 +129,9 @@ namespace FingerprintAnalyzer
 
             RenderSkeleton(output, Probe.Ridges, Logs.Probe.Ridges);
             RenderSkeleton(output, Probe.Valleys, Logs.Probe.Valleys);
+
+            if (Probe.MinutiaCollector)
+                TemplateDrawer.Draw(output, Logs.Probe.MinutiaCollector);
 
             OutputImage = ImageIO.CreateBitmap(PixelFormat.ToColorB(output));
         }
