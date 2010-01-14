@@ -11,10 +11,13 @@ namespace SourceAFIS.Extraction.Model
         public void Draw(SkeletonBuilder skeleton, BinaryMap binary)
         {
             foreach (SkeletonBuilder.Minutia minutia in skeleton.Minutiae)
+            {
+                binary.SetBitOne(minutia.Position);
                 foreach (SkeletonBuilder.Ridge ridge in minutia.Ridges)
                     if (ridge.Start.Position.Y <= ridge.End.Position.Y)
                         foreach (Point point in ridge.Points)
                             binary.SetBitOne(point);
+            }
         }
     }
 }
