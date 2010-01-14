@@ -25,5 +25,13 @@ namespace SourceAFIS.Visualization
             B = b;
             A = a;
         }
+
+        public ColorF(float r, float g, float b)
+        {
+            R = r;
+            G = g;
+            B = b;
+            A = 1;
+        }
     }
 }

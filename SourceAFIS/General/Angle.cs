@@ -77,6 +77,16 @@ namespace SourceAFIS.General
             return Atan(point.X, point.Y);
         }
 
+        public static float Atan(Point center, Point point)
+        {
+            return Atan(Calc.Difference(point, center));
+        }
+
+        public static byte AtanB(Point center, Point point)
+        {
+            return ToByte(Atan(center, point));
+        }
+
         static float[] PrecomputedSin = PrecomputeSin();
 
         static float[] PrecomputeSin()

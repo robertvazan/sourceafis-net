@@ -120,7 +120,9 @@ namespace FingerprintAnalyzer
                     CreateCheckMenu("Thinned", delegate() { return SwitchFlag(ref Blender.Probe.Thinned); }),
                     new ToolStripSeparator(),
                     CreateSubMenu("Ridges", BuildRidgeValleyMenu(Blender.Probe.Ridges)),
-                    CreateSubMenu("Valleys", BuildRidgeValleyMenu(Blender.Probe.Valleys))
+                    CreateSubMenu("Valleys", BuildRidgeValleyMenu(Blender.Probe.Valleys)),
+                    new ToolStripSeparator(),
+                    CreateCheckMenu("Collected Minutiae", delegate() { return SwitchFlag(ref Blender.Probe.MinutiaCollector); }),
                 })
             };
         }

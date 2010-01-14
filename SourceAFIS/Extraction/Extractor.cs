@@ -7,6 +7,7 @@ using SourceAFIS.Meta;
 using SourceAFIS.Visualization;
 using SourceAFIS.Extraction.Filters;
 using SourceAFIS.Extraction.Model;
+using SourceAFIS.Extraction.Templates;
 
 namespace SourceAFIS.Extraction
 {
@@ -50,6 +51,8 @@ namespace SourceAFIS.Extraction
         public TailRemover TailRemover = new TailRemover();
         [Nested]
         public FragmentRemover FragmentRemover = new FragmentRemover();
+        [Nested]
+        public MinutiaCollector MinutiaCollector = new MinutiaCollector();
 
         public Extractor()
         {
@@ -59,8 +62,9 @@ namespace SourceAFIS.Extraction
             BinarySmoother.Majority = 0.8f;
         }
 
-        public void Extract(byte[,] invertedImage, int dpi)
+        public TemplateBuilder Extract(byte[,] invertedImage, int dpi)
         {
+            TemplateBuilder template = null;
             DpiAdjuster.Adjust(this, dpi, delegate()
             {
                 byte[,] image = GrayscaleInverter.GetInverted(invertedImage);
@@ -87,21 +91,29 @@ namespace SourceAFIS.Extraction
 
                 BinaryMap inverted = binary.GetInverted();
                 inverted.And(pixelMask);
-                
-                Threader.Ticket ridgeTicket = Threader.Schedule(delegate() { ProcessSkeleton("Ridges", binary, innerMask); });
-                Threader.Ticket valleyTicket = Threader.Schedule(delegate() { ProcessSkeleton("Valleys", inverted, innerMask); });
+
+                SkeletonBuilder ridges = null;
+                SkeletonBuilder valleys = null;
+                Threader.Ticket ridgeTicket = Threader.Schedule(delegate() { ridges = ProcessSkeleton("Ridges", binary, innerMask); });
+                Threader.Ticket valleyTicket = Threader.Schedule(delegate() { valleys = ProcessSkeleton("Valleys", inverted, innerMask); });
                 ridgeTicket.Wait();
                 valleyTicket.Wait();
+
+                template = new TemplateBuilder();
+                MinutiaCollector.Collect(ridges, TemplateBuilder.MinutiaType.Ending, template);
+                MinutiaCollector.Collect(valleys, TemplateBuilder.MinutiaType.Bifurcation, template);
             });
+            return template;
         }
 
-        void ProcessSkeleton(string name, BinaryMap binary, BinaryMap innerMask)
+        SkeletonBuilder ProcessSkeleton(string name, BinaryMap binary, BinaryMap innerMask)
         {
+            SkeletonBuilder skeleton = null;
             Logger.RunInContext(name, delegate()
             {
                 Logger.Log(this, "Binarized", binary);
                 BinaryMap thinned = Thinner.Thin(binary);
-                SkeletonBuilder skeleton = new SkeletonBuilder();
+                skeleton = new SkeletonBuilder();
                 RidgeTracer.Trace(thinned, skeleton);
                 DotRemover.Filter(skeleton);
                 PoreRemover.Filter(skeleton);
@@ -109,6 +121,7 @@ namespace SourceAFIS.Extraction
                 FragmentRemover.Filter(skeleton);
                 MinutiaMask.Filter(skeleton, innerMask);
             });
+            return skeleton;
         }
     }
 }
