@@ -61,8 +61,12 @@
     <Compile Include="Extraction\Model\SkeletonBuilder.cs" />
     <Compile Include="Extraction\Model\SkeletonShadow.cs" />
     <Compile Include="Extraction\Model\TailRemover.cs" />
+    <Compile Include="Extraction\Templates\ITemplateFormat.cs" />
     <Compile Include="Extraction\Templates\MinutiaCollector.cs" />
+    <Compile Include="Extraction\Templates\SerializedFormat.cs" />
+    <Compile Include="Extraction\Templates\Template.cs" />
     <Compile Include="Extraction\Templates\TemplateBuilder.cs" />
+    <Compile Include="Extraction\Templates\TemplateFormatBase.cs" />
     <Compile Include="General\Angle.cs" />
     <Compile Include="General\BinaryMap.cs" />
     <Compile Include="General\BlockMap.cs" />
@@ -70,6 +74,7 @@
     <Compile Include="General\CircularArray.cs" />
     <Compile Include="General\Logger.cs" />
     <Compile Include="General\Neighborhood.cs" />
+    <Compile Include="General\PointS.cs" />
     <Compile Include="General\ReversedList.cs" />
     <Compile Include="Meta\DpiAdjustedAttribute.cs" />
     <Compile Include="Meta\DpiAdjuster.cs" />
