@@ -38,6 +38,10 @@ namespace SourceAFIS.Extraction
         public CrossRemover CrossRemover = new CrossRemover();
         [Nested]
         public RidgeTracer RidgeTracer = new RidgeTracer();
+        [Nested]
+        public InnerMask InnerMask = new InnerMask();
+        [Nested]
+        public MinutiaMask MinutiaMask = new MinutiaMask();
 
         public Extractor()
         {
@@ -64,22 +68,26 @@ namespace SourceAFIS.Extraction
                 byte[,] orientation = Orientation.Detect(equalized, mask, blocks);
                 float[,] smoothed = RidgeSmoother.Smooth(equalized, orientation, mask, blocks);
                 float[,] orthogonal = OrthogonalSmoother.Smooth(smoothed, orientation, mask, blocks);
-                
+
                 BinaryMap binary = Binarizer.Binarize(smoothed, orthogonal, mask, blocks);
                 binary.AndNot(BinarySmoother.Filter(binary.GetInverted()));
                 binary.Or(BinarySmoother.Filter(binary));
                 CrossRemover.Remove(binary);
+
+                BinaryMap pixelMask = mask.FillBlocks(blocks);
+                BinaryMap innerMask = InnerMask.Compute(pixelMask);
+
                 BinaryMap inverted = binary.GetInverted();
-                inverted.And(mask.FillBlocks(blocks));
+                inverted.And(pixelMask);
                 
-                Threader.Ticket ridgeTicket = Threader.Schedule(delegate() { ProcessSkeleton("Ridges", binary); });
-                Threader.Ticket valleyTicket = Threader.Schedule(delegate() { ProcessSkeleton("Valleys", inverted); });
+                Threader.Ticket ridgeTicket = Threader.Schedule(delegate() { ProcessSkeleton("Ridges", binary, innerMask); });
+                Threader.Ticket valleyTicket = Threader.Schedule(delegate() { ProcessSkeleton("Valleys", inverted, innerMask); });
                 ridgeTicket.Wait();
                 valleyTicket.Wait();
             });
         }
 
-        void ProcessSkeleton(string name, BinaryMap binary)
+        void ProcessSkeleton(string name, BinaryMap binary, BinaryMap innerMask)
         {
             Logger.RunInContext(name, delegate()
             {
@@ -87,6 +95,7 @@ namespace SourceAFIS.Extraction
                 BinaryMap thinned = Thinner.Thin(binary);
                 SkeletonBuilder skeleton = new SkeletonBuilder();
                 RidgeTracer.Trace(thinned, skeleton);
+                MinutiaMask.Filter(skeleton, innerMask);
             });
         }
     }

@@ -109,6 +109,7 @@ namespace FingerprintAnalyzer
                     CreateCheckMenu("Relative Contrast", delegate() { return SwitchFlag(ref Blender.Probe.RelativeContrast); }),
                     CreateCheckMenu("Majority Filter", delegate() { return SwitchFlag(ref Blender.Probe.LowContrastMajority); }),
                     CreateCheckMenu("Mask", delegate() { return SwitchFlag(ref Blender.Probe.SegmentationMask); }),
+                    CreateCheckMenu("Inner Mask", delegate() { return SwitchFlag(ref Blender.Probe.InnerMask); }),
                     new ToolStripSeparator(),
                     CreateCheckMenu("Orientation", delegate() { return SwitchFlag(ref Blender.Probe.Orientation); }),
                     CreateCheckMenu("Orthogonal Smoothing", delegate() { return SwitchFlag(ref Blender.Probe.OrthogonalSmoothing); }),
@@ -129,7 +130,8 @@ namespace FingerprintAnalyzer
             return new ToolStripItem[] {
                 CreateCheckMenu("Binarized", delegate() { return SwitchFlag(ref options.Binarized); }),
                 CreateCheckMenu("Thinned", delegate() { return SwitchFlag(ref options.Thinned); }),
-                CreateCheckMenu("Ridge Tracer", delegate() { return SwitchFlag(ref options.RidgeTracer); })
+                CreateCheckMenu("Ridge Tracer", delegate() { return SwitchFlag(ref options.RidgeTracer); }),
+                CreateCheckMenu("Border Minutiae", delegate() { return SwitchFlag(ref options.MinutiaMask); })
             };
         }
 
