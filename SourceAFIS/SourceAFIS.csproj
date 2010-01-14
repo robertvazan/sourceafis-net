@@ -56,6 +56,7 @@
     <Compile Include="Extraction\Model\ISkeletonFilter.cs" />
     <Compile Include="Extraction\Model\KnotRemover.cs" />
     <Compile Include="Extraction\Model\MinutiaMask.cs" />
+    <Compile Include="Extraction\Model\PoreRemover.cs" />
     <Compile Include="Extraction\Model\RidgeTracer.cs" />
     <Compile Include="Extraction\Model\SkeletonBuilder.cs" />
     <Compile Include="Extraction\Model\SkeletonShadow.cs" />

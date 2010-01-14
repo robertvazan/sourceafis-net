@@ -17,6 +17,7 @@ namespace FingerprintAnalyzer
             public bool Thinned;
             public bool RidgeTracer;
             public bool DotRemover;
+            public bool PoreRemover;
             public bool TailRemover;
             public bool FragmentRemover;
             public bool MinutiaMask;
@@ -141,8 +142,10 @@ namespace FingerprintAnalyzer
                 AlphaLayering.Layer(output, ScalarColoring.Mask(SkeletonDrawer.Draw(logs.RidgeTracer, logs.Binarized.Size), ColorF.Transparent, ColorF.Black));
             if (options.DotRemover)
                 LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.RidgeTracer, logs.Binarized.Size), SkeletonDrawer.Draw(logs.DotRemover, logs.Binarized.Size));
+            if (options.PoreRemover)
+                LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.DotRemover, logs.Binarized.Size), SkeletonDrawer.Draw(logs.PoreRemover, logs.Binarized.Size));
             if (options.TailRemover)
-                LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.DotRemover, logs.Binarized.Size), SkeletonDrawer.Draw(logs.TailRemover, logs.Binarized.Size));
+                LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.PoreRemover, logs.Binarized.Size), SkeletonDrawer.Draw(logs.TailRemover, logs.Binarized.Size));
             if (options.FragmentRemover)
                 LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.TailRemover, logs.Binarized.Size), SkeletonDrawer.Draw(logs.FragmentRemover, logs.Binarized.Size));
             if (options.MinutiaMask)
