@@ -130,7 +130,9 @@ namespace FingerprintAnalyzer
             return new ToolStripItem[] {
                 CreateCheckMenu("Binarized", delegate() { return SwitchFlag(ref options.Binarized); }),
                 CreateCheckMenu("Thinned", delegate() { return SwitchFlag(ref options.Thinned); }),
+                new ToolStripSeparator(),
                 CreateCheckMenu("Ridge Tracer", delegate() { return SwitchFlag(ref options.RidgeTracer); }),
+                CreateCheckMenu("Removed Dots", delegate() { return SwitchFlag(ref options.DotRemover); }),
                 CreateCheckMenu("Border Minutiae", delegate() { return SwitchFlag(ref options.MinutiaMask); }),
                 CreateCheckMenu("Show Endings", delegate() { return SwitchFlag(ref options.ShowEndings); })
             };

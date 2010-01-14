@@ -101,6 +101,11 @@ namespace SourceAFIS.Extraction.Model
             AllMinutiae.Add(minutia);
         }
 
+        public void RemoveMinutia(Minutia minutia)
+        {
+            AllMinutiae.Remove(minutia);
+        }
+
         public object Clone()
         {
             SkeletonBuilder clone = new SkeletonBuilder();
