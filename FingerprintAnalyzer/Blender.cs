@@ -11,42 +11,7 @@ namespace FingerprintAnalyzer
     {
         public LogCollector Logs;
 
-        public sealed class SkeletonOptions
-        {
-            public bool Binarized;
-            public bool Thinned;
-            public bool RidgeTracer;
-            public bool DotRemover;
-            public bool PoreRemover;
-            public bool TailRemover;
-            public bool FragmentRemover;
-            public bool MinutiaMask;
-            public bool ShowEndings;
-        }
-
-        public sealed class ExtractionOptions
-        {
-            public bool OriginalImage;
-            public bool Equalized;
-            public bool SmoothedRidges;
-            public bool OrthogonalSmoothing;
-            public bool Contrast;
-            public bool AbsoluteContrast;
-            public bool RelativeContrast;
-            public bool LowContrastMajority;
-            public bool SegmentationMask;
-            public bool Orientation;
-            public bool Binarized;
-            public bool BinarySmoothing;
-            public bool RemovedCrosses;
-            public bool Thinned;
-            public bool InnerMask;
-            public SkeletonOptions Ridges = new SkeletonOptions();
-            public SkeletonOptions Valleys = new SkeletonOptions();
-            public bool MinutiaCollector;
-        }
-
-        public ExtractionOptions Probe = new ExtractionOptions();
+        public Options Options = new Options();
 
         public Bitmap OutputImage;
 
@@ -58,13 +23,13 @@ namespace FingerprintAnalyzer
         {
             ColorF[,] output;
             bool empty = false;
-            if (Probe.OrthogonalSmoothing)
+            if (Options.Probe.OrthogonalSmoothing)
                 output = BaseGrayscale(Logs.Probe.OrthogonalSmoothing);
-            else if (Probe.SmoothedRidges)
+            else if (Options.Probe.SmoothedRidges)
                 output = BaseGrayscale(Logs.Probe.SmoothedRidges);
-            else if (Probe.Equalized)
+            else if (Options.Probe.Equalized)
                 output = BaseGrayscale(Logs.Probe.Equalized);
-            else if (Probe.OriginalImage)
+            else if (Options.Probe.OriginalImage)
                 output = PixelFormat.ToColorF(Logs.Probe.InputImage);
             else
             {
@@ -75,7 +40,7 @@ namespace FingerprintAnalyzer
                 empty = true;
             }
 
-            if (Probe.Binarized)
+            if (Options.Probe.Binarized)
             {
                 if (empty)
                 {
@@ -85,14 +50,14 @@ namespace FingerprintAnalyzer
                 else
                     AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.Binarized, ColorF.Transparent, TransparentGreen));
             }
-            if (Probe.BinarySmoothing)
+            if (Options.Probe.BinarySmoothing)
             {
                 Logs.Probe.BinarySmoothingZeroes.And(Logs.Probe.Binarized);
                 AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.BinarySmoothingZeroes, ColorF.Transparent, ColorF.Red));
                 Logs.Probe.BinarySmoothingOnes.AndNot(Logs.Probe.Binarized);
                 AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.BinarySmoothingOnes, ColorF.Transparent, ColorF.Green));
             }
-            if (Probe.RemovedCrosses)
+            if (Options.Probe.RemovedCrosses)
             {
                 Logs.Probe.RemovedCrosses.Invert();
                 BinaryMap smoothedBinary = new BinaryMap(Logs.Probe.Binarized);
@@ -102,35 +67,35 @@ namespace FingerprintAnalyzer
                 AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.RemovedCrosses, ColorF.Transparent, ColorF.Red));
             }
 
-            LayerBlocks(Probe.Contrast, output, PixelFormat.ToFloat(Logs.Probe.BlockContrast));
-            LayerMask(Probe.AbsoluteContrast, output, Logs.Probe.AbsoluteContrast, TransparentRed);
-            LayerMask(Probe.RelativeContrast, output, Logs.Probe.RelativeContrast, TransparentRed);
-            LayerMask(Probe.LowContrastMajority, output, Logs.Probe.LowContrastMajority, TransparentRed);
+            LayerBlocks(Options.Probe.Contrast, output, PixelFormat.ToFloat(Logs.Probe.BlockContrast));
+            LayerMask(Options.Probe.AbsoluteContrast, output, Logs.Probe.AbsoluteContrast, TransparentRed);
+            LayerMask(Options.Probe.RelativeContrast, output, Logs.Probe.RelativeContrast, TransparentRed);
+            LayerMask(Options.Probe.LowContrastMajority, output, Logs.Probe.LowContrastMajority, TransparentRed);
 
-            if (Probe.Orientation)
+            if (Options.Probe.Orientation)
             {
                 BinaryMap markers = OrientationMarkers.Draw(Logs.Probe.Orientation, Logs.Probe.Blocks, Logs.Probe.SegmentationMask);
                 AlphaLayering.Layer(output, ScalarColoring.Mask(markers, ColorF.Transparent, ColorF.Red));
             }
 
             Logs.Probe.SegmentationMask.Invert();
-            LayerMask(Probe.SegmentationMask, output, Logs.Probe.SegmentationMask, LightFog);
-            if (Probe.InnerMask)
+            LayerMask(Options.Probe.SegmentationMask, output, Logs.Probe.SegmentationMask, LightFog);
+            if (Options.Probe.InnerMask)
             {
                 Logs.Probe.InnerMask.Invert();
                 AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.InnerMask, ColorF.Transparent, LightFog));
             }
 
-            if (Probe.Thinned)
+            if (Options.Probe.Thinned)
             {
                 AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.Valleys.Thinned, ColorF.Transparent, ColorF.Red));
                 AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.Ridges.Thinned, ColorF.Transparent, ColorF.Green));
             }
 
-            RenderSkeleton(output, Probe.Ridges, Logs.Probe.Ridges);
-            RenderSkeleton(output, Probe.Valleys, Logs.Probe.Valleys);
+            RenderSkeleton(output, Options.Probe.Ridges, Logs.Probe.Ridges);
+            RenderSkeleton(output, Options.Probe.Valleys, Logs.Probe.Valleys);
 
-            if (Probe.MinutiaCollector)
+            if (Options.Probe.MinutiaCollector)
                 TemplateDrawer.Draw(output, Logs.Probe.MinutiaCollector);
 
             OutputImage = ImageIO.CreateBitmap(PixelFormat.ToColorB(output));

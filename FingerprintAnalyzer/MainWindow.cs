@@ -18,7 +18,7 @@ namespace FingerprintAnalyzer
         public MainWindow()
         {
             Blender.Logs = Logs;
-            Blender.Probe.OriginalImage = true;
+            Blender.Options.Probe.OriginalImage = true;
             InitializeLayout();
         }
 
@@ -100,34 +100,34 @@ namespace FingerprintAnalyzer
                     CreateMenuItem("Exit", delegate() { Close(); })
                 }),
                 CreateSubMenu("Probe", new ToolStripItem[] {
-                    CreateCheckMenu("Original Image", delegate() { return SwitchFlag(ref Blender.Probe.OriginalImage); }),
-                    CreateCheckMenu("Equalized", delegate() { return SwitchFlag(ref Blender.Probe.Equalized); }),
-                    CreateCheckMenu("Smoothed", delegate() { return SwitchFlag(ref Blender.Probe.SmoothedRidges); }),
+                    CreateCheckMenu("Original Image", delegate() { return SwitchFlag(ref Blender.Options.Probe.OriginalImage); }),
+                    CreateCheckMenu("Equalized", delegate() { return SwitchFlag(ref Blender.Options.Probe.Equalized); }),
+                    CreateCheckMenu("Smoothed", delegate() { return SwitchFlag(ref Blender.Options.Probe.SmoothedRidges); }),
                     new ToolStripSeparator(),
-                    CreateCheckMenu("Contrast", delegate() { return SwitchFlag(ref Blender.Probe.Contrast); }),
-                    CreateCheckMenu("Absolute Contrast", delegate() { return SwitchFlag(ref Blender.Probe.AbsoluteContrast); }),
-                    CreateCheckMenu("Relative Contrast", delegate() { return SwitchFlag(ref Blender.Probe.RelativeContrast); }),
-                    CreateCheckMenu("Majority Filter", delegate() { return SwitchFlag(ref Blender.Probe.LowContrastMajority); }),
-                    CreateCheckMenu("Mask", delegate() { return SwitchFlag(ref Blender.Probe.SegmentationMask); }),
-                    CreateCheckMenu("Inner Mask", delegate() { return SwitchFlag(ref Blender.Probe.InnerMask); }),
+                    CreateCheckMenu("Contrast", delegate() { return SwitchFlag(ref Blender.Options.Probe.Contrast); }),
+                    CreateCheckMenu("Absolute Contrast", delegate() { return SwitchFlag(ref Blender.Options.Probe.AbsoluteContrast); }),
+                    CreateCheckMenu("Relative Contrast", delegate() { return SwitchFlag(ref Blender.Options.Probe.RelativeContrast); }),
+                    CreateCheckMenu("Majority Filter", delegate() { return SwitchFlag(ref Blender.Options.Probe.LowContrastMajority); }),
+                    CreateCheckMenu("Mask", delegate() { return SwitchFlag(ref Blender.Options.Probe.SegmentationMask); }),
+                    CreateCheckMenu("Inner Mask", delegate() { return SwitchFlag(ref Blender.Options.Probe.InnerMask); }),
                     new ToolStripSeparator(),
-                    CreateCheckMenu("Orientation", delegate() { return SwitchFlag(ref Blender.Probe.Orientation); }),
-                    CreateCheckMenu("Orthogonal Smoothing", delegate() { return SwitchFlag(ref Blender.Probe.OrthogonalSmoothing); }),
+                    CreateCheckMenu("Orientation", delegate() { return SwitchFlag(ref Blender.Options.Probe.Orientation); }),
+                    CreateCheckMenu("Orthogonal Smoothing", delegate() { return SwitchFlag(ref Blender.Options.Probe.OrthogonalSmoothing); }),
                     new ToolStripSeparator(),
-                    CreateCheckMenu("Binarized", delegate() { return SwitchFlag(ref Blender.Probe.Binarized); }),
-                    CreateCheckMenu("Binary Smoothing", delegate() { return SwitchFlag(ref Blender.Probe.BinarySmoothing); }),
-                    CreateCheckMenu("Cross Removal", delegate() { return SwitchFlag(ref Blender.Probe.RemovedCrosses); }),
-                    CreateCheckMenu("Thinned", delegate() { return SwitchFlag(ref Blender.Probe.Thinned); }),
+                    CreateCheckMenu("Binarized", delegate() { return SwitchFlag(ref Blender.Options.Probe.Binarized); }),
+                    CreateCheckMenu("Binary Smoothing", delegate() { return SwitchFlag(ref Blender.Options.Probe.BinarySmoothing); }),
+                    CreateCheckMenu("Cross Removal", delegate() { return SwitchFlag(ref Blender.Options.Probe.RemovedCrosses); }),
+                    CreateCheckMenu("Thinned", delegate() { return SwitchFlag(ref Blender.Options.Probe.Thinned); }),
                     new ToolStripSeparator(),
-                    CreateSubMenu("Ridges", BuildRidgeValleyMenu(Blender.Probe.Ridges)),
-                    CreateSubMenu("Valleys", BuildRidgeValleyMenu(Blender.Probe.Valleys)),
+                    CreateSubMenu("Ridges", BuildRidgeValleyMenu(Blender.Options.Probe.Ridges)),
+                    CreateSubMenu("Valleys", BuildRidgeValleyMenu(Blender.Options.Probe.Valleys)),
                     new ToolStripSeparator(),
-                    CreateCheckMenu("Collected Minutiae", delegate() { return SwitchFlag(ref Blender.Probe.MinutiaCollector); }),
+                    CreateCheckMenu("Collected Minutiae", delegate() { return SwitchFlag(ref Blender.Options.Probe.MinutiaCollector); }),
                 })
             };
         }
 
-        ToolStripItem[] BuildRidgeValleyMenu(Blender.SkeletonOptions options)
+        ToolStripItem[] BuildRidgeValleyMenu(SkeletonOptions options)
         {
             return new ToolStripItem[] {
                 CreateCheckMenu("Binarized", delegate() { return SwitchFlag(ref options.Binarized); }),
