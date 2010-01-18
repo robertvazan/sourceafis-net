@@ -58,26 +58,34 @@ namespace FingerprintAnalyzer
 
         public void Collect()
         {
-            Extractor.Extract(Probe.InputImage, 500);
-            Probe.Blocks = Logger.Retrieve<BlockMap>("Extractor.BlockMap");
-            Probe.BlockContrast = Logger.Retrieve<byte[,]>("Extractor.Mask.Contrast");
-            Probe.AbsoluteContrast = Logger.Retrieve<BinaryMap>("Extractor.Mask.AbsoluteContrast");
-            Probe.RelativeContrast = Logger.Retrieve<BinaryMap>("Extractor.Mask.RelativeContrast");
-            Probe.LowContrastMajority = Logger.Retrieve<BinaryMap>("Extractor.Mask.LowContrastMajority");
-            Probe.SegmentationMask = Logger.Retrieve<BinaryMap>("Extractor.Mask");
-            Probe.Equalized = Logger.Retrieve<float[,]>("Extractor.Equalizer");
-            Probe.Orientation = Logger.Retrieve<byte[,]>("Extractor.Orientation");
-            Probe.SmoothedRidges = Logger.Retrieve<float[,]>("Extractor.RidgeSmoother");
-            Probe.OrthogonalSmoothing = Logger.Retrieve<float[,]>("Extractor.OrthogonalSmoother");
-            Probe.Binarized = Logger.Retrieve<BinaryMap>("Extractor.Binarizer");
-            Probe.BinarySmoothingZeroes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 0);
-            Probe.BinarySmoothingOnes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 1);
-            Probe.RemovedCrosses = Logger.Retrieve<BinaryMap>("Extractor.CrossRemover");
-            Probe.InnerMask = Logger.Retrieve<BinaryMap>("Extractor.InnerMask");
-            CollectSkeleton("[Ridges]", Probe.Ridges);
-            CollectSkeleton("[Valleys]", Probe.Valleys);
-            Probe.MinutiaCollector = Logger.Retrieve<TemplateBuilder>("Extractor.MinutiaCollector");
-            Logger.Clear();
+            Collect(Probe);
+        }
+
+        public void Collect(ExtractionData data)
+        {
+            if (data.InputImage != null)
+            {
+                Extractor.Extract(data.InputImage, 500);
+                data.Blocks = Logger.Retrieve<BlockMap>("Extractor.BlockMap");
+                data.BlockContrast = Logger.Retrieve<byte[,]>("Extractor.Mask.Contrast");
+                data.AbsoluteContrast = Logger.Retrieve<BinaryMap>("Extractor.Mask.AbsoluteContrast");
+                data.RelativeContrast = Logger.Retrieve<BinaryMap>("Extractor.Mask.RelativeContrast");
+                data.LowContrastMajority = Logger.Retrieve<BinaryMap>("Extractor.Mask.LowContrastMajority");
+                data.SegmentationMask = Logger.Retrieve<BinaryMap>("Extractor.Mask");
+                data.Equalized = Logger.Retrieve<float[,]>("Extractor.Equalizer");
+                data.Orientation = Logger.Retrieve<byte[,]>("Extractor.Orientation");
+                data.SmoothedRidges = Logger.Retrieve<float[,]>("Extractor.RidgeSmoother");
+                data.OrthogonalSmoothing = Logger.Retrieve<float[,]>("Extractor.OrthogonalSmoother");
+                data.Binarized = Logger.Retrieve<BinaryMap>("Extractor.Binarizer");
+                data.BinarySmoothingZeroes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 0);
+                data.BinarySmoothingOnes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 1);
+                data.RemovedCrosses = Logger.Retrieve<BinaryMap>("Extractor.CrossRemover");
+                data.InnerMask = Logger.Retrieve<BinaryMap>("Extractor.InnerMask");
+                CollectSkeleton("[Ridges]", data.Ridges);
+                CollectSkeleton("[Valleys]", data.Valleys);
+                data.MinutiaCollector = Logger.Retrieve<TemplateBuilder>("Extractor.MinutiaCollector");
+                Logger.Clear();
+            }
         }
 
         void CollectSkeleton(string context, SkeletonData data)
