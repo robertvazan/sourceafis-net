@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FingerprintAnalyzer
 {
-    public sealed class Options
+    sealed class Options
     {
         public ExtractionOptions Probe = new ExtractionOptions();
     }

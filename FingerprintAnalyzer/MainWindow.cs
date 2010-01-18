@@ -11,6 +11,7 @@ namespace FingerprintAnalyzer
     {
         LogCollector Logs = new LogCollector();
         Blender Blender = new Blender();
+        OptionsDialog OptionsDialog;
 
         MenuStrip MainMenu;
         PictureBox WindowCanvas;
@@ -19,6 +20,8 @@ namespace FingerprintAnalyzer
         {
             Blender.Logs = Logs;
             Blender.Options.Probe.OriginalImage = true;
+            OptionsDialog = new OptionsDialog(Blender.Options);
+            OptionsDialog.OnChange += RefreshCanvas;
             InitializeLayout();
         }
 
@@ -69,77 +72,16 @@ namespace FingerprintAnalyzer
             return menu;
         }
 
-        bool SwitchFlag(ref bool flag)
-        {
-            flag = !flag;
-            return flag;
-        }
-
-        delegate bool BoolFunction();
-
-        ToolStripMenuItem CreateCheckMenu(string text, BoolFunction switcher)
-        {
-            ToolStripMenuItem menu = new ToolStripMenuItem();
-            menu.Text = text;
-            menu.Click += delegate(object sender, EventArgs e)
-            {
-                menu.Checked = switcher();
-                RefreshCanvas();
-            };
-            switcher();
-            menu.Checked = switcher();
-            return menu;
-        }
-
         ToolStripItem[] BuildMenu()
         {
             return new ToolStripItem[] {
                 CreateSubMenu("File", new ToolStripItem[] {
                     CreateMenuItem("Open Probe...", OpenProbe),
                     new ToolStripSeparator(),
+                    CreateMenuItem("Options...", delegate() { OptionsDialog.Show(); OptionsDialog.Focus(); }),
+                    new ToolStripSeparator(),
                     CreateMenuItem("Exit", delegate() { Close(); })
-                }),
-                CreateSubMenu("Probe", new ToolStripItem[] {
-                    CreateCheckMenu("Original Image", delegate() { return SwitchFlag(ref Blender.Options.Probe.OriginalImage); }),
-                    CreateCheckMenu("Equalized", delegate() { return SwitchFlag(ref Blender.Options.Probe.Equalized); }),
-                    CreateCheckMenu("Smoothed", delegate() { return SwitchFlag(ref Blender.Options.Probe.SmoothedRidges); }),
-                    new ToolStripSeparator(),
-                    CreateCheckMenu("Contrast", delegate() { return SwitchFlag(ref Blender.Options.Probe.Contrast); }),
-                    CreateCheckMenu("Absolute Contrast", delegate() { return SwitchFlag(ref Blender.Options.Probe.AbsoluteContrast); }),
-                    CreateCheckMenu("Relative Contrast", delegate() { return SwitchFlag(ref Blender.Options.Probe.RelativeContrast); }),
-                    CreateCheckMenu("Majority Filter", delegate() { return SwitchFlag(ref Blender.Options.Probe.LowContrastMajority); }),
-                    CreateCheckMenu("Mask", delegate() { return SwitchFlag(ref Blender.Options.Probe.SegmentationMask); }),
-                    CreateCheckMenu("Inner Mask", delegate() { return SwitchFlag(ref Blender.Options.Probe.InnerMask); }),
-                    new ToolStripSeparator(),
-                    CreateCheckMenu("Orientation", delegate() { return SwitchFlag(ref Blender.Options.Probe.Orientation); }),
-                    CreateCheckMenu("Orthogonal Smoothing", delegate() { return SwitchFlag(ref Blender.Options.Probe.OrthogonalSmoothing); }),
-                    new ToolStripSeparator(),
-                    CreateCheckMenu("Binarized", delegate() { return SwitchFlag(ref Blender.Options.Probe.Binarized); }),
-                    CreateCheckMenu("Binary Smoothing", delegate() { return SwitchFlag(ref Blender.Options.Probe.BinarySmoothing); }),
-                    CreateCheckMenu("Cross Removal", delegate() { return SwitchFlag(ref Blender.Options.Probe.RemovedCrosses); }),
-                    CreateCheckMenu("Thinned", delegate() { return SwitchFlag(ref Blender.Options.Probe.Thinned); }),
-                    new ToolStripSeparator(),
-                    CreateSubMenu("Ridges", BuildRidgeValleyMenu(Blender.Options.Probe.Ridges)),
-                    CreateSubMenu("Valleys", BuildRidgeValleyMenu(Blender.Options.Probe.Valleys)),
-                    new ToolStripSeparator(),
-                    CreateCheckMenu("Collected Minutiae", delegate() { return SwitchFlag(ref Blender.Options.Probe.MinutiaCollector); }),
                 })
-            };
-        }
-
-        ToolStripItem[] BuildRidgeValleyMenu(SkeletonOptions options)
-        {
-            return new ToolStripItem[] {
-                CreateCheckMenu("Binarized", delegate() { return SwitchFlag(ref options.Binarized); }),
-                CreateCheckMenu("Thinned", delegate() { return SwitchFlag(ref options.Thinned); }),
-                new ToolStripSeparator(),
-                CreateCheckMenu("Ridge Tracer", delegate() { return SwitchFlag(ref options.RidgeTracer); }),
-                CreateCheckMenu("Removed Dots", delegate() { return SwitchFlag(ref options.DotRemover); }),
-                CreateCheckMenu("Removed Pores", delegate() { return SwitchFlag(ref options.PoreRemover); }),
-                CreateCheckMenu("Removed Tails", delegate() { return SwitchFlag(ref options.TailRemover); }),
-                CreateCheckMenu("Removed Fragments", delegate() { return SwitchFlag(ref options.FragmentRemover); }),
-                CreateCheckMenu("Border Minutiae", delegate() { return SwitchFlag(ref options.MinutiaMask); }),
-                CreateCheckMenu("Show Endings", delegate() { return SwitchFlag(ref options.ShowEndings); })
             };
         }
 
