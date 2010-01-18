@@ -4,16 +4,16 @@ using System.Text;
 
 namespace FingerprintAnalyzer
 {
-    public sealed class SkeletonOptions
+    sealed class SkeletonOptions
     {
-        public bool Binarized;
-        public bool Thinned;
-        public bool RidgeTracer;
-        public bool DotRemover;
-        public bool PoreRemover;
-        public bool TailRemover;
-        public bool FragmentRemover;
-        public bool MinutiaMask;
-        public bool ShowEndings;
+        public bool Binarized = false;
+        public bool Thinned = false;
+        public bool RidgeTracer = false;
+        public bool DotRemover = false;
+        public bool PoreRemover = false;
+        public bool TailRemover = false;
+        public bool FragmentRemover = false;
+        public bool MinutiaMask = false;
+        public bool ShowEndings = false;
     }
 }

@@ -4,25 +4,25 @@ using System.Text;
 
 namespace FingerprintAnalyzer
 {
-    public sealed class ExtractionOptions
+    sealed class ExtractionOptions
     {
         public bool OriginalImage;
-        public bool Equalized;
-        public bool SmoothedRidges;
-        public bool OrthogonalSmoothing;
-        public bool Contrast;
-        public bool AbsoluteContrast;
-        public bool RelativeContrast;
-        public bool LowContrastMajority;
-        public bool SegmentationMask;
-        public bool Orientation;
-        public bool Binarized;
-        public bool BinarySmoothing;
-        public bool RemovedCrosses;
-        public bool Thinned;
-        public bool InnerMask;
+        public bool Equalized = false;
+        public bool SmoothedRidges = false;
+        public bool OrthogonalSmoothing = false;
+        public bool Contrast = false;
+        public bool AbsoluteContrast = false;
+        public bool RelativeContrast = false;
+        public bool LowContrastMajority = false;
+        public bool SegmentationMask = false;
+        public bool Orientation = false;
+        public bool Binarized = false;
+        public bool BinarySmoothing = false;
+        public bool RemovedCrosses = false;
+        public bool Thinned = false;
+        public bool InnerMask = false;
         public SkeletonOptions Ridges = new SkeletonOptions();
         public SkeletonOptions Valleys = new SkeletonOptions();
-        public bool MinutiaCollector;
+        public bool MinutiaCollector = false;
     }
 }
