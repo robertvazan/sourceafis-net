@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Reflection;
 using System.ComponentModel;
+using SourceAFIS.General;
 
 namespace FingerprintAnalyzer
 {
@@ -15,20 +16,57 @@ namespace FingerprintAnalyzer
         public VoidFunction OnChange;
 
         List<VoidFunction> ResumeLayoutQueue = new List<VoidFunction>();
+        List<VoidFunction> RefreshQueue = new List<VoidFunction>();
+        Options Options;
+        Options Defaults;
+        Options LastCommit;
 
-        public OptionsDialog(object optionsRoot)
+        public OptionsDialog(Options options)
         {
+            Options = options;
+            Defaults = (Options)Calc.DeepClone(options);
+            LastCommit = (Options)Calc.DeepClone(options);
+
             SuspendLayout();
             
             Text = "Options for SourceAFIS Fingerprint Analyzer";
-            Controls.Add(GenerateDialog(optionsRoot));
+            Controls.Add(GenerateDialog(options));
 
+            RefreshData();
             foreach (VoidFunction resume in ResumeLayoutQueue)
                 resume();
+            ResumeLayoutQueue.Clear();
             ResumeLayout(false);
         }
 
-        Control GenerateDialog(object optionsRoot)
+        void DoOk()
+        {
+            Calc.DeepCopy(Options, LastCommit);
+            Hide();
+        }
+
+        void DoCancel()
+        {
+            Calc.DeepCopy(LastCommit, Options);
+            RefreshData();
+            Hide();
+            OnChange();
+        }
+
+        void DoDefaults()
+        {
+            Calc.DeepCopy(Defaults, Options);
+            RefreshData();
+            OnChange();
+        }
+
+        void RefreshData()
+        {
+            foreach (VoidFunction refresh in RefreshQueue)
+                refresh();
+        }
+
+        Control GenerateDialog(Options options)
         {
             TableLayoutPanel table = new TableLayoutPanel();
             table.SuspendLayout();
@@ -40,7 +78,7 @@ namespace FingerprintAnalyzer
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             table.RowStyles.Add(new RowStyle());
 
-            TabControl mainTabControl = GenerateTabControl(optionsRoot);
+            TabControl mainTabControl = GenerateTabControl(options);
             mainTabControl.Dock = DockStyle.Fill;
             table.Controls.Add(mainTabControl);
             table.Controls.Add(GenerateButtonRow());
@@ -62,14 +100,19 @@ namespace FingerprintAnalyzer
             table.ColumnStyles.Add(new ColumnStyle());
             table.ColumnStyles.Add(new ColumnStyle());
 
-            table.Controls.Add(GenerateButton("OK", delegate() { }));
-            table.Controls.Add(GenerateButton("Cancel", delegate() { }));
-            table.Controls.Add(GenerateButton("Defaults", delegate() { }));
+            Button ok = GenerateButton("OK", delegate() { DoOk(); });
+            Button cancel = GenerateButton("Cancel", delegate() { DoCancel(); });
+            table.Controls.Add(ok);
+            table.Controls.Add(cancel);
+            table.Controls.Add(GenerateButton("Defaults", delegate() { DoDefaults();  }));
+
+            AcceptButton = ok;
+            CancelButton = cancel;
 
             return table;
         }
 
-        Control GenerateButton(string text, VoidFunction action)
+        Button GenerateButton(string text, VoidFunction action)
         {
             Button button = new Button();
             button.Text = text;
@@ -155,12 +198,12 @@ namespace FingerprintAnalyzer
         {
             CheckBox result = new CheckBox();
             result.Text = fieldInfo.Name;
-            result.Checked = (bool)fieldInfo.GetValue(root);
             result.Click += delegate(object sender, EventArgs e)
             {
                 fieldInfo.SetValue(root, result.Checked);
                 OnChange();
             };
+            RefreshQueue.Add(delegate() { result.Checked = (bool)fieldInfo.GetValue(root); });
             return result;
         }
     }

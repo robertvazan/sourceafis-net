@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.Reflection;
 
 namespace SourceAFIS.General
 {
@@ -193,6 +194,30 @@ namespace SourceAFIS.General
                     result[0] = from;
             }
             return result;
+        }
+
+        public static object DeepClone(object root)
+        {
+            object clone = root.GetType().GetConstructor(new Type[0]).Invoke(new object[0]);
+            foreach (FieldInfo fieldInfo in root.GetType().GetFields())
+            {
+                if (!fieldInfo.FieldType.IsClass)
+                    fieldInfo.SetValue(clone, fieldInfo.GetValue(root));
+                else
+                    fieldInfo.SetValue(clone, DeepClone(fieldInfo.GetValue(root)));
+            }
+            return clone;
+        }
+
+        public static void DeepCopy(object source, object target)
+        {
+            foreach (FieldInfo fieldInfo in source.GetType().GetFields())
+            {
+                if (!fieldInfo.FieldType.IsClass)
+                    fieldInfo.SetValue(target, fieldInfo.GetValue(source));
+                else
+                    DeepCopy(fieldInfo.GetValue(source), fieldInfo.GetValue(target));
+            }
         }
     }
 }
