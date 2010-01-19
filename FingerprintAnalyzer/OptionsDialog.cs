@@ -42,11 +42,13 @@ namespace FingerprintAnalyzer
                 resume();
             ResumeLayoutQueue.Clear();
             ResumeLayout(false);
+            PersistentStore.Load(this);
         }
 
         void OnClose(object sender, EventArgs e)
         {
             PersistentStore.Save(Options);
+            PersistentStore.Save(this);
         }
 
         void DoOk()
