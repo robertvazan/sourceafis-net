@@ -20,6 +20,7 @@ namespace FingerprintAnalyzer
         {
             Blender.Logs = Logs;
             OptionsDialog = new OptionsDialog(Blender.Options);
+            OptionsDialog.Owner = this;
             OptionsDialog.OnChange += RefreshCanvas;
             InitializeLayout();
         }
