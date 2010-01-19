@@ -37,8 +37,7 @@ namespace FingerprintAnalyzer
             public float[,] SmoothedRidges;
             public float[,] OrthogonalSmoothing;
             public BinaryMap Binarized;
-            public BinaryMap BinarySmoothingZeroes;
-            public BinaryMap BinarySmoothingOnes;
+            public BinaryMap BinarySmoothing;
             public BinaryMap RemovedCrosses;
             public BinaryMap InnerMask;
             public SkeletonData Ridges = new SkeletonData();
@@ -77,8 +76,7 @@ namespace FingerprintAnalyzer
                 data.SmoothedRidges = Logger.Retrieve<float[,]>("Extractor.RidgeSmoother");
                 data.OrthogonalSmoothing = Logger.Retrieve<float[,]>("Extractor.OrthogonalSmoother");
                 data.Binarized = Logger.Retrieve<BinaryMap>("Extractor.Binarizer");
-                data.BinarySmoothingZeroes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 0);
-                data.BinarySmoothingOnes = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoother", 1);
+                data.BinarySmoothing = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoothingResult");
                 data.RemovedCrosses = Logger.Retrieve<BinaryMap>("Extractor.CrossRemover");
                 data.InnerMask = Logger.Retrieve<BinaryMap>("Extractor.InnerMask");
                 CollectSkeleton("[Ridges]", data.Ridges);

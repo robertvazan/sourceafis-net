@@ -19,7 +19,6 @@ namespace FingerprintAnalyzer
         public MainWindow()
         {
             Blender.Logs = Logs;
-            Blender.Options.Probe.OriginalImage = true;
             OptionsDialog = new OptionsDialog(Blender.Options);
             OptionsDialog.OnChange += RefreshCanvas;
             InitializeLayout();

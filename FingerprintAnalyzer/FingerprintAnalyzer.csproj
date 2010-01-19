@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="Blender.cs" />
     <Compile Include="ExtractionOptions.cs" />
+    <Compile Include="LayerType.cs" />
     <Compile Include="LogCollector.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
@@ -48,7 +49,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SkeletonOptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SourceAFIS\SourceAFIS.csproj">

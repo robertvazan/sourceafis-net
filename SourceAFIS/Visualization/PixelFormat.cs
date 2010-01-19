@@ -57,6 +57,16 @@ namespace SourceAFIS.Visualization
             return output;
         }
 
+        public static float[,] ToFloat(BinaryMap binary)
+        {
+            float[,] output = new float[binary.Height, binary.Width];
+            for (int y = 0; y < binary.Height; ++y)
+                for (int x = 0; x < binary.Width; ++x)
+                    if (binary.GetBit(x, y))
+                        output[y, x] = 1;
+            return output;
+        }
+
         public static float ToFloat(ColorF color)
         {
             return (color.R + color.G + color.B) / 3;

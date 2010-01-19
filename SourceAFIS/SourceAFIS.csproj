@@ -90,6 +90,7 @@
     <Compile Include="Visualization\ColorB.cs" />
     <Compile Include="Visualization\GlobalContrast.cs" />
     <Compile Include="Visualization\GrayscaleInverter.cs" />
+    <Compile Include="Visualization\ImageDiff.cs" />
     <Compile Include="Visualization\ImageIO.cs" />
     <Compile Include="General\RectangleC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
