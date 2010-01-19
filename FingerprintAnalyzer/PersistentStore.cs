@@ -67,6 +67,30 @@ namespace FingerprintAnalyzer
 #endif
         }
 
+        public static void Save(string name, object value)
+        {
+#if !MONO
+            RegistryKey key = Registry.CurrentUser.CreateSubKey(RegistryPath);
+            key.SetValue(name, value);
+#endif
+        }
+
+        public static void Load(string name, ref string value)
+        {
+#if !MONO
+            try
+            {
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath);
+                if (key != null && key.GetValue(name) != null)
+                    value = Convert.ToString(key.GetValue(name));
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(String.Format("Could not read entry {0} from registry. {1}", name, e.Message));
+            }
+#endif
+        }
+
 #if !MONO
         public static void Save(object root, RegistryKey key)
         {
