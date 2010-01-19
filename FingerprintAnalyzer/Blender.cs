@@ -23,12 +23,18 @@ namespace FingerprintAnalyzer
         {
             ColorF[,] output;
 
+            LogCollector.SkeletonData skeletonData;
+            if (Options.Probe.SkeletonType == SkeletonType.Ridges)
+                skeletonData = Logs.Probe.Ridges;
+            else
+                skeletonData = Logs.Probe.Valleys;
+
             LayerType displayLayerType = Options.Probe.DisplayLayer;
-            float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, Logs.Probe, Logs.Probe.Ridges));
+            float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, Logs.Probe, skeletonData));
             output = PixelFormat.ToColorF(GlobalContrast.GetNormalized(GrayscaleInverter.GetInverted(displayLayer)));
 
             LayerType compareLayerType = Options.Probe.CompareWith;
-            float[,] compareLayer = GlobalContrast.GetNormalized(GetLayer(compareLayerType, Logs.Probe, Logs.Probe.Ridges));
+            float[,] compareLayer = GlobalContrast.GetNormalized(GetLayer(compareLayerType, Logs.Probe, skeletonData));
             float[,] diff;
             if ((int)compareLayerType < (int)displayLayerType)
                 diff = ImageDiff.Diff(compareLayer, displayLayer);
