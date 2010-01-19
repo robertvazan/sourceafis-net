@@ -63,6 +63,12 @@ namespace FingerprintAnalyzer
                         diff = ImageDiff.Diff(compareLayer, displayLayer);
                     else
                         diff = ImageDiff.Diff(displayLayer, compareLayer);
+                    if (Options.Probe.DiffType == DiffType.Normalized)
+                        diff = ImageDiff.Normalize(diff, 10);
+                    if (Options.Probe.DiffType == DiffType.Fog)
+                        diff = ImageDiff.Binarize(diff, 0.05f, 0.5f);
+                    if (Options.Probe.DiffType == DiffType.Binary)
+                        diff = ImageDiff.Binarize(diff, 0.05f, 1);
                     ColorF[,] diffLayer = ImageDiff.Render(diff);
                     AlphaLayering.Layer(output, diffLayer);
                 }

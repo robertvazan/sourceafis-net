@@ -11,6 +11,7 @@ namespace FingerprintAnalyzer
         public SkeletonType SkeletonType = SkeletonType.Ridges;
         public QuickCompare CompareWith = QuickCompare.None;
         public LayerType CompareWithLayer = LayerType.OriginalImage;
+        public DiffType DiffType = DiffType.Proportional;
         public MaskType Mask = MaskType.None;
         public bool Contrast = false;
         public bool AbsoluteContrast = false;
