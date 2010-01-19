@@ -52,6 +52,8 @@ namespace SourceAFIS.Extraction
         [Nested]
         public FragmentRemover FragmentRemover = new FragmentRemover();
         [Nested]
+        public BranchMinutiaRemover BranchMinutiaRemover = new BranchMinutiaRemover();
+        [Nested]
         public MinutiaCollector MinutiaCollector = new MinutiaCollector();
 
         public Extractor()
@@ -121,6 +123,7 @@ namespace SourceAFIS.Extraction
                 TailRemover.Filter(skeleton);
                 FragmentRemover.Filter(skeleton);
                 MinutiaMask.Filter(skeleton, innerMask);
+                BranchMinutiaRemover.Filter(skeleton);
             });
             return skeleton;
         }
