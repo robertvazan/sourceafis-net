@@ -12,6 +12,7 @@ namespace FingerprintAnalyzer
         LogCollector Logs = new LogCollector();
         Blender Blender = new Blender();
         OptionsDialog OptionsDialog;
+        string ProbePath;
 
         MenuStrip MainMenu;
         PictureBox WindowCanvas;
@@ -23,6 +24,9 @@ namespace FingerprintAnalyzer
             OptionsDialog.Owner = this;
             OptionsDialog.OnChange += RefreshCanvas;
             InitializeLayout();
+
+            PersistentStore.Load("ProbePath", ref ProbePath);
+            RefreshCanvas();
         }
 
         void InitializeLayout()
@@ -89,6 +93,11 @@ namespace FingerprintAnalyzer
 
         void RefreshCanvas()
         {
+            if (ProbePath != null)
+                Logs.Probe.InputImage = PixelFormat.ToByte(ImageIO.Load(ProbePath));
+            else
+                Logs.Probe.InputImage = null;
+
             if (Logs.Probe.InputImage != null)
             {
                 Logs.Collect();
@@ -104,7 +113,7 @@ namespace FingerprintAnalyzer
             OpenFileDialog dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Logs.Probe.InputImage = PixelFormat.ToByte(ImageIO.Load(dialog.FileName));
+                ProbePath = dialog.FileName;
                 RefreshCanvas();
             }
         }
@@ -112,6 +121,7 @@ namespace FingerprintAnalyzer
         void OnClose(object sender, EventArgs e)
         {
             PersistentStore.Save(this);
+            PersistentStore.Save("ProbePath", ProbePath);
         }
     }
 }
