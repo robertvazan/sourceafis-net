@@ -84,6 +84,7 @@ namespace SourceAFIS.Extraction
                 BinaryMap binary = Binarizer.Binarize(smoothed, orthogonal, mask, blocks);
                 binary.AndNot(BinarySmoother.Filter(binary.GetInverted()));
                 binary.Or(BinarySmoother.Filter(binary));
+                Logger.Log(this, "BinarySmoothingResult", binary);
                 CrossRemover.Remove(binary);
 
                 BinaryMap pixelMask = mask.FillBlocks(blocks);

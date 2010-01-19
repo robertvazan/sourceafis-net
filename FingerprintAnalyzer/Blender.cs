@@ -22,50 +22,20 @@ namespace FingerprintAnalyzer
         public void Blend()
         {
             ColorF[,] output;
-            bool empty = false;
-            if (Options.Probe.OrthogonalSmoothing)
-                output = BaseGrayscale(Logs.Probe.OrthogonalSmoothing);
-            else if (Options.Probe.SmoothedRidges)
-                output = BaseGrayscale(Logs.Probe.SmoothedRidges);
-            else if (Options.Probe.Equalized)
-                output = BaseGrayscale(Logs.Probe.Equalized);
-            else if (Options.Probe.OriginalImage)
-                output = PixelFormat.ToColorF(Logs.Probe.InputImage);
-            else
-            {
-                output = new ColorF[Logs.Probe.InputImage.GetLength(0), Logs.Probe.InputImage.GetLength(1)];
-                for (int y = 0; y < output.GetLength(0); ++y)
-                    for (int x = 0; x < output.GetLength(1); ++x)
-                        output[y, x] = new ColorF(1, 1, 1, 1);
-                empty = true;
-            }
 
-            if (Options.Probe.Binarized)
-            {
-                if (empty)
-                {
-                    output = ScalarColoring.Mask(Logs.Probe.Binarized, ColorF.White, ColorF.Black);
-                    empty = false;
-                }
-                else
-                    AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.Binarized, ColorF.Transparent, TransparentGreen));
-            }
-            if (Options.Probe.BinarySmoothing)
-            {
-                Logs.Probe.BinarySmoothingZeroes.And(Logs.Probe.Binarized);
-                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.BinarySmoothingZeroes, ColorF.Transparent, ColorF.Red));
-                Logs.Probe.BinarySmoothingOnes.AndNot(Logs.Probe.Binarized);
-                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.BinarySmoothingOnes, ColorF.Transparent, ColorF.Green));
-            }
-            if (Options.Probe.RemovedCrosses)
-            {
-                Logs.Probe.RemovedCrosses.Invert();
-                BinaryMap smoothedBinary = new BinaryMap(Logs.Probe.Binarized);
-                smoothedBinary.AndNot(Logs.Probe.BinarySmoothingZeroes);
-                smoothedBinary.Or(Logs.Probe.BinarySmoothingOnes);
-                Logs.Probe.RemovedCrosses.And(smoothedBinary);
-                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.RemovedCrosses, ColorF.Transparent, ColorF.Red));
-            }
+            LayerType displayLayerType = Options.Probe.DisplayLayer;
+            float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, Logs.Probe, Logs.Probe.Ridges));
+            output = PixelFormat.ToColorF(GlobalContrast.GetNormalized(GrayscaleInverter.GetInverted(displayLayer)));
+
+            LayerType compareLayerType = Options.Probe.CompareWith;
+            float[,] compareLayer = GlobalContrast.GetNormalized(GetLayer(compareLayerType, Logs.Probe, Logs.Probe.Ridges));
+            float[,] diff;
+            if ((int)compareLayerType < (int)displayLayerType)
+                diff = ImageDiff.Diff(compareLayer, displayLayer);
+            else
+                diff = ImageDiff.Diff(displayLayer, compareLayer);
+            ColorF[,] diffLayer = ImageDiff.Render(diff);
+            AlphaLayering.Layer(output, diffLayer);
 
             LayerBlocks(Options.Probe.Contrast, output, PixelFormat.ToFloat(Logs.Probe.BlockContrast));
             LayerMask(Options.Probe.AbsoluteContrast, output, Logs.Probe.AbsoluteContrast, TransparentRed);
@@ -86,41 +56,32 @@ namespace FingerprintAnalyzer
                 AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.InnerMask, ColorF.Transparent, LightFog));
             }
 
-            if (Options.Probe.Thinned)
-            {
-                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.Valleys.Thinned, ColorF.Transparent, ColorF.Red));
-                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.Ridges.Thinned, ColorF.Transparent, ColorF.Green));
-            }
-
-            RenderSkeleton(output, Options.Probe.Ridges, Logs.Probe.Ridges);
-            RenderSkeleton(output, Options.Probe.Valleys, Logs.Probe.Valleys);
-
             if (Options.Probe.MinutiaCollector)
                 TemplateDrawer.Draw(output, Logs.Probe.MinutiaCollector);
 
             OutputImage = ImageIO.CreateBitmap(PixelFormat.ToColorB(output));
         }
 
-        void RenderSkeleton(ColorF[,] output, SkeletonOptions options, LogCollector.SkeletonData logs)
+        float[,] GetLayer(LayerType type, LogCollector.ExtractionData data, LogCollector.SkeletonData skeleton)
         {
-            if (options.Binarized)
-                AlphaLayering.Layer(output, ScalarColoring.Mask(logs.Binarized, ColorF.White, ColorF.Black));
-            if (options.Thinned)
-                AlphaLayering.Layer(output, ScalarColoring.Mask(logs.Thinned, ColorF.Transparent, options.Binarized ? ColorF.Green : ColorF.Black));
-            if (options.RidgeTracer)
-                AlphaLayering.Layer(output, ScalarColoring.Mask(SkeletonDrawer.Draw(logs.RidgeTracer, logs.Binarized.Size), ColorF.Transparent, ColorF.Black));
-            if (options.DotRemover)
-                LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.RidgeTracer, logs.Binarized.Size), SkeletonDrawer.Draw(logs.DotRemover, logs.Binarized.Size));
-            if (options.PoreRemover)
-                LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.DotRemover, logs.Binarized.Size), SkeletonDrawer.Draw(logs.PoreRemover, logs.Binarized.Size));
-            if (options.TailRemover)
-                LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.PoreRemover, logs.Binarized.Size), SkeletonDrawer.Draw(logs.TailRemover, logs.Binarized.Size));
-            if (options.FragmentRemover)
-                LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.TailRemover, logs.Binarized.Size), SkeletonDrawer.Draw(logs.FragmentRemover, logs.Binarized.Size));
-            if (options.MinutiaMask)
-                LayerBinaryDiff(output, SkeletonDrawer.Draw(logs.FragmentRemover, logs.Binarized.Size), SkeletonDrawer.Draw(logs.MinutiaMask, logs.Binarized.Size));
-            if (options.ShowEndings)
-                AlphaLayering.Layer(output, ScalarColoring.Mask(SkeletonDrawer.DrawEndings(logs.MinutiaMask, logs.Binarized.Size), ColorF.Transparent, ColorF.Blue));
+            switch (type)
+            {
+                case LayerType.OriginalImage: return GrayscaleInverter.GetInverted(PixelFormat.ToFloat(data.InputImage));
+                case LayerType.Equalized: return data.Equalized;
+                case LayerType.SmoothedRidges: return data.SmoothedRidges;
+                case LayerType.OrthogonalSmoothing: return data.OrthogonalSmoothing;
+                case LayerType.Binarized: return PixelFormat.ToFloat(data.Binarized);
+                case LayerType.BinarySmoothing: return PixelFormat.ToFloat(data.BinarySmoothing);
+                case LayerType.RemovedCrosses: return PixelFormat.ToFloat(data.RemovedCrosses);
+                case LayerType.Thinned: return PixelFormat.ToFloat(skeleton.Thinned);
+                case LayerType.RidgeTracer: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.RidgeTracer, data.Binarized.Size));
+                case LayerType.DotRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.DotRemover, data.Binarized.Size));
+                case LayerType.PoreRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.PoreRemover, data.Binarized.Size));
+                case LayerType.TailRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.TailRemover, data.Binarized.Size));
+                case LayerType.FragmentRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.FragmentRemover, data.Binarized.Size));
+                case LayerType.MinutiaMask: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.MinutiaMask, data.Binarized.Size));
+                default: throw new Exception();
+            }
         }
 
         ColorF[,] BaseGrayscale(float[,] image)

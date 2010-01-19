@@ -7,6 +7,13 @@ namespace SourceAFIS.Visualization
 {
     public sealed class GlobalContrast
     {
+        public static float[,] GetNormalized(float[,] image)
+        {
+            float[,] result = (float[,])image.Clone();
+            Normalize(result);
+            return result;
+        }
+
         public static void Normalize(float[,] image)
         {
             Normalize(image, new RangeF(0, 1));
