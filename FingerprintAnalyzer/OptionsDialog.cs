@@ -25,14 +25,16 @@ namespace FingerprintAnalyzer
         {
             OnChange = delegate() { };
 
-            Options = options;
             Defaults = (Options)Calc.DeepClone(options);
+            PersistentStore.Load(options);
+            Options = options;
             LastCommit = (Options)Calc.DeepClone(options);
 
             SuspendLayout();
             
             Text = "Options for SourceAFIS Fingerprint Analyzer";
             Size = new Size(300, 450);
+            FormClosing += OnClose;
             Controls.Add(GenerateDialog(options));
 
             RefreshData();
@@ -40,6 +42,11 @@ namespace FingerprintAnalyzer
                 resume();
             ResumeLayoutQueue.Clear();
             ResumeLayout(false);
+        }
+
+        void OnClose(object sender, EventArgs e)
+        {
+            PersistentStore.Save(Options);
         }
 
         void DoOk()
