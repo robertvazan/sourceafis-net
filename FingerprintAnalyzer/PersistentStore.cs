@@ -11,7 +11,8 @@ namespace FingerprintAnalyzer
 {
     sealed class PersistentStore
     {
-        const string OptionsPath = @"Software\SourceAFIS\FingerprintAnalyzer\Options";
+        const string RegistryPath = @"Software\SourceAFIS\FingerprintAnalyzer";
+        const string OptionsPath = RegistryPath + @"\Options";
 
         public static void Save(Options options)
         {
@@ -26,6 +27,43 @@ namespace FingerprintAnalyzer
             RegistryKey key = Registry.CurrentUser.OpenSubKey(OptionsPath);
             if (key != null)
                 Load(options, key);
+#endif
+        }
+
+        public static void Save(Form form)
+        {
+#if !MONO
+            RegistryKey key = Registry.CurrentUser.CreateSubKey(RegistryPath + @"\" + form.GetType().Name);
+            key.SetValue("Visible", form.Visible);
+            key.SetValue("WindowState", form.WindowState);
+            key.SetValue("Left", form.Left);
+            key.SetValue("Top", form.Top);
+            key.SetValue("Width", form.Width);
+            key.SetValue("Height", form.Height);
+#endif
+        }
+
+        public static void Load(Form form)
+        {
+#if !MONO
+            try
+            {
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath + @"\" + form.GetType().Name);
+                if (key != null)
+                {
+                    form.WindowState = (FormWindowState)Enum.Parse(typeof(FormWindowState), (string)key.GetValue("WindowState"));
+                    form.Left = Convert.ToInt32(key.GetValue("Left"));
+                    form.Top = Convert.ToInt32(key.GetValue("Top"));
+                    form.Width = Convert.ToInt32(key.GetValue("Width"));
+                    form.Height = Convert.ToInt32(key.GetValue("Height"));
+                    form.StartPosition = FormStartPosition.Manual;
+                    form.Visible = Convert.ToBoolean(key.GetValue("Visible"));
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(String.Format("Could not read form {0} settings from registry. {1}", form.GetType().Name, e.Message));
+            }
 #endif
         }
 

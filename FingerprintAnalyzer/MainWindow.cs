@@ -46,6 +46,8 @@ namespace FingerprintAnalyzer
             Controls.Add(WindowCanvas);
             Controls.Add(MainMenu);
             MainMenuStrip = MainMenu;
+            PersistentStore.Load(this);
+            FormClosing += OnClose;
 
             MainMenu.ResumeLayout(false);
             MainMenu.PerformLayout();
@@ -105,6 +107,11 @@ namespace FingerprintAnalyzer
                 Logs.Probe.InputImage = PixelFormat.ToByte(ImageIO.Load(dialog.FileName));
                 RefreshCanvas();
             }
+        }
+
+        void OnClose(object sender, EventArgs e)
+        {
+            PersistentStore.Save(this);
         }
     }
 }
