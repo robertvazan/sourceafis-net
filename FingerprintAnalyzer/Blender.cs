@@ -21,7 +21,10 @@ namespace FingerprintAnalyzer
 
         public void Blend()
         {
-            ColorF[,] output;
+            ColorF[,] output = new ColorF[Logs.Probe.InputImage.GetLength(0), Logs.Probe.InputImage.GetLength(1)];
+            for (int y = 0; y < output.GetLength(0); ++y)
+                for (int x = 0; x < output.GetLength(1); ++x)
+                    output[y, x] = ColorF.White;
 
             LogCollector.SkeletonData skeletonData;
             if (Options.Probe.SkeletonType == SkeletonType.Ridges)
@@ -29,37 +32,40 @@ namespace FingerprintAnalyzer
             else
                 skeletonData = Logs.Probe.Valleys;
 
-            LayerType displayLayerType = Options.Probe.DisplayLayer;
-            float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, Logs.Probe, skeletonData));
-            output = PixelFormat.ToColorF(GlobalContrast.GetNormalized(GrayscaleInverter.GetInverted(displayLayer)));
-
-            LayerType compareLayerType = displayLayerType;
-            if (Options.Probe.CompareWith != QuickCompare.None)
+            if (Options.Probe.EnableImageDisplay)
             {
-                if (Options.Probe.CompareWith == QuickCompare.OtherLayer)
-                    compareLayerType = Options.Probe.CompareWithLayer;
-                else
+                LayerType displayLayerType = Options.Probe.DisplayLayer;
+                float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, Logs.Probe, skeletonData));
+                output = PixelFormat.ToColorF(GlobalContrast.GetNormalized(GrayscaleInverter.GetInverted(displayLayer)));
+
+                LayerType compareLayerType = displayLayerType;
+                if (Options.Probe.CompareWith != QuickCompare.None)
                 {
-                    int compareLayerIndex;
-                    if (Options.Probe.CompareWith == QuickCompare.Next)
-                        compareLayerIndex = (int)displayLayerType + 1;
+                    if (Options.Probe.CompareWith == QuickCompare.OtherLayer)
+                        compareLayerType = Options.Probe.CompareWithLayer;
                     else
-                        compareLayerIndex = (int)displayLayerType - 1;
-                    if (Enum.IsDefined(typeof(LayerType), compareLayerIndex))
-                        compareLayerType = (LayerType)Enum.Parse(typeof(LayerType), compareLayerIndex.ToString());
+                    {
+                        int compareLayerIndex;
+                        if (Options.Probe.CompareWith == QuickCompare.Next)
+                            compareLayerIndex = (int)displayLayerType + 1;
+                        else
+                            compareLayerIndex = (int)displayLayerType - 1;
+                        if (Enum.IsDefined(typeof(LayerType), compareLayerIndex))
+                            compareLayerType = (LayerType)Enum.Parse(typeof(LayerType), compareLayerIndex.ToString());
+                    }
                 }
-            }
 
-            if (compareLayerType != displayLayerType)
-            {
-                float[,] compareLayer = GlobalContrast.GetNormalized(GetLayer(compareLayerType, Logs.Probe, skeletonData));
-                float[,] diff;
-                if ((int)compareLayerType < (int)displayLayerType)
-                    diff = ImageDiff.Diff(compareLayer, displayLayer);
-                else
-                    diff = ImageDiff.Diff(displayLayer, compareLayer);
-                ColorF[,] diffLayer = ImageDiff.Render(diff);
-                AlphaLayering.Layer(output, diffLayer);
+                if (compareLayerType != displayLayerType)
+                {
+                    float[,] compareLayer = GlobalContrast.GetNormalized(GetLayer(compareLayerType, Logs.Probe, skeletonData));
+                    float[,] diff;
+                    if ((int)compareLayerType < (int)displayLayerType)
+                        diff = ImageDiff.Diff(compareLayer, displayLayer);
+                    else
+                        diff = ImageDiff.Diff(displayLayer, compareLayer);
+                    ColorF[,] diffLayer = ImageDiff.Render(diff);
+                    AlphaLayering.Layer(output, diffLayer);
+                }
             }
 
             LayerBlocks(Options.Probe.Contrast, output, PixelFormat.ToFloat(Logs.Probe.BlockContrast));
@@ -73,16 +79,16 @@ namespace FingerprintAnalyzer
                 AlphaLayering.Layer(output, ScalarColoring.Mask(markers, ColorF.Transparent, ColorF.Red));
             }
 
-            Logs.Probe.SegmentationMask.Invert();
-            LayerMask(Options.Probe.SegmentationMask, output, Logs.Probe.SegmentationMask, LightFog);
-            if (Options.Probe.InnerMask)
-            {
-                Logs.Probe.InnerMask.Invert();
-                AlphaLayering.Layer(output, ScalarColoring.Mask(Logs.Probe.InnerMask, ColorF.Transparent, LightFog));
-            }
-
             if (Options.Probe.MinutiaCollector)
                 TemplateDrawer.Draw(output, Logs.Probe.MinutiaCollector);
+
+            BinaryMap mask = null;
+            if (Options.Probe.Mask == MaskType.Segmentation)
+                mask = BlockFiller.FillBlocks(Logs.Probe.SegmentationMask.GetInverted(), Logs.Probe.Blocks);
+            if (Options.Probe.Mask == MaskType.Inner)
+                mask = Logs.Probe.InnerMask.GetInverted();
+            if (mask != null)
+                AlphaLayering.Layer(output, ScalarColoring.Mask(mask, ColorF.Transparent, LightFog));
 
             OutputImage = ImageIO.CreateBitmap(PixelFormat.ToColorB(output));
         }
@@ -107,23 +113,6 @@ namespace FingerprintAnalyzer
                 case LayerType.MinutiaMask: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.MinutiaMask, data.Binarized.Size));
                 default: throw new Exception();
             }
-        }
-
-        ColorF[,] BaseGrayscale(float[,] image)
-        {
-            GrayscaleInverter.Invert(image);
-            GlobalContrast.Normalize(image);
-            return PixelFormat.ToColorF(image);
-        }
-
-        void LayerBinaryDiff(ColorF[,] output, BinaryMap first, BinaryMap second)
-        {
-            BinaryMap removed = new BinaryMap(first);
-            removed.AndNot(second);
-            AlphaLayering.Layer(output, ScalarColoring.Mask(removed, ColorF.Transparent, ColorF.Red));
-            BinaryMap added = new BinaryMap(second);
-            added.AndNot(first);
-            AlphaLayering.Layer(output, ScalarColoring.Mask(added, ColorF.Transparent, ColorF.Green));
         }
 
         void LayerMask(bool condition, ColorF[,] output, BinaryMap mask, ColorF color)

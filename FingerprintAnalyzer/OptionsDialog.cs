@@ -192,7 +192,6 @@ namespace FingerprintAnalyzer
                 page.PerformLayout();
             });
             page.Text = fieldInfo.Name;
-            page.BackColor = SystemColors.ButtonFace;
             page.AutoScroll = true;
             page.Controls.Add(GenerateStack(fieldInfo.GetValue(root)));
             return page;

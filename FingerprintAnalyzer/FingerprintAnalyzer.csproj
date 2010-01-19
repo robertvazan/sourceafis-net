@@ -43,6 +43,7 @@
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MaskType.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="OptionsDialog.cs">
       <SubType>Form</SubType>
