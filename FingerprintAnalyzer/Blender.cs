@@ -33,15 +33,34 @@ namespace FingerprintAnalyzer
             float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, Logs.Probe, skeletonData));
             output = PixelFormat.ToColorF(GlobalContrast.GetNormalized(GrayscaleInverter.GetInverted(displayLayer)));
 
-            LayerType compareLayerType = Options.Probe.CompareWith;
-            float[,] compareLayer = GlobalContrast.GetNormalized(GetLayer(compareLayerType, Logs.Probe, skeletonData));
-            float[,] diff;
-            if ((int)compareLayerType < (int)displayLayerType)
-                diff = ImageDiff.Diff(compareLayer, displayLayer);
-            else
-                diff = ImageDiff.Diff(displayLayer, compareLayer);
-            ColorF[,] diffLayer = ImageDiff.Render(diff);
-            AlphaLayering.Layer(output, diffLayer);
+            LayerType compareLayerType = displayLayerType;
+            if (Options.Probe.CompareWith != QuickCompare.None)
+            {
+                if (Options.Probe.CompareWith == QuickCompare.OtherLayer)
+                    compareLayerType = Options.Probe.CompareWithLayer;
+                else
+                {
+                    int compareLayerIndex;
+                    if (Options.Probe.CompareWith == QuickCompare.Next)
+                        compareLayerIndex = (int)displayLayerType + 1;
+                    else
+                        compareLayerIndex = (int)displayLayerType - 1;
+                    if (Enum.IsDefined(typeof(LayerType), compareLayerIndex))
+                        compareLayerType = (LayerType)Enum.Parse(typeof(LayerType), compareLayerIndex.ToString());
+                }
+            }
+
+            if (compareLayerType != displayLayerType)
+            {
+                float[,] compareLayer = GlobalContrast.GetNormalized(GetLayer(compareLayerType, Logs.Probe, skeletonData));
+                float[,] diff;
+                if ((int)compareLayerType < (int)displayLayerType)
+                    diff = ImageDiff.Diff(compareLayer, displayLayer);
+                else
+                    diff = ImageDiff.Diff(displayLayer, compareLayer);
+                ColorF[,] diffLayer = ImageDiff.Render(diff);
+                AlphaLayering.Layer(output, diffLayer);
+            }
 
             LayerBlocks(Options.Probe.Contrast, output, PixelFormat.ToFloat(Logs.Probe.BlockContrast));
             LayerMask(Options.Probe.AbsoluteContrast, output, Logs.Probe.AbsoluteContrast, TransparentRed);

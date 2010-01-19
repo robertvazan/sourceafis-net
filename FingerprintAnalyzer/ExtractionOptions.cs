@@ -8,7 +8,8 @@ namespace FingerprintAnalyzer
     {
         public LayerType DisplayLayer = LayerType.OriginalImage;
         public SkeletonType SkeletonType = SkeletonType.Ridges;
-        public LayerType CompareWith = LayerType.OriginalImage;
+        public QuickCompare CompareWith = QuickCompare.None;
+        public LayerType CompareWithLayer = LayerType.OriginalImage;
         public bool Contrast = false;
         public bool AbsoluteContrast = false;
         public bool RelativeContrast = false;
