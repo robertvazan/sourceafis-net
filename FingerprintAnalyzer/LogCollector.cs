@@ -21,6 +21,7 @@ namespace FingerprintAnalyzer
             public SkeletonBuilder TailRemover;
             public SkeletonBuilder FragmentRemover;
             public SkeletonBuilder MinutiaMask;
+            public SkeletonBuilder BranchMinutiaRemover;
         }
 
         public sealed class ExtractionData
@@ -96,6 +97,7 @@ namespace FingerprintAnalyzer
             data.TailRemover = Logger.Retrieve<SkeletonBuilder>("Extractor.TailRemover" + context);
             data.FragmentRemover = Logger.Retrieve<SkeletonBuilder>("Extractor.FragmentRemover" + context);
             data.MinutiaMask = Logger.Retrieve<SkeletonBuilder>("Extractor.MinutiaMask" + context);
+            data.BranchMinutiaRemover = Logger.Retrieve<SkeletonBuilder>("Extractor.BranchMinutiaRemover" + context);
         }
     }
 }

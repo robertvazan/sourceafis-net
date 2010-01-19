@@ -19,6 +19,7 @@ namespace FingerprintAnalyzer
         PoreRemover,
         TailRemover,
         FragmentRemover,
-        MinutiaMask
+        MinutiaMask,
+        BranchMinutiaRemover
     }
 }
