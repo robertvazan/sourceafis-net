@@ -7,6 +7,7 @@ namespace FingerprintAnalyzer
     sealed class ExtractionOptions
     {
         public LayerType DisplayLayer = LayerType.OriginalImage;
+        public SkeletonType SkeletonType = SkeletonType.Ridges;
         public LayerType CompareWith = LayerType.OriginalImage;
         public bool Contrast = false;
         public bool AbsoluteContrast = false;
