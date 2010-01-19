@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Blender.cs" />
+    <Compile Include="DiffType.cs" />
     <Compile Include="ExtractionOptions.cs" />
     <Compile Include="LayerType.cs" />
     <Compile Include="LogCollector.cs" />
