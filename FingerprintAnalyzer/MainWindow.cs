@@ -13,6 +13,7 @@ namespace FingerprintAnalyzer
         Blender Blender = new Blender();
         OptionsDialog OptionsDialog;
         string ProbePath;
+        string CandidatePath;
 
         MenuStrip MainMenu;
         PictureBox WindowCanvas;
@@ -26,6 +27,7 @@ namespace FingerprintAnalyzer
             InitializeLayout();
 
             PersistentStore.Load("ProbePath", ref ProbePath);
+            PersistentStore.Load("CandidatePath", ref CandidatePath);
             RefreshCanvas();
         }
 
@@ -83,6 +85,7 @@ namespace FingerprintAnalyzer
             return new ToolStripItem[] {
                 CreateSubMenu("File", new ToolStripItem[] {
                     CreateMenuItem("Open Probe...", OpenProbe),
+                    CreateMenuItem("Open Candidate...", OpenCandidate),
                     new ToolStripSeparator(),
                     CreateMenuItem("Options...", delegate() { OptionsDialog.Show(); OptionsDialog.Focus(); }),
                     new ToolStripSeparator(),
@@ -97,6 +100,10 @@ namespace FingerprintAnalyzer
                 Logs.Probe.InputImage = PixelFormat.ToByte(ImageIO.Load(ProbePath));
             else
                 Logs.Probe.InputImage = null;
+            if (CandidatePath != null)
+                Logs.Candidate.InputImage = PixelFormat.ToByte(ImageIO.Load(CandidatePath));
+            else
+                Logs.Candidate.InputImage = null;
 
             if (Logs.Probe.InputImage != null)
             {
@@ -118,10 +125,21 @@ namespace FingerprintAnalyzer
             }
         }
 
+        void OpenCandidate()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                CandidatePath = dialog.FileName;
+                RefreshCanvas();
+            }
+        }
+
         void OnClose(object sender, EventArgs e)
         {
             PersistentStore.Save(this);
             PersistentStore.Save("ProbePath", ProbePath);
+            PersistentStore.Save("CandidatePath", CandidatePath);
         }
     }
 }

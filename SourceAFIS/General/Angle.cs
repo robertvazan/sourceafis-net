@@ -59,6 +59,11 @@ namespace SourceAFIS.General
             return (byte)(orientation / 2);
         }
 
+        public static byte FromDegreesB(int degrees)
+        {
+            return (byte)((degrees * 256 + 180) / 360);
+        }
+
         public static float Atan(double x, double y)
         {
             double result = Math.Atan2(y, x);
@@ -160,6 +165,30 @@ namespace SourceAFIS.General
         public static byte Add(byte angle1, byte angle2)
         {
             return (byte)(angle1 + angle2);
+        }
+
+        public static byte Difference(byte angle1, byte angle2)
+        {
+            return (byte)(angle1 - angle2);
+        }
+
+        public static byte Distance(byte first, byte second)
+        {
+            byte diff = Difference(first, second);
+            if (diff <= PIB)
+                return diff;
+            else
+                return Complementary(diff);
+        }
+
+        public static byte Complementary(byte angle)
+        {
+            return (byte)-angle;
+        }
+
+        public static byte Opposite(byte angle)
+        {
+            return (byte)(angle + PIB);
         }
     }
 }

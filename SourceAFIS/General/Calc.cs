@@ -107,6 +107,11 @@ namespace SourceAFIS.General
             return Sq(point.X) + Sq(point.Y);
         }
 
+        public static int DistanceSq(Point left, Point right)
+        {
+            return DistanceSq(Difference(left, right));
+        }
+
         public static int GetArea(Size size)
         {
             return size.Width * size.Height;
@@ -117,6 +122,13 @@ namespace SourceAFIS.General
             T tmp = first;
             first = second;
             second = tmp;
+        }
+
+        public static void Swap<T>(IList<T> list, int first, int second)
+        {
+            T tmp = list[first];
+            list[first] = list[second];
+            list[second] = tmp;
         }
 
         public static void Shuffle<T>(IList<T> collection, Random random)
@@ -144,6 +156,15 @@ namespace SourceAFIS.General
             return 0;
         }
 
+        public static int Compare(float left, float right)
+        {
+            if (left < right)
+                return -1;
+            if (left > right)
+                return 1;
+            return 0;
+        }
+
         public static int ChainCompare(int first, int second)
         {
             if (first != 0)
@@ -155,6 +176,26 @@ namespace SourceAFIS.General
         public static int CompareYX(Point left, Point right)
         {
             return ChainCompare(Compare(left.Y, right.Y), Compare(left.X, right.X));
+        }
+
+        class ComparisonComparer<T> : IComparer<T>
+        {
+            readonly Comparison<T> Comparison;
+
+            public ComparisonComparer(Comparison<T> comparison)
+            {
+                Comparison = comparison;
+            }
+
+            public int Compare(T x, T y)
+            {
+                return Comparison(x, y);
+            }
+        }
+
+        public static IComparer<T> GetComparisonComparer<T>(Comparison<T> comparison)
+        {
+            return new ComparisonComparer<T>(comparison);
         }
 
         public static Point[] ConstructLine(Point from, Point to)

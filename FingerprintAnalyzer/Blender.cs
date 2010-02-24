@@ -4,6 +4,7 @@ using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
 using SourceAFIS.Visualization;
+using SourceAFIS.Matching;
 
 namespace FingerprintAnalyzer
 {
@@ -19,34 +20,102 @@ namespace FingerprintAnalyzer
         readonly ColorF TransparentGreen = new ColorF(0, 1, 0, 0.25f);
         readonly ColorF LightFog = new ColorF(0.9f, 0.9f, 0.9f, 0.9f);
 
+        GlobalTransformation GlobalTransformation = new GlobalTransformation();
+
+        delegate ColorF[,] BlendLayer(LogCollector.ExtractionData data, ExtractionOptions options, Palette palette);
+
+        class Palette
+        {
+            public ColorF Image;
+            public ColorF Ending;
+            public ColorF Bifurcation;
+        }
+
+        Palette ProbePalette = new Palette();
+        Palette CandidatePalette = new Palette();
+
+        public Blender()
+        {
+            ProbePalette.Image = ColorF.Black;
+            ProbePalette.Ending = new ColorF(1, 0, 1);
+            ProbePalette.Bifurcation = new ColorF(0, 1, 1);
+            CandidatePalette.Image = new ColorF(0.2f, 0.1f, 0);
+            CandidatePalette.Ending = new ColorF(0.5f, 1, 0.5f);
+            CandidatePalette.Bifurcation = new ColorF(1, 1, 0);
+        }
+
         public void Blend()
         {
+            BlendLayer[] layers = new BlendLayer[]
+            {
+                BlendImage,
+                BlendDiff,
+                BlendMarkers,
+                BlendMask
+            };
+
             ColorF[,] output = new ColorF[Logs.Probe.InputImage.GetLength(0), Logs.Probe.InputImage.GetLength(1)];
             for (int y = 0; y < output.GetLength(0); ++y)
                 for (int x = 0; x < output.GetLength(1); ++x)
                     output[y, x] = ColorF.White;
 
-            LogCollector.SkeletonData skeletonData;
-            if (Options.Probe.SkeletonType == SkeletonType.Ridges)
-                skeletonData = Logs.Probe.Ridges;
-            else
-                skeletonData = Logs.Probe.Valleys;
-
-            if (Options.Probe.EnableImageDisplay)
+            if (Logs.Probe.InputImage != null)
             {
-                LayerType displayLayerType = Options.Probe.DisplayLayer;
-                float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, Logs.Probe, skeletonData));
-                output = PixelFormat.ToColorF(GlobalContrast.GetNormalized(GrayscaleInverter.GetInverted(displayLayer)));
-
-                LayerType compareLayerType = displayLayerType;
-                if (Options.Probe.CompareWith != QuickCompare.None)
+                Transformation2D transformation = null;
+                if (Logs.Candidate.InputImage != null && Logs.Match.AnyMatch)
+                    transformation = GlobalTransformation.Compute(Logs.Match.Pairing, Logs.Probe.Template, Logs.Candidate.Template);
+                foreach (BlendLayer layer in layers)
                 {
-                    if (Options.Probe.CompareWith == QuickCompare.OtherLayer)
-                        compareLayerType = Options.Probe.CompareWithLayer;
+                    if (transformation != null)
+                    {
+                        AlphaLayering.Layer(output, AffineTransformer.Transform(layer(Logs.Candidate, Options.Candidate, CandidatePalette),
+                            new Size(Logs.Probe.InputImage.GetLength(1), Logs.Probe.InputImage.GetLength(0)), transformation));
+                    }
+                    AlphaLayering.Layer(output, layer(Logs.Probe, Options.Probe, ProbePalette));
+                    if (layer == BlendMarkers && transformation != null)
+                        BlendMatch(output, transformation);
+                }
+            }
+
+            OutputImage = ImageIO.CreateBitmap(PixelFormat.ToColorB(output));
+        }
+
+        void BlendMatch(ColorF[,] output, Transformation2D transformation)
+        {
+            if (Options.Match.PairedInProbe)
+                PairingMarkers.DrawProbe(output, Logs.Match.Pairing, Logs.Probe.Template);
+            if (Options.Match.PairedInCandidate)
+                PairingMarkers.DrawCandidate(output, Logs.Match.Pairing, Logs.Candidate.Template, transformation);
+        }
+
+        ColorF[,] BlendImage(LogCollector.ExtractionData data, ExtractionOptions options, Palette palette)
+        {
+            LogCollector.SkeletonData skeletonData = GetSkeletonData(options, data);
+            if (options.EnableImageDisplay)
+            {
+                LayerType displayLayerType = options.DisplayLayer;
+                float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, data, skeletonData));
+                return ScalarColoring.Interpolate(GlobalContrast.GetNormalized(displayLayer), ColorF.Transparent, palette.Image);
+            }
+            else
+                return GetEmptyLayer(data);
+        }
+
+        ColorF[,] BlendDiff(LogCollector.ExtractionData data, ExtractionOptions options, Palette palette)
+        {
+            if (options.EnableImageDisplay)
+            {
+                LogCollector.SkeletonData skeletonData = GetSkeletonData(options, data);
+                LayerType displayLayerType = options.DisplayLayer;
+                LayerType compareLayerType = displayLayerType;
+                if (options.CompareWith != QuickCompare.None)
+                {
+                    if (options.CompareWith == QuickCompare.OtherLayer)
+                        compareLayerType = options.CompareWithLayer;
                     else
                     {
                         int compareLayerIndex;
-                        if (Options.Probe.CompareWith == QuickCompare.Next)
+                        if (options.CompareWith == QuickCompare.Next)
                             compareLayerIndex = (int)displayLayerType + 1;
                         else
                             compareLayerIndex = (int)displayLayerType - 1;
@@ -57,46 +126,71 @@ namespace FingerprintAnalyzer
 
                 if (compareLayerType != displayLayerType)
                 {
-                    float[,] compareLayer = GlobalContrast.GetNormalized(GetLayer(compareLayerType, Logs.Probe, skeletonData));
+                    float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, data, skeletonData));
+                    float[,] compareLayer = GlobalContrast.GetNormalized(GetLayer(compareLayerType, data, skeletonData));
                     float[,] diff;
                     if ((int)compareLayerType < (int)displayLayerType)
                         diff = ImageDiff.Diff(compareLayer, displayLayer);
                     else
                         diff = ImageDiff.Diff(displayLayer, compareLayer);
-                    if (Options.Probe.DiffType == DiffType.Normalized)
+                    if (options.DiffType == DiffType.Normalized)
                         diff = ImageDiff.Normalize(diff, 10);
-                    if (Options.Probe.DiffType == DiffType.Fog)
+                    if (options.DiffType == DiffType.Fog)
                         diff = ImageDiff.Binarize(diff, 0.05f, 0.5f);
-                    if (Options.Probe.DiffType == DiffType.Binary)
+                    if (options.DiffType == DiffType.Binary)
                         diff = ImageDiff.Binarize(diff, 0.05f, 1);
-                    ColorF[,] diffLayer = ImageDiff.Render(diff);
-                    AlphaLayering.Layer(output, diffLayer);
+                    return ImageDiff.Render(diff);
                 }
+                else
+                    return GetEmptyLayer(data);
             }
+            else
+                return GetEmptyLayer(data);
+        }
 
-            LayerBlocks(Options.Probe.Contrast, output, PixelFormat.ToFloat(Logs.Probe.BlockContrast));
-            LayerMask(Options.Probe.AbsoluteContrast, output, Logs.Probe.AbsoluteContrast, TransparentRed);
-            LayerMask(Options.Probe.RelativeContrast, output, Logs.Probe.RelativeContrast, TransparentRed);
-            LayerMask(Options.Probe.LowContrastMajority, output, Logs.Probe.LowContrastMajority, TransparentRed);
+        ColorF[,] BlendMarkers(LogCollector.ExtractionData data, ExtractionOptions options, Palette palette)
+        {
+            ColorF[,] output = GetEmptyLayer(data);
+            LayerBlocks(options.Contrast, output, PixelFormat.ToFloat(data.BlockContrast));
+            LayerMask(options.AbsoluteContrast, output, data.AbsoluteContrast, TransparentRed);
+            LayerMask(options.RelativeContrast, output, data.RelativeContrast, TransparentRed);
+            LayerMask(options.LowContrastMajority, output, data.LowContrastMajority, TransparentRed);
 
-            if (Options.Probe.Orientation)
+            if (options.Orientation)
             {
-                BinaryMap markers = OrientationMarkers.Draw(Logs.Probe.Orientation, Logs.Probe.Blocks, Logs.Probe.SegmentationMask);
+                BinaryMap markers = OrientationMarkers.Draw(data.Orientation, data.Blocks, data.SegmentationMask);
                 AlphaLayering.Layer(output, ScalarColoring.Mask(markers, ColorF.Transparent, ColorF.Red));
             }
 
-            if (Options.Probe.MinutiaCollector)
-                TemplateDrawer.Draw(output, Logs.Probe.MinutiaCollector);
+            if (options.MinutiaCollector)
+                TemplateDrawer.Draw(output, data.MinutiaCollector, palette.Ending, palette.Bifurcation);
+            return output;
+        }
 
+        ColorF[,] BlendMask(LogCollector.ExtractionData data, ExtractionOptions options, Palette palette)
+        {
             BinaryMap mask = null;
-            if (Options.Probe.Mask == MaskType.Segmentation)
-                mask = BlockFiller.FillBlocks(Logs.Probe.SegmentationMask.GetInverted(), Logs.Probe.Blocks);
-            if (Options.Probe.Mask == MaskType.Inner)
-                mask = Logs.Probe.InnerMask.GetInverted();
+            if (options.Mask == MaskType.Segmentation)
+                mask = BlockFiller.FillBlocks(data.SegmentationMask.GetInverted(), data.Blocks);
+            if (options.Mask == MaskType.Inner)
+                mask = data.InnerMask.GetInverted();
             if (mask != null)
-                AlphaLayering.Layer(output, ScalarColoring.Mask(mask, ColorF.Transparent, LightFog));
+                return ScalarColoring.Mask(mask, ColorF.Transparent, LightFog);
+            else
+                return GetEmptyLayer(data);
+        }
 
-            OutputImage = ImageIO.CreateBitmap(PixelFormat.ToColorB(output));
+        ColorF[,] GetEmptyLayer(LogCollector.ExtractionData data)
+        {
+            return new ColorF[data.InputImage.GetLength(0), data.InputImage.GetLength(1)];
+        }
+
+        LogCollector.SkeletonData GetSkeletonData(ExtractionOptions options, LogCollector.ExtractionData data)
+        {
+            if (options.SkeletonType == SkeletonType.Ridges)
+                return data.Ridges;
+            else
+                return data.Valleys;
         }
 
         float[,] GetLayer(LayerType type, LogCollector.ExtractionData data, LogCollector.SkeletonData skeleton)

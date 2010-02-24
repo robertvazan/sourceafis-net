@@ -76,7 +76,21 @@
     <Compile Include="General\Logger.cs" />
     <Compile Include="General\Neighborhood.cs" />
     <Compile Include="General\PointS.cs" />
+    <Compile Include="General\PriorityQueue.cs" />
     <Compile Include="General\ReversedList.cs" />
+    <Compile Include="General\Transformation2D.cs" />
+    <Compile Include="Matching\EdgeAnalysis.cs" />
+    <Compile Include="Matching\ExhaustiveRootSelector.cs" />
+    <Compile Include="Matching\GlobalTransformation.cs" />
+    <Compile Include="Matching\IRootSelector.cs" />
+    <Compile Include="Matching\MatchAnalysis.cs" />
+    <Compile Include="Matching\Matcher.cs" />
+    <Compile Include="Matching\MatchScoring.cs" />
+    <Compile Include="Matching\MinutiaPair.cs" />
+    <Compile Include="Matching\MinutiaPairing.cs" />
+    <Compile Include="Matching\NeighborIterator.cs" />
+    <Compile Include="Matching\PairSelector.cs" />
+    <Compile Include="Matching\ProbeNeighbors.cs" />
     <Compile Include="Meta\DpiAdjustedAttribute.cs" />
     <Compile Include="Meta\DpiAdjuster.cs" />
     <Compile Include="Meta\NestedAttribute.cs" />
@@ -85,6 +99,7 @@
     <Compile Include="General\RangeF.cs" />
     <Compile Include="General\Threader.cs" />
     <Compile Include="Meta\ParameterValue.cs" />
+    <Compile Include="Visualization\AffineTransformer.cs" />
     <Compile Include="Visualization\AlphaLayering.cs" />
     <Compile Include="Visualization\BlockFiller.cs" />
     <Compile Include="Visualization\CircleDrawer.cs" />
@@ -97,6 +112,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Visualization\ColorF.cs" />
     <Compile Include="Visualization\OrientationMarkers.cs" />
+    <Compile Include="Visualization\PairingMarkers.cs" />
     <Compile Include="Visualization\PixelFormat.cs" />
     <Compile Include="Visualization\ScalarColoring.cs" />
     <Compile Include="Visualization\SkeletonDrawer.cs" />
