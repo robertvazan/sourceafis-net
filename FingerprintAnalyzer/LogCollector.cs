@@ -6,6 +6,7 @@ using SourceAFIS.Extraction.Model;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.General;
 using SourceAFIS.Visualization;
+using SourceAFIS.Matching;
 
 namespace FingerprintAnalyzer
 {
@@ -44,24 +45,39 @@ namespace FingerprintAnalyzer
             public SkeletonData Ridges = new SkeletonData();
             public SkeletonData Valleys = new SkeletonData();
             public TemplateBuilder MinutiaCollector;
+            public Template Template;
+        }
+
+        public sealed class MatchData
+        {
+            public int RootIndex;
+            public bool AnyMatch;
+            public MinutiaPair Root;
+            public MinutiaPairing Pairing;
         }
 
         public ExtractionData Probe = new ExtractionData();
+        public ExtractionData Candidate = new ExtractionData();
+        public MatchData Match = new MatchData();
 
         Extractor Extractor = new Extractor();
+        Matcher Matcher = new Matcher();
 
         public LogCollector()
         {
             Logger.Resolver.Scan(Extractor, "Extractor");
+            Logger.Resolver.Scan(Matcher, "Matcher");
             Logger.Filter = delegate(string path) { return true; };
         }
 
         public void Collect()
         {
-            Collect(Probe);
+            CollectExtraction(Probe);
+            CollectExtraction(Candidate);
+            CollectMatching();
         }
 
-        public void Collect(ExtractionData data)
+        public void CollectExtraction(ExtractionData data)
         {
             if (data.InputImage != null)
             {
@@ -83,6 +99,7 @@ namespace FingerprintAnalyzer
                 CollectSkeleton("[Ridges]", data.Ridges);
                 CollectSkeleton("[Valleys]", data.Valleys);
                 data.MinutiaCollector = Logger.Retrieve<TemplateBuilder>("Extractor.MinutiaCollector");
+                data.Template = new SerializedFormat().Export(data.MinutiaCollector);
                 Logger.Clear();
             }
         }
@@ -98,6 +115,23 @@ namespace FingerprintAnalyzer
             data.FragmentRemover = Logger.Retrieve<SkeletonBuilder>("Extractor.FragmentRemover" + context);
             data.MinutiaMask = Logger.Retrieve<SkeletonBuilder>("Extractor.MinutiaMask" + context);
             data.BranchMinutiaRemover = Logger.Retrieve<SkeletonBuilder>("Extractor.BranchMinutiaRemover" + context);
+        }
+
+        void CollectMatching()
+        {
+            if (Probe.InputImage != null && Candidate.InputImage != null)
+            {
+                Matcher.Prepare(Probe.Template);
+                Matcher.Match(Candidate.Template);
+                Match.RootIndex = Logger.Retrieve<int>("Matcher.BestRootIndex");
+                Match.AnyMatch = Match.RootIndex >= 0;
+                if (Match.AnyMatch)
+                {
+                    Match.Root = Logger.Retrieve<MinutiaPair>("Matcher.Root", Match.RootIndex);
+                    Match.Pairing = Logger.Retrieve<MinutiaPairing>("Matcher.Pairing", Match.RootIndex);
+                }
+                Logger.Clear();
+            }
         }
     }
 }

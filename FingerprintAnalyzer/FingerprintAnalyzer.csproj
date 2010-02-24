@@ -45,6 +45,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MaskType.cs" />
+    <Compile Include="MatchingOptions.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="OptionsDialog.cs">
       <SubType>Form</SubType>

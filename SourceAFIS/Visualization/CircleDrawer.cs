@@ -34,5 +34,26 @@ namespace SourceAFIS.Visualization
                     }
             return borderPoints.ToArray();
         }
+
+        public static void Paint(Point[] circle, Point center, BinaryMap binary)
+        {
+            foreach (Point circleRelative in circle)
+            {
+                Point circlePoint = Calc.Add(center, circleRelative);
+                if (binary.Rect.Contains(circlePoint))
+                    binary.SetBitOne(circlePoint);
+            }
+        }
+
+        public static void Paint(Point[] circle, Point center, ColorF[,] output, ColorF color)
+        {
+            RectangleC rect = new RectangleC(output.GetLength(1), output.GetLength(0));
+            foreach (Point circleRelative in circle)
+            {
+                Point circlePoint = Calc.Add(center, circleRelative);
+                if (rect.Contains(circlePoint))
+                    output[circlePoint.Y, circlePoint.X] = color;
+            }
+        }
     }
 }
