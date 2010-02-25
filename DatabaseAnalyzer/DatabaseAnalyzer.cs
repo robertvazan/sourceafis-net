@@ -12,6 +12,8 @@ namespace DatabaseAnalyzer
         TestDatabase TestDatabase = new TestDatabase();
         ExtractorBenchmark ExtractorBenchmark = new ExtractorBenchmark();
         ExtractorReport ExtractorReport = new ExtractorReport();
+        MatcherBenchmark MatcherBenchmark = new MatcherBenchmark();
+        MatcherReport MatcherReport = new MatcherReport();
 
         public DatabaseAnalyzer()
         {
@@ -19,6 +21,8 @@ namespace DatabaseAnalyzer
             Options.ExtractorBenchmark = ExtractorBenchmark;
             ExtractorBenchmark.Database = TestDatabase;
             ExtractorReport.Benchmark = ExtractorBenchmark;
+            MatcherBenchmark.TestDatabase = TestDatabase;
+            MatcherReport.Benchmark = MatcherBenchmark;
         }
 
         void Run()
@@ -29,6 +33,9 @@ namespace DatabaseAnalyzer
                 case "extractor-benchmark":
                     RunExtractorBenchmark();
                     break;
+                case "matcher-benchmark":
+                    RunMatcherBenchmark();
+                    break;
             }
         }
 
@@ -38,6 +45,16 @@ namespace DatabaseAnalyzer
             ExtractorBenchmark.Run();
             ExtractorReport.Create();
             ExtractorReport.Save();
+        }
+
+        void RunMatcherBenchmark()
+        {
+            Console.WriteLine("Running extraction");
+            ExtractorBenchmark.Run();
+            Console.WriteLine("Running matcher benchmark");
+            MatcherBenchmark.Run();
+            MatcherReport.Create();
+            MatcherReport.Save();
         }
 
         static void Main(string[] args)

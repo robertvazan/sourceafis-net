@@ -9,26 +9,20 @@ using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Tuning
 {
-    public sealed class TestDatabase : IEnumerable<TestDatabase.Database>
+    public sealed class TestDatabase
     {
         public List<Database> Databases = new List<Database>();
-        public IEnumerator<Database> GetEnumerator() { return Databases.GetEnumerator(); }
-        IEnumerator IEnumerable.GetEnumerator() { return Databases.GetEnumerator(); }
 
-        public sealed class Database : IEnumerable<Finger>
+        public sealed class Database
         {
             public string Path;
             public List<Finger> Fingers = new List<Finger>();
-            public IEnumerator<Finger> GetEnumerator() { return Fingers.GetEnumerator(); }
-            IEnumerator IEnumerable.GetEnumerator() { return Fingers.GetEnumerator(); }
         }
 
-        public sealed class Finger : IEnumerable<View>
+        public sealed class Finger
         {
             public string Name;
             public List<View> Views = new List<View>();
-            public IEnumerator<View> GetEnumerator() { return Views.GetEnumerator(); }
-            IEnumerator IEnumerable.GetEnumerator() { return Views.GetEnumerator(); }
         }
 
         public sealed class View
@@ -38,13 +32,23 @@ namespace SourceAFIS.Tuning
             public Template Template;
         }
 
+        public IEnumerable<Finger> AllFingers
+        {
+            get
+            {
+                foreach (Database database in Databases)
+                    foreach (Finger finger in database.Fingers)
+                        yield return finger;
+            }
+        }
+
         public IEnumerable<View> AllViews
         {
             get
             {
-                foreach (Database database in this)
-                    foreach (Finger finger in database)
-                        foreach (View view in finger)
+                foreach (Database database in Databases)
+                    foreach (Finger finger in database.Fingers)
+                        foreach (View view in finger.Views)
                             yield return view;
             }
         }
@@ -94,11 +98,27 @@ namespace SourceAFIS.Tuning
             }
         }
 
+        void ClipList<T>(List<T> list, int max)
+        {
+            if (list.Count > max)
+                list.RemoveRange(max, list.Count - max);
+        }
+
+        public void ClipDatabaseCount(int max)
+        {
+            ClipList(Databases, max);
+        }
+
         public void ClipFingersPerDatabase(int max)
         {
-            foreach (Database database in this)
-                if (database.Fingers.Count > max)
-                    database.Fingers.RemoveRange(max, database.Fingers.Count - max);
+            foreach (Database database in Databases)
+                ClipList(database.Fingers, max);
+        }
+
+        public void ClipViewsPerFinger(int max)
+        {
+            foreach (Finger finger in AllFingers)
+                ClipList(finger.Views, max);
         }
     }
 }
