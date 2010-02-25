@@ -35,6 +35,7 @@
   <ItemGroup>
     <Compile Include="DatabaseAnalyzer.cs" />
     <Compile Include="ExtractorReport.cs" />
+    <Compile Include="MatcherReport.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Report.cs" />

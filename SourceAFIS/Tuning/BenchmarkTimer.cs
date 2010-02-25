@@ -9,12 +9,13 @@ namespace SourceAFIS.Tuning
         public DateTime StartTime;
         public DateTime StopTime;
         public DateTime LastTime;
+        public TimeSpan Accumulated;
 
         public TimeSpan TotalTime { get { return StopTime - StartTime; } }
         public TimeSpan Elapsed { get { return LastTime - StartTime; } }
 
         public void Start() { StartTime = DateTime.Now; }
-        public void Stop() { StopTime = DateTime.Now; }
+        public void Stop() { StopTime = DateTime.Now; Accumulated += TotalTime; }
         public void Update() { LastTime = DateTime.Now; }
     }
 }
