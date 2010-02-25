@@ -99,6 +99,9 @@
     <Compile Include="General\RangeF.cs" />
     <Compile Include="General\Threader.cs" />
     <Compile Include="Meta\ParameterValue.cs" />
+    <Compile Include="Tuning\BenchmarkTimer.cs" />
+    <Compile Include="Tuning\ExtractorBenchmark.cs" />
+    <Compile Include="Tuning\TestDatabase.cs" />
     <Compile Include="Visualization\AffineTransformer.cs" />
     <Compile Include="Visualization\AlphaLayering.cs" />
     <Compile Include="Visualization\BlockFiller.cs" />
