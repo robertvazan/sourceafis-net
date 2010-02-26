@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.IO;
 using SourceAFIS.Tuning;
 
 namespace DatabaseAnalyzer
@@ -45,12 +46,18 @@ namespace DatabaseAnalyzer
             ExtractorBenchmark.Run();
             ExtractorReport.Create();
             ExtractorReport.Save();
+            TestDatabase.Save("TestDatabase.dat");
         }
 
         void RunMatcherBenchmark()
         {
-            Console.WriteLine("Running extraction");
-            ExtractorBenchmark.Run();
+            if (File.Exists("TestDatabase.dat"))
+                TestDatabase.Load("TestDatabase.dat");
+            else
+            {
+                Console.WriteLine("Running extraction");
+                ExtractorBenchmark.Run();
+            }
             Console.WriteLine("Running matcher benchmark");
             MatcherBenchmark.Run();
             MatcherReport.Create();
