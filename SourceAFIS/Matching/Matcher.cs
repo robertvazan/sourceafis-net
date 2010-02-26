@@ -18,7 +18,7 @@ namespace SourceAFIS.Matching
         [Nested]
         public ProbeNeighbors ProbeNeighbors = new ProbeNeighbors();
         [Nested]
-        public EdgeAnalysis CandidateEdge = new EdgeAnalysis();
+        public EdgeConstructor EdgeConstructor = new EdgeConstructor();
         [Nested]
         public PairSelector PairSelector = new PairSelector();
         [Nested]
@@ -65,7 +65,6 @@ namespace SourceAFIS.Matching
         void PrepareCandidate(Template candidate)
         {
             Pairing.SetCandidate(candidate);
-            CandidateEdge.Template = candidate;
             PairSelector.Clear();
         }
 
@@ -94,15 +93,13 @@ namespace SourceAFIS.Matching
 
         void CollectEdges(Template candidate)
         {
-            CandidateEdge.ReferenceIndex = Pairing.LastAdded.Candidate;
             foreach (int candidateNeighbor in CandidateNeighbors.GetNeighbors(candidate, Pairing.LastAdded.Candidate))
                 if (!Pairing.IsCandidatePaired(candidateNeighbor))
                 {
-                    CandidateEdge.NeighborIndex = candidateNeighbor;
-                    CandidateEdge.ComputeAll();
-                    foreach (int probeNeighbor in ProbeNeighbors.GetMatchingNeighbors(Pairing.LastAdded.Probe, CandidateEdge))
+                    EdgeInfo candidateEdge = EdgeConstructor.Construct(candidate, Pairing.LastAdded.Candidate, candidateNeighbor);
+                    foreach (int probeNeighbor in ProbeNeighbors.GetMatchingNeighbors(Pairing.LastAdded.Probe, candidateEdge))
                         if (!Pairing.IsProbePaired(probeNeighbor))
-                            PairSelector.Enqueue(new MinutiaPair(probeNeighbor, candidateNeighbor), CandidateEdge.EdgeLength);
+                            PairSelector.Enqueue(new MinutiaPair(probeNeighbor, candidateNeighbor), candidateEdge.Length);
                 }
         }
     }
