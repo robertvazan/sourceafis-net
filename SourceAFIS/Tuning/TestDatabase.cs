@@ -6,25 +6,31 @@ using System.IO;
 using System.Drawing;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Visualization;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SourceAFIS.Tuning
 {
+    [Serializable]
     public sealed class TestDatabase
     {
         public List<Database> Databases = new List<Database>();
 
+        [Serializable]
         public sealed class Database
         {
             public string Path;
             public List<Finger> Fingers = new List<Finger>();
         }
 
+        [Serializable]
         public sealed class Finger
         {
             public string Name;
             public List<View> Views = new List<View>();
         }
 
+        [Serializable]
         public sealed class View
         {
             public string Path;
@@ -119,6 +125,26 @@ namespace SourceAFIS.Tuning
         {
             foreach (Finger finger in AllFingers)
                 ClipList(finger.Views, max);
+        }
+
+        public void Save(string path)
+        {
+            using (FileStream stream = File.OpenWrite(path))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, this);
+            }
+        }
+
+        public void Load(string path)
+        {
+            using (FileStream stream = File.OpenRead(path))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                TestDatabase loaded = (TestDatabase)formatter.Deserialize(stream);
+                Databases = loaded.Databases;
+                loaded.Databases = null;
+            }
         }
     }
 }
