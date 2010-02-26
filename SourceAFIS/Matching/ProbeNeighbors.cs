@@ -29,7 +29,6 @@ namespace SourceAFIS.Matching
 
         public void Reset(Template probe)
         {
-            NeighborIterator.Reset(probe);
             Map = new EdgeInfo[probe.Minutiae.Length][];
 
             List<EdgeInfo> edges = new List<EdgeInfo>();
@@ -39,7 +38,7 @@ namespace SourceAFIS.Matching
             for (int reference = 0; reference < Map.Length; ++reference)
             {
                 analysis.ReferenceIndex = reference;
-                foreach (int neighbor in NeighborIterator.GetNeighbors(reference))
+                foreach (int neighbor in NeighborIterator.GetNeighbors(probe, reference))
                 {
                     analysis.NeighborIndex = neighbor;
                     analysis.ComputeAll();

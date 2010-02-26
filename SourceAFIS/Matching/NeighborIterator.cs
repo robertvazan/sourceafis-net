@@ -13,18 +13,11 @@ namespace SourceAFIS.Matching
         [DpiAdjusted]
         public int MaxDistance = 200;
 
-        Template Template;
-
-        public void Reset(Template template)
+        public IEnumerable<int> GetNeighbors(Template template, int minutia)
         {
-            Template = template;
-        }
-
-        public IEnumerable<int> GetNeighbors(int minutia)
-        {
-            Point center = Template.Minutiae[minutia].Position;
-            for (int i = 0; i < Template.Minutiae.Length; ++i)
-                if (i != minutia && Calc.DistanceSq(center, Template.Minutiae[i].Position) <= Calc.Sq(MaxDistance))
+            Point center = template.Minutiae[minutia].Position;
+            for (int i = 0; i < template.Minutiae.Length; ++i)
+                if (i != minutia && Calc.DistanceSq(center, template.Minutiae[i].Position) <= Calc.Sq(MaxDistance))
                     yield return i;
         }
     }

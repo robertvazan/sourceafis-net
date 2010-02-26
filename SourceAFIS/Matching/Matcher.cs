@@ -28,12 +28,13 @@ namespace SourceAFIS.Matching
 
         public int MaxTriedRoots = 10000;
 
+        Template Probe;
+
         public void Prepare(Template probe)
         {
-            RootSelector.SetProbe(probe);
+            Probe = probe;
             Pairing.SetProbe(probe);
             ProbeNeighbors.Reset(probe);
-            MatchAnalysis.SetProbe(probe);
         }
 
         public float Match(Template candidate)
@@ -43,10 +44,10 @@ namespace SourceAFIS.Matching
             int rootIndex = 0;
             float bestScore = 0;
             int bestRootIndex = -1;
-            foreach (MinutiaPair root in RootSelector.GetRoots())
+            foreach (MinutiaPair root in RootSelector.GetRoots(Probe, candidate))
             {
                 Logger.Log(this, "Root", root);
-                float score = TryRoot(root);
+                float score = TryRoot(root, candidate);
                 if (score > bestScore)
                 {
                     bestScore = score;
@@ -63,29 +64,26 @@ namespace SourceAFIS.Matching
 
         void PrepareCandidate(Template candidate)
         {
-            RootSelector.SetCandidate(candidate);
             Pairing.SetCandidate(candidate);
-            CandidateNeighbors.Reset(candidate);
             CandidateEdge.Template = candidate;
             PairSelector.Clear();
-            MatchAnalysis.SetCandidate(candidate);
         }
 
-        float TryRoot(MinutiaPair root)
+        float TryRoot(MinutiaPair root, Template candidate)
         {
             Pairing.Reset();
             Pairing.Add(root);
-            BuildPairing();
+            BuildPairing(candidate);
 
-            MatchAnalysis.Analyze(Pairing);
+            MatchAnalysis.Analyze(Pairing, Probe, candidate);
             return MatchScoring.Compute(MatchAnalysis);
         }
 
-        void BuildPairing()
+        void BuildPairing(Template candidate)
         {
             while (true)
             {
-                CollectEdges();
+                CollectEdges(candidate);
                 PairSelector.SkipPaired(Pairing);
                 if (PairSelector.Count == 0)
                     break;
@@ -94,10 +92,10 @@ namespace SourceAFIS.Matching
             Logger.Log(this, "Pairing", Pairing);
         }
 
-        void CollectEdges()
+        void CollectEdges(Template candidate)
         {
             CandidateEdge.ReferenceIndex = Pairing.LastAdded.Candidate;
-            foreach (int candidateNeighbor in CandidateNeighbors.GetNeighbors(Pairing.LastAdded.Candidate))
+            foreach (int candidateNeighbor in CandidateNeighbors.GetNeighbors(candidate, Pairing.LastAdded.Candidate))
                 if (!Pairing.IsCandidatePaired(candidateNeighbor))
                 {
                     CandidateEdge.NeighborIndex = candidateNeighbor;

@@ -7,23 +7,10 @@ namespace SourceAFIS.Matching
 {
     public sealed class ExhaustiveRootSelector : IRootSelector
     {
-        int ProbeCount;
-        int CandidateCount;
-
-        public void SetProbe(Template probe)
+        public IEnumerable<MinutiaPair> GetRoots(Template probeTemplate, Template candidateTemplate)
         {
-            ProbeCount = probe.Minutiae.Length;
-        }
-
-        public void SetCandidate(Template candidate)
-        {
-            CandidateCount = candidate.Minutiae.Length;
-        }
-
-        public IEnumerable<MinutiaPair> GetRoots()
-        {
-            for (int probe = 0; probe < ProbeCount; ++probe)
-                for (int candidate = 0; candidate < CandidateCount; ++candidate)
+            for (int probe = 0; probe < probeTemplate.Minutiae.Length; ++probe)
+                for (int candidate = 0; candidate < candidateTemplate.Minutiae.Length; ++candidate)
                     yield return new MinutiaPair(probe, candidate);
         }
     }
