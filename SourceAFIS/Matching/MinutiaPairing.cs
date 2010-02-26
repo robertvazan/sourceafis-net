@@ -13,12 +13,12 @@ namespace SourceAFIS.Matching
 
         public MinutiaPair LastAdded { get { return LastPair; } }
 
-        public void SetProbe(Template probe)
+        public void SelectProbe(Template probe)
         {
             CandidateByProbe = new int[probe.Minutiae.Length];
         }
 
-        public void SetCandidate(Template candidate)
+        public void SelectCandidate(Template candidate)
         {
             if (ProbeByCandidate == null || ProbeByCandidate.Length < candidate.Minutiae.Length)
                 ProbeByCandidate = new int[candidate.Minutiae.Length];

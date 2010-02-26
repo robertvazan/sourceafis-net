@@ -33,7 +33,7 @@ namespace SourceAFIS.Matching
         public void Prepare(Template probe)
         {
             Probe = probe;
-            Pairing.SetProbe(probe);
+            Pairing.SelectProbe(probe);
             ProbeNeighbors.Reset(probe);
         }
 
@@ -64,7 +64,7 @@ namespace SourceAFIS.Matching
 
         void PrepareCandidate(Template candidate)
         {
-            Pairing.SetCandidate(candidate);
+            Pairing.SelectCandidate(candidate);
             PairSelector.Clear();
         }
 
