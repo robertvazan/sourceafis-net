@@ -7,8 +7,6 @@ namespace SourceAFIS.Matching
 {
     public interface IRootSelector
     {
-        void SetProbe(Template probe);
-        void SetCandidate(Template candidate);
-        IEnumerable<MinutiaPair> GetRoots();
+        IEnumerable<MinutiaPair> GetRoots(Template probe, Template candidate);
     }
 }

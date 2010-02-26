@@ -7,30 +7,17 @@ namespace SourceAFIS.Matching
 {
     public sealed class MatchAnalysis
     {
-        Template Probe;
-        Template Candidate;
-
         public int PairCount;
         public float PairFraction;
 
-        public void SetProbe(Template probe)
-        {
-            Probe = probe;
-        }
-
-        public void SetCandidate(Template candidate)
-        {
-            Candidate = candidate;
-        }
-
-        public void Analyze(MinutiaPairing pairing)
+        public void Analyze(MinutiaPairing pairing, Template probe, Template candidate)
         {
             PairCount = 0;
             foreach (MinutiaPair pair in pairing.GetPairs())
                 ++PairCount;
 
-            float probeFraction = PairCount / (float)Probe.Minutiae.Length;
-            float candidateFraction = PairCount / (float)Candidate.Minutiae.Length;
+            float probeFraction = PairCount / (float)probe.Minutiae.Length;
+            float candidateFraction = PairCount / (float)candidate.Minutiae.Length;
             PairFraction = (probeFraction + candidateFraction) / 2;
         }
     }
