@@ -9,13 +9,12 @@ namespace SourceAFIS.Matching
         public float PairCountFactor = 1;
         public float PairFractionFactor = 10;
 
-        public float Score;
-
-        public void Compute(MatchAnalysis analysis)
+        public float Compute(MatchAnalysis analysis)
         {
-            Score = 0;
-            Score += PairCountFactor * analysis.PairCount;
-            Score += PairFractionFactor * analysis.PairFraction;
+            float score = 0;
+            score += PairCountFactor * analysis.PairCount;
+            score += PairFractionFactor * analysis.PairFraction;
+            return score;
         }
     }
 }

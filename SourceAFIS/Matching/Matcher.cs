@@ -78,8 +78,7 @@ namespace SourceAFIS.Matching
             BuildPairing();
 
             MatchAnalysis.Analyze(Pairing);
-            MatchScoring.Compute(MatchAnalysis);
-            return MatchScoring.Score;
+            return MatchScoring.Compute(MatchAnalysis);
         }
 
         void BuildPairing()
