@@ -11,46 +11,39 @@ namespace SourceAFIS.Matching
     {
         [Nested]
         public NeighborIterator NeighborIterator = new NeighborIterator();
+        [Nested]
+        public EdgeConstructor EdgeConstructor = new EdgeConstructor();
 
         public int MaxNeighbors = 10;
         [DpiAdjusted]
         public int MaxDistanceError = 20;
         public byte MaxAngleError = Angle.FromDegreesB(10);
 
-        struct EdgeInfo
+        struct EdgeRecord
         {
-            public float Length;
-            public byte ReferenceAngle;
-            public byte NeighborAngle;
+            public EdgeInfo Edge;
             public int Neighbor;
         }
 
-        EdgeInfo[][] Map;
+        EdgeRecord[][] Map;
 
         public void Reset(Template probe)
         {
-            Map = new EdgeInfo[probe.Minutiae.Length][];
+            Map = new EdgeRecord[probe.Minutiae.Length][];
 
-            List<EdgeInfo> edges = new List<EdgeInfo>();
-            EdgeAnalysis analysis = new EdgeAnalysis();
-            analysis.Template = probe;
+            List<EdgeRecord> edges = new List<EdgeRecord>();
 
             for (int reference = 0; reference < Map.Length; ++reference)
             {
-                analysis.ReferenceIndex = reference;
                 foreach (int neighbor in NeighborIterator.GetNeighbors(probe, reference))
                 {
-                    analysis.NeighborIndex = neighbor;
-                    analysis.ComputeAll();
-                    EdgeInfo edge = new EdgeInfo();
-                    edge.Length = analysis.EdgeLength;
-                    edge.ReferenceAngle = analysis.ReferenceAngle;
-                    edge.NeighborAngle = analysis.NeighborAngle;
-                    edge.Neighbor = neighbor;
-                    edges.Add(edge);
+                    EdgeRecord record = new EdgeRecord();
+                    record.Edge = EdgeConstructor.Construct(probe, reference, neighbor);
+                    record.Neighbor = neighbor;
+                    edges.Add(record);
                 }
 
-                edges.Sort(delegate(EdgeInfo left, EdgeInfo right) { return Calc.Compare(left.Length, right.Length); });
+                edges.Sort(delegate(EdgeRecord left, EdgeRecord right) { return Calc.Compare(left.Edge.Length, right.Edge.Length); });
                 if (edges.Count > MaxNeighbors)
                     edges.RemoveRange(MaxNeighbors, edges.Count - MaxNeighbors);
                 Map[reference] = edges.ToArray();
@@ -58,15 +51,16 @@ namespace SourceAFIS.Matching
             }
         }
 
-        public IEnumerable<int> GetMatchingNeighbors(int reference, EdgeAnalysis candidateEdge)
+        public IEnumerable<int> GetMatchingNeighbors(int reference, EdgeInfo candidateEdge)
         {
-            foreach (EdgeInfo edge in Map[reference])
+            foreach (EdgeRecord probeRecord in Map[reference])
             {
-                if (Math.Abs(edge.Length - candidateEdge.EdgeLength) <= MaxDistanceError
-                    && Angle.Distance(edge.ReferenceAngle, candidateEdge.ReferenceAngle) <= MaxAngleError
-                    && Angle.Distance(edge.NeighborAngle, candidateEdge.NeighborAngle) <= MaxAngleError)
+                EdgeInfo probeEdge = probeRecord.Edge;
+                if (Math.Abs(probeEdge.Length - candidateEdge.Length) <= MaxDistanceError
+                    && Angle.Distance(probeEdge.ReferenceAngle, candidateEdge.ReferenceAngle) <= MaxAngleError
+                    && Angle.Distance(probeEdge.NeighborAngle, candidateEdge.NeighborAngle) <= MaxAngleError)
                 {
-                    yield return edge.Neighbor;
+                    yield return probeRecord.Neighbor;
                 }
             }
         }
