@@ -70,9 +70,10 @@ namespace SourceAFIS.General
         public static void Split(Range range, RangeFunction function)
         {
             List<Ticket> tickets = new List<Ticket>();
-            for (int i = 0; i < Math.Min(HwThreadCount, range.Length); ++i)
+            int count = Math.Min(HwThreadCount, range.Length);
+            for (int i = 0; i < count; ++i)
             {
-                Range subrange = new Range(range.Interpolate(i, HwThreadCount), range.Interpolate(i + 1, HwThreadCount));
+                Range subrange = new Range(range.Interpolate(i, count), range.Interpolate(i + 1, count));
                 tickets.Add(Schedule(delegate() { function(subrange); }));
             }
             Wait(tickets);
@@ -114,6 +115,19 @@ namespace SourceAFIS.General
                     for (int x = 0; x < size.Width; ++x)
                         function(new Point(x, y));
             });
+        }
+
+        public static void Split(Range range, IList<RangeFunction> functions)
+        {
+            List<Ticket> tickets = new List<Ticket>();
+            int threadCount = Math.Min(functions.Count, Math.Min(HwThreadCount, range.Length));
+            for (int i = 0; i < threadCount; ++i)
+            {
+                RangeFunction function = functions[i];
+                Range subrange = new Range(range.Interpolate(i, threadCount), range.Interpolate(i + 1, threadCount));
+                tickets.Add(Schedule(delegate() { function(subrange); }));
+            }
+            Wait(tickets);
         }
 
         sealed class TicketImplementation : Ticket

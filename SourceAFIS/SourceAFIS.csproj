@@ -79,6 +79,7 @@
     <Compile Include="General\PriorityQueue.cs" />
     <Compile Include="General\ReversedList.cs" />
     <Compile Include="General\Transformation2D.cs" />
+    <Compile Include="Matching\BulkMatcher.cs" />
     <Compile Include="Matching\EdgeConstructor.cs" />
     <Compile Include="Matching\EdgeInfo.cs" />
     <Compile Include="Matching\ExhaustiveRootSelector.cs" />
