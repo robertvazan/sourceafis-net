@@ -11,6 +11,7 @@ namespace SourceAFIS.Matching
     public sealed class NeighborIterator
     {
         [DpiAdjusted]
+        [Parameter(Lower = 30, Upper = 1500)]
         public int MaxDistance = 200;
 
         public IEnumerable<int> GetNeighbors(Template template, int minutia)

@@ -94,6 +94,7 @@
     <Compile Include="Matching\ProbeNeighbors.cs" />
     <Compile Include="Meta\DpiAdjustedAttribute.cs" />
     <Compile Include="Meta\DpiAdjuster.cs" />
+    <Compile Include="Meta\ParameterAttribute.cs" />
     <Compile Include="Meta\NestedAttribute.cs" />
     <Compile Include="Meta\ObjectTree.cs" />
     <Compile Include="General\Range.cs" />

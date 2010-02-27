@@ -9,6 +9,7 @@ namespace SourceAFIS.Extraction.Model
     public sealed class TailRemover : ISkeletonFilter
     {
         [DpiAdjusted]
+        [Parameter(Lower = 3, Upper = 100)]
         public int MinTailLength = 25;
 
         [Nested]

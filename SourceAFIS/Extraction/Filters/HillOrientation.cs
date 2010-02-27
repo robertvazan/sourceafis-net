@@ -10,11 +10,16 @@ namespace SourceAFIS.Extraction.Filters
     public sealed class HillOrientation
     {
         [DpiAdjusted]
+        [Parameter(Lower = 0.5, Upper = 4)]
         public float MinHalfDistance = 2;
         [DpiAdjusted]
+        [Parameter(Lower = 5, Upper = 13)]
         public float MaxHalfDistance = 6;
+        [Parameter(Upper = 100)]
         public int NeighborListSplit = 50;
+        [Parameter(Upper = 100)]
         public int NeighborsChecked = 20;
+        [Parameter(Upper = 3)]
         public int SmoothingRadius = 1;
 
         struct NeighborInfo

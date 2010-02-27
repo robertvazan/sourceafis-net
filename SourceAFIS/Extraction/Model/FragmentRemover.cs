@@ -9,6 +9,7 @@ namespace SourceAFIS.Extraction.Model
     public sealed class FragmentRemover : ISkeletonFilter
     {
         [DpiAdjusted]
+        [Parameter(Lower = 3, Upper = 100)]
         public int MinFragmentLength = 25;
 
         [Nested]

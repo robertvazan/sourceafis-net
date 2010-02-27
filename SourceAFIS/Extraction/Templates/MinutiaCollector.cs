@@ -10,8 +10,10 @@ namespace SourceAFIS.Extraction.Templates
     public sealed class MinutiaCollector
     {
         [DpiAdjusted(Min = 2)]
+        [Parameter(Lower = 3, Upper = 50)]
         public int DirectionSegmentLength = 20;
         [DpiAdjusted(Min = 0)]
+        [Parameter(Lower = 0, Upper = 20)]
         public int DirectionSegmentSkip = 1;
 
         byte ComputeDirection(SkeletonBuilder.Ridge ridge)

@@ -14,9 +14,12 @@ namespace SourceAFIS.Matching
         [Nested]
         public EdgeConstructor EdgeConstructor = new EdgeConstructor();
 
+        [Parameter(Lower = 2, Upper = 100)]
         public int MaxNeighbors = 10;
         [DpiAdjusted]
+        [Parameter(Lower = 0, Upper = 50)]
         public int MaxDistanceError = 20;
+        [Parameter]
         public byte MaxAngleError = Angle.FromDegreesB(10);
 
         struct EdgeRecord

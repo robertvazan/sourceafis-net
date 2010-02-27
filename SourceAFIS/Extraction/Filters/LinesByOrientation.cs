@@ -9,9 +9,12 @@ namespace SourceAFIS.Extraction.Filters
 {
     public sealed class LinesByOrientation
     {
+        [Parameter(Lower = 4, Upper = 128)]
         public int AngularResolution = 32;
         [DpiAdjusted]
+        [Parameter(Upper = 50)]
         public int Radius = 5;
+        [Parameter(Lower = 1.1, Upper = 4)]
         public float StepFactor = 1.5f;
 
         public Point[][] Construct()

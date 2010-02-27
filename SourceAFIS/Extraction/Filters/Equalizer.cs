@@ -4,12 +4,15 @@ using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
 using SourceAFIS.Visualization;
+using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class Equalizer
     {
+        [Parameter(Lower = 1, Upper = 10)]
         public float MaxScaling = 4f;
+        [Parameter(Lower = 0.1)]
         public float MinScaling = 0.25f;
 
         const float RangeMin = -1;
