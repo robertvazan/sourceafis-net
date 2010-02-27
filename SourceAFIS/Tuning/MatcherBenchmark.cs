@@ -9,14 +9,13 @@ namespace SourceAFIS.Tuning
     public sealed class MatcherBenchmark
     {
         public TestDatabase TestDatabase = new TestDatabase();
-        public Matcher Matcher = new Matcher();
+        public BulkMatcher Matcher = new BulkMatcher();
 
         public sealed class Statistics
         {
             public BenchmarkTimer Timer = new BenchmarkTimer();
             public int Count;
             public double Milliseconds;
-            public List<float> Scores = new List<float>();
         }
 
         public sealed class PrepareStats
@@ -42,13 +41,17 @@ namespace SourceAFIS.Tuning
                         TestDatabase.View view = finger.Views[viewIndex];
                         RunPrepare(view.Template);
 
+                        List<Template> matching = new List<Template>();
                         for (int candidateView = 0; candidateView < finger.Views.Count; ++candidateView)
                             if (candidateView != viewIndex)
-                                RunMatch(finger.Views[candidateView].Template, Matches);
+                                matching.Add(finger.Views[candidateView].Template);
+                        RunMatch(matching, Matches);
 
+                        List<Template> nonmatching = new List<Template>();
                         for (int candidateFinger = 0; candidateFinger < database.Fingers.Count; ++candidateFinger)
                             if (candidateFinger != fingerIndex)
-                                RunMatch(database.Fingers[candidateFinger].Views[viewIndex].Template, NonMatches);
+                                nonmatching.Add(database.Fingers[candidateFinger].Views[viewIndex].Template);
+                        RunMatch(nonmatching, NonMatches);
                     }
                 }
             }
@@ -58,18 +61,17 @@ namespace SourceAFIS.Tuning
         void RunPrepare(Template template)
         {
             Prepares.Timer.Start();
-            Matcher.SelectProbe(Matcher.CreateIndex(template));
+            Matcher.Prepare(template);
             Prepares.Timer.Stop();
             ++Prepares.Count;
         }
 
-        void RunMatch(Template template, Statistics statistics)
+        void RunMatch(List<Template> templates, Statistics statistics)
         {
             statistics.Timer.Start();
-            float score = Matcher.Match(template);
+            Matcher.Match(templates);
             statistics.Timer.Stop();
-            ++statistics.Count;
-            statistics.Scores.Add(score);
+            statistics.Count += templates.Count;
         }
 
         void Summarize()
