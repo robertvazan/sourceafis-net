@@ -121,7 +121,7 @@ namespace FingerprintAnalyzer
         {
             if (Probe.InputImage != null && Candidate.InputImage != null)
             {
-                Matcher.Prepare(Probe.Template);
+                Matcher.SelectProbe(Matcher.CreateIndex(Probe.Template));
                 Matcher.Match(Candidate.Template);
                 Match.RootIndex = Logger.Retrieve<int>("Matcher.BestRootIndex");
                 Match.AnyMatch = Match.RootIndex >= 0;

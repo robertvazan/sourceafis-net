@@ -51,9 +51,9 @@ namespace SourceAFIS.Meta
                 parameter.SaveValue();
         }
 
-        public static object ClonePrototype(object prototype)
+        public static T ClonePrototype<T>(T prototype) where T : class
         {
-            object clone = prototype.GetType().GetConstructor(Type.EmptyTypes).Invoke(null);
+            T clone = (T)prototype.GetType().GetConstructor(Type.EmptyTypes).Invoke(null);
             ParameterSet parameters = new ParameterSet(new ObjectTree(prototype));
             parameters.Rebind(new ObjectTree(clone));
             parameters.SaveValues();

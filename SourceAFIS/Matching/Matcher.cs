@@ -16,7 +16,7 @@ namespace SourceAFIS.Matching
         [Nested]
         public NeighborIterator CandidateNeighbors = new NeighborIterator();
         [Nested]
-        public ProbeNeighbors ProbeNeighbors = new ProbeNeighbors();
+        public ProbeNeighbors ProbeNeighborsPrototype = new ProbeNeighbors();
         [Nested]
         public EdgeConstructor EdgeConstructor = new EdgeConstructor();
         [Nested]
@@ -29,13 +29,21 @@ namespace SourceAFIS.Matching
         [Parameter(Upper = 10000)]
         public int MaxTriedRoots = 10000;
 
-        Template Probe;
+        ProbeIndex Probe;
 
-        public void Prepare(Template probe)
+        public ProbeIndex CreateIndex(Template probe)
+        {
+            ProbeIndex index = new ProbeIndex();
+            index.Template = probe;
+            index.Neighbors = ParameterSet.ClonePrototype(ProbeNeighborsPrototype);
+            index.Neighbors.Reset(probe);
+            return index;
+        }
+
+        public void SelectProbe(ProbeIndex probe)
         {
             Probe = probe;
-            Pairing.SelectProbe(probe);
-            ProbeNeighbors.Reset(probe);
+            Pairing.SelectProbe(probe.Template);
         }
 
         public float Match(Template candidate)
@@ -45,7 +53,7 @@ namespace SourceAFIS.Matching
             int rootIndex = 0;
             float bestScore = 0;
             int bestRootIndex = -1;
-            foreach (MinutiaPair root in RootSelector.GetRoots(Probe, candidate))
+            foreach (MinutiaPair root in RootSelector.GetRoots(Probe.Template, candidate))
             {
                 Logger.Log(this, "Root", root);
                 float score = TryRoot(root, candidate);
@@ -75,7 +83,7 @@ namespace SourceAFIS.Matching
             Pairing.Add(root);
             BuildPairing(candidate);
 
-            MatchAnalysis.Analyze(Pairing, Probe, candidate);
+            MatchAnalysis.Analyze(Pairing, Probe.Template, candidate);
             return MatchScoring.Compute(MatchAnalysis);
         }
 
@@ -98,7 +106,7 @@ namespace SourceAFIS.Matching
                 if (!Pairing.IsCandidatePaired(candidateNeighbor))
                 {
                     EdgeInfo candidateEdge = EdgeConstructor.Construct(candidate, Pairing.LastAdded.Candidate, candidateNeighbor);
-                    foreach (int probeNeighbor in ProbeNeighbors.GetMatchingNeighbors(Pairing.LastAdded.Probe, candidateEdge))
+                    foreach (int probeNeighbor in Probe.Neighbors.GetMatchingNeighbors(Pairing.LastAdded.Probe, candidateEdge))
                         if (!Pairing.IsProbePaired(probeNeighbor))
                             PairSelector.Enqueue(new MinutiaPair(probeNeighbor, candidateNeighbor), candidateEdge.Length);
                 }

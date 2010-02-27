@@ -58,7 +58,7 @@ namespace SourceAFIS.Tuning
         void RunPrepare(Template template)
         {
             Prepares.Timer.Start();
-            Matcher.Prepare(template);
+            Matcher.SelectProbe(Matcher.CreateIndex(template));
             Prepares.Timer.Stop();
             ++Prepares.Count;
         }
