@@ -26,6 +26,7 @@ namespace SourceAFIS.Matching
         [Nested]
         public MatchScoring MatchScoring = new MatchScoring();
 
+        [Parameter(Upper = 10000)]
         public int MaxTriedRoots = 10000;
 
         Template Probe;

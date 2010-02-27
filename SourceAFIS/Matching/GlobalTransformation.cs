@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
+using SourceAFIS.Meta;
 using SourceAFIS.Extraction.Templates;
 
 namespace SourceAFIS.Matching
 {
     public sealed class GlobalTransformation
     {
+        [Parameter(Upper = 100000)]
         public int MaxIterations = 10000;
 
         Random Random;

@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
+using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class AbsoluteContrast
     {
-        public byte Limit = 15;
+        [Parameter(Upper = 255)]
+        public int Limit = 15;
 
         public BinaryMap DetectLowContrast(byte[,] contrast)
         {

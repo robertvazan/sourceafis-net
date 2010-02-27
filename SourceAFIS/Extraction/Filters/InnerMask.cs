@@ -10,6 +10,7 @@ namespace SourceAFIS.Extraction.Filters
     public sealed class InnerMask
     {
         [DpiAdjusted]
+        [Parameter(Lower = 0, Upper = 50)]
         public int MinBorderDistance = 15;
 
         void ShrinkBy(BinaryMap temporary, BinaryMap inner, int amount)

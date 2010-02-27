@@ -9,8 +9,11 @@ namespace SourceAFIS.Extraction.Filters
 {
     public sealed class VotingFilter
     {
+        [Parameter(Upper = 10)]
         public int Radius = 1;
+        [Parameter(Lower = 0.51)]
         public float Majority = 0.51f;
+        [Parameter(Lower = 0, Upper = 20)]
         public int BorderDistance = 0;
 
         public BinaryMap Filter(BinaryMap input)

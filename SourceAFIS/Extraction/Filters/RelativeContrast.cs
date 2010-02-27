@@ -10,8 +10,11 @@ namespace SourceAFIS.Extraction.Filters
     public sealed class RelativeContrast
     {
         [DpiAdjusted]
+        [Parameter(Lower = 10 * 10, Upper = 2000 * 2000)]
         public int SampleSize = 300 * 300;
+        [Parameter]
         public float SampleFraction = 0.25f;
+        [Parameter]
         public float RelativeLimit = 0.3f;
 
         public BinaryMap DetectLowContrast(byte[,] contrast, BlockMap blocks)

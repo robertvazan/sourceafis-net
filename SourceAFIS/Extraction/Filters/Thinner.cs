@@ -10,6 +10,7 @@ namespace SourceAFIS.Extraction.Filters
     public sealed class Thinner
     {
         [DpiAdjusted]
+        [Parameter(Lower = 5, Upper = 50)]
         public int MaxIterations = 15;
 
         static readonly bool[] IsRemovable = ConstructRemovable();
