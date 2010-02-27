@@ -91,6 +91,7 @@
     <Compile Include="Matching\MinutiaPairing.cs" />
     <Compile Include="Matching\NeighborIterator.cs" />
     <Compile Include="Matching\PairSelector.cs" />
+    <Compile Include="Matching\ProbeIndex.cs" />
     <Compile Include="Matching\ProbeNeighbors.cs" />
     <Compile Include="Meta\DpiAdjustedAttribute.cs" />
     <Compile Include="Meta\DpiAdjuster.cs" />
