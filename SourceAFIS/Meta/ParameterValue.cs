@@ -11,8 +11,10 @@ namespace SourceAFIS.Meta
         public object ObjectReference;
         public string FieldPath;
         public FieldInfo Field;
+        public ParameterAttribute Attribute;
 
         public double DoubleValue;
+        public byte ByteValue { get { return Convert.ToByte(DoubleValue); } set { DoubleValue = value; } }
         public int IntValue { get { return Convert.ToInt32(DoubleValue); } set { DoubleValue = value; } }
         public float FloatValue { get { return Convert.ToSingle(DoubleValue); } set { DoubleValue = value; } }
 
@@ -38,6 +40,8 @@ namespace SourceAFIS.Meta
                 IntValue = (int)Field.GetValue(instance);
             else if (Field.FieldType == typeof(float))
                 FloatValue = (float)Field.GetValue(instance);
+            else if (Field.FieldType == typeof(byte))
+                ByteValue = (byte)Field.GetValue(instance);
             else
                 throw new Exception();
         }
@@ -48,11 +52,23 @@ namespace SourceAFIS.Meta
                 Field.SetValue(instance, IntValue);
             else if (Field.FieldType == typeof(float))
                 Field.SetValue(instance, FloatValue);
+            else if (Field.FieldType == typeof(byte))
+                Field.SetValue(instance, ByteValue);
             else
                 throw new Exception();
         }
 
         public void ReadValue() { ReadValue(ObjectReference); }
         public void SaveValue() { SaveValue(ObjectReference); }
+
+        public void Rebind(object reference)
+        {
+            ObjectReference = reference;
+        }
+
+        public void Rebind(ObjectTree tree)
+        {
+            Rebind(tree.GetObject(ObjectPath));
+        }
     }
 }
