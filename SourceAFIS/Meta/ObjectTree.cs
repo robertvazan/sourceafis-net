@@ -16,6 +16,20 @@ namespace SourceAFIS.Meta
         Dictionary<string, Item> ByPath = new Dictionary<string,Item>();
         Dictionary<object, Item> ByReference = new Dictionary<object,Item>();
 
+        public ObjectTree()
+        {
+        }
+
+        public ObjectTree(object root)
+        {
+            Scan(root, "Root");
+        }
+
+        public ObjectTree(object root, string path)
+        {
+            Scan(root, path);
+        }
+
         public void Scan(object root, string path)
         {
             if (!ByReference.ContainsKey(root) && !ByPath.ContainsKey(path))
