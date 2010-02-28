@@ -12,7 +12,7 @@ namespace SourceAFIS.Matching
     {
         [DpiAdjusted]
         [Parameter(Lower = 30, Upper = 1500)]
-        public int MaxDistance = 200;
+        public int MaxDistance = 150;
 
         public IEnumerable<int> GetNeighbors(Template template, int minutia)
         {

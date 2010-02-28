@@ -10,7 +10,7 @@ namespace SourceAFIS.Matching
     {
         [DpiAdjusted]
         [Parameter(Lower = 0, Upper = 50)]
-        public int MaxDistanceError = 20;
+        public int MaxDistanceError = 15;
         [Parameter]
         public byte MaxAngleError = Angle.FromDegreesB(10);
 
@@ -48,12 +48,13 @@ namespace SourceAFIS.Matching
                 for (int probeIndex = range.Begin; probeIndex < range.End; ++probeIndex)
                 {
                     byte referenceDiff = Angle.Difference(probeStar[probeIndex].Edge.ReferenceAngle, candidateEdge.Edge.ReferenceAngle);
-                    byte neighborDiff = Angle.Difference(probeStar[probeIndex].Edge.NeighborAngle, candidateEdge.Edge.NeighborAngle);
-                    
-                    if ((referenceDiff <= MaxAngleError || referenceDiff >= complementaryAngleError)
-                        && (neighborDiff <= MaxAngleError || neighborDiff >= complementaryAngleError))
+                    if (referenceDiff <= MaxAngleError || referenceDiff >= complementaryAngleError)
                     {
-                        ReturnList.Add(new EdgePair(probeIndex, candidateIndex));
+                        byte neighborDiff = Angle.Difference(probeStar[probeIndex].Edge.NeighborAngle, candidateEdge.Edge.NeighborAngle);
+                        if (neighborDiff <= MaxAngleError || neighborDiff >= complementaryAngleError)
+                        {
+                            ReturnList.Add(new EdgePair(probeIndex, candidateIndex));
+                        }
                     }
                 }
             }
