@@ -10,11 +10,11 @@ namespace SourceAFIS.Matching
     {
         public EdgeInfo Construct(Template template, int reference, int neighbor)
         {
+            PolarPoint polar = Angle.ToPolar(Calc.Difference(template.Minutiae[neighbor].Position, template.Minutiae[reference].Position));
             EdgeInfo edge;
-            edge.Length = (float)Math.Sqrt(Calc.DistanceSq(template.Minutiae[reference].Position, template.Minutiae[neighbor].Position));
-            byte edgeAngle = Angle.AtanB(template.Minutiae[reference].Position, template.Minutiae[neighbor].Position);
-            edge.ReferenceAngle = Angle.Difference(template.Minutiae[reference].Direction, edgeAngle);
-            edge.NeighborAngle = Angle.Difference(template.Minutiae[neighbor].Direction, Angle.Opposite(edgeAngle));
+            edge.Length = (short)polar.Distance;
+            edge.ReferenceAngle = Angle.Difference(template.Minutiae[reference].Direction, polar.Angle);
+            edge.NeighborAngle = Angle.Difference(template.Minutiae[neighbor].Direction, Angle.Opposite(polar.Angle));
             return edge;
         }
     }
