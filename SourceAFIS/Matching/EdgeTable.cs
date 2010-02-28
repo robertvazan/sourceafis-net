@@ -16,11 +16,6 @@ namespace SourceAFIS.Matching
 
         [Parameter(Lower = 2, Upper = 100)]
         public int MaxNeighbors = 10;
-        [DpiAdjusted]
-        [Parameter(Lower = 0, Upper = 50)]
-        public int MaxDistanceError = 20;
-        [Parameter]
-        public byte MaxAngleError = Angle.FromDegreesB(10);
 
         public NeighborEdge[][] Table;
 
@@ -45,20 +40,6 @@ namespace SourceAFIS.Matching
                     edges.RemoveRange(MaxNeighbors, edges.Count - MaxNeighbors);
                 Table[reference] = edges.ToArray();
                 edges.Clear();
-            }
-        }
-
-        public IEnumerable<int> GetMatchingNeighbors(int reference, EdgeInfo candidateEdge)
-        {
-            foreach (NeighborEdge probeRecord in Table[reference])
-            {
-                EdgeInfo probeEdge = probeRecord.Edge;
-                if (Math.Abs(probeEdge.Length - candidateEdge.Length) <= MaxDistanceError
-                    && Angle.Distance(probeEdge.ReferenceAngle, candidateEdge.ReferenceAngle) <= MaxAngleError
-                    && Angle.Distance(probeEdge.NeighborAngle, candidateEdge.NeighborAngle) <= MaxAngleError)
-                {
-                    yield return probeRecord.Neighbor;
-                }
             }
         }
     }

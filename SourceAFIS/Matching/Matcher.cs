@@ -23,6 +23,8 @@ namespace SourceAFIS.Matching
         public MatchAnalysis MatchAnalysis = new MatchAnalysis();
         [Nested]
         public MatchScoring MatchScoring = new MatchScoring();
+        [Nested]
+        public EdgeLookup EdgeLookup = new EdgeLookup();
 
         [Parameter(Upper = 10000)]
         public int MaxTriedRoots = 10000;
@@ -102,14 +104,14 @@ namespace SourceAFIS.Matching
 
         void CollectEdges(Template candidate)
         {
-            foreach (NeighborEdge candidateEdge in CandidateEdges.Table[Pairing.LastAdded.Candidate])
+            List<EdgeLookup.EdgePair> edgePairs = EdgeLookup.FindMatchingPairs(
+                Probe.Edges.Table[Pairing.LastAdded.Probe], CandidateEdges.Table[Pairing.LastAdded.Candidate]);
+            foreach (EdgeLookup.EdgePair edgePair in edgePairs)
             {
-                if (!Pairing.IsCandidatePaired(candidateEdge.Neighbor))
-                {
-                    foreach (int probeNeighbor in Probe.Edges.GetMatchingNeighbors(Pairing.LastAdded.Probe, candidateEdge.Edge))
-                        if (!Pairing.IsProbePaired(probeNeighbor))
-                            PairSelector.Enqueue(new MinutiaPair(probeNeighbor, candidateEdge.Neighbor), candidateEdge.Edge.Length);
-                }
+                NeighborEdge probeEdge = Probe.Edges.Table[Pairing.LastAdded.Probe][edgePair.ProbeIndex];
+                NeighborEdge candidateEdge = CandidateEdges.Table[Pairing.LastAdded.Candidate][edgePair.CandidateIndex];
+                if (!Pairing.IsCandidatePaired(candidateEdge.Neighbor) && !Pairing.IsProbePaired(probeEdge.Neighbor))
+                    PairSelector.Enqueue(new MinutiaPair(probeEdge.Neighbor, candidateEdge.Neighbor), candidateEdge.Edge.Length);
             }
         }
     }
