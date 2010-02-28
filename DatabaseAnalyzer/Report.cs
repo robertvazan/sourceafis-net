@@ -59,9 +59,19 @@ namespace DatabaseAnalyzer
             AddProperty(parent, name, value.ToString("F0"));
         }
 
+        protected void AddProperty(XmlElement parent, string name, double value, int precision)
+        {
+            AddProperty(parent, name, value.ToString("F" + precision.ToString()));
+        }
+
         protected void AddProperty(string name, double value)
         {
             AddProperty(name, value.ToString("F0"));
+        }
+
+        protected void AddProperty(string name, double value, int precision)
+        {
+            AddProperty(name, value.ToString("F" + precision.ToString()));
         }
 
         public void Save()
