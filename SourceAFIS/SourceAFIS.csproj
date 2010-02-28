@@ -91,10 +91,11 @@
     <Compile Include="Matching\MatchScoring.cs" />
     <Compile Include="Matching\MinutiaPair.cs" />
     <Compile Include="Matching\MinutiaPairing.cs" />
+    <Compile Include="Matching\NeighborEdge.cs" />
     <Compile Include="Matching\NeighborIterator.cs" />
     <Compile Include="Matching\PairSelector.cs" />
     <Compile Include="Matching\ProbeIndex.cs" />
-    <Compile Include="Matching\ProbeNeighbors.cs" />
+    <Compile Include="Matching\EdgeTable.cs" />
     <Compile Include="Meta\DpiAdjustedAttribute.cs" />
     <Compile Include="Meta\DpiAdjuster.cs" />
     <Compile Include="Meta\ParameterAttribute.cs" />

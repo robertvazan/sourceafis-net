@@ -8,6 +8,6 @@ namespace SourceAFIS.Matching
     public sealed class ProbeIndex
     {
         public Template Template;
-        public ProbeNeighbors Neighbors;
+        public EdgeTable Edges;
     }
 }

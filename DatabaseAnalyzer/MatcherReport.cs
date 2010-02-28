@@ -16,7 +16,7 @@ namespace DatabaseAnalyzer
             CreateDocument("matcher-report");
             XmlElement prepare = AddChild("prepare");
             AddProperty(prepare, "count", Benchmark.Prepares.Count);
-            AddProperty(prepare, "milliseconds", Benchmark.Prepares.Milliseconds);
+            AddProperty(prepare, "microseconds", Benchmark.Prepares.Milliseconds * 1000);
             CreateMatches(Benchmark.Matches, "matches");
             CreateMatches(Benchmark.NonMatches, "non-matches");
         }
@@ -25,7 +25,7 @@ namespace DatabaseAnalyzer
         {
             XmlElement matches = AddChild(name);
             AddProperty(matches, "count", statistics.Count);
-            AddProperty(matches, "milliseconds", statistics.Milliseconds);
+            AddProperty(matches, "microseconds", statistics.Milliseconds * 1000);
         }
     }
 }

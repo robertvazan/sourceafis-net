@@ -14,9 +14,7 @@ namespace SourceAFIS.Matching
         [Nested]
         public MinutiaPairing Pairing = new MinutiaPairing();
         [Nested]
-        public NeighborIterator CandidateNeighbors = new NeighborIterator();
-        [Nested]
-        public ProbeNeighbors ProbeNeighborsPrototype = new ProbeNeighbors();
+        public EdgeTable EdgeTablePrototype = new EdgeTable();
         [Nested]
         public EdgeConstructor EdgeConstructor = new EdgeConstructor();
         [Nested]
@@ -30,13 +28,14 @@ namespace SourceAFIS.Matching
         public int MaxTriedRoots = 10000;
 
         ProbeIndex Probe;
+        EdgeTable CandidateEdges = new EdgeTable();
 
         public ProbeIndex CreateIndex(Template probe)
         {
             ProbeIndex index = new ProbeIndex();
             index.Template = probe;
-            index.Neighbors = ParameterSet.ClonePrototype(ProbeNeighborsPrototype);
-            index.Neighbors.Reset(probe);
+            index.Edges = ParameterSet.ClonePrototype(EdgeTablePrototype);
+            index.Edges.Reset(probe);
             return index;
         }
 
@@ -75,6 +74,7 @@ namespace SourceAFIS.Matching
         {
             Pairing.SelectCandidate(candidate);
             PairSelector.Clear();
+            CandidateEdges.Reset(candidate);
         }
 
         float TryRoot(MinutiaPair root, Template candidate)
@@ -102,14 +102,15 @@ namespace SourceAFIS.Matching
 
         void CollectEdges(Template candidate)
         {
-            foreach (int candidateNeighbor in CandidateNeighbors.GetNeighbors(candidate, Pairing.LastAdded.Candidate))
-                if (!Pairing.IsCandidatePaired(candidateNeighbor))
+            foreach (NeighborEdge candidateEdge in CandidateEdges.Table[Pairing.LastAdded.Candidate])
+            {
+                if (!Pairing.IsCandidatePaired(candidateEdge.Neighbor))
                 {
-                    EdgeInfo candidateEdge = EdgeConstructor.Construct(candidate, Pairing.LastAdded.Candidate, candidateNeighbor);
-                    foreach (int probeNeighbor in Probe.Neighbors.GetMatchingNeighbors(Pairing.LastAdded.Probe, candidateEdge))
+                    foreach (int probeNeighbor in Probe.Edges.GetMatchingNeighbors(Pairing.LastAdded.Probe, candidateEdge.Edge))
                         if (!Pairing.IsProbePaired(probeNeighbor))
-                            PairSelector.Enqueue(new MinutiaPair(probeNeighbor, candidateNeighbor), candidateEdge.Length);
+                            PairSelector.Enqueue(new MinutiaPair(probeNeighbor, candidateEdge.Neighbor), candidateEdge.Edge.Length);
                 }
+            }
         }
     }
 }

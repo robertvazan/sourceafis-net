@@ -7,7 +7,7 @@ using SourceAFIS.Extraction.Templates;
 
 namespace SourceAFIS.Matching
 {
-    public sealed class ProbeNeighbors
+    public sealed class EdgeTable
     {
         [Nested]
         public NeighborIterator NeighborIterator = new NeighborIterator();
@@ -22,41 +22,35 @@ namespace SourceAFIS.Matching
         [Parameter]
         public byte MaxAngleError = Angle.FromDegreesB(10);
 
-        struct EdgeRecord
+        public NeighborEdge[][] Table;
+
+        public void Reset(Template template)
         {
-            public EdgeInfo Edge;
-            public int Neighbor;
-        }
+            Table = new NeighborEdge[template.Minutiae.Length][];
 
-        EdgeRecord[][] Map;
+            List<NeighborEdge> edges = new List<NeighborEdge>();
 
-        public void Reset(Template probe)
-        {
-            Map = new EdgeRecord[probe.Minutiae.Length][];
-
-            List<EdgeRecord> edges = new List<EdgeRecord>();
-
-            for (int reference = 0; reference < Map.Length; ++reference)
+            for (int reference = 0; reference < Table.Length; ++reference)
             {
-                foreach (int neighbor in NeighborIterator.GetNeighbors(probe, reference))
+                foreach (int neighbor in NeighborIterator.GetNeighbors(template, reference))
                 {
-                    EdgeRecord record = new EdgeRecord();
-                    record.Edge = EdgeConstructor.Construct(probe, reference, neighbor);
+                    NeighborEdge record = new NeighborEdge();
+                    record.Edge = EdgeConstructor.Construct(template, reference, neighbor);
                     record.Neighbor = neighbor;
                     edges.Add(record);
                 }
 
-                edges.Sort(delegate(EdgeRecord left, EdgeRecord right) { return Calc.Compare(left.Edge.Length, right.Edge.Length); });
+                edges.Sort(delegate(NeighborEdge left, NeighborEdge right) { return Calc.Compare(left.Edge.Length, right.Edge.Length); });
                 if (edges.Count > MaxNeighbors)
                     edges.RemoveRange(MaxNeighbors, edges.Count - MaxNeighbors);
-                Map[reference] = edges.ToArray();
+                Table[reference] = edges.ToArray();
                 edges.Clear();
             }
         }
 
         public IEnumerable<int> GetMatchingNeighbors(int reference, EdgeInfo candidateEdge)
         {
-            foreach (EdgeRecord probeRecord in Map[reference])
+            foreach (NeighborEdge probeRecord in Table[reference])
             {
                 EdgeInfo probeEdge = probeRecord.Edge;
                 if (Math.Abs(probeEdge.Length - candidateEdge.Length) <= MaxDistanceError
