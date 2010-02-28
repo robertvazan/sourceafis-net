@@ -35,6 +35,33 @@ namespace SourceAFIS.General
             return count;
         }
 
+        static byte[] HighestBitCache = CreateHighestBitCache();
+
+        static byte[] CreateHighestBitCache()
+        {
+            byte[] result = new byte[256];
+            for (uint i = 0; i < 256; ++i)
+            {
+                int highest = 0;
+                for (uint j = i; j > 0; j >>= 1)
+                    ++highest;
+                result[i] = (byte)highest;
+            }
+            return result;
+        }
+
+        public static int HighestBit(uint value)
+        {
+            if (value < (1u << 8))
+                return HighestBitCache[value];
+            else if (value < (1u << 16))
+                return HighestBitCache[value >> 8];
+            else if (value < (1u << 24))
+                return HighestBitCache[value >> 16];
+            else
+                return HighestBitCache[value >> 24];
+        }
+
         public static int Sq(int value)
         {
             return value * value;

@@ -82,6 +82,11 @@ namespace SourceAFIS.General
             return Atan(point.X, point.Y);
         }
 
+        public static byte AtanB(Point point)
+        {
+            return ToByte(Atan(point));
+        }
+
         public static float Atan(Point center, Point point)
         {
             return Atan(Calc.Difference(point, center));
@@ -189,6 +194,64 @@ namespace SourceAFIS.General
         public static byte Opposite(byte angle)
         {
             return (byte)(angle + PIB);
+        }
+
+        const int PolarCacheBits = 6;
+        const uint PolarCacheRadius = 1u << PolarCacheBits;
+        const uint PolarCacheMask = PolarCacheRadius - 1;
+
+        struct PolarPointB
+        {
+            public byte Distance;
+            public byte Angle;
+        }
+
+        static PolarPointB[,] PolarCache;
+
+        static PolarPointB[,] CreatePolarCache()
+        {
+            PolarPointB[,] cache = new PolarPointB[PolarCacheRadius, PolarCacheRadius];
+            for (int y = 0; y < PolarCacheRadius; ++y)
+                for (int x = 0; x < PolarCacheRadius; ++x)
+                {
+                    cache[y, x].Distance = Convert.ToByte(Math.Round(Math.Sqrt(Calc.Sq(x) + Calc.Sq(y))));
+                    if (y > 0 || x > 0)
+                        cache[y, x].Angle = Angle.AtanB(new Point(x, y));
+                    else
+                        cache[y, x].Angle = 0;
+                }
+            return cache;
+        }
+
+        public static PolarPoint ToPolar(Point point)
+        {
+            if (PolarCache == null)
+                PolarCache = CreatePolarCache();
+            
+            int quadrant = 0;
+            int x = point.X;
+            int y = point.Y;
+
+            if (y < 0)
+            {
+                x = -x;
+                y = -y;
+                quadrant = 128;
+            }
+
+            if (x < 0)
+            {
+                int tmp = -x;
+                x = y;
+                y = tmp;
+                quadrant += 64;
+            }
+
+            int overflow = (x | y) >> PolarCacheBits;
+            int shift = Calc.HighestBit((uint)(x | y) >> PolarCacheBits);
+
+            PolarPointB polarB = PolarCache[y >> shift, x >> shift];
+            return new PolarPoint(polarB.Distance << shift, (byte)(polarB.Angle + quadrant));
         }
     }
 }

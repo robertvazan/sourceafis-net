@@ -76,6 +76,7 @@
     <Compile Include="General\Logger.cs" />
     <Compile Include="General\Neighborhood.cs" />
     <Compile Include="General\PointS.cs" />
+    <Compile Include="General\PolarPoint.cs" />
     <Compile Include="General\PriorityQueue.cs" />
     <Compile Include="General\ReversedList.cs" />
     <Compile Include="General\Transformation2D.cs" />
