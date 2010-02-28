@@ -83,6 +83,7 @@
     <Compile Include="Matching\BulkMatcher.cs" />
     <Compile Include="Matching\EdgeConstructor.cs" />
     <Compile Include="Matching\EdgeInfo.cs" />
+    <Compile Include="Matching\EdgeLookup.cs" />
     <Compile Include="Matching\ExhaustiveRootSelector.cs" />
     <Compile Include="Matching\GlobalTransformation.cs" />
     <Compile Include="Matching\IRootSelector.cs" />
