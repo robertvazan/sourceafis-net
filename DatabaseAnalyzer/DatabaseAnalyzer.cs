@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.IO;
+using System.Drawing;
 using SourceAFIS.Tuning;
+using SourceAFIS.Visualization;
 
 namespace DatabaseAnalyzer
 {
@@ -57,11 +59,17 @@ namespace DatabaseAnalyzer
             {
                 Console.WriteLine("Running extraction");
                 ExtractorBenchmark.Run();
+                TestDatabase.Save("TestDatabase.dat");
             }
             Console.WriteLine("Running matcher benchmark");
             MatcherBenchmark.Run();
+            
             MatcherReport.Create();
             MatcherReport.Save();
+
+            ROCGraph graph = new ROCGraph();
+            for (int i = 0; i < MatcherBenchmark.ROCs.Length; ++i)
+                ImageIO.CreateBitmap(PixelFormat.ToColorB(graph.Draw(MatcherBenchmark.ROCs[i]))).Save("ROC" + (i + 1).ToString() + ".png");
         }
 
         static void Main(string[] args)

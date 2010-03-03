@@ -134,6 +134,7 @@
     <Compile Include="Visualization\OrientationMarkers.cs" />
     <Compile Include="Visualization\PairingMarkers.cs" />
     <Compile Include="Visualization\PixelFormat.cs" />
+    <Compile Include="Visualization\ROCGraph.cs" />
     <Compile Include="Visualization\ScalarColoring.cs" />
     <Compile Include="Visualization\SkeletonDrawer.cs" />
     <Compile Include="Visualization\TemplateDrawer.cs" />
