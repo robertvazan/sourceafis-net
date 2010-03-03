@@ -20,16 +20,28 @@ namespace DatabaseAnalyzer
             XmlDocument.AppendChild(RootElement);
         }
 
-        protected XmlElement AddChild(XmlElement parent, string name)
+        protected XmlElement AddChild(XmlElement parent, string tag)
         {
-            XmlElement element = XmlDocument.CreateElement(name);
+            XmlElement element = XmlDocument.CreateElement(tag);
             parent.AppendChild(element);
             return element;
         }
 
-        protected XmlElement AddChild(string name)
+        protected XmlElement AddChild(string tag)
         {
-            return AddChild(RootElement, name);
+            return AddChild(RootElement, tag);
+        }
+
+        protected XmlElement AddChild(XmlElement parent, string tag, string name)
+        {
+            XmlElement child = AddChild(parent, tag);
+            child.SetAttribute("name", name);
+            return child;
+        }
+
+        protected XmlElement AddChild(string tag, string name)
+        {
+            return AddChild(RootElement, tag, name);
         }
 
         protected void AddProperty(XmlElement parent, string name, string value)
@@ -77,6 +89,11 @@ namespace DatabaseAnalyzer
         public void Save()
         {
             XmlDocument.Save(Path);
+        }
+
+        public string FormatPercent(float value, int precision)
+        {
+            return (value * 100).ToString("F" + precision.ToString());
         }
     }
 }
