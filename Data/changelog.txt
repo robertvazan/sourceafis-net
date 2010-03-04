@@ -1,0 +1,10 @@
+2010-03-04 - SourceAFIS 0.3
+* DatabaseAnalyzer tool
+* 40x faster matching algorithm
+
+2010-02-25 - SourceAFIS 0.2
+* matching algorithm
+
+2010-01-15 - SourceAFIS 0.1
+* extraction algorithm
+* FingerprintAnalyzer tool
