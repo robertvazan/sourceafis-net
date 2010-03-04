@@ -9,34 +9,45 @@ namespace SourceAFIS.Matching
     {
         int[] ProbeByCandidate;
         int[] CandidateByProbe;
-        MinutiaPair LastPair;
+        MinutiaPair[] PairList;
+        int PairCount;
 
-        public MinutiaPair LastAdded { get { return LastPair; } }
+        public int Count { get { return PairCount; } }
+        public MinutiaPair LastAdded { get { return PairList[PairCount - 1]; } }
 
         public void SelectProbe(Template probe)
         {
             CandidateByProbe = new int[probe.Minutiae.Length];
+            for (int i = 0; i < CandidateByProbe.Length; ++i)
+                CandidateByProbe[i] = -1;
+            PairList = new MinutiaPair[probe.Minutiae.Length];
+            PairCount = 0;
         }
 
         public void SelectCandidate(Template candidate)
         {
             if (ProbeByCandidate == null || ProbeByCandidate.Length < candidate.Minutiae.Length)
                 ProbeByCandidate = new int[candidate.Minutiae.Length];
+            for (int i = 0; i < ProbeByCandidate.Length; ++i)
+                ProbeByCandidate[i] = -1;
         }
 
         public void Reset()
         {
-            for (int i = 0; i < ProbeByCandidate.Length; ++i)
-                ProbeByCandidate[i] = -1;
-            for (int i = 0; i < CandidateByProbe.Length; ++i)
-                CandidateByProbe[i] = -1;
+            for (int i = 0; i < PairCount; ++i)
+            {
+                ProbeByCandidate[PairList[i].Candidate] = -1;
+                CandidateByProbe[PairList[i].Probe] = -1;
+            }
+            PairCount = 0;
         }
 
         public void Add(MinutiaPair pair)
         {
             ProbeByCandidate[pair.Candidate] = pair.Probe;
             CandidateByProbe[pair.Probe] = pair.Candidate;
-            LastPair = pair;
+            PairList[PairCount] = pair;
+            ++PairCount;
         }
 
         public int GetProbeByCandidate(int candidate)
@@ -59,11 +70,9 @@ namespace SourceAFIS.Matching
             return ProbeByCandidate[candidate] >= 0;
         }
 
-        public IEnumerable<MinutiaPair> GetPairs()
+        public MinutiaPair GetPair(int index)
         {
-            for (int probe = 0; probe < CandidateByProbe.Length; ++probe)
-                if (CandidateByProbe[probe] >= 0)
-                    yield return new MinutiaPair(probe, CandidateByProbe[probe]);
+            return PairList[index];
         }
 
         public object Clone()
@@ -71,7 +80,8 @@ namespace SourceAFIS.Matching
             MinutiaPairing clone = new MinutiaPairing();
             clone.CandidateByProbe = (int[])CandidateByProbe.Clone();
             clone.ProbeByCandidate = (int[])ProbeByCandidate.Clone();
-            clone.LastPair = LastPair;
+            clone.PairList = (MinutiaPair[])PairList.Clone();
+            clone.PairCount = PairCount;
             return clone;
         }
     }

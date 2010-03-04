@@ -73,8 +73,9 @@ namespace SourceAFIS.Matching
         long MeasureDistance(MinutiaPairing pairing, Template probe, Template candidate, Transformation2D transformation)
         {
             long sum = 0;
-            foreach (MinutiaPair pair in pairing.GetPairs())
+            for (int i = 0; i < pairing.Count; ++i)
             {
+                MinutiaPair pair = pairing.GetPair(i);
                 Point candidatePoint = candidate.Minutiae[pair.Candidate].Position;
                 Point probePoint = probe.Minutiae[pair.Probe].Position;
                 Point expectedPoint = transformation.Apply(candidatePoint);

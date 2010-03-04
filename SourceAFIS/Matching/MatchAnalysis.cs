@@ -12,9 +12,7 @@ namespace SourceAFIS.Matching
 
         public void Analyze(MinutiaPairing pairing, Template probe, Template candidate)
         {
-            PairCount = 0;
-            foreach (MinutiaPair pair in pairing.GetPairs())
-                ++PairCount;
+            PairCount = pairing.Count;
 
             float probeFraction = PairCount / (float)probe.Minutiae.Length;
             float candidateFraction = PairCount / (float)candidate.Minutiae.Length;

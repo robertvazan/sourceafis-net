@@ -14,8 +14,9 @@ namespace SourceAFIS.Visualization
 
         public static void DrawProbe(ColorF[,] output, MinutiaPairing pairing, Template probe)
         {
-            foreach (MinutiaPair pair in pairing.GetPairs())
+            for (int i = 0; i < pairing.Count; ++i)
             {
+                MinutiaPair pair = pairing.GetPair(i);
                 Point point = probe.Minutiae[pair.Probe].Position;
                 CircleDrawer.Paint(Circle, point, output, ColorF.Red);
             }
@@ -23,8 +24,9 @@ namespace SourceAFIS.Visualization
 
         public static void DrawCandidate(ColorF[,] output, MinutiaPairing pairing, Template candidate, Transformation2D transformation)
         {
-            foreach (MinutiaPair pair in pairing.GetPairs())
+            for (int i = 0; i < pairing.Count; ++i)
             {
+                MinutiaPair pair = pairing.GetPair(i);
                 Point point = transformation.Apply(candidate.Minutiae[pair.Candidate].Position);
                 CircleDrawer.Paint(Circle, point, output, ColorF.Red);
             }
