@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 using SourceAFIS.Extraction.Templates;
@@ -10,10 +11,11 @@ namespace SourceAFIS.Matching
     public sealed class EdgeTable
     {
         [Nested]
-        public NeighborIterator NeighborIterator = new NeighborIterator();
-        [Nested]
         public EdgeConstructor EdgeConstructor = new EdgeConstructor();
 
+        [DpiAdjusted]
+        [Parameter(Lower = 30, Upper = 1500)]
+        public int MaxDistance = 150;
         [Parameter(Lower = 2, Upper = 100)]
         public int MaxNeighbors = 10;
 
@@ -27,12 +29,17 @@ namespace SourceAFIS.Matching
 
             for (int reference = 0; reference < Table.Length; ++reference)
             {
-                foreach (int neighbor in NeighborIterator.GetNeighbors(template, reference))
+                Point referencePosition = template.Minutiae[reference].Position;
+                for (int neighbor = 0; neighbor < template.Minutiae.Length; ++neighbor)
                 {
-                    NeighborEdge record = new NeighborEdge();
-                    record.Edge = EdgeConstructor.Construct(template, reference, neighbor);
-                    record.Neighbor = neighbor;
-                    edges.Add(record);
+                    if (Calc.DistanceSq(referencePosition, template.Minutiae[neighbor].Position)
+                        <= Calc.Sq(MaxDistance) && neighbor != reference)
+                    {
+                        NeighborEdge record = new NeighborEdge();
+                        record.Edge = EdgeConstructor.Construct(template, reference, neighbor);
+                        record.Neighbor = neighbor;
+                        edges.Add(record);
+                    }
                 }
 
                 edges.Sort(delegate(NeighborEdge left, NeighborEdge right) { return Calc.Compare(left.Edge.Length, right.Edge.Length); });

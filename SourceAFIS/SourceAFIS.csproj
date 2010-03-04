@@ -93,7 +93,6 @@
     <Compile Include="Matching\MinutiaPair.cs" />
     <Compile Include="Matching\MinutiaPairing.cs" />
     <Compile Include="Matching\NeighborEdge.cs" />
-    <Compile Include="Matching\NeighborIterator.cs" />
     <Compile Include="Matching\PairSelector.cs" />
     <Compile Include="Matching\ProbeIndex.cs" />
     <Compile Include="Matching\EdgeTable.cs" />
