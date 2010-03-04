@@ -26,7 +26,7 @@ namespace SourceAFIS.Tuning
                 else
                 {
                     Array.Sort(partial);
-                    return partial[TakenIndex];
+                    return partial[partial.Length - TakenIndex - 1];
                 }
             }
         }
