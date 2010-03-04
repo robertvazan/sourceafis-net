@@ -7,19 +7,7 @@ namespace SourceAFIS.Matching
 {
     public sealed class PairSelector
     {
-        struct ConsideredPair
-        {
-            public MinutiaPair Pair;
-            public float Distance;
-        }
-
-        PriorityQueue<ConsideredPair> Queue;
-
-        public PairSelector()
-        {
-            Queue = new PriorityQueue<ConsideredPair>(
-                delegate(ConsideredPair left, ConsideredPair right) { return Calc.Compare(left.Distance, right.Distance); });
-        }
+        PriorityQueueF<MinutiaPair> Queue = new PriorityQueueF<MinutiaPair>();
 
         public void Clear()
         {
@@ -28,16 +16,13 @@ namespace SourceAFIS.Matching
 
         public void Enqueue(MinutiaPair pair, float distance)
         {
-            ConsideredPair added;
-            added.Pair = pair;
-            added.Distance = distance;
-            Queue.Enqueue(added);
+            Queue.Enqueue(distance, pair);
         }
 
         public void SkipPaired(MinutiaPairing pairing)
         {
-            while (Queue.Count > 0 && (pairing.IsProbePaired(Queue.Peek().Pair.Probe)
-                || pairing.IsCandidatePaired(Queue.Peek().Pair.Candidate)))
+            while (Queue.Count > 0 && (pairing.IsProbePaired(Queue.Peek().Probe)
+                || pairing.IsCandidatePaired(Queue.Peek().Candidate)))
             {
                 Queue.Dequeue();
             }
@@ -47,7 +32,7 @@ namespace SourceAFIS.Matching
 
         public MinutiaPair Dequeue()
         {
-            return Queue.Dequeue().Pair;
+            return Queue.Dequeue();
         }
     }
 }
