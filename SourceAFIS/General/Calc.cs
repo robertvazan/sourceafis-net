@@ -182,6 +182,14 @@ namespace SourceAFIS.General
             return result / collection.Count;
         }
 
+        public static int Sum(IList<int> collection)
+        {
+            int result = 0;
+            foreach (int item in collection)
+                result += item;
+            return result;
+        }
+
         public static int Compare(int left, int right)
         {
             if (left < right)

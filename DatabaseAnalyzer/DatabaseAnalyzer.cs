@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.IO;
-using System.Drawing;
 using SourceAFIS.Tuning;
 using SourceAFIS.Tuning.Reports;
-using SourceAFIS.Visualization;
 
 namespace DatabaseAnalyzer
 {
@@ -24,7 +22,6 @@ namespace DatabaseAnalyzer
             Options.ExtractorBenchmark = ExtractorBenchmark;
             ExtractorBenchmark.Database = TestDatabase;
             MatcherBenchmark.TestDatabase = TestDatabase;
-            MatcherReport.Benchmark = MatcherBenchmark;
         }
 
         void Run()
@@ -47,7 +44,7 @@ namespace DatabaseAnalyzer
             ExtractorReport report = ExtractorBenchmark.Run();
             Console.WriteLine("Saving extractor report");
             report.Save("Extractor");
-            TestDatabase = report.Templates;
+            MatcherBenchmark.TestDatabase = TestDatabase = report.Templates;
         }
 
         void RunMatcherBenchmark()
@@ -57,15 +54,11 @@ namespace DatabaseAnalyzer
                 TestDatabase.Load(dbPath);
             else
                 RunExtractorBenchmark();
-            Console.WriteLine("Running matcher benchmark");
-            MatcherBenchmark.Run();
             
-            MatcherReport.Create();
-            MatcherReport.Save();
-
-            ROCGraph graph = new ROCGraph();
-            for (int i = 0; i < MatcherBenchmark.ROCs.Length; ++i)
-                ImageIO.CreateBitmap(PixelFormat.ToColorB(graph.Draw(MatcherBenchmark.ROCs[i]))).Save("ROC" + (i + 1).ToString() + ".png");
+            Console.WriteLine("Running matcher benchmark");
+            MatcherReport report = MatcherBenchmark.Run();
+            Console.WriteLine("Saving matcher report");
+            report.Save("Matcher");
         }
 
         static void Main(string[] args)
