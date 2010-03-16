@@ -20,13 +20,13 @@ namespace SourceAFIS.Tuning.Reports
         {
             Directory.CreateDirectory(folder);
 
-            using (FileStream stream = File.OpenWrite(Path.Combine(folder, "ExtractorReport.xml")))
+            using (FileStream stream = File.Open(Path.Combine(folder, "ExtractorReport.xml"), FileMode.Create))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(ExtractorReport));
                 serializer.Serialize(stream, this);
             }
 
-            using (FileStream stream = File.OpenWrite(Path.Combine(folder, "Templates.xml")))
+            using (FileStream stream = File.Open(Path.Combine(folder, "Templates.xml"), FileMode.Create))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(TestDatabase));
                 serializer.Serialize(stream, Templates);

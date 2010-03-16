@@ -4,7 +4,6 @@ using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 using SourceAFIS.Tuning.Errors;
-using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Tuning.Reports
 {
@@ -13,21 +12,22 @@ namespace SourceAFIS.Tuning.Reports
         public MatcherTimings Time = new MatcherTimings();
 
         public ScoreTable[] ScoreTables;
-        public ROCCurve[] ROCs;
-        public MultiFingerStatistics[] PerDatabaseErrors;
-        public MultiFingerStatistics AverageErrors = new MultiFingerStatistics();
+        public AccuracyStatistics[] Accuracy;
 
         public void SetDatabaseCount(int count)
         {
             ScoreTables = new ScoreTable[count];
-            ROCs = new ROCCurve[count];
-            PerDatabaseErrors = new MultiFingerStatistics[count];
-
             for (int i = 0; i < count; ++i)
-            {
                 ScoreTables[i] = new ScoreTable();
-                ROCs[i] = new ROCCurve();
-                PerDatabaseErrors[i] = new MultiFingerStatistics();
+        }
+
+        public void ComputeStatistics()
+        {
+            Accuracy = new AccuracyStatistics[AccuracyMeasure.DefaultLandscape.Count];
+            for (int i = 0; i < Accuracy.Length; ++i)
+            {
+                Accuracy[i] = new AccuracyStatistics();
+                Accuracy[i].Compute(ScoreTables, AccuracyMeasure.DefaultLandscape[i]);
             }
         }
 
@@ -35,45 +35,36 @@ namespace SourceAFIS.Tuning.Reports
         {
             Directory.CreateDirectory(folder);
 
-            using (FileStream stream = File.OpenWrite(Path.Combine(folder, "Time.xml")))
+            using (FileStream stream = File.Open(Path.Combine(folder, "Time.xml"), FileMode.Create))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(MatcherTimings));
                 serializer.Serialize(stream, Time);
             }
 
-            using (FileStream stream = File.OpenWrite(Path.Combine(folder, "Errors.xml")))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(MultiFingerStatistics));
-                serializer.Serialize(stream, AverageErrors);
-            }
-
-            for (int i = 0; i < ScoreTables.Length; ++i)
-                SaveDatabase(Path.Combine(folder, String.Format("Database{0}", i + 1)), i);
+            SaveScoreTables(Path.Combine(folder, "ScoreTable"));
+            SaveAccuracy(Path.Combine(folder, "Accuracy"));
         }
 
-        void SaveDatabase(string folder, int index)
+        void SaveScoreTables(string folder)
         {
             Directory.CreateDirectory(folder);
 
-            using (FileStream stream = File.OpenWrite(Path.Combine(folder, "Errors.xml")))
+            for (int i = 0; i < ScoreTables.Length; ++i)
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(MultiFingerStatistics));
-                serializer.Serialize(stream, PerDatabaseErrors[index]);
+                using (FileStream stream = File.Open(Path.Combine(folder, String.Format("Database{0}.xml", i + 1)), FileMode.Create))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(ScoreTable));
+                    serializer.Serialize(stream, ScoreTables[i]);
+                }
             }
+        }
 
-            using (FileStream stream = File.OpenWrite(Path.Combine(folder, "ScoreTable.xml")))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(ScoreTable));
-                serializer.Serialize(stream, ScoreTables[index]);
-            }
+        void SaveAccuracy(string folder)
+        {
+            Directory.CreateDirectory(folder);
 
-            using (FileStream stream = File.OpenWrite(Path.Combine(folder, "ROC.xml")))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(ROCCurve));
-                serializer.Serialize(stream, ROCs[index]);
-            }
-
-            ImageIO.CreateBitmap(PixelFormat.ToColorB(new ROCGraph().Draw(ROCs[index]))).Save(Path.Combine(folder, "ROC.png"));
+            for (int i = 0; i < Accuracy.Length; ++i)
+                Accuracy[i].Save(Path.Combine(folder, Accuracy[i].Name));
         }
     }
 }
