@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Drawing;
-using SourceAFIS.Extraction.Templates;
-using SourceAFIS.Visualization;
+using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using SourceAFIS.Extraction.Templates;
+using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Tuning
 {
     [Serializable]
-    public sealed class TestDatabase
+    public sealed class TestDatabase : ICloneable
     {
         public List<Database> Databases = new List<Database>();
 
@@ -35,6 +36,7 @@ namespace SourceAFIS.Tuning
         {
             public string Path;
             public string FileName;
+            [XmlIgnore]
             public Template Template;
         }
 
@@ -129,6 +131,7 @@ namespace SourceAFIS.Tuning
 
         public void Save(string path)
         {
+            File.Delete(path);
             using (FileStream stream = File.OpenWrite(path))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
@@ -146,5 +149,34 @@ namespace SourceAFIS.Tuning
                 loaded.Databases = null;
             }
         }
+
+        public TestDatabase Clone()
+        {
+            TestDatabase clone = new TestDatabase();
+            foreach (Database database in Databases)
+            {
+                Database cloneDatabase = new Database();
+                cloneDatabase.Path = database.Path;
+                foreach (Finger finger in database.Fingers)
+                {
+                    Finger cloneFinger = new Finger();
+                    cloneFinger.Name = finger.Name;
+                    foreach (View view in finger.Views)
+                    {
+                        View cloneView = new View();
+                        cloneView.FileName = view.FileName;
+                        cloneView.Path = view.Path;
+                        if (view.Template != null)
+                            cloneView.Template = view.Template.Clone();
+                        cloneFinger.Views.Add(cloneView);
+                    }
+                    cloneDatabase.Fingers.Add(cloneFinger);
+                }
+                clone.Databases.Add(cloneDatabase);
+            }
+            return clone;
+        }
+
+        object ICloneable.Clone() { return Clone(); }
     }
 }
