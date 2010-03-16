@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using SourceAFIS.Tuning;
+using SourceAFIS.Tuning.Errors;
+using SourceAFIS.Tuning.Reports;
 
 namespace DatabaseAnalyzer
 {

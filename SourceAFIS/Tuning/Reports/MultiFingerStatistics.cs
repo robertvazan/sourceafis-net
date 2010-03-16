@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SourceAFIS.Tuning.Errors;
 
-namespace SourceAFIS.Tuning
+namespace SourceAFIS.Tuning.Reports
 {
     public sealed class MultiFingerStatistics
     {

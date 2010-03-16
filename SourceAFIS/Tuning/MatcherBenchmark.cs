@@ -4,6 +4,8 @@ using System.Text;
 using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Matching;
+using SourceAFIS.Tuning.Errors;
+using SourceAFIS.Tuning.Reports;
 
 namespace SourceAFIS.Tuning
 {

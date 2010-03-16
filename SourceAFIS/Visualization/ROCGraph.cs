@@ -4,6 +4,7 @@ using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
 using SourceAFIS.Tuning;
+using SourceAFIS.Tuning.Errors;
 
 namespace SourceAFIS.Visualization
 {
