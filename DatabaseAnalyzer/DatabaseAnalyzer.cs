@@ -5,6 +5,7 @@ using System.Xml;
 using System.IO;
 using System.Drawing;
 using SourceAFIS.Tuning;
+using SourceAFIS.Tuning.Reports;
 using SourceAFIS.Visualization;
 
 namespace DatabaseAnalyzer
@@ -14,7 +15,6 @@ namespace DatabaseAnalyzer
         Options Options = new Options();
         TestDatabase TestDatabase = new TestDatabase();
         ExtractorBenchmark ExtractorBenchmark = new ExtractorBenchmark();
-        ExtractorReport ExtractorReport = new ExtractorReport();
         MatcherBenchmark MatcherBenchmark = new MatcherBenchmark();
         MatcherReport MatcherReport = new MatcherReport();
 
@@ -23,7 +23,6 @@ namespace DatabaseAnalyzer
             Options.TestDatabase = TestDatabase;
             Options.ExtractorBenchmark = ExtractorBenchmark;
             ExtractorBenchmark.Database = TestDatabase;
-            ExtractorReport.Benchmark = ExtractorBenchmark;
             MatcherBenchmark.TestDatabase = TestDatabase;
             MatcherReport.Benchmark = MatcherBenchmark;
         }
@@ -45,22 +44,19 @@ namespace DatabaseAnalyzer
         void RunExtractorBenchmark()
         {
             Console.WriteLine("Running extractor benchmark");
-            ExtractorBenchmark.Run();
-            ExtractorReport.Create();
-            ExtractorReport.Save();
-            TestDatabase.Save("TestDatabase.dat");
+            ExtractorReport report = ExtractorBenchmark.Run();
+            Console.WriteLine("Saving extractor report");
+            report.Save("Extractor");
+            TestDatabase = report.Templates;
         }
 
         void RunMatcherBenchmark()
         {
-            if (File.Exists("TestDatabase.dat"))
-                TestDatabase.Load("TestDatabase.dat");
+            string dbPath = Path.Combine("Extractor", "Templates.dat");
+            if (File.Exists(dbPath))
+                TestDatabase.Load(dbPath);
             else
-            {
-                Console.WriteLine("Running extraction");
-                ExtractorBenchmark.Run();
-                TestDatabase.Save("TestDatabase.dat");
-            }
+                RunExtractorBenchmark();
             Console.WriteLine("Running matcher benchmark");
             MatcherBenchmark.Run();
             

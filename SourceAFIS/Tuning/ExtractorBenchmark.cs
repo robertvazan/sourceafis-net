@@ -4,6 +4,7 @@ using System.Text;
 using SourceAFIS.Extraction;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Visualization;
+using SourceAFIS.Tuning.Reports;
 
 namespace SourceAFIS.Tuning
 {
@@ -13,53 +14,39 @@ namespace SourceAFIS.Tuning
         public Extractor Extractor = new Extractor();
         public int MaxTotalSeconds = 300;
 
-        public struct Statistics
+        public ExtractorReport Run()
         {
-            public double Seconds;
-            public int Minutiae;
-            public int TemplateBytes;
-        }
+            ExtractorReport report = new ExtractorReport();
+            report.Templates = Database.Clone();
 
-        public bool Timeout;
-        public int Count;
-        public Statistics Totals;
-        public Statistics Average;
-
-        public void Run()
-        {
-            Totals = new Statistics();
-            Count = 0;
+            int count = 0;
             SerializedFormat templateFormat = new SerializedFormat();
 
             BenchmarkTimer timer = new BenchmarkTimer();
             timer.Start();
-            Timeout = false;
-            
-            foreach (TestDatabase.View view in Database.AllViews)
+
+            foreach (TestDatabase.View view in report.Templates.AllViews)
             {
                 ColorB[,] image = ImageIO.Load(view.Path);
                 byte[,] grayscale = PixelFormat.ToByte(image);
                 TemplateBuilder builder = Extractor.Extract(grayscale, 500);
                 view.Template = templateFormat.Export(builder);
 
-                Totals.Minutiae += view.Template.Minutiae.Length;
-                Totals.TemplateBytes += templateFormat.Serialize(view.Template).Length;
-                ++Count;
+                report.MinutiaCount += view.Template.Minutiae.Length;
+                report.TemplateSize += templateFormat.Serialize(view.Template).Length;
+                ++count;
 
                 timer.Update();
                 if (timer.Elapsed.TotalSeconds > MaxTotalSeconds)
-                {
-                    Timeout = true;
-                    break;
-                }
+                    throw new Exception("Timeout");
             }
 
             timer.Stop();
-            Totals.Seconds = timer.TotalTime.TotalSeconds;
+            report.Time = (float)(timer.TotalTime.TotalSeconds / count);
 
-            Average.Seconds = Totals.Seconds / Count;
-            Average.Minutiae = Totals.Minutiae / Count;
-            Average.TemplateBytes = Totals.TemplateBytes / Count;
+            report.MinutiaCount /= count;
+            report.TemplateSize /= count;
+            return report;
         }
     }
 }

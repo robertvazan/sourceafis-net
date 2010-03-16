@@ -6,7 +6,7 @@ using SourceAFIS.General;
 namespace SourceAFIS.Extraction.Templates
 {
     [Serializable]
-    public sealed class Template
+    public sealed class Template : ICloneable
     {
         public enum MinutiaType : byte
         {
@@ -60,5 +60,12 @@ namespace SourceAFIS.Extraction.Templates
                 builder.Minutiae.Add(minutia.ToBuilderMinutia());
             return builder;
         }
+
+        public Template Clone()
+        {
+            return new Template(ToTemplateBuilder());
+        }
+
+        object ICloneable.Clone() { return Clone(); }
     }
 }

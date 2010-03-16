@@ -113,6 +113,7 @@
     <Compile Include="Tuning\ExtractorBenchmark.cs" />
     <Compile Include="Tuning\MatcherBenchmark.cs" />
     <Compile Include="Tuning\Errors\MultiFingerPolicy.cs" />
+    <Compile Include="Tuning\Reports\ExtractorReport.cs" />
     <Compile Include="Tuning\Reports\MultiFingerStatistics.cs" />
     <Compile Include="Tuning\Errors\ROCCurve.cs" />
     <Compile Include="Tuning\Errors\ROCPoint.cs" />
