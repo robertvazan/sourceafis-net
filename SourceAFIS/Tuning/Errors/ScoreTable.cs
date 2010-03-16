@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SourceAFIS.Tuning
+namespace SourceAFIS.Tuning.Errors
 {
     public sealed class ScoreTable
     {
