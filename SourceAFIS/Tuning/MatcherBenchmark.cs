@@ -14,97 +14,73 @@ namespace SourceAFIS.Tuning
         public TestDatabase TestDatabase = new TestDatabase();
         public BulkMatcher Matcher = new BulkMatcher();
 
-        public sealed class Statistics
+        public MatcherReport Run()
         {
-            public BenchmarkTimer Timer = new BenchmarkTimer();
-            public int Count;
-            public double Milliseconds;
-            public float[][][][] ScoreTable;
-        }
+            MatcherReport report = new MatcherReport();
+            report.SetDatabaseCount(TestDatabase.Databases.Count);
+            
+            BenchmarkTimer prepareTimer = new BenchmarkTimer();
+            BenchmarkTimer matchingTimer = new BenchmarkTimer();
+            BenchmarkTimer nonmatchingTimer = new BenchmarkTimer();
 
-        public sealed class PrepareStats
-        {
-            public BenchmarkTimer Timer = new BenchmarkTimer();
-            public int Count;
-            public double Milliseconds;
-        }
-
-        public PrepareStats Prepares = new PrepareStats();
-        public Statistics Matches = new Statistics();
-        public Statistics NonMatches = new Statistics();
-        public ScoreTable[] ScoreTables;
-
-        public ROCCurve[] ROCs;
-        public MultiFingerStatistics[] PerDatabaseErrors;
-        public MultiFingerStatistics AverageErrors = new MultiFingerStatistics();
-
-        public void Run()
-        {
-            ScoreTables = new ScoreTable[TestDatabase.Databases.Count];
             for (int databaseIndex = 0; databaseIndex < TestDatabase.Databases.Count; ++databaseIndex)
             {
                 TestDatabase.Database database = TestDatabase.Databases[databaseIndex];
-                ScoreTables[databaseIndex] = new ScoreTable();
-                ScoreTables[databaseIndex].Initialize(database);
+                report.ScoreTables[databaseIndex].Initialize(database);
                 for (int fingerIndex = 0; fingerIndex < database.Fingers.Count; ++fingerIndex)
                 {
                     TestDatabase.Finger finger = database.Fingers[fingerIndex];
                     for (int viewIndex = 0; viewIndex < finger.Views.Count; ++viewIndex)
                     {
                         TestDatabase.View view = finger.Views[viewIndex];
-                        RunPrepare(view.Template);
+                        RunPrepare(view.Template, prepareTimer);
 
                         List<Template> matching = new List<Template>();
                         for (int candidateView = 0; candidateView < finger.Views.Count; ++candidateView)
                             if (candidateView != viewIndex)
                                 matching.Add(finger.Views[candidateView].Template);
-                        ScoreTables[databaseIndex].Table[fingerIndex][viewIndex].Matching = RunMatch(matching, Matches);
+                        report.ScoreTables[databaseIndex].Table[fingerIndex][viewIndex].Matching = RunMatch(matching, matchingTimer);
 
                         List<Template> nonmatching = new List<Template>();
                         for (int candidateFinger = 0; candidateFinger < database.Fingers.Count; ++candidateFinger)
                             if (candidateFinger != fingerIndex)
                                 nonmatching.Add(database.Fingers[candidateFinger].Views[viewIndex].Template);
-                        ScoreTables[databaseIndex].Table[fingerIndex][viewIndex].NonMatching = RunMatch(nonmatching, NonMatches);
+                        report.ScoreTables[databaseIndex].Table[fingerIndex][viewIndex].NonMatching = RunMatch(nonmatching, nonmatchingTimer);
                     }
                 }
+
+                report.ROCs[databaseIndex].Compute(report.ScoreTables[databaseIndex]);
+                report.PerDatabaseErrors[databaseIndex].Compute(report.ScoreTables[databaseIndex]);
             }
-            Summarize();
+
+            report.AverageErrors.Average(new List<MultiFingerStatistics>(report.PerDatabaseErrors));
+
+            report.Time.Prepare = GetAverageTime(prepareTimer, report.ScoreTables, delegate(ScoreTable table) { return table.TemplateCount; });
+            report.Time.Matching = GetAverageTime(matchingTimer, report.ScoreTables, delegate(ScoreTable table) { return table.MatchingCount; });
+            report.Time.NonMatching = GetAverageTime(nonmatchingTimer, report.ScoreTables, delegate(ScoreTable table) { return table.NonMatchingCount; });
+
+            return report;
         }
 
-        void RunPrepare(Template template)
+        void RunPrepare(Template template, BenchmarkTimer timer)
         {
-            Prepares.Timer.Start();
+            timer.Start();
             Matcher.Prepare(template);
-            Prepares.Timer.Stop();
-            ++Prepares.Count;
+            timer.Stop();
         }
 
-        float[] RunMatch(List<Template> templates, Statistics statistics)
+        float[] RunMatch(List<Template> templates, BenchmarkTimer timer)
         {
-            statistics.Timer.Start();
+            timer.Start();
             float[] scores = Matcher.Match(templates);
-            statistics.Timer.Stop();
-            statistics.Count += templates.Count;
+            timer.Stop();
             return scores;
         }
 
-        void Summarize()
+        float GetAverageTime(BenchmarkTimer timer, ScoreTable[] tables, Converter<ScoreTable, int> converter)
         {
-            Prepares.Milliseconds = Prepares.Timer.Accumulated.TotalMilliseconds / Prepares.Count;
-            Matches.Milliseconds = Matches.Timer.Accumulated.TotalMilliseconds / Matches.Count;
-            NonMatches.Milliseconds = NonMatches.Timer.Accumulated.TotalMilliseconds / NonMatches.Count;
-
-            ROCs = new ROCCurve[TestDatabase.Databases.Count];
-            PerDatabaseErrors = new MultiFingerStatistics[TestDatabase.Databases.Count];
-            for (int database = 0; database < TestDatabase.Databases.Count; ++database)
-            {
-                ROCs[database] = new ROCCurve();
-                ROCs[database].Compute(ScoreTables[database]);
-
-                PerDatabaseErrors[database] = new MultiFingerStatistics();
-                PerDatabaseErrors[database].Compute(ScoreTables[database]);
-            }
-            AverageErrors.Average(new List<MultiFingerStatistics>(PerDatabaseErrors));
+            List<int> counts = new List<ScoreTable>(tables).ConvertAll<int>(converter);
+            return (float)(timer.Accumulated.TotalSeconds / Calc.Sum(counts));
         }
     }
 }
