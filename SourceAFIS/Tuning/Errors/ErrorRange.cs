@@ -5,7 +5,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Tuning.Errors
 {
-    public sealed class ErrorRate
+    public sealed class ErrorRange
     {
         public ROCPoint Rate;
         public ROCPoint Min;
@@ -21,11 +21,11 @@ namespace SourceAFIS.Tuning.Errors
             Rate.Threshold = Calc.Interpolate(Min.Threshold, Max.Threshold, fraction);
         }
 
-        public void Average(List<ErrorRate> partial)
+        public void Average(List<ErrorRange> partial)
         {
-            Rate.Average(partial.ConvertAll<ROCPoint>(delegate(ErrorRate rate) { return rate.Rate; }));
-            Min.Average(partial.ConvertAll<ROCPoint>(delegate(ErrorRate rate) { return rate.Min; }));
-            Max.Average(partial.ConvertAll<ROCPoint>(delegate(ErrorRate rate) { return rate.Max; }));
+            Rate.Average(partial.ConvertAll<ROCPoint>(delegate(ErrorRange rate) { return rate.Rate; }));
+            Min.Average(partial.ConvertAll<ROCPoint>(delegate(ErrorRange rate) { return rate.Min; }));
+            Max.Average(partial.ConvertAll<ROCPoint>(delegate(ErrorRange rate) { return rate.Max; }));
         }
 
         void FindMinMax(ROCCurve ROC, ErrorPolicy.Evaluate policy, out ROCPoint left, out ROCPoint right)

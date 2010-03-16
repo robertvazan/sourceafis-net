@@ -48,16 +48,13 @@ namespace SourceAFIS.Tuning
                         report.ScoreTables[databaseIndex].Table[fingerIndex][viewIndex].NonMatching = RunMatch(nonmatching, nonmatchingTimer);
                     }
                 }
-
-                report.ROCs[databaseIndex].Compute(report.ScoreTables[databaseIndex]);
-                report.PerDatabaseErrors[databaseIndex].Compute(report.ScoreTables[databaseIndex]);
             }
-
-            report.AverageErrors.Average(new List<MultiFingerStatistics>(report.PerDatabaseErrors));
 
             report.Time.Prepare = GetAverageTime(prepareTimer, report.ScoreTables, delegate(ScoreTable table) { return table.TemplateCount; });
             report.Time.Matching = GetAverageTime(matchingTimer, report.ScoreTables, delegate(ScoreTable table) { return table.MatchingCount; });
             report.Time.NonMatching = GetAverageTime(nonmatchingTimer, report.ScoreTables, delegate(ScoreTable table) { return table.NonMatchingCount; });
+
+            report.ComputeStatistics();
 
             return report;
         }

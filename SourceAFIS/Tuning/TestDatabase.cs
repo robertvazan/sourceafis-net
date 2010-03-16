@@ -132,7 +132,7 @@ namespace SourceAFIS.Tuning
         public void Save(string path)
         {
             File.Delete(path);
-            using (FileStream stream = File.OpenWrite(path))
+            using (FileStream stream = File.Open(path, FileMode.Create))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(stream, this);
