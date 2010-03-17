@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.IO;
+using SourceAFIS.Meta;
 using SourceAFIS.Tuning;
 using SourceAFIS.Tuning.Reports;
 
@@ -14,7 +15,7 @@ namespace DatabaseAnalyzer
         TestDatabase TestDatabase = new TestDatabase();
         ExtractorBenchmark ExtractorBenchmark = new ExtractorBenchmark();
         MatcherBenchmark MatcherBenchmark = new MatcherBenchmark();
-        MatcherReport MatcherReport = new MatcherReport();
+        Optimizer Optimizer = new Optimizer();
 
         public DatabaseAnalyzer()
         {
@@ -22,6 +23,8 @@ namespace DatabaseAnalyzer
             Options.ExtractorBenchmark = ExtractorBenchmark;
             ExtractorBenchmark.Database = TestDatabase;
             MatcherBenchmark.TestDatabase = TestDatabase;
+            Optimizer.ExtractorBenchmark = ExtractorBenchmark;
+            Optimizer.MatcherBenchmark = MatcherBenchmark;
         }
 
         void Run()
@@ -34,6 +37,9 @@ namespace DatabaseAnalyzer
                     break;
                 case "matcher-benchmark":
                     RunMatcherBenchmark();
+                    break;
+                case "optimizer":
+                    RunOptimizer();
                     break;
             }
         }
@@ -59,6 +65,21 @@ namespace DatabaseAnalyzer
             MatcherReport report = MatcherBenchmark.Run();
             Console.WriteLine("Saving matcher report");
             report.Save("Matcher");
+        }
+
+        void RunOptimizer()
+        {
+            Optimizer.Mutations.OnMutation += delegate(ParameterValue initial, ParameterValue mutated)
+            {
+                Console.WriteLine("Mutated {0}, {1} -> {2}", initial.FieldPath, initial.Value.Double, mutated.Value.Double);
+            };
+            Optimizer.NicheSlot.OnChange += delegate()
+            {
+                Console.WriteLine("NicheSlot has improved");
+                Optimizer.NicheSlot.Save("Optimizer");
+            };
+            Console.WriteLine("Running optimizer");
+            Optimizer.Run();
         }
 
         static void Main(string[] args)

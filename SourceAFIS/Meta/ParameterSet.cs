@@ -2,12 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using System.Xml.Serialization;
 
 namespace SourceAFIS.Meta
 {
-    public sealed class ParameterSet
+    public sealed class ParameterSet : ICloneable
     {
+        [XmlIgnore]
         Dictionary<string, ParameterValue> ByPath = new Dictionary<string, ParameterValue>();
+
+        public ParameterValue[] AllParameters
+        {
+            get { return new List<ParameterValue>(ByPath.Values).ToArray(); }
+            set
+            {
+                ByPath.Clear();
+                foreach (ParameterValue parameter in value)
+                    ByPath[parameter.FieldPath] = parameter;
+            }
+        }
 
         public ParameterSet()
         {
@@ -24,10 +37,9 @@ namespace SourceAFIS.Meta
             {
                 object objectReference = tree.GetObject(objectPath);
                 foreach (FieldInfo field in objectReference.GetType().GetFields())
-                    foreach (object attribute in field.GetCustomAttributes(typeof(ParameterAttributes), true))
+                    foreach (object attribute in field.GetCustomAttributes(typeof(ParameterAttribute), true))
                     {
                         ParameterValue parameter = new ParameterValue(objectPath, tree, field);
-                        parameter.Attribute = (ParameterAttribute)attribute;
                         ByPath[parameter.FieldPath] = parameter;
                     }
             }
@@ -59,5 +71,14 @@ namespace SourceAFIS.Meta
             parameters.SaveValues();
             return clone;
         }
+
+        public ParameterSet Clone()
+        {
+            ParameterSet clone = new ParameterSet();
+            clone.AllParameters = AllParameters;
+            return clone;
+        }
+
+        object ICloneable.Clone() { return Clone(); }
     }
 }
