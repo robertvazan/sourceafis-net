@@ -14,41 +14,6 @@ namespace SourceAFIS.Tuning.Errors
 
         public Entry[][] Table;
 
-        public int TemplateCount
-        {
-            get
-            {
-                int count = 0;
-                foreach (Entry[] finger in Table)
-                    count += finger.Length;
-                return count;
-            }
-        }
-
-        public int MatchingCount
-        {
-            get
-            {
-                int count = 0;
-                foreach (Entry[] finger in Table)
-                    foreach (Entry entry in finger)
-                        count += entry.Matching.Length;
-                return count;
-            }
-        }
-
-        public int NonMatchingCount
-        {
-            get
-            {
-                int count = 0;
-                foreach (Entry[] finger in Table)
-                    foreach (Entry entry in finger)
-                        count += entry.NonMatching.Length;
-                return count;
-            }
-        }
-
         public void Initialize(TestDatabase.Database database)
         {
             Table = new Entry[database.Fingers.Count][];

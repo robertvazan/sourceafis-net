@@ -13,6 +13,7 @@ namespace SourceAFIS.Tuning
     {
         public TestDatabase TestDatabase = new TestDatabase();
         public BulkMatcher Matcher = new BulkMatcher();
+        public float Timeout = 300;
 
         public MatcherReport Run()
         {
@@ -46,13 +47,19 @@ namespace SourceAFIS.Tuning
                             if (candidateFinger != fingerIndex)
                                 nonmatching.Add(database.Fingers[candidateFinger].Views[viewIndex].Template);
                         report.ScoreTables[databaseIndex].Table[fingerIndex][viewIndex].NonMatching = RunMatch(nonmatching, nonmatchingTimer);
+
+                        if (prepareTimer.Accumulated.TotalSeconds + matchingTimer.Accumulated.TotalSeconds +
+                            nonmatchingTimer.Accumulated.TotalSeconds > Timeout)
+                        {
+                            throw new Exception("Timeout in matcher");
+                        }
                     }
                 }
             }
 
-            report.Time.Prepare = GetAverageTime(prepareTimer, report.ScoreTables, delegate(ScoreTable table) { return table.TemplateCount; });
-            report.Time.Matching = GetAverageTime(matchingTimer, report.ScoreTables, delegate(ScoreTable table) { return table.MatchingCount; });
-            report.Time.NonMatching = GetAverageTime(nonmatchingTimer, report.ScoreTables, delegate(ScoreTable table) { return table.NonMatchingCount; });
+            report.Time.Prepare = (float)prepareTimer.Accumulated.TotalSeconds / TestDatabase.GetFingerprintCount();
+            report.Time.Matching = (float)matchingTimer.Accumulated.TotalSeconds / TestDatabase.GetMatchingPairCount();
+            report.Time.NonMatching = (float)nonmatchingTimer.Accumulated.TotalSeconds / TestDatabase.GetNonMatchingPairCount();
 
             report.ComputeStatistics();
 
@@ -72,12 +79,6 @@ namespace SourceAFIS.Tuning
             float[] scores = Matcher.Match(templates);
             timer.Stop();
             return scores;
-        }
-
-        float GetAverageTime(BenchmarkTimer timer, ScoreTable[] tables, Converter<ScoreTable, int> converter)
-        {
-            List<int> counts = new List<ScoreTable>(tables).ConvertAll<int>(converter);
-            return (float)(timer.Accumulated.TotalSeconds / Calc.Sum(counts));
         }
     }
 }

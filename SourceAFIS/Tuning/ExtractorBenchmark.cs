@@ -12,7 +12,7 @@ namespace SourceAFIS.Tuning
     {
         public TestDatabase Database = new TestDatabase();
         public Extractor Extractor = new Extractor();
-        public int MaxTotalSeconds = 300;
+        public float Timeout = 300;
 
         public ExtractorReport Run()
         {
@@ -37,8 +37,8 @@ namespace SourceAFIS.Tuning
                 ++count;
 
                 timer.Update();
-                if (timer.Elapsed.TotalSeconds > MaxTotalSeconds)
-                    throw new Exception("Timeout");
+                if (timer.Elapsed.TotalSeconds > Timeout)
+                    throw new Exception("Timeout in extractor");
             }
 
             timer.Stop();

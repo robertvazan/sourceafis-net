@@ -14,8 +14,12 @@ namespace SourceAFIS.Tuning
         public NicheSlot NicheSlot = new NicheSlot();
         public MutationSequencer Mutations = new MutationSequencer();
 
+        public delegate void ExceptionEvent(Exception e);
+        public ExceptionEvent OnException;
+
         public void Run()
         {
+            SetTimeouts();
             ParameterSet trial = new ParameterSet();
             trial.Add(new ObjectTree(ExtractorBenchmark.Extractor, "Extractor"));
             trial.Add(new ObjectTree(MatcherBenchmark.Matcher, "Matcher"));
@@ -38,8 +42,10 @@ namespace SourceAFIS.Tuning
 
                     report.Matcher = MatcherBenchmark.Run();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    if (OnException != null)
+                        OnException(e);
                 }
 
                 NicheSlot.Fit(report);
@@ -48,6 +54,14 @@ namespace SourceAFIS.Tuning
                     throw new Exception();
                 trial = Mutations.Mutate(NicheSlot.BestSolution.Configuration.Parameters);
             }
+        }
+
+        void SetTimeouts()
+        {
+            ExtractorBenchmark.Timeout = NicheSlot.TimeConstraints.Extraction * ExtractorBenchmark.Database.GetFingerprintCount();
+            MatcherBenchmark.Timeout = NicheSlot.TimeConstraints.Prepare * ExtractorBenchmark.Database.GetFingerprintCount() +
+                NicheSlot.TimeConstraints.Matching * ExtractorBenchmark.Database.GetMatchingPairCount() +
+                NicheSlot.TimeConstraints.NonMatching * ExtractorBenchmark.Database.GetNonMatchingPairCount();
         }
     }
 }
