@@ -60,7 +60,7 @@ namespace SourceAFIS.Extraction
         public Extractor()
         {
             OrthogonalSmoother.AngleOffset = Angle.PIB;
-            OrthogonalSmoother.Lines.Radius = 7;
+            OrthogonalSmoother.Lines.Radius = 4;
             BinarySmoother.Radius = 2;
             BinarySmoother.Majority = 0.8f;
         }
