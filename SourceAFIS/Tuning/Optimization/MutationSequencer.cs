@@ -2,22 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.Meta;
+using SourceAFIS.General;
 
 namespace SourceAFIS.Tuning.Optimization
 {
     public sealed class MutationSequencer
     {
-        Random Random = new Random();
+        public float ExtractorWeight = 0.2f;
 
         public delegate void MutationEvent(ParameterValue initial, ParameterValue mutated);
         public MutationEvent OnMutation;
+
+        Random Random = new Random();
 
         public ParameterSet Mutate(ParameterSet initial)
         {
             ParameterSet mutated = initial.Clone();
             
-            ParameterValue[] all = mutated.AllParameters;
-            ParameterValue parameter = all[Random.Next(all.Length)];
+            ParameterValue parameter = PickParameter(mutated);
             ParameterValue savedParameter = parameter.Clone();
             Mutate(parameter);
 
@@ -25,6 +27,31 @@ namespace SourceAFIS.Tuning.Optimization
                 OnMutation(savedParameter, parameter);
 
             return mutated;
+        }
+
+        ParameterValue PickParameter(ParameterSet parameters)
+        {
+            ParameterValue[] all = parameters.AllParameters;
+            
+            float[] weights = new float[all.Length];
+            for (int i = 0; i < all.Length; ++i)
+                if (Calc.BeginsWith(all[i].FieldPath, "Extractor."))
+                    weights[i] = ExtractorWeight;
+                else
+                    weights[i] = 1;
+
+            float totalWeight = 0;
+            foreach (float weight in weights)
+                totalWeight += weight;
+            
+            float randomWeight = (float)(Random.NextDouble() * totalWeight);
+            for (int i = 0; i < all.Length; ++i)
+            {
+                randomWeight -= weights[i];
+                if (randomWeight < 0)
+                    return all[i];
+            }
+            return all[all.Length - 1];
         }
 
         void Mutate(ParameterValue parameter)
