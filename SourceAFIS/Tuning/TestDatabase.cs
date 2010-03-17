@@ -178,5 +178,33 @@ namespace SourceAFIS.Tuning
         }
 
         object ICloneable.Clone() { return Clone(); }
+
+        public int GetFingerprintCount()
+        {
+            int count = 0;
+            foreach (Finger finger in AllFingers)
+                count += finger.Views.Count;
+            return count;
+        }
+
+        public int GetMatchingPairCount()
+        {
+            int count = 0;
+            foreach (Finger finger in AllFingers)
+                count += finger.Views.Count * (finger.Views.Count - 1);
+            return count;
+        }
+
+        public int GetNonMatchingPairCount()
+        {
+            int count = 0;
+            foreach (Database database in Databases)
+                foreach (Finger finger in database.Fingers)
+                    for (int viewIndex = 0; viewIndex < finger.Views.Count; ++viewIndex)
+                        foreach (Finger pairFinger in database.Fingers)
+                            if (pairFinger != finger && viewIndex < pairFinger.Views.Count)
+                                ++count;
+            return count;
+        }
     }
 }

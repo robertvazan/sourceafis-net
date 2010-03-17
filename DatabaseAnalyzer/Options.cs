@@ -31,7 +31,7 @@ namespace DatabaseAnalyzer
             ClipDatabase("fingers-per-database", TestDatabase.ClipFingersPerDatabase);
             ClipDatabase("views-per-finger", TestDatabase.ClipViewsPerFinger);
 
-            ExtractorBenchmark.MaxTotalSeconds = GetInt("extractor-benchmark/max-seconds", ExtractorBenchmark.MaxTotalSeconds);
+            ExtractorBenchmark.Timeout = GetFloat("extractor-benchmark/max-seconds", ExtractorBenchmark.Timeout);
 
             Action = Root.SelectSingleNode("/database-analyzer/action").Value;
         }
@@ -50,6 +50,15 @@ namespace DatabaseAnalyzer
             XPathNavigator element = Root.SelectSingleNode("/database-analyzer/" + path);
             if (element != null)
                 return Convert.ToInt32(element.Value);
+            else
+                return defaultValue;
+        }
+
+        float GetFloat(string path, float defaultValue)
+        {
+            XPathNavigator element = Root.SelectSingleNode("/database-analyzer/" + path);
+            if (element != null)
+                return Convert.ToSingle(element.Value);
             else
                 return defaultValue;
         }

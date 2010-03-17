@@ -69,6 +69,10 @@ namespace DatabaseAnalyzer
 
         void RunOptimizer()
         {
+            Optimizer.OnException += delegate(Exception e)
+            {
+                Console.WriteLine("Optimizer iteration failed: {0}", e.Message);
+            };
             Optimizer.Mutations.OnMutation += delegate(ParameterValue initial, ParameterValue mutated)
             {
                 Console.WriteLine("Mutated {0}, {1} -> {2}", initial.FieldPath, initial.Value.Double, mutated.Value.Double);
