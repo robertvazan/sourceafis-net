@@ -31,8 +31,11 @@ namespace SourceAFIS.Tuning
 
                 try
                 {
-                    report.Extractor = ExtractorBenchmark.Run();
+                    report.Extractor = NicheSlot.GetCachedTemplates(trial);
+                    if (report.Extractor == null)
+                        report.Extractor = ExtractorBenchmark.Run();
                     MatcherBenchmark.TestDatabase = report.Extractor.Templates;
+
                     report.Matcher = MatcherBenchmark.Run();
                 }
                 catch (Exception)
