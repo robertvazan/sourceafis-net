@@ -23,11 +23,11 @@ namespace SourceAFIS.Tuning.Reports
 
         public void ComputeStatistics()
         {
-            Accuracy = new AccuracyStatistics[AccuracyMeasure.DefaultLandscape.Count];
+            Accuracy = new AccuracyStatistics[AccuracyMeasure.AccuracyLandscape.Count];
             for (int i = 0; i < Accuracy.Length; ++i)
             {
                 Accuracy[i] = new AccuracyStatistics();
-                Accuracy[i].Compute(ScoreTables, AccuracyMeasure.DefaultLandscape[i]);
+                Accuracy[i].Compute(ScoreTables, AccuracyMeasure.AccuracyLandscape[i]);
             }
         }
 
@@ -35,7 +35,7 @@ namespace SourceAFIS.Tuning.Reports
         {
             Directory.CreateDirectory(folder);
 
-            using (FileStream stream = File.Open(Path.Combine(folder, "Time.xml"), FileMode.Create))
+            using (FileStream stream = File.Open(Path.Combine(folder, "MatcherTime.xml"), FileMode.Create))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(MatcherTimings));
                 serializer.Serialize(stream, Time);

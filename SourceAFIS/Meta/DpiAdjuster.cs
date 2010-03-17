@@ -19,15 +19,15 @@ namespace SourceAFIS.Meta
 
             public void Adjust(double factor)
             {
-                Value.DoubleValue = OriginalValue * factor;
-                if (Value.DoubleValue < Attribute.Min)
-                    Value.DoubleValue = Attribute.Min;
+                Value.Value.Double = OriginalValue * factor;
+                if (Value.Value.Double < Attribute.Min)
+                    Value.Value.Double = Attribute.Min;
                 Value.SaveValue();
             }
 
             public void Revert()
             {
-                Value.DoubleValue = OriginalValue;
+                Value.Value.Double = OriginalValue;
                 Value.SaveValue();
             }
         }
@@ -45,7 +45,7 @@ namespace SourceAFIS.Meta
                     {
                         Parameter parameter = new Parameter();
                         parameter.Value = new ParameterValue(path, tree, field);
-                        parameter.OriginalValue = parameter.Value.DoubleValue;
+                        parameter.OriginalValue = parameter.Value.Value.Double;
                         parameter.Attribute = (DpiAdjustedAttribute)attribute;
                         Parameters.Add(parameter);
                     }

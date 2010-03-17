@@ -11,7 +11,7 @@ namespace SourceAFIS.Tuning.Errors
         public ErrorPolicy.Evaluate ErrorPolicyFunction = ErrorPolicy.EER;
         public ScalarErrorMeasure ScalarMeasure = ScalarErrorMeasure.Average;
 
-        public static readonly List<AccuracyMeasure> DefaultLandscape = GenerateDefault();
+        public static readonly List<AccuracyMeasure> AccuracyLandscape = GenerateDefault();
 
         static List<AccuracyMeasure> GenerateDefault()
         {
