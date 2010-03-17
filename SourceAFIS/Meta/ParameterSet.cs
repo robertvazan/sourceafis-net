@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.Xml.Serialization;
+using SourceAFIS.General;
 
 namespace SourceAFIS.Meta
 {
@@ -18,7 +19,7 @@ namespace SourceAFIS.Meta
             {
                 ByPath.Clear();
                 foreach (ParameterValue parameter in value)
-                    ByPath[parameter.FieldPath] = parameter;
+                    Add(parameter);
             }
         }
 
@@ -43,6 +44,11 @@ namespace SourceAFIS.Meta
                         ByPath[parameter.FieldPath] = parameter;
                     }
             }
+        }
+
+        public void Add(ParameterValue parameter)
+        {
+            ByPath[parameter.FieldPath] = parameter;
         }
 
         public void Rebind(ObjectTree tree)
@@ -75,10 +81,34 @@ namespace SourceAFIS.Meta
         public ParameterSet Clone()
         {
             ParameterSet clone = new ParameterSet();
-            clone.AllParameters = AllParameters;
+            foreach (ParameterValue parameter in ByPath.Values)
+                clone.Add(parameter.Clone());
             return clone;
         }
 
         object ICloneable.Clone() { return Clone(); }
+
+        public ParameterSet GetSubset(string beginsWith)
+        {
+            ParameterSet result = new ParameterSet();
+            foreach (ParameterValue parameter in ByPath.Values)
+                if (Calc.BeginsWith(parameter.FieldPath, beginsWith))
+                    result.Add(parameter.Clone());
+            return result;
+        }
+
+        public bool PersistentlyEquals(ParameterSet other)
+        {
+            if (ByPath.Count != other.ByPath.Count)
+                return false;
+            foreach (string path in ByPath.Keys)
+            {
+                if (!other.ByPath.ContainsKey(path))
+                    return false;
+                if (ByPath[path].Value.Double != other.ByPath[path].Value.Double)
+                    return false;
+            }
+            return true;
+        }
     }
 }

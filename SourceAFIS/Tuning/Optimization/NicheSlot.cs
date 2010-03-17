@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Xml.Serialization;
+using SourceAFIS.Meta;
 using SourceAFIS.Tuning.Errors;
 using SourceAFIS.Tuning.Reports;
 
@@ -47,6 +48,18 @@ namespace SourceAFIS.Tuning.Optimization
                 XmlSerializer serializer = new XmlSerializer(typeof(AccuracyStatistics));
                 serializer.Serialize(stream, BestPerformance);
             }
+        }
+
+        public ExtractorReport GetCachedTemplates(ParameterSet query)
+        {
+            if (BestSolution != null)
+            {
+                ParameterSet filteredQuery = query.GetSubset("Extractor.");
+                ParameterSet filteredCache = BestSolution.Configuration.Parameters.GetSubset("Extractor.");
+                if (filteredCache.PersistentlyEquals(filteredQuery))
+                    return BestSolution.Extractor;
+            }
+            return null;
         }
     }
 }

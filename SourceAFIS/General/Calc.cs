@@ -303,5 +303,10 @@ namespace SourceAFIS.General
                     DeepCopy(fieldInfo.GetValue(source), fieldInfo.GetValue(target));
             }
         }
+
+        public static bool BeginsWith(string outer, string inner)
+        {
+            return outer.Length >= inner.Length && outer.Substring(0, inner.Length) == inner;
+        }
     }
 }
