@@ -41,14 +41,14 @@ namespace SourceAFIS.Tuning
                     MatcherBenchmark.TestDatabase = report.Extractor.Templates;
 
                     report.Matcher = MatcherBenchmark.Run();
+
+                    NicheSlot.Fit(report);
                 }
                 catch (Exception e)
                 {
                     if (OnException != null)
                         OnException(e);
                 }
-
-                NicheSlot.Fit(report);
 
                 if (NicheSlot.BestSolution == null)
                     throw new Exception();
