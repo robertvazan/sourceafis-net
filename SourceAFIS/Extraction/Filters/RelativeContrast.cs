@@ -13,7 +13,7 @@ namespace SourceAFIS.Extraction.Filters
         [Parameter(Lower = 10 * 10, Upper = 2000 * 2000)]
         public int SampleSize = 300 * 300;
         [Parameter]
-        public float SampleFraction = 0.25f;
+        public float SampleFraction = 0.49f;
         [Parameter]
         public float RelativeLimit = 0.3f;
 

@@ -9,7 +9,7 @@ namespace SourceAFIS.Extraction.Filters
     public sealed class AbsoluteContrast
     {
         [Parameter(Upper = 255)]
-        public int Limit = 15;
+        public int Limit = 8;
 
         public BinaryMap DetectLowContrast(byte[,] contrast)
         {
