@@ -10,7 +10,7 @@ namespace SourceAFIS.Matching
     {
         [DpiAdjusted]
         [Parameter(Lower = 0, Upper = 50)]
-        public int MaxDistanceError = 11;
+        public int MaxDistanceError = 6;
         [Parameter(Lower = 1)]
         public byte MaxAngleError = Angle.FromDegreesB(10);
 
