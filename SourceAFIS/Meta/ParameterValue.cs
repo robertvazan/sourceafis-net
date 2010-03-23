@@ -169,5 +169,10 @@ namespace SourceAFIS.Meta
         }
 
         object ICloneable.Clone() { return Clone(); }
+
+        public bool PersistentlyEquals(ParameterValue other)
+        {
+            return Value.Double == other.Value.Double;
+        }
     }
 }

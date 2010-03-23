@@ -8,6 +8,7 @@ namespace SourceAFIS.Tuning.Optimization
 {
     public sealed class MutationSequencer
     {
+        public int MultipleAdvices = 10;
         public float ExtractorWeight = 0.2f;
 
         public delegate void MutationEvent(ParameterValue initial, ParameterValue mutated);
@@ -15,76 +16,59 @@ namespace SourceAFIS.Tuning.Optimization
 
         Random Random = new Random();
 
+        public MutationAdvisor[] Advisors = new MutationAdvisor[] {
+            new AxisFocusMutation(),
+            new RandomMutation()
+        };
+
         public ParameterSet Mutate(ParameterSet initial)
         {
-            ParameterSet mutated = initial.Clone();
+            List<MutationAdvice> advices = new List<MutationAdvice>();
+            foreach (MutationAdvisor advisor in Advisors)
+                for (int i = 0; i < MultipleAdvices; ++i)
+                    advices.AddRange(advisor.Advise(initial));
             
-            ParameterValue parameter = PickParameter(mutated);
-            ParameterValue savedParameter = parameter.Clone();
-            Mutate(parameter);
+            AdjustExtractorWeight(advices);
 
+            ParameterSet mutated = PickAdvice(advices).Mutated;
+
+            string mutatedPath = mutated.GetDifference(initial).FieldPath;
             if (OnMutation != null)
-                OnMutation(savedParameter, parameter);
+                OnMutation(initial.Get(mutatedPath), mutated.Get(mutatedPath));
 
             return mutated;
         }
 
-        ParameterValue PickParameter(ParameterSet parameters)
+        public void Feedback(ParameterSet initial, ParameterSet mutated, bool improved)
         {
-            ParameterValue[] all = parameters.AllParameters;
-            
-            float[] weights = new float[all.Length];
-            for (int i = 0; i < all.Length; ++i)
-                if (Calc.BeginsWith(all[i].FieldPath, "Extractor."))
-                    weights[i] = ExtractorWeight;
-                else
-                    weights[i] = 1;
-
-            float totalWeight = 0;
-            foreach (float weight in weights)
-                totalWeight += weight;
-            
-            float randomWeight = (float)(Random.NextDouble() * totalWeight);
-            for (int i = 0; i < all.Length; ++i)
-            {
-                randomWeight -= weights[i];
-                if (randomWeight < 0)
-                    return all[i];
-            }
-            return all[all.Length - 1];
+            foreach (MutationAdvisor advisor in Advisors)
+                advisor.Feedback(initial, mutated, improved);
         }
 
-        void Mutate(ParameterValue parameter)
+        void AdjustExtractorWeight(List<MutationAdvice> advices)
         {
-            int value = parameter.Value.Normalized;
-            int upper = parameter.Upper.Normalized;
-            int lower = parameter.Lower.Normalized;
+            foreach (MutationAdvice advice in advices)
+            {
+                ParameterValue parameter = advice.Mutated.GetDifference(advice.Initial);
+                if (Calc.BeginsWith(parameter.FieldPath, "Extractor."))
+                    advice.Confidence *= ExtractorWeight;
+            }
+        }
 
-            bool negative = (Random.Next(2) == 1);
-            if (!negative && value >= upper)
-                negative = true;
-            if (negative && value <= lower)
-                negative = false;
+        MutationAdvice PickAdvice(List<MutationAdvice> advices)
+        {
+            float confidenceSum = 0;
+            foreach (MutationAdvice advice in advices)
+                confidenceSum += advice.Confidence;
 
-            int range;
-            if (!negative)
-                range = upper - value;
-            else
-                range = value - lower;
-            double change = Math.Pow(range, Random.NextDouble());
-            int intChange = Convert.ToInt32(change);
-
-            int newvalue;
-            if (!negative)
-                newvalue = value + intChange;
-            else
-                newvalue = value - intChange;
-            if (newvalue > upper)
-                newvalue = upper;
-            if (newvalue < lower)
-                newvalue = lower;
-            
-            parameter.Value.Normalized = newvalue;
+            float randomWeight = (float)(Random.NextDouble() * confidenceSum);
+            for (int i = 0; i < advices.Count; ++i)
+            {
+                randomWeight -= advices[i].Confidence;
+                if (randomWeight < 0)
+                    return advices[i];
+            }
+            return advices[advices.Count - 1];
         }
     }
 }

@@ -20,6 +20,7 @@ namespace SourceAFIS.Tuning
         public void Run()
         {
             SetTimeouts();
+            ParameterSet previous = null;
             ParameterSet trial = new ParameterSet();
             trial.Add(new ObjectTree(ExtractorBenchmark.Extractor, "Extractor"));
             trial.Add(new ObjectTree(MatcherBenchmark.Matcher, "Matcher"));
@@ -33,6 +34,7 @@ namespace SourceAFIS.Tuning
                 TestReport report = new TestReport();
                 report.Configuration.Parameters = trial.Clone();
 
+                bool improved = false;
                 try
                 {
                     report.Extractor = NicheSlot.GetCachedTemplates(trial);
@@ -42,7 +44,7 @@ namespace SourceAFIS.Tuning
 
                     report.Matcher = MatcherBenchmark.Run();
 
-                    NicheSlot.Fit(report);
+                    improved = NicheSlot.Fit(report);
                 }
                 catch (Exception e)
                 {
@@ -52,6 +54,9 @@ namespace SourceAFIS.Tuning
 
                 if (NicheSlot.BestSolution == null)
                     throw new Exception();
+                if (previous != null)
+                    Mutations.Feedback(previous, trial, improved);
+                previous = trial;
                 trial = Mutations.Mutate(NicheSlot.BestSolution.Configuration.Parameters);
             }
         }

@@ -51,6 +51,16 @@ namespace SourceAFIS.Meta
             ByPath[parameter.FieldPath] = parameter;
         }
 
+        public ParameterValue Get(string path)
+        {
+            return ByPath[path];
+        }
+
+        public bool Contains(string path)
+        {
+            return ByPath.ContainsKey(path);
+        }
+
         public void Rebind(ObjectTree tree)
         {
             foreach (ParameterValue parameter in ByPath.Values)
@@ -105,10 +115,29 @@ namespace SourceAFIS.Meta
             {
                 if (!other.ByPath.ContainsKey(path))
                     return false;
-                if (ByPath[path].Value.Double != other.ByPath[path].Value.Double)
+                if (!ByPath[path].PersistentlyEquals(other.ByPath[path]))
                     return false;
             }
             return true;
+        }
+
+        public ParameterSet GetDifferences(ParameterSet original)
+        {
+            ParameterSet diff = new ParameterSet();
+            foreach (ParameterValue parameter in ByPath.Values)
+                if (!original.Contains(parameter.FieldPath) || !parameter.PersistentlyEquals(original.Get(parameter.FieldPath)))
+                    diff.Add(parameter.Clone());
+            return diff;
+        }
+
+        public ParameterValue GetDifference(ParameterSet original)
+        {
+            ParameterSet diff = GetDifferences(original);
+            ParameterValue[] all = diff.AllParameters;
+            if (all.Length > 1)
+                throw new Exception("Multiple differences in ParameterSet");
+            else
+                return all[0];
         }
     }
 }
