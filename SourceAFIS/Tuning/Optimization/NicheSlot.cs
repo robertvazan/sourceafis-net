@@ -21,7 +21,7 @@ namespace SourceAFIS.Tuning.Optimization
         public delegate void ChangeEvent();
         public ChangeEvent OnChange;
 
-        public void Fit(TestReport solution)
+        public bool Fit(TestReport solution)
         {
             if (TimeConstraints.Check(solution.Extractor) && TimeConstraints.Check(solution.Matcher))
             {
@@ -30,13 +30,18 @@ namespace SourceAFIS.Tuning.Optimization
 
                 if (BestSolution == null || BestPerformance.Average > performance.Average)
                 {
+                    bool improved = BestSolution != null;
+
                     BestSolution = solution;
                     BestPerformance = performance;
 
                     if (OnChange != null)
                         OnChange();
+
+                    return improved;
                 }
             }
+            return false;
         }
 
         public void Save(string folder)

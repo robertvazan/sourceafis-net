@@ -115,8 +115,13 @@
     <Compile Include="Tuning\ExtractorBenchmark.cs" />
     <Compile Include="Tuning\MatcherBenchmark.cs" />
     <Compile Include="Tuning\Errors\MultiFingerPolicy.cs" />
+    <Compile Include="Tuning\Optimization\AxisFocusMutation.cs" />
+    <Compile Include="Tuning\Optimization\MutationAdvice.cs" />
+    <Compile Include="Tuning\Optimization\MutationAdvisor.cs" />
+    <Compile Include="Tuning\Optimization\MutationMemory.cs" />
     <Compile Include="Tuning\Optimization\MutationSequencer.cs" />
     <Compile Include="Tuning\Optimization\NicheSlot.cs" />
+    <Compile Include="Tuning\Optimization\RandomMutation.cs" />
     <Compile Include="Tuning\Optimization\TimeConstraints.cs" />
     <Compile Include="Tuning\Optimizer.cs" />
     <Compile Include="Tuning\Reports\ExtractorReport.cs" />
