@@ -72,9 +72,12 @@ namespace SourceAFIS.Extraction.Model
             if (distanceSq > Calc.Sq(GapSize))
                 return false;
 
+            byte gapDirection = Angle.AtanB(end1.Position, end2.Position);
             byte direction1 = Angle.AtanB(end1.Position, GetAngleSample(end1));
+            if (Angle.Distance(direction1, Angle.Opposite(gapDirection)) > GapAngle)
+                return false;
             byte direction2 = Angle.AtanB(end2.Position, GetAngleSample(end2));
-            if (Angle.Distance(direction1, Angle.Opposite(direction2)) > GapAngle)
+            if (Angle.Distance(direction2, gapDirection) > GapAngle)
                 return false;
             return true;
         }
