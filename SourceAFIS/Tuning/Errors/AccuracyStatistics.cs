@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
+using SourceAFIS.Tuning.Reports;
 using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Tuning.Errors
@@ -49,6 +50,8 @@ namespace SourceAFIS.Tuning.Errors
         public string Name;
         public PerDatabaseInfo[] PerDatabase;
         public float Average;
+        [XmlIgnore]
+        public TopErrors TopErrors;
 
         public void Compute(ScoreTable[] tables, AccuracyMeasure measure)
         {
@@ -61,9 +64,11 @@ namespace SourceAFIS.Tuning.Errors
                 Average += PerDatabase[db].Scalar;
             }
             Average /= tables.Length;
+            TopErrors = new TopErrors();
+            TopErrors.Compute(tables);
         }
 
-        public void Save(string folder)
+        public void Save(string folder, bool perDatabase)
         {
             Directory.CreateDirectory(folder);
 
@@ -71,6 +76,12 @@ namespace SourceAFIS.Tuning.Errors
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(AccuracyStatistics));
                 serializer.Serialize(stream, this);
+            }
+
+            using (FileStream stream = File.Open(Path.Combine(folder, "TopErrors.xml"), FileMode.Create))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(TopErrors));
+                serializer.Serialize(stream, TopErrors);
             }
 
             for (int i = 0; i < PerDatabase.Length; ++i)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace SourceAFIS.Tuning.Errors
 {
@@ -10,6 +11,14 @@ namespace SourceAFIS.Tuning.Errors
         {
             public float[] Matching;
             public float[] NonMatching;
+        }
+
+        public struct Index
+        {
+            [XmlAttribute]
+            public int Finger;
+            [XmlAttribute]
+            public int View;
         }
 
         public Entry[][] Table;

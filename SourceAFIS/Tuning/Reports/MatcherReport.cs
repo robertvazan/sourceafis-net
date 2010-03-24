@@ -64,7 +64,7 @@ namespace SourceAFIS.Tuning.Reports
             Directory.CreateDirectory(folder);
 
             for (int i = 0; i < Accuracy.Length; ++i)
-                Accuracy[i].Save(Path.Combine(folder, Accuracy[i].Name));
+                Accuracy[i].Save(Path.Combine(folder, Accuracy[i].Name), true);
         }
     }
 }

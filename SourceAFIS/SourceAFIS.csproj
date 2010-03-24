@@ -79,6 +79,7 @@
     <Compile Include="General\PolarPoint.cs" />
     <Compile Include="General\PriorityQueueF.cs" />
     <Compile Include="General\ReversedList.cs" />
+    <Compile Include="General\TopListF.cs" />
     <Compile Include="General\Transformation2D.cs" />
     <Compile Include="Matching\BulkMatcher.cs" />
     <Compile Include="Matching\EdgeConstructor.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Tuning\Errors\ScoreTable.cs" />
     <Compile Include="Tuning\Reports\TestConfiguration.cs" />
     <Compile Include="Tuning\Reports\TestReport.cs" />
+    <Compile Include="Tuning\Reports\TopErrors.cs" />
     <Compile Include="Tuning\TestDatabase.cs" />
     <Compile Include="Visualization\AffineTransformer.cs" />
     <Compile Include="Visualization\AlphaLayering.cs" />

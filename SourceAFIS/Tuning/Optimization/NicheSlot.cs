@@ -47,12 +47,7 @@ namespace SourceAFIS.Tuning.Optimization
         public void Save(string folder)
         {
             BestSolution.Save(folder);
-
-            using (FileStream stream = File.Open(Path.Combine(folder, "Accuracy.xml"), FileMode.Create))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(AccuracyStatistics));
-                serializer.Serialize(stream, BestPerformance);
-            }
+            BestPerformance.Save(folder, false);
         }
 
         public ExtractorReport GetCachedTemplates(ParameterSet query)
