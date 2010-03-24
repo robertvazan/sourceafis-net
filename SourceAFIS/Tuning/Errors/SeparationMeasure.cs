@@ -27,10 +27,10 @@ namespace SourceAFIS.Tuning.Errors
 
             float GetNonMatchingMax(ScoreTable table)
             {
-                float max = Single.MaxValue;
+                float max = Single.MinValue;
                 foreach (ScoreTable.Index index in table.GetAllIndexes())
                     foreach (float score in table.GetEntry(index).NonMatching)
-                        max = Math.Min(max, score);
+                        max = Math.Max(max, score);
                 return max;
             }
         }
@@ -41,26 +41,14 @@ namespace SourceAFIS.Tuning.Errors
         {
             public override float Measure(ScoreTable table)
             {
-                return (GetMatchingDeviation(table, GetMatchingAverage(table)) +
-                    GetNonMatchingDeviation(table, GetNonMatchingAverage(table))) / GetAveragesDistance(table);
-            }
-
-            float GetMatchingDeviation(ScoreTable table, float center)
-            {
-                double sum = 0;
-                foreach (ScoreTable.Index index in table.GetAllIndexes())
-                    foreach (float score in table.GetEntry(index).Matching)
-                        sum += Calc.Sq(score - center);
-                return (float)Math.Sqrt(sum);
-            }
-
-            float GetNonMatchingDeviation(ScoreTable table, float center)
-            {
-                double sum = 0;
-                foreach (ScoreTable.Index index in table.GetAllIndexes())
-                    foreach (float score in table.GetEntry(index).NonMatching)
-                        sum += Calc.Sq(score - center);
-                return (float)Math.Sqrt(sum);
+                float distance = GetAveragesDistance(table);
+                float matchingAverage = GetMatchingAverage(table);
+                float matching = AverageMatching(table,
+                    delegate(float score) { return Calc.Sq(score - matchingAverage); });
+                float nonmatchingAverage = GetNonMatchingAverage(table);
+                float nonmatching = AverageNonMatching(table,
+                    delegate(float score) { return Calc.Sq(score - nonmatchingAverage); });
+                return (distance - (float)Math.Sqrt(matching) - (float)Math.Sqrt(nonmatching)) / distance;
             }
         }
 
@@ -70,28 +58,14 @@ namespace SourceAFIS.Tuning.Errors
         {
             public override float Measure(ScoreTable table)
             {
-                return (GetMatchingDeviation(table, GetMatchingMedian(table)) +
-                    GetNonMatchingDeviation(table, GetNonMatchingMedian(table))) / GetMedianDistance(table);
-            }
-
-            float GetMatchingDeviation(ScoreTable table, float center)
-            {
-                double sum = 0;
-                foreach (ScoreTable.Index index in table.GetAllIndexes())
-                    foreach (float score in table.GetEntry(index).Matching)
-                        if (score < center)
-                            sum += Calc.Sq(score - center);
-                return (float)Math.Sqrt(sum);
-            }
-
-            float GetNonMatchingDeviation(ScoreTable table, float center)
-            {
-                double sum = 0;
-                foreach (ScoreTable.Index index in table.GetAllIndexes())
-                    foreach (float score in table.GetEntry(index).NonMatching)
-                        if (score > center)
-                            sum += Calc.Sq(score - center);
-                return (float)Math.Sqrt(sum);
+                float distance = GetMedianDistance(table);
+                float matchingMedian = GetMatchingMedian(table);
+                float matching = AverageMatching(table,
+                    delegate(float score) { return score < matchingMedian ? Calc.Sq(score - matchingMedian) : 0; });
+                float nonmatchingMedian = GetNonMatchingMedian(table);
+                float nonmatching = AverageNonMatching(table,
+                    delegate(float score) { return score > nonmatchingMedian ? Calc.Sq(score - nonmatchingMedian) : 0; });
+                return (distance - (float)Math.Sqrt(matching) - (float)Math.Sqrt(nonmatching)) / distance;
             }
         }
 
@@ -101,32 +75,48 @@ namespace SourceAFIS.Tuning.Errors
         {
             public override float Measure(ScoreTable table)
             {
-                return (GetMatchingDistance(table, GetMatchingMedian(table)) +
-                    GetNonMatchingDistance(table, GetNonMatchingMedian(table))) / GetMedianDistance(table);
-            }
-
-            float GetMatchingDistance(ScoreTable table, float center)
-            {
-                double sum = 0;
-                foreach (ScoreTable.Index index in table.GetAllIndexes())
-                    foreach (float score in table.GetEntry(index).Matching)
-                        if (score < center)
-                            sum += center - score;
-                return (float)sum;
-            }
-
-            float GetNonMatchingDistance(ScoreTable table, float center)
-            {
-                double sum = 0;
-                foreach (ScoreTable.Index index in table.GetAllIndexes())
-                    foreach (float score in table.GetEntry(index).NonMatching)
-                        if (score > center)
-                            sum += score - center;
-                return (float)sum;
+                float distance = GetMedianDistance(table);
+                float matchingMedian = GetMatchingMedian(table);
+                float matching = AverageMatching(table,
+                    delegate(float score) { return score < matchingMedian ? matchingMedian - score : 0; });
+                float nonmatchingMedian = GetNonMatchingMedian(table);
+                float nonmatching = AverageNonMatching(table,
+                    delegate(float score) { return score > nonmatchingMedian ? score - nonmatchingMedian : 0; });
+                return (distance - matching - nonmatching) / distance;
             }
         }
 
         public static readonly SeparationMeasure HalfDistance = new HalfDistanceMeasure();
+
+        protected delegate float ScoreTransform(float score);
+
+        protected float AverageMatching(ScoreTable table, ScoreTransform transform)
+        {
+            double sum = 0;
+            int count = 0;
+            foreach (ScoreTable.Index index in table.GetAllIndexes())
+            {
+                float[] scores = table.GetEntry(index).Matching;
+                count += scores.Length;
+                foreach (float score in scores)
+                    sum += transform(score);
+            }
+            return (float)(sum / count);
+        }
+
+        protected float AverageNonMatching(ScoreTable table, ScoreTransform transform)
+        {
+            double sum = 0;
+            int count = 0;
+            foreach (ScoreTable.Index index in table.GetAllIndexes())
+            {
+                float[] scores = table.GetEntry(index).NonMatching;
+                count += scores.Length;
+                foreach (float score in scores)
+                    sum += transform(score);
+            }
+            return (float)(sum / count);
+        }
 
         protected float GetMedianDistance(ScoreTable table)
         {
@@ -176,7 +166,7 @@ namespace SourceAFIS.Tuning.Errors
             int count = 0;
             foreach (ScoreTable.Index index in table.GetAllIndexes())
             {
-                float[] scores = table.GetEntry(index).Matching;
+                float[] scores = table.GetEntry(index).NonMatching;
                 count += scores.Length;
                 foreach (float score in scores)
                     sum += score;
