@@ -23,6 +23,9 @@ namespace SourceAFIS.Extraction.Model
         [DpiAdjusted]
         [Parameter(Upper = 100)]
         public int ToleratedOverlapLength = 3;
+        [DpiAdjusted]
+        [Parameter(Upper = 20)]
+        public int MinEndingLength = 3;
 
         [Nested]
         public KnotRemover KnotRemover = new KnotRemover();
@@ -39,9 +42,10 @@ namespace SourceAFIS.Extraction.Model
         {
             PriorityQueueF<Gap> queue = new PriorityQueueF<Gap>();
             foreach (SkeletonBuilder.Minutia end1 in skeleton.Minutiae)
-                if (end1.Ridges.Count == 1)
+                if (end1.Ridges.Count == 1 && end1.Ridges[0].Points.Count >= MinEndingLength)
                     foreach (SkeletonBuilder.Minutia end2 in skeleton.Minutiae)
-                        if (end2 != end1 && end2.Ridges.Count == 1 && end1.Ridges[0].End != end2 && IsWithinLimits(end1, end2))
+                        if (end2 != end1 && end2.Ridges.Count == 1 && end1.Ridges[0].End != end2
+                            && end2.Ridges[0].Points.Count >= MinEndingLength && IsWithinLimits(end1, end2))
                         {
                             Gap gap;
                             gap.End1 = end1;
