@@ -24,7 +24,9 @@ namespace SourceAFIS.Matching
             while (Queue.Count > 0 && (pairing.IsProbePaired(Queue.Peek().Probe)
                 || pairing.IsCandidatePaired(Queue.Peek().Candidate)))
             {
-                Queue.Dequeue();
+                MinutiaPair pair = Queue.Dequeue();
+                if (pairing.GetCandidateByProbe(pair.Probe) == pair.Candidate)
+                    pairing.AddSupportByProbe(pair.Probe);
             }
         }
 
