@@ -17,6 +17,7 @@ namespace FingerprintAnalyzer
         RidgeTracer,
         DotRemover,
         PoreRemover,
+        GapRemover,
         TailRemover,
         FragmentRemover,
         MinutiaMask,
