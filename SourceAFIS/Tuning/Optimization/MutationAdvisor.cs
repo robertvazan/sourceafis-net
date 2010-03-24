@@ -13,11 +13,11 @@ namespace SourceAFIS.Tuning.Optimization
 
         protected Random Random = new Random();
         List<MutationMemory> Live = new List<MutationMemory>();
-        bool Initialized;
 
         public IEnumerable<MutationAdvice> Advise(ParameterSet initial)
         {
-            Initialize();
+            if (Live.Count == 0)
+                Live.AddRange(InitializeMemory());
             PurgeExpired();
 
             foreach (MutationMemory memory in Live)
@@ -47,15 +47,6 @@ namespace SourceAFIS.Tuning.Optimization
                 MutationMemory added = Remember(initial, mutated);
                 if (added != null)
                     Live.Add(added);
-            }
-        }
-
-        void Initialize()
-        {
-            if (!Initialized)
-            {
-                Live.AddRange(InitializeMemory());
-                Initialized = true;
             }
         }
 
