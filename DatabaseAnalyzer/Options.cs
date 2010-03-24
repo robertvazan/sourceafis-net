@@ -11,6 +11,7 @@ namespace DatabaseAnalyzer
     {
         public TestDatabase TestDatabase;
         public ExtractorBenchmark ExtractorBenchmark;
+        public Optimizer Optimizer;
 
         public string Action;
 
@@ -32,6 +33,9 @@ namespace DatabaseAnalyzer
             ClipDatabase("views-per-finger", TestDatabase.ClipViewsPerFinger);
 
             ExtractorBenchmark.Timeout = GetFloat("extractor-benchmark/max-seconds", ExtractorBenchmark.Timeout);
+
+            foreach (XPathNavigator element in Root.Select("/database-analyzer/optimizer/mutate"))
+                Optimizer.Mutations.ManualAdvisor.ParameterPaths.Add(element.Value);
 
             Action = Root.SelectSingleNode("/database-analyzer/action").Value;
         }

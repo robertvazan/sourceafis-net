@@ -31,6 +31,14 @@
 
 </extractor-benchmark>
 
+<!-- optimizer options -->
+<optimizer>
+
+<!-- name of parameter that should be tuned first, several <mutate> tags can appear here -->
+<!-- <mutate>Extractor.GapRemover.GapAngle</mutate> -->
+
+</optimizer>
+
 <!-- action to take, available actions: -->
 <!-- extractor-benchmark - run extraction over all images, store templates in TestDatabase.dat -->
 <!-- matcher-benchmark - run matching over templates in TestDatabase.dat, runs extraction if necessary -->

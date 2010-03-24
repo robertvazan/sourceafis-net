@@ -13,7 +13,6 @@ namespace SourceAFIS.Tuning.Optimization
 
             MutationMemory memory = new MutationMemory();
             memory.Lifetime = memory.ResetLifetime = 10;
-            memory.Confidence = 2;
             memory.Mutate = delegate(ParameterSet initial)
             {
                 ParameterSet mutated = initial.Clone();
