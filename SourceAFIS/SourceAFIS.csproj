@@ -114,6 +114,7 @@
     <Compile Include="Tuning\Errors\ErrorPolicy.cs" />
     <Compile Include="Tuning\Errors\ErrorRange.cs" />
     <Compile Include="Tuning\Errors\ScalarErrorMeasure.cs" />
+    <Compile Include="Tuning\Errors\SeparationMeasure.cs" />
     <Compile Include="Tuning\ExtractorBenchmark.cs" />
     <Compile Include="Tuning\MatcherBenchmark.cs" />
     <Compile Include="Tuning\Errors\MultiFingerPolicy.cs" />
