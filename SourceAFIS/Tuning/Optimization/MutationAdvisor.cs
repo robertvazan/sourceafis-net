@@ -8,7 +8,7 @@ namespace SourceAFIS.Tuning.Optimization
 {
     public abstract class MutationAdvisor
     {
-        protected abstract MutationMemory Remember(ParameterSet initial, ParameterSet mutated);
+        protected virtual MutationMemory Remember(ParameterSet initial, ParameterSet mutated) { return null; }
         protected virtual IEnumerable<MutationMemory> InitializeMemory() { yield break; }
 
         protected Random Random = new Random();

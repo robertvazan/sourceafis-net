@@ -16,10 +16,19 @@ namespace SourceAFIS.Tuning.Optimization
 
         Random Random = new Random();
 
-        public MutationAdvisor[] Advisors = new MutationAdvisor[] {
-            new AxisFocusMutation(),
-            new RandomMutation()
-        };
+        public ManualMutation ManualAdvisor = new ManualMutation();
+        public AxisFocusMutation AxisFocusAdvisor = new AxisFocusMutation();
+        public RandomMutation RandomAdvisor = new RandomMutation();
+        
+        public IEnumerable<MutationAdvisor> Advisors
+        {
+            get
+            {
+                yield return ManualAdvisor;
+                yield return AxisFocusAdvisor;
+                yield return RandomAdvisor;
+            }
+        }
 
         public ParameterSet Mutate(ParameterSet initial)
         {

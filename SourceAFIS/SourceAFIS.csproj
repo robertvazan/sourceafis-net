@@ -119,6 +119,7 @@
     <Compile Include="Tuning\MatcherBenchmark.cs" />
     <Compile Include="Tuning\Errors\MultiFingerPolicy.cs" />
     <Compile Include="Tuning\Optimization\AxisFocusMutation.cs" />
+    <Compile Include="Tuning\Optimization\ManualMutation.cs" />
     <Compile Include="Tuning\Optimization\MutationAdvice.cs" />
     <Compile Include="Tuning\Optimization\MutationAdvisor.cs" />
     <Compile Include="Tuning\Optimization\MutationMemory.cs" />
