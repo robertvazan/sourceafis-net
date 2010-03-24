@@ -56,8 +56,8 @@ namespace SourceAFIS.Tuning
                     throw new Exception();
                 if (previous != null)
                     Mutations.Feedback(previous, trial, improved);
-                previous = trial;
-                trial = Mutations.Mutate(NicheSlot.BestSolution.Configuration.Parameters);
+                previous = NicheSlot.BestSolution.Configuration.Parameters;
+                trial = Mutations.Mutate(previous);
             }
         }
 
