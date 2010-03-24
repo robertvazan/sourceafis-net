@@ -27,7 +27,7 @@ namespace SourceAFIS.Extraction.Filters
             LowContrastMajority.Radius = 4;
             LowContrastMajority.Majority = 0.6f;
             InnerMaskFilter.Radius = 6;
-            InnerMaskFilter.BorderDistance = 5;
+            InnerMaskFilter.BorderDistance = 4;
         }
 
         public BinaryMap ComputeMask(BlockMap blocks, short[, ,] histogram)

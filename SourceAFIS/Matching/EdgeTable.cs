@@ -15,7 +15,7 @@ namespace SourceAFIS.Matching
 
         [DpiAdjusted]
         [Parameter(Lower = 30, Upper = 1500)]
-        public int MaxDistance = 203;
+        public int MaxDistance = 159;
         [Parameter(Lower = 2, Upper = 100)]
         public int MaxNeighbors = 9;
 
