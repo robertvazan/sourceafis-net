@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SourceAFIS.Meta;
 using System.IO;
 using System.Xml.Serialization;
+using SourceAFIS.Meta;
+using SourceAFIS.Extraction;
+using SourceAFIS.Matching;
 
 namespace SourceAFIS.Tuning.Reports
 {
@@ -26,6 +28,20 @@ namespace SourceAFIS.Tuning.Reports
                 XmlSerializer serializer = new XmlSerializer(typeof(ParameterSet));
                 serializer.Serialize(stream, Parameters);
             }
+
+            using (FileStream stream = File.Open(Path.Combine(folder, "ParameterChanges.xml"), FileMode.Create))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(ParameterSet));
+                serializer.Serialize(stream, GetChanges());
+            }
+        }
+
+        ParameterSet GetChanges()
+        {
+            ParameterSet original = new ParameterSet();
+            original.Add(new ObjectTree(new Extractor(), "Extractor"));
+            original.Add(new ObjectTree(new BulkMatcher(), "Matcher"));
+            return Parameters.GetDifferences(original);
         }
     }
 }
