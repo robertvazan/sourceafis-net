@@ -18,6 +18,7 @@ namespace SourceAFIS.Tuning.Errors
             public ROCCurve ROC = new ROCCurve();
             public ErrorRange Range = new ErrorRange();
             public float Scalar;
+            public float Separation;
 
             public void Compute(ScoreTable table, AccuracyMeasure measure)
             {
@@ -25,6 +26,7 @@ namespace SourceAFIS.Tuning.Errors
                 ROC.Compute(CombinedScores);
                 Range.Compute(ROC, measure.ErrorPolicyFunction);
                 Scalar = measure.ScalarMeasure.Measure(Range.Rate);
+                Separation = measure.Separation.Measure(CombinedScores);
             }
 
             public void Save(string folder)
@@ -49,7 +51,8 @@ namespace SourceAFIS.Tuning.Errors
 
         public string Name;
         public PerDatabaseInfo[] PerDatabase;
-        public float Average;
+        public float AverageError;
+        public float Separation;
         [XmlIgnore]
         public TopErrors TopErrors;
 
@@ -61,9 +64,11 @@ namespace SourceAFIS.Tuning.Errors
             {
                 PerDatabase[db] = new PerDatabaseInfo();
                 PerDatabase[db].Compute(tables[db], measure);
-                Average += PerDatabase[db].Scalar;
+                AverageError += PerDatabase[db].Scalar;
+                Separation += PerDatabase[db].Separation;
             }
-            Average /= tables.Length;
+            AverageError /= tables.Length;
+            Separation /= tables.Length;
             TopErrors = new TopErrors();
             TopErrors.Compute(tables);
         }

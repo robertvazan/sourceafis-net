@@ -28,7 +28,8 @@ namespace SourceAFIS.Tuning.Optimization
                 AccuracyStatistics performance = new AccuracyStatistics();
                 performance.Compute(solution.Matcher.ScoreTables, Measure);
 
-                if (BestSolution == null || BestPerformance.Average > performance.Average)
+                if (BestSolution == null || performance.AverageError < BestPerformance.AverageError
+                    || performance.AverageError == BestPerformance.AverageError && performance.Separation > BestPerformance.Separation)
                 {
                     bool improved = BestSolution != null;
 

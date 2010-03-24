@@ -19,6 +19,12 @@ namespace SourceAFIS.Tuning.Errors
             public int Finger;
             [XmlAttribute]
             public int View;
+
+            public Index(int finger, int view)
+            {
+                Finger = finger;
+                View = view;
+            }
         }
 
         public Entry[][] Table;
@@ -28,6 +34,18 @@ namespace SourceAFIS.Tuning.Errors
             Table = new Entry[database.Fingers.Count][];
             for (int finger = 0; finger < database.Fingers.Count; ++finger)
                 Table[finger] = new Entry[database.Fingers[finger].Views.Count];
+        }
+
+        public IEnumerable<Index> GetAllIndexes()
+        {
+            for (int finger = 0; finger < Table.Length; ++finger)
+                for (int view = 0; view < Table[finger].Length; ++view)
+                    yield return new Index(finger, view);
+        }
+
+        public Entry GetEntry(Index index)
+        {
+            return Table[index.Finger][index.View];
         }
 
         public ScoreTable GetMultiFingerTable(MultiFingerPolicy policy)
