@@ -9,6 +9,7 @@ namespace SourceAFIS.Matching
     {
         int[] ProbeByCandidate;
         int[] CandidateByProbe;
+        int[] SupportingEdgesByProbe;
         MinutiaPair[] PairList;
         int PairCount;
 
@@ -20,6 +21,7 @@ namespace SourceAFIS.Matching
             CandidateByProbe = new int[probe.Minutiae.Length];
             for (int i = 0; i < CandidateByProbe.Length; ++i)
                 CandidateByProbe[i] = -1;
+            SupportingEdgesByProbe = new int[probe.Minutiae.Length];
             PairList = new MinutiaPair[probe.Minutiae.Length];
             PairCount = 0;
         }
@@ -38,6 +40,7 @@ namespace SourceAFIS.Matching
             {
                 ProbeByCandidate[PairList[i].Candidate] = -1;
                 CandidateByProbe[PairList[i].Probe] = -1;
+                SupportingEdgesByProbe[PairList[i].Probe] = 0;
             }
             PairCount = 0;
         }
@@ -75,11 +78,22 @@ namespace SourceAFIS.Matching
             return PairList[index];
         }
 
+        public void AddSupportByProbe(int probe)
+        {
+            ++SupportingEdgesByProbe[probe];
+        }
+
+        public int GetSupportByProbe(int probe)
+        {
+            return SupportingEdgesByProbe[probe];
+        }
+
         public object Clone()
         {
             MinutiaPairing clone = new MinutiaPairing();
             clone.CandidateByProbe = (int[])CandidateByProbe.Clone();
             clone.ProbeByCandidate = (int[])ProbeByCandidate.Clone();
+            clone.SupportingEdgesByProbe = (int[])SupportingEdgesByProbe.Clone();
             clone.PairList = (MinutiaPair[])PairList.Clone();
             clone.PairCount = PairCount;
             return clone;

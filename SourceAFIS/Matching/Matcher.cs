@@ -112,6 +112,8 @@ namespace SourceAFIS.Matching
                 NeighborEdge candidateEdge = CandidateEdges.Table[Pairing.LastAdded.Candidate][edgePair.CandidateIndex];
                 if (!Pairing.IsCandidatePaired(candidateEdge.Neighbor) && !Pairing.IsProbePaired(probeEdge.Neighbor))
                     PairSelector.Enqueue(new MinutiaPair(probeEdge.Neighbor, candidateEdge.Neighbor), candidateEdge.Edge.Length);
+                else if (Pairing.GetCandidateByProbe(probeEdge.Neighbor) == candidateEdge.Neighbor)
+                    Pairing.AddSupportByProbe(probeEdge.Neighbor);
             }
         }
     }
