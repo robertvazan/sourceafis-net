@@ -41,7 +41,7 @@ namespace SourceAFIS.Extraction.Model
             foreach (SkeletonBuilder.Minutia end1 in skeleton.Minutiae)
                 if (end1.Ridges.Count == 1)
                     foreach (SkeletonBuilder.Minutia end2 in skeleton.Minutiae)
-                        if (end2 != end1 && end2.Ridges.Count == 1 && IsWithinLimits(end1, end2))
+                        if (end2 != end1 && end2.Ridges.Count == 1 && end1.Ridges[0].End != end2 && IsWithinLimits(end1, end2))
                         {
                             Gap gap;
                             gap.End1 = end1;
