@@ -25,7 +25,7 @@ namespace SourceAFIS.Extraction.Model
         public int ToleratedOverlapLength = 3;
         [DpiAdjusted]
         [Parameter(Upper = 20)]
-        public int MinEndingLength = 3;
+        public int MinEndingLength = 7;
 
         [Nested]
         public KnotRemover KnotRemover = new KnotRemover();
