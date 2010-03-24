@@ -11,6 +11,13 @@ namespace SourceAFIS.General
         public const float PI2 = (float)(2 * Math.PI);
         public const byte PIB = 128;
 
+        public const byte B180 = PIB;
+        public const byte B90 = B180 / 2;
+        public const byte B60 = B180 / 3;
+        public const byte B45 = B180 / 4;
+        public const byte B30 = B180 / 6;
+        public const byte B15 = B180 / 12;
+
         public static float FromFraction(float fraction)
         {
             return fraction * PI2;

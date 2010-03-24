@@ -14,12 +14,13 @@ namespace SourceAFIS.General
         public int Width;
         public int Height;
 
-        public int Left { get { return X; } set { X = value; } }
-        public int Bottom { get { return Y; } set { Y = value; } }
+        public int Left { get { return X; } set { Width += X - value; X = value; } }
+        public int Bottom { get { return Y; } set { Height += Y - value;  Y = value; } }
         public int Right { get { return X + Width; } set { Width = value - X; } }
         public int Top { get { return Y + Height; } set { Height = value - Y; } }
 
-        public Point BottomLeft { get { return new Point(Left, Bottom); } set { Left = value.X; Bottom = value.Y; } }
+        public Point Point { get { return new Point(Left, Bottom); } set { X = value.X; Y = value.Y; } }
+        public Size Size { get { return new Size(Width, Height); } set { Width = value.Width; Height = value.Height; } }
         
         public Range RangeX { get { return new Range(Left, Right); } }
         public Range RangeY { get { return new Range(Bottom, Top); } }
@@ -93,7 +94,7 @@ namespace SourceAFIS.General
 
         public void Shift(Point relative)
         {
-            BottomLeft = Calc.Add(BottomLeft, relative);
+            Point = Calc.Add(Point, relative);
         }
 
         public RectangleC GetShifted(Point relative)
@@ -113,6 +114,18 @@ namespace SourceAFIS.General
                 Bottom = other.Bottom;
             if (Top > other.Top)
                 Top = other.Top;
+        }
+
+        public void Include(Point point)
+        {
+            if (Left > point.X)
+                Left = point.X;
+            if (Right <= point.X)
+                Right = point.X + 1;
+            if (Bottom > point.Y)
+                Bottom = point.Y;
+            if (Top <= point.Y)
+                Top = point.Y + 1;
         }
 
         sealed class RectEnumerator : IEnumerator<Point>
