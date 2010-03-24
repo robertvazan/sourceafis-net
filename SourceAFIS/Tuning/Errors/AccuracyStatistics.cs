@@ -84,8 +84,9 @@ namespace SourceAFIS.Tuning.Errors
                 serializer.Serialize(stream, TopErrors);
             }
 
-            for (int i = 0; i < PerDatabase.Length; ++i)
-                PerDatabase[i].Save(Path.Combine(folder, String.Format("Database{0}", i + 1)));
+            if (perDatabase)
+                for (int i = 0; i < PerDatabase.Length; ++i)
+                    PerDatabase[i].Save(Path.Combine(folder, String.Format("Database{0}", i + 1)));
         }
     }
 }
