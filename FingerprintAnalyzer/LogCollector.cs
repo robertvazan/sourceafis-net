@@ -19,6 +19,7 @@ namespace FingerprintAnalyzer
             public SkeletonBuilder RidgeTracer;
             public SkeletonBuilder DotRemover;
             public SkeletonBuilder PoreRemover;
+            public SkeletonBuilder GapRemover;
             public SkeletonBuilder TailRemover;
             public SkeletonBuilder FragmentRemover;
             public SkeletonBuilder MinutiaMask;
@@ -111,6 +112,7 @@ namespace FingerprintAnalyzer
             data.RidgeTracer = Logger.Retrieve<SkeletonBuilder>("Extractor.RidgeTracer" + context);
             data.DotRemover = Logger.Retrieve<SkeletonBuilder>("Extractor.DotRemover" + context);
             data.PoreRemover = Logger.Retrieve<SkeletonBuilder>("Extractor.PoreRemover" + context);
+            data.GapRemover = Logger.Retrieve<SkeletonBuilder>("Extractor.GapRemover" + context);
             data.TailRemover = Logger.Retrieve<SkeletonBuilder>("Extractor.TailRemover" + context);
             data.FragmentRemover = Logger.Retrieve<SkeletonBuilder>("Extractor.FragmentRemover" + context);
             data.MinutiaMask = Logger.Retrieve<SkeletonBuilder>("Extractor.MinutiaMask" + context);

@@ -62,6 +62,7 @@ namespace SourceAFIS.Extraction.Model
             }
 
             KnotRemover.Filter(skeleton);
+            Logger.Log(this, skeleton);
         }
 
         bool IsWithinLimits(SkeletonBuilder.Minutia end1, SkeletonBuilder.Minutia end2)
