@@ -12,6 +12,7 @@ namespace SourceAFIS.Matching
         public int MinSupportingEdges = 1;
 
         public int PairCount;
+        public int CorrectTypeCount;
         public int SupportedCount;
         public float PairFraction;
         public int EdgeCount;
@@ -22,16 +23,22 @@ namespace SourceAFIS.Matching
 
             EdgeCount = 0;
             SupportedCount = 0;
+            CorrectTypeCount = 0;
+
             for (int i = 0; i < PairCount; ++i)
             {
-                int support = pairing.GetSupportByProbe(pairing.GetPair(i).Probe);
+                MinutiaPair pair = pairing.GetPair(i);
+                int support = pairing.GetSupportByProbe(pair.Probe);
                 if (support >= MinSupportingEdges)
                     ++SupportedCount;
                 EdgeCount += support + 1;
+                if (probe.Minutiae[pair.Probe].Type == candidate.Minutiae[pair.Candidate].Type)
+                    ++CorrectTypeCount;
             }
 
-            float probeFraction = SupportedCount / (float)probe.Minutiae.Length;
-            float candidateFraction = SupportedCount / (float)candidate.Minutiae.Length;
+            int countForFraction = Math.Min(CorrectTypeCount, SupportedCount);
+            float probeFraction = countForFraction / (float)probe.Minutiae.Length;
+            float candidateFraction = countForFraction / (float)candidate.Minutiae.Length;
             PairFraction = (probeFraction + candidateFraction) / 2;
         }
     }
