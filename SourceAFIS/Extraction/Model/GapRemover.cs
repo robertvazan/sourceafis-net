@@ -22,7 +22,7 @@ namespace SourceAFIS.Extraction.Model
         public int AngleSampleOffset = 15;
         [DpiAdjusted]
         [Parameter(Upper = 100)]
-        public int ToleratedOverlapLength = 3;
+        public int ToleratedOverlapLength = 2;
         [DpiAdjusted]
         [Parameter(Upper = 20)]
         public int MinEndingLength = 7;
