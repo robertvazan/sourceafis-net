@@ -9,7 +9,7 @@ namespace SourceAFIS.Tuning.Reports
 {
     public sealed class TopErrors
     {
-        public const int TopErrorCount = 5;
+        public const int TopErrorCount = 20;
 
         public struct Pair
         {
