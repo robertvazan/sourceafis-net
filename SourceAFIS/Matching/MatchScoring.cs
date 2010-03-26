@@ -10,7 +10,7 @@ namespace SourceAFIS.Matching
         [Parameter(Upper = 10)]
         public float PairCountFactor = 0.48f;
         [Parameter(Upper = 100)]
-        public float PairFractionFactor = 8.26f;
+        public float PairFractionFactor = 6.7f;
         [Parameter(Upper = 10)]
         public float CorrectTypeFactor = 0.1f;
         [Parameter(Upper = 10)]
