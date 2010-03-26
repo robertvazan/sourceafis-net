@@ -36,9 +36,8 @@ namespace SourceAFIS.Matching
                     ++CorrectTypeCount;
             }
 
-            int countForFraction = Math.Min(CorrectTypeCount, SupportedCount);
-            float probeFraction = countForFraction / (float)probe.Minutiae.Length;
-            float candidateFraction = countForFraction / (float)candidate.Minutiae.Length;
+            float probeFraction = PairCount / (float)probe.Minutiae.Length;
+            float candidateFraction = PairCount / (float)candidate.Minutiae.Length;
             PairFraction = (probeFraction + candidateFraction) / 2;
         }
     }
