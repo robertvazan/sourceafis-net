@@ -4,6 +4,7 @@ using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
 using SystemPixelFormat = System.Drawing.Imaging.PixelFormat;
+using System.Runtime.InteropServices;
 
 namespace SourceAFIS.Visualization
 {
@@ -13,31 +14,27 @@ namespace SourceAFIS.Visualization
         {
             int width = bmp.Width;
             int height = bmp.Height;
-            ColorB[,] result = new ColorB[height, width];
             BitmapData data = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, SystemPixelFormat.Format24bppRgb);
+            
+            byte[] bytes = new byte[height * data.Stride];
             try
             {
-                unsafe
-                {
-                    byte* scan0 = (byte*)data.Scan0;
-                    for (int y = 0; y < height; ++y)
-                    {
-                        byte* scanY = scan0 + y * data.Stride;
-                        for (int x = 0; x < width; ++x)
-                        {
-                            byte* scanXY = scanY + x * 3;
-                            int invertedY = height - 1 - y;
-                            result[invertedY, x].B = *(scanXY + 0);
-                            result[invertedY, x].G = *(scanXY + 1);
-                            result[invertedY, x].R = *(scanXY + 2);
-                        }
-                    }
-                }
+                Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
             }
             finally
             {
                 bmp.UnlockBits(data);
             }
+
+            ColorB[,] result = new ColorB[height, width];
+            for (int y = 0; y < height; ++y)
+                for (int x = 0; x < width; ++x)
+                {
+                    int offset = (height - 1 - y) * data.Stride + x * 3;
+                    result[y, x].B = bytes[offset + 0];
+                    result[y, x].G = bytes[offset + 1];
+                    result[y, x].R = bytes[offset + 2];
+                }
             return result;
         }
 
@@ -47,24 +44,20 @@ namespace SourceAFIS.Visualization
             int height = pixels.GetLength(0);
             Bitmap bmp = new Bitmap(width, height, SystemPixelFormat.Format24bppRgb);
             BitmapData data = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, SystemPixelFormat.Format24bppRgb);
+            
+            byte[] bytes = new byte[height * data.Stride];
+            for (int y = 0; y < height; ++y)
+                for (int x = 0; x < width; ++x)
+                {
+                    int offset = (height - 1 - y) * data.Stride + x * 3;
+                    bytes[offset + 0] = pixels[y, x].B;
+                    bytes[offset + 1] = pixels[y, x].G;
+                    bytes[offset + 2] = pixels[y, x].R;
+                }
+
             try
             {
-                unsafe
-                {
-                    byte* scan0 = (byte*)data.Scan0;
-                    for (int y = 0; y < height; ++y)
-                    {
-                        byte* scanY = scan0 + y * data.Stride;
-                        for (int x = 0; x < width; ++x)
-                        {
-                            byte* scanXY = scanY + x * 3;
-                            int invertedY = height - 1 - y;
-                            *(scanXY + 0) = pixels[invertedY, x].B;
-                            *(scanXY + 1) = pixels[invertedY, x].G;
-                            *(scanXY + 2) = pixels[invertedY, x].R;
-                        }
-                    }
-                }
+                Marshal.Copy(bytes, 0, data.Scan0, bytes.Length);
             }
             finally
             {
