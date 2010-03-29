@@ -15,6 +15,9 @@ namespace SourceAFIS.Extraction.Templates
         [DpiAdjusted(Min = 0)]
         [Parameter(Lower = 0, Upper = 20)]
         public int DirectionSegmentSkip = 1;
+        [DpiAdjusted]
+        [Parameter(Upper = 4000)]
+        public int DpiScaling = 500;
 
         byte ComputeDirection(SkeletonBuilder.Ridge ridge)
         {
@@ -35,13 +38,14 @@ namespace SourceAFIS.Extraction.Templates
 
         public void Collect(SkeletonBuilder skeleton, TemplateBuilder.MinutiaType type, TemplateBuilder template)
         {
+            float dpiFactor = 500 / (float)DpiScaling;
             foreach (SkeletonBuilder.Minutia skeletonMinutia in skeleton.Minutiae)
             {
                 if (skeletonMinutia.Valid && skeletonMinutia.Ridges.Count == 1)
                 {
                     TemplateBuilder.Minutia templateMinutia = new TemplateBuilder.Minutia();
                     templateMinutia.Type = type;
-                    templateMinutia.Position = skeletonMinutia.Position;
+                    templateMinutia.Position = Calc.Round(Calc.Multiply(dpiFactor, skeletonMinutia.Position));
                     templateMinutia.Direction = ComputeDirection(skeletonMinutia.Ridges[0]);
                     template.Minutiae.Add(templateMinutia);
                 }
