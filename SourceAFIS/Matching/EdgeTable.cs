@@ -13,7 +13,6 @@ namespace SourceAFIS.Matching
         [Nested]
         public EdgeConstructor EdgeConstructor = new EdgeConstructor();
 
-        [DpiAdjusted]
         [Parameter(Lower = 30, Upper = 1500)]
         public int MaxDistance = 191;
         [Parameter(Lower = 2, Upper = 100)]

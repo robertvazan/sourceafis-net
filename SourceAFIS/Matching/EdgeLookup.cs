@@ -8,7 +8,6 @@ namespace SourceAFIS.Matching
 {
     public sealed class EdgeLookup
     {
-        [DpiAdjusted]
         [Parameter(Lower = 0, Upper = 50)]
         public int MaxDistanceError = 6;
         [Parameter(Lower = 1)]
