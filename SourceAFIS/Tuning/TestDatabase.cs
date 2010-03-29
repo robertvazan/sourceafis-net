@@ -179,6 +179,14 @@ namespace SourceAFIS.Tuning
 
         object ICloneable.Clone() { return Clone(); }
 
+        public int GetFingerCount()
+        {
+            int count = 0;
+            foreach (Database database in Databases)
+                count += database.Fingers.Count;
+            return count;
+        }
+
         public int GetFingerprintCount()
         {
             int count = 0;

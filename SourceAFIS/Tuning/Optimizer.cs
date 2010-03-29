@@ -40,6 +40,7 @@ namespace SourceAFIS.Tuning
                     report.Extractor = NicheSlot.GetCachedTemplates(trial);
                     if (report.Extractor == null)
                         report.Extractor = ExtractorBenchmark.Run();
+                    report.Configuration.DatabaseStatistics.Collect(report.Extractor.Templates);
                     MatcherBenchmark.TestDatabase = report.Extractor.Templates;
 
                     report.Matcher = MatcherBenchmark.Run();
