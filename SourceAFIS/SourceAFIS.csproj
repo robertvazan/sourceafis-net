@@ -128,6 +128,7 @@
     <Compile Include="Tuning\Optimization\RandomMutation.cs" />
     <Compile Include="Tuning\Optimization\TimeConstraints.cs" />
     <Compile Include="Tuning\Optimizer.cs" />
+    <Compile Include="Tuning\Reports\DatabaseStatistics.cs" />
     <Compile Include="Tuning\Reports\ExtractorReport.cs" />
     <Compile Include="Tuning\Reports\MatcherReport.cs" />
     <Compile Include="Tuning\Reports\MatcherTimings.cs" />

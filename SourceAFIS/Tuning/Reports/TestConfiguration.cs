@@ -12,6 +12,7 @@ namespace SourceAFIS.Tuning.Reports
     public sealed class TestConfiguration
     {
         public ParameterSet Parameters;
+        public DatabaseStatistics DatabaseStatistics = new DatabaseStatistics();
 
         public void Save(string folder)
         {
