@@ -40,8 +40,9 @@
 </optimizer>
 
 <!-- action to take, available actions: -->
-<!-- extractor-benchmark - run extraction over all images, store templates in TestDatabase.dat -->
-<!-- matcher-benchmark - run matching over templates in TestDatabase.dat, runs extraction if necessary -->
+<!-- extractor-benchmark - run extraction over all images, store reports under Extractor folder -->
+<!-- matcher-benchmark - run matching over templates from Extractor/Templates.dat, store reports under Matcher folder -->
+<!-- optimizer - optimize algorithm parameters through simple hill climbing search, save reports under Optimizer folder -->
 <action>matcher-benchmark</action>
 
 </database-analyzer>

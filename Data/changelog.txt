@@ -1,3 +1,7 @@
+2010-03-31 - SourceAFIS 0.4
+* optimizer for algorithm parameters
+* reduced EER by 50%
+
 2010-03-04 - SourceAFIS 0.3
 * DatabaseAnalyzer tool
 * 40x faster matching algorithm
