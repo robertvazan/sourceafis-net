@@ -254,7 +254,6 @@ namespace SourceAFIS.General
                 quadrant += 64;
             }
 
-            int overflow = (x | y) >> PolarCacheBits;
             int shift = Calc.HighestBit((uint)(x | y) >> PolarCacheBits);
 
             PolarPointB polarB = PolarCache[y >> shift, x >> shift];
