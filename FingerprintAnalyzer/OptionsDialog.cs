@@ -47,6 +47,11 @@ namespace FingerprintAnalyzer
 
         void OnClose(object sender, EventArgs e)
         {
+            Save();
+        }
+        
+        public void Save()
+        {
             PersistentStore.Save(Options);
             PersistentStore.Save(this);
         }

@@ -137,6 +137,7 @@ namespace FingerprintAnalyzer
 
         void OnClose(object sender, EventArgs e)
         {
+            OptionsDialog.Save();
             PersistentStore.Save(this);
             PersistentStore.Save("ProbePath", ProbePath);
             PersistentStore.Save("CandidatePath", CandidatePath);
