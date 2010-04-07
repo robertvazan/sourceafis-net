@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
-#if !MONO
 using Microsoft.Win32;
-#endif
 
 namespace FingerprintAnalyzer
 {
@@ -16,23 +14,18 @@ namespace FingerprintAnalyzer
 
         public static void Save(Options options)
         {
-#if !MONO
             Save(options, Registry.CurrentUser.CreateSubKey(OptionsPath));
-#endif
         }
 
         public static void Load(Options options)
         {
-#if !MONO
             RegistryKey key = Registry.CurrentUser.OpenSubKey(OptionsPath);
             if (key != null)
                 Load(options, key);
-#endif
         }
 
         public static void Save(Form form)
         {
-#if !MONO
             RegistryKey key = Registry.CurrentUser.CreateSubKey(RegistryPath + @"\" + form.GetType().Name);
             key.SetValue("Visible", form.Visible);
             key.SetValue("WindowState", form.WindowState);
@@ -40,12 +33,10 @@ namespace FingerprintAnalyzer
             key.SetValue("Top", form.Top);
             key.SetValue("Width", form.Width);
             key.SetValue("Height", form.Height);
-#endif
         }
 
         public static void Load(Form form)
         {
-#if !MONO
             try
             {
                 RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath + @"\" + form.GetType().Name);
@@ -62,22 +53,21 @@ namespace FingerprintAnalyzer
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("Could not read form {0} settings from registry. {1}", form.GetType().Name, e.Message));
+                MessageBox.Show(String.Format("Could not read form {0} settings from registry. {1}", form.GetType().Name, e.ToString()));
             }
-#endif
         }
 
         public static void Save(string name, object value)
         {
-#if !MONO
             RegistryKey key = Registry.CurrentUser.CreateSubKey(RegistryPath);
-            key.SetValue(name, value);
-#endif
+            if (value != null)
+                key.SetValue(name, value);
+            else
+                key.DeleteValue(name, false);
         }
 
         public static void Load(string name, ref string value)
         {
-#if !MONO
             try
             {
                 RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath);
@@ -86,12 +76,10 @@ namespace FingerprintAnalyzer
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("Could not read entry {0} from registry. {1}", name, e.Message));
+                MessageBox.Show(String.Format("Could not read entry {0} from registry. {1}", name, e.ToString()));
             }
-#endif
         }
 
-#if !MONO
         public static void Save(object root, RegistryKey key)
         {
             foreach (FieldInfo fieldInfo in root.GetType().GetFields())
@@ -127,10 +115,9 @@ namespace FingerprintAnalyzer
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(String.Format("Could not read {0} from registry. {1}", fieldInfo.Name, e.Message));
+                    MessageBox.Show(String.Format("Could not read {0} from registry. {1}", fieldInfo.Name, e.ToString()));
                 }
             }
         }
-#endif
     }
 }
