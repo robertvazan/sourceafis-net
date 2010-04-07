@@ -40,6 +40,7 @@ namespace SourceAFIS.Tuning
             public Template Template;
         }
 
+        [XmlIgnore]
         public IEnumerable<Finger> AllFingers
         {
             get
@@ -50,6 +51,7 @@ namespace SourceAFIS.Tuning
             }
         }
 
+        [XmlIgnore]
         public IEnumerable<View> AllViews
         {
             get
