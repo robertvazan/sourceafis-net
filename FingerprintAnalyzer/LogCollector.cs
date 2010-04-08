@@ -62,7 +62,7 @@ namespace FingerprintAnalyzer
         public MatchData Match = new MatchData();
 
         Extractor Extractor = new Extractor();
-        Matcher Matcher = new Matcher();
+        MinutiaMatcher Matcher = new MinutiaMatcher();
 
         public LogCollector()
         {

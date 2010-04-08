@@ -12,7 +12,7 @@ namespace SourceAFIS.Tuning
     public sealed class MatcherBenchmark
     {
         public TestDatabase TestDatabase = new TestDatabase();
-        public BulkMatcher Matcher = new BulkMatcher();
+        public Matcher Matcher = new Matcher();
         public float Timeout = 300;
 
         public MatcherReport Run()

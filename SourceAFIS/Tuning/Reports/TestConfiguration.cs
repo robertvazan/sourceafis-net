@@ -41,7 +41,7 @@ namespace SourceAFIS.Tuning.Reports
         {
             ParameterSet original = new ParameterSet();
             original.Add(new ObjectTree(new Extractor(), "Extractor"));
-            original.Add(new ObjectTree(new BulkMatcher(), "Matcher"));
+            original.Add(new ObjectTree(new Matcher(), "Matcher"));
             return Parameters.GetDifferences(original);
         }
     }

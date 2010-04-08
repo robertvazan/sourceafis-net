@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -81,7 +81,7 @@
     <Compile Include="General\ReversedList.cs" />
     <Compile Include="General\TopListF.cs" />
     <Compile Include="General\Transformation2D.cs" />
-    <Compile Include="Matching\BulkMatcher.cs" />
+    <Compile Include="Matching\Matcher.cs" />
     <Compile Include="Matching\EdgeConstructor.cs" />
     <Compile Include="Matching\EdgeInfo.cs" />
     <Compile Include="Matching\EdgeLookup.cs" />
@@ -89,7 +89,7 @@
     <Compile Include="Matching\GlobalTransformation.cs" />
     <Compile Include="Matching\IRootSelector.cs" />
     <Compile Include="Matching\MatchAnalysis.cs" />
-    <Compile Include="Matching\Matcher.cs" />
+    <Compile Include="Matching\MinutiaMatcher.cs" />
     <Compile Include="Matching\MatchScoring.cs" />
     <Compile Include="Matching\MinutiaPair.cs" />
     <Compile Include="Matching\MinutiaPairing.cs" />
