@@ -32,13 +32,11 @@ namespace SourceAFIS.Matching.Minutia
         ProbeIndex Probe;
         EdgeTable CandidateEdges = new EdgeTable();
 
-        public ProbeIndex CreateIndex(Template probe)
+        public void BuildIndex(Template probe, ProbeIndex index)
         {
-            ProbeIndex index = new ProbeIndex();
             index.Template = probe;
             index.Edges = ParameterSet.ClonePrototype(EdgeTablePrototype);
             index.Edges.Reset(probe);
-            return index;
         }
 
         public void SelectProbe(ProbeIndex probe)

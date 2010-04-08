@@ -63,7 +63,7 @@ namespace FingerprintAnalyzer
         public MatchData Match = new MatchData();
 
         Extractor Extractor = new Extractor();
-        MinutiaMatcher Matcher = new MinutiaMatcher();
+        Matcher Matcher = new Matcher();
 
         public LogCollector()
         {
@@ -124,8 +124,8 @@ namespace FingerprintAnalyzer
         {
             if (Probe.InputImage != null && Candidate.InputImage != null)
             {
-                Matcher.SelectProbe(Matcher.CreateIndex(Probe.Template));
-                Matcher.Match(Candidate.Template);
+                Matcher.Prepare(Probe.Template);
+                Matcher.Match(new Template[] { Candidate.Template });
                 Match.RootIndex = Logger.Retrieve<int>("Matcher.BestRootIndex");
                 Match.AnyMatch = Match.RootIndex >= 0;
                 if (Match.AnyMatch)
