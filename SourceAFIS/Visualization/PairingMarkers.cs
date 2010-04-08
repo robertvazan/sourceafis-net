@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
-using SourceAFIS.Matching;
+using SourceAFIS.Matching.Minutia;
 using SourceAFIS.Extraction.Templates;
 
 namespace SourceAFIS.Visualization

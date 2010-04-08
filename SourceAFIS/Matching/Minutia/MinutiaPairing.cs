@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.Extraction.Templates;
 
-namespace SourceAFIS.Matching
+namespace SourceAFIS.Matching.Minutia
 {
     public sealed class MinutiaPairing : ICloneable
     {

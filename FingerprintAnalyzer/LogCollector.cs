@@ -7,6 +7,7 @@ using SourceAFIS.Extraction.Templates;
 using SourceAFIS.General;
 using SourceAFIS.Visualization;
 using SourceAFIS.Matching;
+using SourceAFIS.Matching.Minutia;
 
 namespace FingerprintAnalyzer
 {

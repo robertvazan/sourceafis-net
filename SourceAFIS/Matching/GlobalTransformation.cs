@@ -5,6 +5,7 @@ using System.Drawing;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 using SourceAFIS.Extraction.Templates;
+using SourceAFIS.Matching.Minutia;
 
 namespace SourceAFIS.Matching
 {
