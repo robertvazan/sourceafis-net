@@ -4,7 +4,7 @@ using System.Text;
 using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
 
-namespace SourceAFIS.Matching
+namespace SourceAFIS.Matching.Minutia
 {
     public sealed class EdgeConstructor
     {

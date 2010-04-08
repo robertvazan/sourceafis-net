@@ -4,7 +4,7 @@ using System.Text;
 using SourceAFIS.Meta;
 using SourceAFIS.General;
 
-namespace SourceAFIS.Matching
+namespace SourceAFIS.Matching.Minutia
 {
     public sealed class EdgeLookup
     {

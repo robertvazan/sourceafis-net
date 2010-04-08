@@ -6,7 +6,7 @@ using SourceAFIS.General;
 using SourceAFIS.Meta;
 using SourceAFIS.Extraction.Templates;
 
-namespace SourceAFIS.Matching
+namespace SourceAFIS.Matching.Minutia
 {
     public sealed class EdgeTable
     {
