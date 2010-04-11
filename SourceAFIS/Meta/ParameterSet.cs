@@ -134,10 +134,8 @@ namespace SourceAFIS.Meta
         {
             ParameterSet diff = GetDifferences(original);
             ParameterValue[] all = diff.AllParameters;
-            if (all.Length > 1)
-                throw new Exception("Multiple differences in ParameterSet");
-            else
-                return all[0];
+            AssertException.Check(all.Length <= 1);
+            return all[0];
         }
     }
 }

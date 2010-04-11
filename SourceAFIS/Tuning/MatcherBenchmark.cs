@@ -51,7 +51,7 @@ namespace SourceAFIS.Tuning
                         if (prepareTimer.Accumulated.TotalSeconds + matchingTimer.Accumulated.TotalSeconds +
                             nonmatchingTimer.Accumulated.TotalSeconds > Timeout)
                         {
-                            throw new Exception("Timeout in matcher");
+                            throw new TimeoutException("Timeout in matcher");
                         }
                     }
                 }

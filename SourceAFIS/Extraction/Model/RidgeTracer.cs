@@ -109,8 +109,7 @@ namespace SourceAFIS.Extraction.Model
                                 if (binary.GetBitSafe(next, false) && next != previous)
                                     break;
                             }
-                            if (next == new Point())
-                                throw new Exception();
+                            AssertException.Check(next != new Point());
                             previous = current;
                             current = next;
                             ridge.Points.Add(current);

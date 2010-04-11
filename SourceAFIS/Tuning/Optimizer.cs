@@ -54,7 +54,7 @@ namespace SourceAFIS.Tuning
                 }
 
                 if (NicheSlot.BestSolution == null)
-                    throw new Exception();
+                    throw new ApplicationException("Initial parameter set doesn't meet basic NicheSlot criteria");
                 if (previous != null)
                     Mutations.Feedback(previous, trial, improved);
                 previous = NicheSlot.BestSolution.Configuration.Parameters;
