@@ -116,7 +116,7 @@ namespace SourceAFIS.Meta
             else if (Field.FieldType == typeof(byte))
                 Value.Byte = (byte)Field.GetValue(instance);
             else
-                throw new Exception();
+                throw new AssertException();
         }
 
         public void SaveValue(object instance)
@@ -128,7 +128,7 @@ namespace SourceAFIS.Meta
             else if (Field.FieldType == typeof(byte))
                 Field.SetValue(instance, Value.Byte);
             else
-                throw new Exception();
+                throw new AssertException();
         }
 
         public void ReadValue()

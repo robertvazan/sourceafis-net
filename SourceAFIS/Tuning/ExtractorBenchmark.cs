@@ -38,7 +38,7 @@ namespace SourceAFIS.Tuning
 
                 timer.Update();
                 if (timer.Elapsed.TotalSeconds > Timeout)
-                    throw new Exception("Timeout in extractor");
+                    throw new TimeoutException("Timeout in extractor");
             }
 
             timer.Stop();

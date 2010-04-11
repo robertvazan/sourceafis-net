@@ -38,7 +38,7 @@ namespace SourceAFIS.Tuning.Errors
                 return;
             if (FindZeroPair(ROC, policy, ref left, ref right))
                 return;
-            throw new Exception();
+            throw new AssertException();
         }
 
         bool CheckForNoZero(ROCCurve ROC, ErrorPolicy.Evaluate policy, ref ROCPoint left, ref ROCPoint right)

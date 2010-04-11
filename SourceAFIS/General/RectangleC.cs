@@ -177,15 +177,15 @@ namespace SourceAFIS.General
             return new RectEnumerator(this);
         }
 
-        int IList<Point>.IndexOf(Point point) { throw new Exception(); }
-        void IList<Point>.Insert(int at, Point point) { throw new Exception(); }
-        void IList<Point>.RemoveAt(int at) { throw new Exception(); }
-        void ICollection<Point>.Add(Point point) { throw new Exception(); }
-        bool ICollection<Point>.Remove(Point point) { throw new Exception(); }
-        void ICollection<Point>.Clear() { throw new Exception(); }
-        void ICollection<Point>.CopyTo(Point[] array, int count) { throw new Exception(); }
+        int IList<Point>.IndexOf(Point point) { throw new NotImplementedException(); }
+        void IList<Point>.Insert(int at, Point point) { throw new NotSupportedException(); }
+        void IList<Point>.RemoveAt(int at) { throw new NotSupportedException(); }
+        void ICollection<Point>.Add(Point point) { throw new NotSupportedException(); }
+        bool ICollection<Point>.Remove(Point point) { throw new NotSupportedException(); }
+        void ICollection<Point>.Clear() { throw new NotSupportedException(); }
+        void ICollection<Point>.CopyTo(Point[] array, int count) { throw new NotImplementedException(); }
         bool ICollection<Point>.IsReadOnly { get { return true; } }
         int ICollection<Point>.Count { get { return TotalArea; } }
-        Point IList<Point>.this[int at] { get { return new Point(at % Width, at / Width); } set { throw new Exception(); } }
+        Point IList<Point>.this[int at] { get { return new Point(at % Width, at / Width); } set { throw new NotSupportedException(); } }
     }
 }

@@ -69,6 +69,7 @@
     <Compile Include="Extraction\Templates\TemplateBuilder.cs" />
     <Compile Include="Extraction\Templates\TemplateFormatBase.cs" />
     <Compile Include="General\Angle.cs" />
+    <Compile Include="General\AssertException.cs" />
     <Compile Include="General\BinaryMap.cs" />
     <Compile Include="General\BlockMap.cs" />
     <Compile Include="General\Calc.cs" />
