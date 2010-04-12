@@ -49,7 +49,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties ExternalSources="" Sandcastle_ProduceHelp2x="True" Sandcastle_ProduceHelp1x="True" Sandcastle_PresentationName="Visual Studio 2005" Sandcastle_Version="2.4.10520.1" BuildEngineProviderName="Sandcastle" DocProjectVersion="1.11.0.0" IsDocProject="true" ProcessComponentTypeName="DocProject.BuildProcess" />
+      <UserProperties DefaultApplyToAll="True" DoNotAskIncludeOutputInProject="True" ExternalSources="" Sandcastle_ProduceHelp2x="True" Sandcastle_ProduceHelp1x="True" Sandcastle_PresentationName="Visual Studio 2005" Sandcastle_Version="2.4.10520.1" BuildEngineProviderName="Sandcastle" DocProjectVersion="1.11.0.0" IsDocProject="true" ProcessComponentTypeName="DocProject.BuildProcess" />
     </VisualStudio>
   </ProjectExtensions>
   <ItemGroup>
@@ -192,6 +192,7 @@
     <Content Include="Help\Settings\metadata.xml" />
     <Content Include="Help\Settings\Projects\help2x.xslt" />
     <Content Include="Help\Settings\tokens.xml" />
+    <Content Include="Help\Settings\topics.xml" />
     <Content Include="Help\Styles\Presentation.css" />
     <Content Include="Help\Styles\TopicDesigner.css" />
     <Content Include="Help\Styles\Whidbey\presentation.css" />
