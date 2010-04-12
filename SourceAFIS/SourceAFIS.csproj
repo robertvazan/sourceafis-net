@@ -113,7 +113,6 @@
     <Compile Include="Simple\Finger.cs" />
     <Compile Include="Simple\Fingerprint.cs" />
     <Compile Include="Simple\Person.cs" />
-    <Compile Include="Tuning\BenchmarkTimer.cs" />
     <Compile Include="Tuning\Errors\AccuracyMeasure.cs" />
     <Compile Include="Tuning\Errors\AccuracyStatistics.cs" />
     <Compile Include="Tuning\Errors\ErrorPolicy.cs" />
