@@ -6,6 +6,9 @@ using SourceAFIS.Extraction.Templates;
 
 namespace SourceAFIS.Simple
 {
+    /// <summary>
+    /// Contains single fingerprint ready for matching.
+    /// </summary>
     [Serializable]
     public class Fingerprint : ICloneable
     {
