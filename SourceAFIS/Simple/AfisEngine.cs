@@ -8,9 +8,22 @@ using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Simple
 {
+    /// <summary>
+    /// Methods and settings of SourceAFIS fingerprint matching engine.
+    /// </summary>
+    /// <remarks>
+    /// Application should create one AfisEngine object for every thread that
+    /// needs SourceAFIS functionality, because this class is not thread-safe.
+    /// After setting relevant properties (notably Threshold), application
+    /// can call one of the three main methods (Extract, Verify, Identify)
+    /// to perform template extraction and fingerprint matching.
+    /// </remarks>
     public class AfisEngine
     {
         int DpiValue = 500;
+        /// <summary>
+        /// DPI of images submitted for template extraction.
+        /// </summary>
         public int Dpi
         {
             get { return DpiValue; }
@@ -22,6 +35,9 @@ namespace SourceAFIS.Simple
             }
         }
         float ThresholdValue = 12;
+        /// <summary>
+        /// Matching score threshold for making match/non-match decisions.
+        /// </summary>
         public float Threshold
         {
             get { return ThresholdValue; }
@@ -33,6 +49,9 @@ namespace SourceAFIS.Simple
             }
         }
         int SkipBestScoreValue = 0;
+        /// <summary>
+        /// Take N-th best matching fingerprint if there are multiple fingerprints per person.
+        /// </summary>
         public int SkipBestScore
         {
             get { return SkipBestScoreValue; }
@@ -47,6 +66,15 @@ namespace SourceAFIS.Simple
         Extractor Extractor = new Extractor();
         Matcher Matcher = new Matcher();
 
+        /// <summary>
+        /// Create new SourceAFIS engine.
+        /// </summary>
+        public AfisEngine() { }
+
+        /// <summary>
+        /// Extract fingerprint template to be used during matching.
+        /// </summary>
+        /// <param name="fp"></param>
         public void Extract(Fingerprint fp)
         {
             byte[,] grayscale = PixelFormat.ToByte(ImageIO.GetPixels(fp.Image));
@@ -54,6 +82,12 @@ namespace SourceAFIS.Simple
             fp.Decoded = new SerializedFormat().Export(builder);
         }
 
+        /// <summary>
+        /// Compute similarity score between two persons.
+        /// </summary>
+        /// <param name="probe"></param>
+        /// <param name="candidate"></param>
+        /// <returns></returns>
         public float Verify(Person probe, Person candidate)
         {
             BestMatchSkipper collector = new BestMatchSkipper(1, SkipBestScore);
@@ -72,6 +106,12 @@ namespace SourceAFIS.Simple
             return ApplyThreshold(collector.GetSkipScore(0));
         }
 
+        /// <summary>
+        /// Compare one person against a set of other persons and return best match.
+        /// </summary>
+        /// <param name="probe"></param>
+        /// <param name="candidateSource"></param>
+        /// <returns></returns>
         public Person Identify(Person probe, IEnumerable<Person> candidateSource)
         {
             List<Person> candidates = new List<Person>(candidateSource);
