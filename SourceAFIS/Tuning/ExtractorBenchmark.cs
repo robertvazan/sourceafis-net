@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 using SourceAFIS.Extraction;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Visualization;
@@ -22,7 +23,7 @@ namespace SourceAFIS.Tuning
             int count = 0;
             SerializedFormat templateFormat = new SerializedFormat();
 
-            BenchmarkTimer timer = new BenchmarkTimer();
+            Stopwatch timer = new Stopwatch();
             timer.Start();
 
             foreach (TestDatabase.View view in report.Templates.AllViews)
@@ -36,13 +37,12 @@ namespace SourceAFIS.Tuning
                 report.TemplateSize += templateFormat.Serialize(view.Template).Length;
                 ++count;
 
-                timer.Update();
                 if (timer.Elapsed.TotalSeconds > Timeout)
                     throw new TimeoutException("Timeout in extractor");
             }
 
             timer.Stop();
-            report.Time = (float)(timer.TotalTime.TotalSeconds / count);
+            report.Time = (float)(timer.Elapsed.TotalSeconds / count);
 
             report.MinutiaCount /= count;
             report.TemplateSize /= count;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Matching;
@@ -19,10 +20,10 @@ namespace SourceAFIS.Tuning
         {
             MatcherReport report = new MatcherReport();
             report.SetDatabaseCount(TestDatabase.Databases.Count);
-            
-            BenchmarkTimer prepareTimer = new BenchmarkTimer();
-            BenchmarkTimer matchingTimer = new BenchmarkTimer();
-            BenchmarkTimer nonmatchingTimer = new BenchmarkTimer();
+
+            Stopwatch prepareTimer = new Stopwatch();
+            Stopwatch matchingTimer = new Stopwatch();
+            Stopwatch nonmatchingTimer = new Stopwatch();
 
             for (int databaseIndex = 0; databaseIndex < TestDatabase.Databases.Count; ++databaseIndex)
             {
@@ -48,8 +49,8 @@ namespace SourceAFIS.Tuning
                                 nonmatching.Add(database.Fingers[candidateFinger].Views[viewIndex].Template);
                         report.ScoreTables[databaseIndex].Table[fingerIndex][viewIndex].NonMatching = RunMatch(nonmatching, nonmatchingTimer);
 
-                        if (prepareTimer.Accumulated.TotalSeconds + matchingTimer.Accumulated.TotalSeconds +
-                            nonmatchingTimer.Accumulated.TotalSeconds > Timeout)
+                        if (prepareTimer.Elapsed.TotalSeconds + matchingTimer.Elapsed.TotalSeconds +
+                            nonmatchingTimer.Elapsed.TotalSeconds > Timeout)
                         {
                             throw new TimeoutException("Timeout in matcher");
                         }
@@ -57,23 +58,23 @@ namespace SourceAFIS.Tuning
                 }
             }
 
-            report.Time.Prepare = (float)prepareTimer.Accumulated.TotalSeconds / TestDatabase.GetFingerprintCount();
-            report.Time.Matching = (float)matchingTimer.Accumulated.TotalSeconds / TestDatabase.GetMatchingPairCount();
-            report.Time.NonMatching = (float)nonmatchingTimer.Accumulated.TotalSeconds / TestDatabase.GetNonMatchingPairCount();
+            report.Time.Prepare = (float)prepareTimer.Elapsed.TotalSeconds / TestDatabase.GetFingerprintCount();
+            report.Time.Matching = (float)matchingTimer.Elapsed.TotalSeconds / TestDatabase.GetMatchingPairCount();
+            report.Time.NonMatching = (float)nonmatchingTimer.Elapsed.TotalSeconds / TestDatabase.GetNonMatchingPairCount();
 
             report.ComputeStatistics();
 
             return report;
         }
 
-        void RunPrepare(Template template, BenchmarkTimer timer)
+        void RunPrepare(Template template, Stopwatch timer)
         {
             timer.Start();
             Matcher.Prepare(template);
             timer.Stop();
         }
 
-        float[] RunMatch(List<Template> templates, BenchmarkTimer timer)
+        float[] RunMatch(List<Template> templates, Stopwatch timer)
         {
             timer.Start();
             float[] scores = Matcher.Match(templates);
