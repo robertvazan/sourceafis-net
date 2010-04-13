@@ -40,6 +40,9 @@ namespace SourceAFIS.Simple
         /// <summary>
         /// Get/set all fingerprints belonging to this person as a collection.
         /// </summary>
+        /// <value>
+        /// An array containing all fingerprints belonging to this person.
+        /// </value>
         public Fingerprint[] AllFingerprints
         {
             get { return InnerList.ToArray(); }
@@ -52,13 +55,16 @@ namespace SourceAFIS.Simple
         public Person() { }
 
         /// <summary>
-        /// Number of fingerprints belonging to the person.
+        /// Get the number of fingerprints belonging to the person.
         /// </summary>
+        /// <value>
+        /// Number of fingerprints belonging to the person.
+        /// </value>
         public int Count { get { return InnerList.Count; } }
         /// <summary>
         /// Add fingerprint to person's fingerprint collection.
         /// </summary>
-        /// <param name="fp"></param>
+        /// <param name="fp">Fingerprint to add.</param>
         public void Add(Fingerprint fp) { CheckNull(fp); InnerList.Add(fp); }
         /// <summary>
         /// Remove all fingerprints from person's fingerprint collection.
@@ -67,14 +73,14 @@ namespace SourceAFIS.Simple
         /// <summary>
         /// Remove fingerprint from person's fingerprint collection.
         /// </summary>
-        /// <param name="fp"></param>
-        /// <returns></returns>
+        /// <param name="fp">Fingerprint to remove.</param>
+        /// <returns>True if the fingerprint was found and removed. False otherwise.</returns>
         public bool Remove(Fingerprint fp) { return InnerList.Remove(fp); }
         /// <summary>
         /// Access person's fingerprint by index.
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
+        /// <param name="index">Position of the fingerprint within person's fingerprint collection.</param>
+        /// <value>Fingerprint at the specified index.</value>
         public Fingerprint this[int index]
         {
             get { return InnerList[index]; }
@@ -83,18 +89,18 @@ namespace SourceAFIS.Simple
         /// <summary>
         /// Add fingerprint to person's fingerprint collection at specific index.
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="fp"></param>
+        /// <param name="index">Index at which the fingerprint should be inserted.</param>
+        /// <param name="fp">Fingerprint to insert.</param>
         public void Insert(int index, Fingerprint fp) { CheckNull(fp); InnerList.Insert(index, fp); }
         /// <summary>
         /// Remove fingerprint from person's fingerprint collection at specified index.
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="index">Index of the removed fingerprint in person's fingerprint collection.</param>
         public void RemoveAt(int index) { InnerList.RemoveAt(index); }
         /// <summary>
         /// Create deep copy of the Person.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Deep copy of the Person.</returns>
         public Person Clone()
         {
             Person clone = new Person();

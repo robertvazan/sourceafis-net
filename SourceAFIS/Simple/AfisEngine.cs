@@ -22,8 +22,11 @@ namespace SourceAFIS.Simple
     {
         int DpiValue = 500;
         /// <summary>
-        /// DPI of images submitted for template extraction.
+        /// Get/set DPI setting.
         /// </summary>
+        /// <value>
+        /// DPI of images submitted for template extraction.
+        /// </value>
         public int Dpi
         {
             get { return DpiValue; }
@@ -36,8 +39,11 @@ namespace SourceAFIS.Simple
         }
         float ThresholdValue = 12;
         /// <summary>
-        /// Matching score threshold for making match/non-match decisions.
+        /// Get/set matching score threshold.
         /// </summary>
+        /// <value>
+        /// Matching score threshold for making match/non-match decisions.
+        /// </value>
         public float Threshold
         {
             get { return ThresholdValue; }
@@ -50,8 +56,11 @@ namespace SourceAFIS.Simple
         }
         int SkipBestScoreValue = 0;
         /// <summary>
-        /// Take N-th best matching fingerprint if there are multiple fingerprints per person.
+        /// Get/set number of matches to skip during multi-finger matching.
         /// </summary>
+        /// <value>
+        /// Number of best matches to skip during multi-finger matching.
+        /// </value>
         public int SkipBestScore
         {
             get { return SkipBestScoreValue; }
@@ -74,7 +83,7 @@ namespace SourceAFIS.Simple
         /// <summary>
         /// Extract fingerprint template to be used during matching.
         /// </summary>
-        /// <param name="fp"></param>
+        /// <param name="fp">Fingerprint object to use for template extraction.</param>
         public void Extract(Fingerprint fp)
         {
             byte[,] grayscale = PixelFormat.ToByte(ImageIO.GetPixels(fp.Image));
@@ -85,9 +94,9 @@ namespace SourceAFIS.Simple
         /// <summary>
         /// Compute similarity score between two persons.
         /// </summary>
-        /// <param name="probe"></param>
-        /// <param name="candidate"></param>
-        /// <returns></returns>
+        /// <param name="probe">First of the two persons to compare.</param>
+        /// <param name="candidate">Second of the two persons to compare.</param>
+        /// <returns>Matching score indicating similarity between the two persons or 0 if there is no match.</returns>
         public float Verify(Person probe, Person candidate)
         {
             BestMatchSkipper collector = new BestMatchSkipper(1, SkipBestScore);
@@ -109,9 +118,9 @@ namespace SourceAFIS.Simple
         /// <summary>
         /// Compare one person against a set of other persons and return best match.
         /// </summary>
-        /// <param name="probe"></param>
-        /// <param name="candidateSource"></param>
-        /// <returns></returns>
+        /// <param name="probe">Person to look up in the collection.</param>
+        /// <param name="candidateSource">Collection of persons that will be searched.</param>
+        /// <returns>Best matching person in the collection or null if there is no match.</returns>
         public Person Identify(Person probe, IEnumerable<Person> candidateSource)
         {
             List<Person> candidates = new List<Person>(candidateSource);
