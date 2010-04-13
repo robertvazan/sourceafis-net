@@ -32,6 +32,17 @@ namespace SourceAFIS.Simple
         /// <summary>
         /// Application-assigned ID for the person.
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// SourceAFIS doesn't use this field. It is provided for applications as an easy means
+        /// to link Person objects back to application-specific data. Applications can store any
+        /// integer ID in this field, for example database table key or an array index.
+        /// </para>
+        /// <para>
+        /// Applications that need to attach more detailed information to the person should
+        /// inherit from Person class and add fields as necessary.
+        /// </para>
+        /// </remarks>
         [XmlAttribute]
         public int Id;
 

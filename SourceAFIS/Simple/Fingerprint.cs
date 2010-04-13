@@ -15,7 +15,8 @@ namespace SourceAFIS.Simple
     /// This class contains basic information (image, template) about the fingerprint that
     /// is used by SourceAFIS to perform template extraction and fingerprint matching.
     /// If you need to attach application-specific information to Fingerprint object,
-    /// inherit from this class and add fields as necessary.
+    /// inherit from this class and add fields as necessary. Fingerprint objects can be
+    /// grouped in Person objects.
     /// </para>
     /// <para>
     /// This class is designed to be easy to serialize in order to be stored in binary format (BLOB)
@@ -43,7 +44,8 @@ namespace SourceAFIS.Simple
         /// <remarks>
         /// <para>
         /// Call <see cref="AfisEngine.Extract">AfisEngine.Extract(Fingerprint)</see> to convert this image
-        /// to fingerprint template stored in <see cref="Template"/> property.
+        /// to fingerprint template stored in <see cref="Template"/> property. Without this step, Fingerprint
+        /// object cannot be matched with other fingerprints.
         /// </para>
         /// <para>
         /// If you later change <see cref="Image"/> property, <see cref="Template"/> property is not updated automatically unless
@@ -51,7 +53,7 @@ namespace SourceAFIS.Simple
         /// in order to save space, because fingerprint matching requires only valid <see cref="Template"/> property.
         /// </para>
         /// <para>
-        /// If you are going to alter the image after reading/writing this property,
+        /// If the image is going to be altered after reading/writing this property, application should
         /// make a copy of the image by calling <see cref="M:Bitmap.Clone">Bitmap.Clone()</see> in order to avoid
         /// damaging the copy stored in this property.
         /// </para>
@@ -75,8 +77,8 @@ namespace SourceAFIS.Simple
         /// <para>
         /// Template property is initialized by <see cref="AfisEngine.Extract">AfisEngine.Extract(Fingerprint)</see>
         /// method that takes the fingerprint image from <see cref="Image"/> property and stores template
-        /// in <c>Template</c> property. <c>Fingerprint</c> objects can be grouped in <see cref="Person"/> object
-        /// and used in <see cref="AfisEngine.Verify">AfisEngine.Verify(Person,Person)</see> and
+        /// in <c>Template</c> property. <c>Fingerprint</c> objects with valid (non-null) template can be
+        /// used in <see cref="AfisEngine.Verify">AfisEngine.Verify(Person,Person)</see> and
         /// <see cref="AfisEngine.Identify">AfisEngine.Identify(Person,IEnumerable&lt;Person&gt;)</see>.
         /// </para>
         /// <para>
@@ -102,6 +104,11 @@ namespace SourceAFIS.Simple
         /// Finger (thumb to little) and hand (right or left) that was used to create this fingerprint.
         /// Default value Any means unspecified finger position.
         /// </value>
+        /// <remarks>
+        /// Finger position is used to speed up matching by skipping fingerprint pairs
+        /// with incompatible finger positions. Check Finger enumeration for information
+        /// on how to control this process. Default value Any disables this behavior.
+        /// </remarks>
         [XmlAttribute]
         public Finger Finger { get { return FingerValue; } set { FingerValue = value; } }
 
