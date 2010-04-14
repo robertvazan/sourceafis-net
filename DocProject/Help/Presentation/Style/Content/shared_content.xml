@@ -169,11 +169,11 @@
 			</includeAttribute>
 			comments
 		</a>
-			about this topic to Microsoft.
+			about this topic to the SourceAFIS maintainer.
 		</span>
 	</item>
 
-	<item id="MailToLink">javascript:sendfeedback('Documentation Feedback (Sandcastle CTP): ', '{1}', '');</item>
+	<item id="MailToLink">javascript:sendfeedback('Documentation Feedback (SourceAFIS): ', '{1}', '');</item>
   -->
 
 <item id="footer">
@@ -186,7 +186,7 @@
       </includeAttribute>
       feedback
 		</a>
-			on this topic to Microsoft.
+			on this topic to the SourceAFIS maintainer.
 		</span>
 </item>
   
@@ -245,6 +245,6 @@
   
 <item id="copyrightStatement"><include item="copyrightText"/></item>
 
-<item id="copyrightText">&#169; 2005 Microsoft Corporation. All rights reserved.</item> 
+<item id="copyrightText">&#169; 2009-2010 Robert Vanak. All rights reserved.</item> 
 
 </content>
