@@ -43,19 +43,14 @@ namespace SourceAFIS.Simple
         /// </value>
         /// <remarks>
         /// <para>
-        /// Call <see cref="AfisEngine.Extract">AfisEngine.Extract(Fingerprint)</see> to convert this image
-        /// to fingerprint template stored in <see cref="Template"/> property. Without this step, Fingerprint
-        /// object cannot be matched with other fingerprints.
+        /// This is the fingerprint image. This property must be set before call to AfisEngine.Extract
+        /// in order to generate valid Template. Once the Template is generated, Image property has only
+        /// informational meaning and it can be set to null to save space. It is however recommended to
+        /// keep the original image just in case it is needed to regenerate the Template in future.
         /// </para>
         /// <para>
-        /// If you later change <see cref="Image"/> property, <see cref="Template"/> property is not updated automatically unless
-        /// you call <c>AfisEngine.Extract(Fingerprint)</c> again. You can even set this property to null
-        /// in order to save space, because fingerprint matching requires only valid <see cref="Template"/> property.
-        /// </para>
-        /// <para>
-        /// If the image is going to be altered after reading/writing this property, application should
-        /// make a copy of the image by calling <see cref="M:Bitmap.Clone">Bitmap.Clone()</see> in order to avoid
-        /// damaging the copy stored in this property.
+        /// Accessors of this property do not clone the image. To avoid unwanted sharing of the Bitmap
+        /// object, call Bitmap.Clone.
         /// </para>
         /// </remarks>
         [XmlIgnore]
@@ -72,19 +67,14 @@ namespace SourceAFIS.Simple
         /// <para>
         /// Fingerprint template is an abstract model of the fingerprint that is serialized
         /// in a very compact binary format (up to a few KB). Templates are better than fingerprint images,
-        /// because they require less space and they are easier to match than images.
-        /// </para>
-        /// <para>
-        /// Template property is initialized by <see cref="AfisEngine.Extract">AfisEngine.Extract(Fingerprint)</see>
-        /// method that takes the fingerprint image from <see cref="Image"/> property and stores template
-        /// in <c>Template</c> property. <c>Fingerprint</c> objects with valid (non-null) template can be
-        /// used in <see cref="AfisEngine.Verify">AfisEngine.Verify(Person,Person)</see> and
-        /// <see cref="AfisEngine.Identify">AfisEngine.Identify(Person,IEnumerable&lt;Person&gt;)</see>.
+        /// because they require less space and they are easier to match than images. To generate
+        /// Template, pass Fingerprint object with valid Image to AfisEngine.Extract. Template
+        /// is required by AfisEngine.Verify and AfisEngine.Identify.
         /// </para>
         /// <para>
         /// If you need access to internal structure of the template, have a look at
         /// SourceAFIS.Extraction.Templates.SerializedFormat class in SourceAFIS source code.
-        /// Format of the template may change however in later versions of SourceAFIS.
+        /// Format of the template may however change in later versions of SourceAFIS.
         /// Applications are recommended to keep the original image in order to be able
         /// to regenerate the template.
         /// </para>
