@@ -89,7 +89,7 @@ namespace Sample
             // Look up the probe using Threshold = 10
             Afis.Threshold = 10;
             Console.WriteLine("Identifying {0} in database of {1} persons...", probe.Name, database.Count);
-            Person match = Afis.Identify(probe, database.ToArray());
+            MyPerson match = Afis.Identify(probe, database);
             // Null result means that there is no candidate with similarity score above threshold
             if (match == null)
             {
@@ -97,12 +97,11 @@ namespace Sample
                 return;
             }
             // Print out any non-null result
-            MyPerson myMatch = (MyPerson)match;
-            Console.WriteLine("Probe {0} matches registered person {1}", probe.Name, myMatch.Name);
+            Console.WriteLine("Probe {0} matches registered person {1}", probe.Name, match.Name);
 
             // Compute similarity score
-            float score = Afis.Verify(probe, myMatch);
-            Console.WriteLine("Similarity score between {0} and {1} = {2:F3}", probe.Name, myMatch.Name, score);
+            float score = Afis.Verify(probe, match);
+            Console.WriteLine("Similarity score between {0} and {1} = {2:F3}", probe.Name, match.Name, score);
         }
     }
 }
