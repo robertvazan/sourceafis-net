@@ -1,3 +1,8 @@
+2010-04-14 - SourceAFIS 0.5
+* SourceAFIS.Simple namespace contains an easy-to-use API
+* documentation for SourceAFIS.Simple
+* sample application that uses SourceAFIS.Simple
+
 2010-03-31 - SourceAFIS 0.4
 * optimizer for algorithm parameters
 * reduced EER by 50%
