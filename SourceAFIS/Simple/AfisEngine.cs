@@ -226,10 +226,10 @@ namespace SourceAFIS.Simple
         /// <seealso cref="Threshold"/>
         /// <seealso cref="SkipBestMatches"/>
         /// <seealso cref="Verify"/>
-        public Person Identify(Person probe, IEnumerable<Person> candidateSource)
+        public TCandidate Identify<TCandidate>(Person probe, IEnumerable<TCandidate> candidateSource) where TCandidate : Person
         {
-            List<Person> candidates = new List<Person>(candidateSource);
-            BestMatchSkipper collector = new BestMatchSkipper(candidates.Count, SkipBestMatches);
+            TCandidate[] candidates = new List<TCandidate>(candidateSource).ToArray();
+            BestMatchSkipper collector = new BestMatchSkipper(candidates.Length, SkipBestMatches);
             foreach (Fingerprint probeFp in probe)
             {
                 List<int> personsByFingerprint = new List<int>();
@@ -254,11 +254,11 @@ namespace SourceAFIS.Simple
             return first == second || first == Finger.Any || second == Finger.Any;
         }
 
-        List<Template> FlattenHierarchy(List<Person> persons, Finger finger, out List<int> personIndexes)
+        List<Template> FlattenHierarchy(Person[] persons, Finger finger, out List<int> personIndexes)
         {
             List<Template> templates = new List<Template>();
             personIndexes = new List<int>();
-            for (int personIndex = 0; personIndex < persons.Count; ++personIndex)
+            for (int personIndex = 0; personIndex < persons.Length; ++personIndex)
             {
                 Person person = persons[personIndex];
                 for (int i = 0; i < person.Count; ++i)
