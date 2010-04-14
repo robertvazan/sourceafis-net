@@ -212,13 +212,13 @@ namespace SourceAFIS.Simple
         /// </summary>
         /// <param name="probe">Person to look up in the collection.</param>
         /// <param name="candidateSource">Collection of persons that will be searched.</param>
-        /// <returns>Best matching <see cref="Person"/> in the collection or null if there is no match.</returns>
+        /// <returns>Best matching <see cref="Person"/> in the collection or <see langword="null"/> if there is no match.</returns>
         /// <remarks>
         /// <para>
         /// Compares probe <see cref="Person"/> to all candidate <see cref="Person"/>s and returns the most similar
         /// candidate. Calling <see cref="Identify"/> is conceptually identical to calling <see cref="Verify"/> in a loop
         /// except that <see cref="Identify"/> is significantly faster than loop of <see cref="Verify"/> calls.
-        /// If there is no candidate with score at or above <see cref="Threshold"/>, <see cref="Identify"/> returns null.
+        /// If there is no candidate with score at or above <see cref="Threshold"/>, <see cref="Identify"/> returns <see langword="null"/>.
         /// </para>
         /// <para>
         /// <see cref="Fingerprint"/>s passed to this method must have valid <see cref="Fingerprint.Template"/>, i.e. they must

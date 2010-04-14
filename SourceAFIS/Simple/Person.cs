@@ -87,7 +87,7 @@ namespace SourceAFIS.Simple
         /// Remove <see cref="Fingerprint"/> from person's fingerprint collection.
         /// </summary>
         /// <param name="fp">Fingerprint to remove.</param>
-        /// <returns>True if the <see cref="Fingerprint"/> was found and removed. False otherwise.</returns>
+        /// <returns>Returns <see langword="true"/> if the <see cref="Fingerprint"/> was found and removed, <see langword="false"/> otherwise.</returns>
         public bool Remove(Fingerprint fp) { return InnerList.Remove(fp); }
         /// <summary>
         /// Access <see cref="Person"/>'s fingerprint by index.
