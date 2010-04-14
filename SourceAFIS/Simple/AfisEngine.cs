@@ -99,42 +99,25 @@ namespace SourceAFIS.Simple
         /// </value>
         /// <remarks>
         /// <para>
-        /// The purpose of this property is to improve accuracy during multi-finger
-        /// matching. Multi-finger matching usually improves only FRR (false reject
-        /// rate), but SkipBestMatches can be used to distribute benefits of
-        /// multi-finger matching evenly between FAR (false accept rate) and FRR.
+        /// When there are multiple fingerprints per person, SourceAFIS compares
+        /// every probe fingerprint to every candidate fingerprint and takes the
+        /// best match, the one with highest similarity score. This behavior
+        /// improves FRR (false reject rate), because low similarity scores caused
+        /// by damaged fingerprints are ignored.
         /// </para>
         /// <para>
-        /// When every Person has only one Fingerprint, this property has no effect.
+        /// When SkipBestMatches is non-zero, SourceAFIS ignores specified number
+        /// of best matches and takes the next best match. This behavior improves
+        /// FAR (false accept rate), because it lowers probability that one accidentally
+        /// matching fingerprint pair skews match results. In case there aren't
+        /// enough fingerprint pairs to skip, SourceAFIS takes the lowest scoring
+        /// pair.
         /// </para>
         /// <para>
-        /// When there are multiple fingerprints per person, SourceAFIS can calculate
-        /// similarity score between all probe fingerprints and all candidate fingerprints,
-        /// but then there is a problem as to which of these fingerprint-fingerprint scores
-        /// should be considered person-person similarity score? SourceAFIS by default
-        /// uses the highest fingerprint-fingerprint score as person-person score.
-        /// This behavior is used when SkipBestMatches is zero (the default).
-        /// </para>
-        /// <para>
-        /// When SkipBestMatches is non-zero, SourceAFIS puts fingerprint-fingerprint
-        /// scores in a sorted array, skips highest scoring pairs as specified by
-        /// SkipBestMatches, and takes the next best score after these skipped matches.
-        /// This is intended to get rid of cases when some pair of fingerprints
-        /// matches accidentally (it is a false accept). Increasing SkipBestMatches
-        /// therefore improves FAR. There is however some risk that the next best score
-        /// is too low due to poor quality of the fingerprint or other reason. Higher
-        /// SkipBestMatches therefore also worsens FRR. In high-quality fingerprint
-        /// databases, it is often best to take the middle score, i.e. set
-        /// SkipBestMatches to 1 when doing 3-finger or 4-finger matching and
-        /// to 2 when matching with 5 or more fingerprints.
-        /// </para>
-        /// <para>
-        /// If the score array is too short (there are too few fingerprint-fingerprint
-        /// pairs), SourceAFIS takes the last score in the array.
-        /// </para>
-        /// <para>
-        /// When Fingerprint.Finger property is used to restrict compatible fingerprint
-        /// pairs, incompatible pairs are not included in the score array.
+        /// SkipBestMatches can be used to distribute positive effects of multi-finger
+        /// matching evenly between FAR and FRR. It is recommended to set SkipBestMatches
+        /// to 1 in 3-finger and 4-finger matching and to 2 when there are 5 or more
+        /// fingerprints per person.
         /// </para>
         /// </remarks>
         public int SkipBestMatches
@@ -190,7 +173,11 @@ namespace SourceAFIS.Simple
         /// <para>
         /// Verify method compares two persons, fingerprint by fingerprint, and returns
         /// floating-point similarity score that indicates degree of similarity between
-        /// the two persons. If this score falls below Threshold, Extract method returns zero.
+        /// the two persons. If this score falls below Threshold, Verify method returns zero.
+        /// </para>
+        /// <para>
+        /// Fingerprints passed to this method must have valid Template, i.e. they must
+        /// have passed through Extract method.
         /// </para>
         /// </remarks>
         public float Verify(Person probe, Person candidate)
@@ -223,6 +210,10 @@ namespace SourceAFIS.Simple
         /// candidate. Calling Identify is conceptually identical to calling Verify in a loop
         /// except that Identify is significantly faster than loop of Verify calls.
         /// If there is no candidate with score at or above Threshold, Identify returns null.
+        /// </para>
+        /// <para>
+        /// Fingerprints passed to this method must have valid Template, i.e. they must
+        /// have passed through Extract method.
         /// </para>
         /// </remarks>
         public Person Identify(Person probe, IEnumerable<Person> candidateSource)
