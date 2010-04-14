@@ -72,6 +72,22 @@ namespace SourceAFIS.Visualization
             return (color.R + color.G + color.B) / 3;
         }
 
+        public static ColorB ToColorB(byte color)
+        {
+            return new ColorB(color, color, color);
+        }
+
+        public static ColorB[,] ToColorB(byte[,] input)
+        {
+            ColorB[,] output = new ColorB[input.GetLength(0), input.GetLength(1)];
+            Threader.Split(input.GetLength(0), delegate(int y)
+            {
+                for (int x = 0; x < input.GetLength(1); ++x)
+                    output[y, x] = ToColorB(input[y, x]);
+            });
+            return output;
+        }
+
         public static ColorB ToColorB(ColorF color)
         {
             return new ColorB(ToByte(color.R), ToByte(color.G), ToByte(color.B));

@@ -4,7 +4,6 @@ using System.Text;
 using SourceAFIS.Extraction;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Matching;
-using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Simple
 {
@@ -164,8 +163,7 @@ namespace SourceAFIS.Simple
         /// <seealso cref="Dpi"/>
         public void Extract(Fingerprint fp)
         {
-            byte[,] grayscale = PixelFormat.ToByte(ImageIO.GetPixels(fp.Image));
-            TemplateBuilder builder = Extractor.Extract(grayscale, Dpi);
+            TemplateBuilder builder = Extractor.Extract(fp.Image, Dpi);
             fp.Decoded = new SerializedFormat().Export(builder);
         }
 

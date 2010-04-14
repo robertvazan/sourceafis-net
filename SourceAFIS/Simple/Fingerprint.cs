@@ -4,6 +4,7 @@ using System.Text;
 using System.Drawing;
 using System.Xml.Serialization;
 using SourceAFIS.Extraction.Templates;
+using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Simple
 {
@@ -34,12 +35,12 @@ namespace SourceAFIS.Simple
         /// </summary>
         public Fingerprint() { }
 
-        Bitmap ImageValue;
+        byte[,] ImageValue;
         /// <summary>
         /// Fingerprint image.
         /// </summary>
         /// <value>
-        /// Fingerprint image that was used to extract the <see cref="Template"/> or other image
+        /// Raw fingerprint image that was used to extract the <see cref="Template"/> or other image
         /// attached later after extraction. This property is <see langword="null"/> by default.
         /// </value>
         /// <remarks>
@@ -50,14 +51,37 @@ namespace SourceAFIS.Simple
         /// keep the original image just in case it is needed to regenerate the <see cref="Template"/> in future.
         /// </para>
         /// <para>
-        /// Accessors of this property do not clone the image. To avoid unwanted sharing of the <see cref="Bitmap"/>
-        /// object, call <see cref="ICloneable.Clone"/> on the <see cref="Bitmap"/>.
+        /// The format of this image is a simple raw 2D array of <see langword="byte"/>s. Every byte
+        /// represents shade of gray from black (0) to white (255). When indexing the 2D array, Y axis
+        /// goes first, X axis goes second, e.g. <c>Image[y, x]</c>. To convert to/from <see cref="Bitmap"/>
+        /// object, use <see cref="BitmapImage"/> property.
+        /// </para>
+        /// <para>
+        /// Accessors of this property do not clone the image. To avoid unwanted sharing of the <see langword="byte"/>
+        /// array, call <see cref="ICloneable.Clone"/> on the <see cref="Image"/>.
         /// </para>
         /// </remarks>
         /// <seealso cref="Template"/>
+        /// <seealso cref="BitmapImage"/>
+        /// <seealso cref="AfisEngine.Extract"/>
+        public byte[,] Image { get { return ImageValue; } set { ImageValue = value; } }
+
+        /// <summary>
+        /// Fingerprint image as <see cref="Bitmap"/> object.
+        /// </summary>
+        /// <value>
+        /// Fingerprint image from <see cref="Image"/> property converted to <see cref="Bitmap"/>
+        /// object or <see langword="null"/> if <see cref="Image"/> is <see langword="null"/>.
+        /// </value>
+        /// <seealso cref="Image"/>
+        /// <seealso cref="Template"/>
         /// <seealso cref="AfisEngine.Extract"/>
         [XmlIgnore]
-        public Bitmap Image { get { return ImageValue; } set { ImageValue = value; } }
+        public Bitmap BitmapImage
+        {
+            get { return ImageValue != null ? ImageIO.CreateBitmap(PixelFormat.ToColorB(ImageValue)) : null; }
+            set { ImageValue = value != null ? PixelFormat.ToByte(ImageIO.GetPixels(value)) : null; }
+        }
 
         /// <summary>
         /// Fingerprint template.
@@ -118,8 +142,8 @@ namespace SourceAFIS.Simple
         public Fingerprint Clone()
         {
             Fingerprint clone = new Fingerprint();
-            clone.Image = Image != null ? (Bitmap)Image.Clone() : null;
-            clone.Template = Template != null ? (byte[])Template.Clone() : null;
+            clone.ImageValue = ImageValue != null ? (byte[,])ImageValue.Clone() : null;
+            clone.Decoded = Decoded != null ? Decoded.Clone() : null;
             clone.Finger = Finger;
             return clone;
         }
