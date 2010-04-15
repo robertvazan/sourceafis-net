@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Threading;
+using System.Globalization;
 using SourceAFIS.Simple;
 
 namespace FvcMatch
@@ -22,7 +24,7 @@ namespace FvcMatch
             using (FileStream stream = File.Open(args[2], FileMode.Append))
             {
                 using (TextWriter writer = new StreamWriter(stream))
-                    writer.WriteLine("{0} {1} {2} {3}", args[0], args[1], status, similarity);
+                    writer.WriteLine("{0} {1} {2} {3:F5}", args[0], args[1], status, similarity);
             }
         }
 
@@ -30,6 +32,7 @@ namespace FvcMatch
         {
             try
             {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
                 AfisEngine afis = new AfisEngine();
                 Person probe = LoadTemplate(args[0]);
                 Person candidate = LoadTemplate(args[1]);
