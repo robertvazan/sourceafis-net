@@ -28,6 +28,22 @@ namespace FvcMatch
             }
         }
 
+        const double ScoreScaling = 100;
+        const double BendingThreshold = 0.5;
+        const double BendingFactor = 3;
+
+        float FixScore(float score)
+        {
+            double similarity = score / ScoreScaling;
+            if (similarity > BendingThreshold)
+                similarity = (similarity - BendingThreshold) / BendingFactor + BendingThreshold;
+            if (similarity > 1)
+                similarity = 1;
+            if (similarity < 0)
+                similarity = 0;
+            return (float)similarity;
+        }
+
         static void Main(string[] args)
         {
             try
