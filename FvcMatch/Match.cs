@@ -39,6 +39,10 @@ namespace FvcMatch
                 afis.Threshold = 0;
                 float score = afis.Verify(probe, candidate);
                 float similarity = score / 100;
+                if (similarity > 1)
+                    similarity = 1;
+                if (similarity < 0)
+                    similarity = 0;
                 WriteLog(args, "OK", similarity);
             }
             catch (Exception)
