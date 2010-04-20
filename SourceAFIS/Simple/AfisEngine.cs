@@ -11,11 +11,18 @@ namespace SourceAFIS.Simple
     /// Methods and settings of SourceAFIS fingerprint matching engine.
     /// </summary>
     /// <remarks>
-    /// Application should create one <see cref="AfisEngine"/> object for every thread that
-    /// needs SourceAFIS functionality, because this class is not thread-safe.
+    /// <para>
     /// After setting relevant properties (notably <see cref="Threshold"/>), application
     /// can call one of the three main methods (<see cref="Extract"/>, <see cref="Verify"/>, <see cref="Identify"/>)
     /// to perform template extraction and fingerprint matching.
+    /// </para>
+    /// <para>
+    /// <see cref="AfisEngine"/> objects are thread-safe. <see cref="AfisEngine"/> is lightweight,
+    /// but application is encouraged to cache AfisEngine instances anyway. Every
+    /// <see cref="AfisEngine"/> method utilizes multiple cores automatically. Applications
+    /// that wish to execute several methods of <see cref="AfisEngine"/> in parallel should
+    /// create multiple <see cref="AfisEngine"/> objects, perhaphs one per thread.
+    /// </para>
     /// </remarks>
     public class AfisEngine
     {
@@ -45,12 +52,15 @@ namespace SourceAFIS.Simple
         /// <seealso cref="Extract"/>
         public int Dpi
         {
-            get { return DpiValue; }
+            get { lock (this) return DpiValue; }
             set
             {
-                if (value < 100 || value > 5000)
-                    throw new ArgumentOutOfRangeException();
-                DpiValue = value;
+                lock (this)
+                {
+                    if (value < 100 || value > 5000)
+                        throw new ArgumentOutOfRangeException();
+                    DpiValue = value;
+                }
             }
         }
         float ThresholdValue = 12;
@@ -83,12 +93,15 @@ namespace SourceAFIS.Simple
         /// <seealso cref="Identify"/>
         public float Threshold
         {
-            get { return ThresholdValue; }
+            get { lock (this) return ThresholdValue; }
             set
             {
-                if (value < 0)
-                    throw new ArgumentOutOfRangeException();
-                ThresholdValue = value;
+                lock (this)
+                {
+                    if (value < 0)
+                        throw new ArgumentOutOfRangeException();
+                    ThresholdValue = value;
+                }
             }
         }
         int SkipBestMatchesValue = 0;
@@ -126,12 +139,15 @@ namespace SourceAFIS.Simple
         /// <seealso cref="Identify"/>
         public int SkipBestMatches
         {
-            get { return SkipBestMatchesValue; }
+            get { lock (this) return SkipBestMatchesValue; }
             set
             {
-                if (value < 0)
-                    throw new ArgumentOutOfRangeException();
-                SkipBestMatchesValue = value;
+                lock (this)
+                {
+                    if (value < 0)
+                        throw new ArgumentOutOfRangeException();
+                    SkipBestMatchesValue = value;
+                }
             }
         }
 
@@ -163,8 +179,11 @@ namespace SourceAFIS.Simple
         /// <seealso cref="Dpi"/>
         public void Extract(Fingerprint fp)
         {
-            TemplateBuilder builder = Extractor.Extract(fp.Image, Dpi);
-            fp.Decoded = new SerializedFormat().Export(builder);
+            lock (this)
+            {
+                TemplateBuilder builder = Extractor.Extract(fp.Image, Dpi);
+                fp.Decoded = new SerializedFormat().Export(builder);
+            }
         }
 
         /// <summary>
@@ -189,20 +208,23 @@ namespace SourceAFIS.Simple
         /// <seealso cref="Identify"/>
         public float Verify(Person probe, Person candidate)
         {
-            BestMatchSkipper collector = new BestMatchSkipper(1, SkipBestMatches);
-            foreach (Fingerprint probeFp in probe)
+            lock (this)
             {
-                List<Template> candidateTemplates = new List<Template>();
-                foreach (Fingerprint candidateFp in candidate)
-                    if (IsCompatibleFinger(probeFp.Finger, candidateFp.Finger))
-                        candidateTemplates.Add(candidateFp.Decoded);
+                BestMatchSkipper collector = new BestMatchSkipper(1, SkipBestMatches);
+                foreach (Fingerprint probeFp in probe)
+                {
+                    List<Template> candidateTemplates = new List<Template>();
+                    foreach (Fingerprint candidateFp in candidate)
+                        if (IsCompatibleFinger(probeFp.Finger, candidateFp.Finger))
+                            candidateTemplates.Add(candidateFp.Decoded);
 
-                Matcher.Prepare(probeFp.Decoded);
-                foreach (float score in Matcher.Match(candidateTemplates))
-                    collector.AddScore(0, score);
+                    Matcher.Prepare(probeFp.Decoded);
+                    foreach (float score in Matcher.Match(candidateTemplates))
+                        collector.AddScore(0, score);
+                }
+
+                return ApplyThreshold(collector.GetSkipScore(0));
             }
-
-            return ApplyThreshold(collector.GetSkipScore(0));
         }
 
         /// <summary>
@@ -228,25 +250,28 @@ namespace SourceAFIS.Simple
         /// <seealso cref="Verify"/>
         public TCandidate Identify<TCandidate>(Person probe, IEnumerable<TCandidate> candidateSource) where TCandidate : Person
         {
-            TCandidate[] candidates = new List<TCandidate>(candidateSource).ToArray();
-            BestMatchSkipper collector = new BestMatchSkipper(candidates.Length, SkipBestMatches);
-            foreach (Fingerprint probeFp in probe)
+            lock (this)
             {
-                List<int> personsByFingerprint = new List<int>();
-                List<Template> candidateTemplates = FlattenHierarchy(candidates, probeFp.Finger, out personsByFingerprint);
-                
-                Matcher.Prepare(probeFp.Decoded);
-                float[] scores = Matcher.Match(candidateTemplates);
-                for (int i = 0; i < scores.Length; ++i)
-                    collector.AddScore(personsByFingerprint[i], scores[i]);
-            }
+                TCandidate[] candidates = new List<TCandidate>(candidateSource).ToArray();
+                BestMatchSkipper collector = new BestMatchSkipper(candidates.Length, SkipBestMatches);
+                foreach (Fingerprint probeFp in probe)
+                {
+                    List<int> personsByFingerprint = new List<int>();
+                    List<Template> candidateTemplates = FlattenHierarchy(candidates, probeFp.Finger, out personsByFingerprint);
 
-            int bestPersonIndex;
-            float bestScore = collector.GetBestScore(out bestPersonIndex);
-            if (bestPersonIndex >= 0 && bestScore >= Threshold)
-                return candidates[bestPersonIndex];
-            else
-                return null;
+                    Matcher.Prepare(probeFp.Decoded);
+                    float[] scores = Matcher.Match(candidateTemplates);
+                    for (int i = 0; i < scores.Length; ++i)
+                        collector.AddScore(personsByFingerprint[i], scores[i]);
+                }
+
+                int bestPersonIndex;
+                float bestScore = collector.GetBestScore(out bestPersonIndex);
+                if (bestPersonIndex >= 0 && bestScore >= Threshold)
+                    return candidates[bestPersonIndex];
+                else
+                    return null;
+            }
         }
 
         bool IsCompatibleFinger(Finger first, Finger second)
