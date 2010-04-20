@@ -8,8 +8,6 @@ namespace SourceAFIS.General
 {
     public sealed class DetailLogger
     {
-        public delegate void Task();
-
         public abstract class Hook
         {
             public abstract void Log(object data);
@@ -106,7 +104,7 @@ namespace SourceAFIS.General
                 return "";
         }
 
-        public static void RunInContext(string name, Task task)
+        public static void RunInContext(string name, Procedure task)
         {
             ThreadName = name;
             try

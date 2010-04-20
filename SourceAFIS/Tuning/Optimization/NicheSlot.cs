@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Xml.Serialization;
+using SourceAFIS.General;
 using SourceAFIS.Meta;
 using SourceAFIS.Tuning.Errors;
 using SourceAFIS.Tuning.Reports;
@@ -18,8 +19,7 @@ namespace SourceAFIS.Tuning.Optimization
         public TestReport BestSolution;
         public AccuracyStatistics BestPerformance;
 
-        public delegate void ChangeEvent();
-        public ChangeEvent OnChange;
+        public Procedure OnChange;
 
         public bool Fit(TestReport solution)
         {

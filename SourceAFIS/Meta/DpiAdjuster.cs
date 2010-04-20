@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using SourceAFIS.General;
 
 namespace SourceAFIS.Meta
 {
     public sealed class DpiAdjuster
     {
-        public delegate void VoidFunction();
-
         public int DefaultDpi = 500;
 
         class Parameter
@@ -65,7 +64,7 @@ namespace SourceAFIS.Meta
                 parameter.Revert();
         }
 
-        public void Adjust(object root, int dpi, VoidFunction function)
+        public void Adjust(object root, int dpi, Procedure function)
         {
             ObjectTree tree = new ObjectTree();
             tree.Scan(this, "Dpi");

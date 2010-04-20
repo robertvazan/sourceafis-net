@@ -83,6 +83,7 @@
     <Compile Include="General\PointS.cs" />
     <Compile Include="General\PolarPoint.cs" />
     <Compile Include="General\PriorityQueueF.cs" />
+    <Compile Include="General\Procedure.cs" />
     <Compile Include="General\ReversedList.cs" />
     <Compile Include="General\TopListF.cs" />
     <Compile Include="General\Transformation2D.cs" />
