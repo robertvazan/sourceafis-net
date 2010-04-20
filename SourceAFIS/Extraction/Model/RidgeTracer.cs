@@ -8,6 +8,8 @@ namespace SourceAFIS.Extraction.Model
 {
     public sealed class RidgeTracer
     {
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         static bool[] IsMinutia = ConstructPixelClassifier();
 
         static bool[] ConstructPixelClassifier()
@@ -148,7 +150,7 @@ namespace SourceAFIS.Extraction.Model
             Dictionary<Point, SkeletonBuilder.Minutia> minutiaMap = ComputeMinutiaCenters(linking, skeleton);
             TraceRidges(binary, minutiaMap);
             FixLinkingGaps(skeleton);
-            Logger.Log(this, skeleton);
+            Logger.Log(skeleton);
         }
     }
 }

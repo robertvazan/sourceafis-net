@@ -78,7 +78,7 @@
     <Compile Include="General\BlockMap.cs" />
     <Compile Include="General\Calc.cs" />
     <Compile Include="General\CircularArray.cs" />
-    <Compile Include="General\Logger.cs" />
+    <Compile Include="General\DetailLogger.cs" />
     <Compile Include="General\Neighborhood.cs" />
     <Compile Include="General\PointS.cs" />
     <Compile Include="General\PolarPoint.cs" />

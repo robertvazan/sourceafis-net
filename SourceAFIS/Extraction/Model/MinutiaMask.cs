@@ -7,6 +7,8 @@ namespace SourceAFIS.Extraction.Model
 {
     public sealed class MinutiaMask
     {
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         public void Filter(SkeletonBuilder skeleton, BinaryMap mask)
         {
             foreach (SkeletonBuilder.Minutia minutia in skeleton.Minutiae)
@@ -14,7 +16,7 @@ namespace SourceAFIS.Extraction.Model
                 if (!mask.GetBitSafe(minutia.Position, false))
                     minutia.Valid = false;
             }
-            Logger.Log(this, skeleton);
+            Logger.Log(skeleton);
         }
     }
 }

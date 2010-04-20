@@ -21,6 +21,8 @@ namespace SourceAFIS.Extraction.Filters
         [Nested]
         public VotingFilter InnerMaskFilter = new VotingFilter();
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         public SegmentationMask()
         {
             LowContrastMajority.BorderDistance = 1;
@@ -44,7 +46,7 @@ namespace SourceAFIS.Extraction.Filters
             mask.Or(BlockErrorFilter.Filter(mask));
             mask.Or(InnerMaskFilter.Filter(mask));
 
-            Logger.Log(this, mask);
+            Logger.Log(mask);
             return mask;
         }
     }

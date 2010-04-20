@@ -13,6 +13,8 @@ namespace SourceAFIS.Extraction.Filters
         [Nested]
         public LinesByOrientation Lines = new LinesByOrientation();
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         public float[,] Smooth(float[,] input, byte[,] orientation, BinaryMap mask, BlockMap blocks)
         {
             Point[][] lines = Lines.Construct();
@@ -38,7 +40,7 @@ namespace SourceAFIS.Extraction.Filters
                             output[y, x] *= 1f / line.Length;
                 }
             });
-            Logger.Log(this, output);
+            Logger.Log(output);
             return output;
         }
     }

@@ -22,6 +22,8 @@ namespace SourceAFIS.Extraction.Filters
         [Parameter(Upper = 3)]
         public int SmoothingRadius = 1;
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         struct NeighborInfo
         {
             public Point Position;
@@ -106,7 +108,7 @@ namespace SourceAFIS.Extraction.Filters
                     }
                 }
             });
-            Logger.Log(this, "Raw", orientation);
+            Logger.Log("Raw", orientation);
             return orientation;
         }
 
@@ -164,7 +166,7 @@ namespace SourceAFIS.Extraction.Filters
             PointF[,] byBlock = SumBlocks(accumulated, blocks, mask);
             PointF[,] smooth = Smooth(byBlock, mask);
             byte[,] angles = ToAngles(smooth, mask);
-            Logger.Log(this, angles);
+            Logger.Log(angles);
             return angles;
         }
     }

@@ -32,6 +32,8 @@ namespace SourceAFIS.Extraction.Model
         [Nested]
         public SkeletonShadow SkeletonShadow = new SkeletonShadow();
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         struct Gap
         {
             public SkeletonBuilder.Minutia End1;
@@ -66,7 +68,7 @@ namespace SourceAFIS.Extraction.Model
             }
 
             KnotRemover.Filter(skeleton);
-            Logger.Log(this, skeleton);
+            Logger.Log(skeleton);
         }
 
         bool IsWithinLimits(SkeletonBuilder.Minutia end1, SkeletonBuilder.Minutia end2)
