@@ -32,7 +32,7 @@ namespace SourceAFIS.Matching.Minutia
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
         ProbeIndex Probe;
-        EdgeTable CandidateEdges = new EdgeTable();
+        EdgeTable CandidateEdges;
 
         public void BuildIndex(Template probe, ProbeIndex index)
         {
@@ -45,6 +45,7 @@ namespace SourceAFIS.Matching.Minutia
         {
             Probe = probe;
             Pairing.SelectProbe(probe.Template);
+            CandidateEdges = ParameterSet.ClonePrototype(EdgeTablePrototype);
         }
 
         public float Match(Template candidate)
