@@ -16,11 +16,15 @@ namespace SourceAFIS.Matching
         ProbeIndex ProbeIndex;
         MinutiaMatcher[] Matchers;
 
-        public void Prepare(Template probe)
+        public void Initialize()
         {
             Matchers = new MinutiaMatcher[Threader.HwThreadCount];
             for (int i = 0; i < Matchers.Length; ++i)
                 Matchers[i] = ParameterSet.ClonePrototype(MinutiaMatcher);
+        }
+
+        public void Prepare(Template probe)
+        {
             ProbeIndex = new ProbeIndex();
             Matchers[0].BuildIndex(probe, ProbeIndex);
             for (int i = 0; i < Matchers.Length; ++i)

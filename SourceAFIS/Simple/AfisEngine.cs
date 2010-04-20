@@ -157,7 +157,10 @@ namespace SourceAFIS.Simple
         /// <summary>
         /// Create new SourceAFIS engine.
         /// </summary>
-        public AfisEngine() { }
+        public AfisEngine()
+        {
+            Matcher.Initialize();
+        }
 
         /// <summary>
         /// Extract fingerprint template to be used during matching.
