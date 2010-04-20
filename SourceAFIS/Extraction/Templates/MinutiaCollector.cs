@@ -19,6 +19,8 @@ namespace SourceAFIS.Extraction.Templates
         [Parameter(Upper = 4000)]
         public int DpiScaling = 500;
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         byte ComputeDirection(SkeletonBuilder.Ridge ridge)
         {
             int first = DirectionSegmentSkip;
@@ -50,7 +52,7 @@ namespace SourceAFIS.Extraction.Templates
                     template.Minutiae.Add(templateMinutia);
                 }
             }
-            Logger.Log(this, template);
+            Logger.Log(template);
         }
     }
 }

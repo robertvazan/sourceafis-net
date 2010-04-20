@@ -16,6 +16,8 @@ namespace SourceAFIS.Extraction.Filters
         [Parameter(Lower = 0, Upper = 20)]
         public int BorderDistance = 0;
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         public BinaryMap Filter(BinaryMap input)
         {
             RectangleC rect = new RectangleC(new Point(BorderDistance, BorderDistance),
@@ -40,7 +42,7 @@ namespace SourceAFIS.Extraction.Filters
                         output.SetBitOne(x, y);
                 }
             });
-            Logger.Log(this, output);
+            Logger.Log(output);
             return output;
         }
     }

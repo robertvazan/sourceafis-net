@@ -13,6 +13,8 @@ namespace SourceAFIS.Extraction.Filters
         [Parameter(Lower = 5, Upper = 50)]
         public int MaxIterations = 15;
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         static readonly bool[] IsRemovable = ConstructRemovable();
 
         static bool[] ConstructRemovable()
@@ -102,7 +104,7 @@ namespace SourceAFIS.Extraction.Filters
                 }
             }
 
-            Logger.Log(this, skeleton);
+            Logger.Log(skeleton);
             return skeleton;
         }
     }

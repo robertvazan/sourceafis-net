@@ -17,6 +17,8 @@ namespace SourceAFIS.Extraction.Filters
         [Parameter]
         public float RelativeLimit = 0.3f;
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         public BinaryMap DetectLowContrast(byte[,] contrast, BlockMap blocks)
         {
             List<byte> sortedContrast = new List<byte>();
@@ -40,7 +42,7 @@ namespace SourceAFIS.Extraction.Filters
                 for (int x = 0; x < result.Width; ++x)
                     if (contrast[y, x] < limit)
                         result.SetBitOne(x, y);
-            Logger.Log(this, result);
+            Logger.Log(result);
             return result;
         }
     }

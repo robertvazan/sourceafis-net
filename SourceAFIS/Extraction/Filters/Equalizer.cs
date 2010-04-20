@@ -15,6 +15,8 @@ namespace SourceAFIS.Extraction.Filters
         [Parameter(Lower = 0.1)]
         public float MinScaling = 0.25f;
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         const float RangeMin = -1;
         const float RangeMax = 1;
         const float RangeSize = RangeMax - RangeMin;
@@ -87,7 +89,7 @@ namespace SourceAFIS.Extraction.Filters
                         }
                 }
             });
-            Logger.Log(this, result);
+            Logger.Log(result);
             return result;
         }
 

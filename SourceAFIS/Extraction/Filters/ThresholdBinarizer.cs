@@ -8,6 +8,8 @@ namespace SourceAFIS.Extraction.Filters
 {
     public sealed class ThresholdBinarizer
     {
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         public BinaryMap Binarize(float[,] input, float[,] baseline, BinaryMap mask, BlockMap blocks)
         {
             BinaryMap binarized = new BinaryMap(input.GetLength(1), input.GetLength(0));
@@ -22,7 +24,7 @@ namespace SourceAFIS.Extraction.Filters
                                 binarized.SetBitOne(x, y);
                 }
             });
-            Logger.Log(this, binarized);
+            Logger.Log(binarized);
             return binarized;
         }
     }

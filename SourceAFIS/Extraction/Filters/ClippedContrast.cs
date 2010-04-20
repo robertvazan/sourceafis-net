@@ -12,6 +12,8 @@ namespace SourceAFIS.Extraction.Filters
         [Parameter(Upper = 0.4)]
         public float ClipFraction = 0.1f;
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         public byte[,] Compute(BlockMap blocks, short[, ,] histogram)
         {
             byte[,] result = new byte[blocks.BlockCount.Height, blocks.BlockCount.Width];
@@ -48,7 +50,7 @@ namespace SourceAFIS.Extraction.Filters
 
                 result[block.Y, block.X] = (byte)(upperBound - lowerBound);
             });
-            Logger.Log(this, result);
+            Logger.Log(result);
             return result;
         }
     }

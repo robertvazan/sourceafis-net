@@ -59,6 +59,8 @@ namespace SourceAFIS.Extraction
         [Nested]
         public MinutiaCollector MinutiaCollector = new MinutiaCollector();
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         public Extractor()
         {
             OrthogonalSmoother.AngleOffset = Angle.PIB;
@@ -76,7 +78,7 @@ namespace SourceAFIS.Extraction
                 byte[,] image = GrayscaleInverter.GetInverted(invertedImage);
 
                 BlockMap blocks = new BlockMap(new Size(image.GetLength(1), image.GetLength(0)), BlockSize);
-                Logger.Log(this, "BlockMap", blocks);
+                Logger.Log("BlockMap", blocks);
 
                 short[, ,] histogram = Histogram.Analyze(blocks, image);
                 short[, ,] smoothHistogram = Histogram.SmoothAroundCorners(blocks, histogram);
@@ -90,7 +92,7 @@ namespace SourceAFIS.Extraction
                 BinaryMap binary = Binarizer.Binarize(smoothed, orthogonal, mask, blocks);
                 binary.AndNot(BinarySmoother.Filter(binary.GetInverted()));
                 binary.Or(BinarySmoother.Filter(binary));
-                Logger.Log(this, "BinarySmoothingResult", binary);
+                Logger.Log("BinarySmoothingResult", binary);
                 CrossRemover.Remove(binary);
 
                 BinaryMap pixelMask = mask.FillBlocks(blocks);
@@ -116,9 +118,9 @@ namespace SourceAFIS.Extraction
         SkeletonBuilder ProcessSkeleton(string name, BinaryMap binary, BinaryMap innerMask)
         {
             SkeletonBuilder skeleton = null;
-            Logger.RunInContext(name, delegate()
+            DetailLogger.RunInContext(name, delegate()
             {
-                Logger.Log(this, "Binarized", binary);
+                Logger.Log("Binarized", binary);
                 BinaryMap thinned = Thinner.Thin(binary);
                 skeleton = new SkeletonBuilder();
                 RidgeTracer.Trace(thinned, skeleton);

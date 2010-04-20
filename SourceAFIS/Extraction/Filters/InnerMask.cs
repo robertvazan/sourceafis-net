@@ -13,6 +13,8 @@ namespace SourceAFIS.Extraction.Filters
         [Parameter(Lower = 0, Upper = 50)]
         public int MinBorderDistance = 15;
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         void ShrinkBy(BinaryMap temporary, BinaryMap inner, int amount)
         {
             temporary.Clear();
@@ -38,7 +40,7 @@ namespace SourceAFIS.Extraction.Filters
             }
             if (total < MinBorderDistance)
                 ShrinkBy(temporary, inner, MinBorderDistance - total);
-            Logger.Log(this, inner);
+            Logger.Log(inner);
             return inner;
         }
     }

@@ -85,6 +85,7 @@ namespace SourceAFIS.Meta
             ParameterSet parameters = new ParameterSet(new ObjectTree(prototype));
             parameters.Rebind(new ObjectTree(clone));
             parameters.SaveValues();
+            DetailLogger.CopyHooks(prototype, clone);
             return clone;
         }
 

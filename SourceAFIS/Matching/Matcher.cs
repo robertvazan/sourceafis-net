@@ -11,7 +11,7 @@ namespace SourceAFIS.Matching
     public sealed class Matcher
     {
         [Nested]
-        public MinutiaMatcher MatcherPrototype = new MinutiaMatcher();
+        public MinutiaMatcher MinutiaMatcher = new MinutiaMatcher();
 
         ProbeIndex ProbeIndex;
         MinutiaMatcher[] Matchers;
@@ -20,7 +20,7 @@ namespace SourceAFIS.Matching
         {
             Matchers = new MinutiaMatcher[Threader.HwThreadCount];
             for (int i = 0; i < Matchers.Length; ++i)
-                Matchers[i] = ParameterSet.ClonePrototype(MatcherPrototype);
+                Matchers[i] = ParameterSet.ClonePrototype(MinutiaMatcher);
             ProbeIndex = new ProbeIndex();
             Matchers[0].BuildIndex(probe, ProbeIndex);
             for (int i = 0; i < Matchers.Length; ++i)

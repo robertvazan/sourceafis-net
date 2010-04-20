@@ -7,6 +7,8 @@ namespace SourceAFIS.Extraction.Model
 {
     public sealed class DotRemover : ISkeletonFilter
     {
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         public void Filter(SkeletonBuilder skeleton)
         {
             List<SkeletonBuilder.Minutia> removed = new List<SkeletonBuilder.Minutia>();
@@ -15,7 +17,7 @@ namespace SourceAFIS.Extraction.Model
                     removed.Add(minutia);
             foreach (SkeletonBuilder.Minutia minutia in removed)
                 skeleton.RemoveMinutia(minutia);
-            Logger.Log(this, skeleton);
+            Logger.Log(skeleton);
         }
     }
 }

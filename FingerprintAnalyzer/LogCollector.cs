@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SourceAFIS.Meta;
 using SourceAFIS.Extraction;
 using SourceAFIS.Extraction.Model;
 using SourceAFIS.Extraction.Templates;
@@ -62,14 +63,16 @@ namespace FingerprintAnalyzer
         public ExtractionData Candidate = new ExtractionData();
         public MatchData Match = new MatchData();
 
+        DetailLogger Logger = new DetailLogger();
         Extractor Extractor = new Extractor();
         Matcher Matcher = new Matcher();
 
         public LogCollector()
         {
-            Logger.Resolver.Scan(Extractor, "Extractor");
-            Logger.Resolver.Scan(Matcher, "Matcher");
-            Logger.Filter = delegate(string path) { return true; };
+            ObjectTree tree = new ObjectTree();
+            tree.Scan(Extractor, "Extractor");
+            tree.Scan(Matcher, "Matcher");
+            Logger.Attach(tree);
         }
 
         public void Collect()
@@ -126,12 +129,12 @@ namespace FingerprintAnalyzer
             {
                 Matcher.Prepare(Probe.Template);
                 Matcher.Match(new Template[] { Candidate.Template });
-                Match.RootIndex = Logger.Retrieve<int>("Matcher.BestRootIndex");
+                Match.RootIndex = Logger.Retrieve<int>("Matcher.MinutiaMatcher.BestRootIndex");
                 Match.AnyMatch = Match.RootIndex >= 0;
                 if (Match.AnyMatch)
                 {
-                    Match.Root = Logger.Retrieve<MinutiaPair>("Matcher.Root", Match.RootIndex);
-                    Match.Pairing = Logger.Retrieve<MinutiaPairing>("Matcher.Pairing", Match.RootIndex);
+                    Match.Root = Logger.Retrieve<MinutiaPair>("Matcher.MinutiaMatcher.Root", Match.RootIndex);
+                    Match.Pairing = Logger.Retrieve<MinutiaPairing>("Matcher.MinutiaMatcher.Pairing", Match.RootIndex);
                 }
                 Logger.Clear();
             }
