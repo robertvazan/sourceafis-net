@@ -35,7 +35,7 @@ namespace SourceAFIS.Matching
         {
             float[] scores = new float[candidates.Count];
             
-            Threader.RangeFunction[] rangeMatchers = new Threader.RangeFunction[Matchers.Length];
+            Action<Range>[] rangeMatchers = new Action<Range>[Matchers.Length];
             for (int i = 0; i < rangeMatchers.Length; ++i)
             {
                 MinutiaMatcher matcher = Matchers[i];

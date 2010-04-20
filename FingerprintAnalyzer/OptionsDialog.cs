@@ -11,12 +11,10 @@ namespace FingerprintAnalyzer
 {
     sealed class OptionsDialog : Form
     {
-        public delegate void VoidFunction();
+        public Procedure OnChange;
 
-        public VoidFunction OnChange;
-
-        List<VoidFunction> ResumeLayoutQueue = new List<VoidFunction>();
-        List<VoidFunction> RefreshQueue = new List<VoidFunction>();
+        List<Procedure> ResumeLayoutQueue = new List<Procedure>();
+        List<Procedure> RefreshQueue = new List<Procedure>();
         Options Options;
         Options Defaults;
         Options LastCommit;
@@ -38,7 +36,7 @@ namespace FingerprintAnalyzer
             Controls.Add(GenerateDialog(options));
 
             RefreshData();
-            foreach (VoidFunction resume in ResumeLayoutQueue)
+            foreach (Procedure resume in ResumeLayoutQueue)
                 resume();
             ResumeLayoutQueue.Clear();
             ResumeLayout(false);
@@ -79,7 +77,7 @@ namespace FingerprintAnalyzer
 
         void RefreshData()
         {
-            foreach (VoidFunction refresh in RefreshQueue)
+            foreach (Procedure refresh in RefreshQueue)
                 refresh();
         }
 
@@ -134,7 +132,7 @@ namespace FingerprintAnalyzer
             return table;
         }
 
-        Button GenerateButton(string text, VoidFunction action)
+        Button GenerateButton(string text, Procedure action)
         {
             Button button = new Button();
             button.Text = text;

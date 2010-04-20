@@ -8,11 +8,6 @@ namespace SourceAFIS.General
 {
     public sealed class Threader
     {
-        public delegate void Task();
-        public delegate void RangeFunction(Range range);
-        public delegate void IterationFunction(int at);
-        public delegate void ApplyFunction<T>(T value);
-
         public abstract class Ticket
         {
             public abstract void Wait();
@@ -37,7 +32,7 @@ namespace SourceAFIS.General
             }
         }
 
-        public static Ticket Schedule(Task task)
+        public static Ticket Schedule(Procedure task)
         {
             TicketImplementation ticket = new TicketImplementation(task);
             
@@ -67,7 +62,7 @@ namespace SourceAFIS.General
                 ticket.Wait();
         }
 
-        public static void Split(Range range, RangeFunction function)
+        public static void Split(Range range, Action<Range> function)
         {
             List<Ticket> tickets = new List<Ticket>();
             int count = Math.Min(HwThreadCount, range.Length);
@@ -79,12 +74,12 @@ namespace SourceAFIS.General
             Wait(tickets);
         }
 
-        public static void Split(int count, RangeFunction function)
+        public static void Split(int count, Action<Range> function)
         {
             Split(new Range(count), function);
         }
 
-        public static void Split(Range range, IterationFunction function)
+        public static void Split(Range range, Action<int> function)
         {
             Split(range, delegate(Range subrange)
             {
@@ -93,12 +88,12 @@ namespace SourceAFIS.General
             });
         }
 
-        public static void Split(int count, IterationFunction function)
+        public static void Split(int count, Action<int> function)
         {
             Split(new Range(count), function);
         }
 
-        public static void Split<T>(IList<T> list, ApplyFunction<T> function)
+        public static void Split<T>(IList<T> list, Action<T> function)
         {
             Split(list.Count, delegate(Range subrange)
             {
@@ -107,7 +102,7 @@ namespace SourceAFIS.General
             });
         }
 
-        public static void SplitY(Size size, ApplyFunction<Point> function)
+        public static void SplitY(Size size, Action<Point> function)
         {
             Split(size.Height, delegate(Range yRange)
             {
@@ -117,13 +112,13 @@ namespace SourceAFIS.General
             });
         }
 
-        public static void Split(Range range, IList<RangeFunction> functions)
+        public static void Split(Range range, IList<Action<Range>> functions)
         {
             List<Ticket> tickets = new List<Ticket>();
             int threadCount = Math.Min(functions.Count, Math.Min(HwThreadCount, range.Length));
             for (int i = 0; i < threadCount; ++i)
             {
-                RangeFunction function = functions[i];
+                Action<Range> function = functions[i];
                 Range subrange = new Range(range.Interpolate(i, threadCount), range.Interpolate(i + 1, threadCount));
                 tickets.Add(Schedule(delegate() { function(subrange); }));
             }
@@ -132,11 +127,11 @@ namespace SourceAFIS.General
 
         sealed class TicketImplementation : Ticket
         {
-            Task Task;
+            Procedure Task;
             ManualResetEvent Finished = new ManualResetEvent(false);
             Exception TaskException;
 
-            public TicketImplementation(Task task)
+            public TicketImplementation(Procedure task)
             {
                 Task = task;
             }
@@ -168,10 +163,10 @@ namespace SourceAFIS.General
         sealed class Worker
         {
             volatile TicketImplementation Ticket;
-            volatile Task OnFinished;
+            volatile Procedure OnFinished;
             AutoResetEvent TaskSubmitted = new AutoResetEvent(false);
 
-            public void Submit(TicketImplementation ticket, Task onFinished)
+            public void Submit(TicketImplementation ticket, Procedure onFinished)
             {
                 Ticket = ticket;
                 OnFinished = onFinished;

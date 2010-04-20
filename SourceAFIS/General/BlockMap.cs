@@ -7,8 +7,6 @@ namespace SourceAFIS.General
 {
     public sealed class BlockMap
     {
-        public delegate void ForEachFunction(Point at);
-
         public sealed class PointGrid
         {
             public readonly int[] AllX;

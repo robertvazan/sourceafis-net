@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using SourceAFIS.General;
 using SourceAFIS.Visualization;
 
 namespace FingerprintAnalyzer
@@ -70,9 +71,7 @@ namespace FingerprintAnalyzer
             return menu;
         }
 
-        delegate void VoidFunction();
-
-        ToolStripMenuItem CreateMenuItem(string text, VoidFunction action)
+        ToolStripMenuItem CreateMenuItem(string text, Procedure action)
         {
             ToolStripMenuItem menu = new ToolStripMenuItem();
             menu.Text = text;
