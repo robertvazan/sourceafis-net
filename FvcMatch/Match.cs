@@ -32,7 +32,7 @@ namespace FvcMatch
         const double BendingThreshold = 0.5;
         const double BendingFactor = 3;
 
-        float FixScore(float score)
+        static float FixScore(float score)
         {
             double similarity = score / ScoreScaling;
             if (similarity > BendingThreshold)
@@ -54,11 +54,7 @@ namespace FvcMatch
                 Person candidate = LoadTemplate(args[1]);
                 afis.Threshold = 0;
                 float score = afis.Verify(probe, candidate);
-                float similarity = score / 100;
-                if (similarity > 1)
-                    similarity = 1;
-                if (similarity < 0)
-                    similarity = 0;
+                float similarity = FixScore(score);
                 WriteLog(args, "OK", similarity);
             }
             catch (Exception)
