@@ -5,7 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using SourceAFIS.Simple;
+using SourceAFIS.Simple; // import namespace SourceAFIS.Simple
 
 namespace Sample
 {
