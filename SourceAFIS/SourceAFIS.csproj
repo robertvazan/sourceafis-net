@@ -10,6 +10,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SourceAFIS</RootNamespace>
     <AssemblyName>SourceAFIS</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>KeyPair.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -167,6 +169,9 @@
     <Compile Include="Visualization\ScalarColoring.cs" />
     <Compile Include="Visualization\SkeletonDrawer.cs" />
     <Compile Include="Visualization\TemplateDrawer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="KeyPair.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
