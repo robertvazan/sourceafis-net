@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace AfisBuilder
 {
@@ -8,13 +9,13 @@ namespace AfisBuilder
     {
         public void Run()
         {
-            Command.ChangeDirectory(@"..\..\..");
+            Directory.SetCurrentDirectory(@"..\..\..");
             Command.Build(@"SourceAFIS\SourceAFIS.csproj", "Release");
             Command.Build(@"DatabaseAnalyzer\DatabaseAnalyzer.csproj", "Release");
             Command.Build(@"FingerprintAnalyzer\FingerprintAnalyzer.csproj", "Release");
             Command.Build(@"FvcEnroll\FvcEnroll.csproj", "Release");
             Command.Build(@"FvcMatch\FvcMatch.csproj", "Release");
-            Command.Copy(@"SourceAFIS\bin\Release\SourceAFIS.dll", @"Sample\dll\SourceAFIS.dll");
+            File.Copy(@"SourceAFIS\bin\Release\SourceAFIS.dll", @"Sample\dll\SourceAFIS.dll", true);
             Command.Build(@"Sample\Sample.csproj", "Debug");
             Command.Build(@"DocProject\DocProject.csproj", "Release");
         }
