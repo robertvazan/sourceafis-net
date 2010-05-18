@@ -2,52 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace AfisBuilder
 {
     class AfisBuilder
     {
         string OutputFolder;
-        Regex VersionRegex;
-        string BuildVersion;
-
-        void CollectVersion()
-        {
-            Console.WriteLine("Reading release version");
-            VersionRegex = new Regex(@"^\[assembly: AssemblyVersion\(""(\d+.\d+).\*""\)\]$");
-            foreach (string line in File.ReadAllLines(@"SourceAFIS\Properties\AssemblyInfo.cs"))
-            {
-                Match match = VersionRegex.Match(line);
-                if (match.Success)
-                    BuildVersion = match.Groups[1].Value;
-            }
-            if (BuildVersion == null)
-                throw new ApplicationException("Release version not found.");
-        }
-
-        void UpdateVersion(string project)
-        {
-            string path = project + @"\Properties\AssemblyInfo.cs";
-            Console.WriteLine("Updating version: {0}", path);
-            string[] lines = File.ReadAllLines(path);
-            bool found = false;
-            for (int i = 0; i < lines.Length; ++i)
-            {
-                Match match = VersionRegex.Match(lines[i]);
-                if (match.Success)
-                {
-                    found = true;
-                    Group group = match.Groups[1];
-                    int from = group.Index;
-                    int to = group.Index + group.Length;
-                    lines[i] = lines[i].Substring(0, from) + BuildVersion + lines[i].Substring(to, lines[i].Length - to);
-                }
-            }
-            if (!found)
-                throw new ApplicationException("No version to update.");
-            File.WriteAllLines(path, lines, Encoding.UTF8);
-        }
 
         void SetFolder()
         {
@@ -57,12 +17,12 @@ namespace AfisBuilder
 
         void UpdateVersions()
         {
-            CollectVersion();
-            UpdateVersion("DatabaseAnalyzer");
-            UpdateVersion("FingerprintAnalyzer");
-            UpdateVersion("FvcEnroll");
-            UpdateVersion("FvcMatch");
-            UpdateVersion("Sample");
+            Versions.Collect();
+            Versions.Update("DatabaseAnalyzer");
+            Versions.Update("FingerprintAnalyzer");
+            Versions.Update("FvcEnroll");
+            Versions.Update("FvcMatch");
+            Versions.Update("Sample");
         }
 
         void BuildProjects()
@@ -81,7 +41,7 @@ namespace AfisBuilder
 
         void AssembleZip()
         {
-            string path = OutputFolder + @"\SourceAFIS-" + BuildVersion;
+            string path = OutputFolder + @"\SourceAFIS-" + Versions.Release;
             Console.WriteLine("Assembling ZIP archive: {0}", path);
             if (Directory.Exists(path))
                 Directory.Delete(path, true);
@@ -115,7 +75,7 @@ namespace AfisBuilder
                 File.Delete(path + @"Sample\Sample.suo");
             Directory.Delete(path + @"Sample\obj", true);
 
-            Command.Zip(OutputFolder + @"\SourceAFIS-" + BuildVersion + ".zip", path);
+            Command.Zip(OutputFolder + @"\SourceAFIS-" + Versions.Release + ".zip", path);
         }
 
         public void Run()
