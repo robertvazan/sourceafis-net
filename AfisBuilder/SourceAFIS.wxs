@@ -14,6 +14,22 @@
               </File>
             </Component>
           </Directory>
+          <Directory Id="Documentation" Name="Documentation">
+            <Directory Id="SourceAFIS" Name="SourceAFIS">
+              <Directory Id="html" Name="html" />
+              <Directory Id="icons" Name="icons" />
+              <Directory Id="scripts" Name="scripts" />
+              <Directory Id="styles" Name="styles" />
+            </Directory>
+          </Directory>
+          <Directory Id="Sample" Name="Sample">
+            <Directory Id="bin" Name="bin">
+              <Directory Id="Debug" Name="Debug" />
+            </Directory>
+            <Directory Id="dll" Name="dll" />
+            <Directory Id="images" Name="images" />
+            <Directory Id="Properties" Name="Properties" />
+          </Directory>
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder" Name="Programs">
