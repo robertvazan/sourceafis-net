@@ -81,10 +81,14 @@ namespace AfisBuilder
 
         void AssembleMsi()
         {
+            string wxsPath = @"AfisBuilder\SourceAFIS.wxs";
+            WiX.Load(wxsPath);
+            WiX.Save(wxsPath);
+
             string workspace = OutputFolder + @"\msi";
             Command.ForceDeleteDirectory(workspace);
             Command.CopyDirectory(ZipFolder, workspace);
-            Command.CopyTo(@"AfisBuilder\SourceAFIS.wxs", workspace);
+            Command.CopyTo(wxsPath, workspace);
 
             Directory.SetCurrentDirectory(workspace);
             Command.CompileWiX("SourceAFIS.wxs");
