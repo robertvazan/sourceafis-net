@@ -8,12 +8,14 @@ namespace AfisBuilder
     class AfisBuilder
     {
         string OutputFolder;
+        string SolutionFolder;
         string ZipFolder;
 
         void SetFolder()
         {
             OutputFolder = Directory.GetCurrentDirectory();
             Directory.SetCurrentDirectory(@"..\..\..");
+            SolutionFolder = Directory.GetCurrentDirectory();
         }
 
         void UpdateVersions()
@@ -34,8 +36,7 @@ namespace AfisBuilder
             Command.Build(@"FvcEnroll\FvcEnroll.csproj", "Release");
             Command.Build(@"FvcMatch\FvcMatch.csproj", "Release");
             Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", @"Sample\dll");
-            if (Directory.Exists(@"Sample\bin"))
-                Directory.Delete(@"Sample\bin", true);
+            Command.ForceDeleteDirectory(@"Sample\bin");
             Command.Build(@"Sample\Sample.csproj", "Debug");
             Command.Build(@"DocProject\DocProject.csproj", "Release");
         }
@@ -44,8 +45,7 @@ namespace AfisBuilder
         {
             ZipFolder = OutputFolder + @"\SourceAFIS-" + Versions.Release;
             Console.WriteLine("Assembling ZIP archive: {0}", ZipFolder);
-            if (Directory.Exists(ZipFolder))
-                Directory.Delete(ZipFolder, true);
+            Command.ForceDeleteDirectory(ZipFolder);
             Directory.CreateDirectory(ZipFolder);
             string prefix = ZipFolder + @"\";
 
@@ -79,12 +79,26 @@ namespace AfisBuilder
             Command.Zip(ZipFolder + ".zip", ZipFolder);
         }
 
+        void AssembleMsi()
+        {
+            string workspace = OutputFolder + @"\msi";
+            Command.ForceDeleteDirectory(workspace);
+            Command.CopyDirectory(ZipFolder, workspace);
+            Command.CopyTo(@"AfisBuilder\SourceAFIS.wxs", workspace);
+
+            Directory.SetCurrentDirectory(workspace);
+            Command.CompileWiX("SourceAFIS.wxs");
+            Directory.SetCurrentDirectory(SolutionFolder);
+        }
+
         public void Run()
         {
             SetFolder();
             UpdateVersions();
-            BuildProjects();
+            //BuildProjects();
             AssembleZip();
+            AssembleMsi();
+            Console.WriteLine("AfisBuilder finished successfully.");
         }
 
         static void Main(string[] args)

@@ -23,6 +23,12 @@ namespace AfisBuilder
                     CopyDirectory(subfolder, to + @"\" + Path.GetFileName(subfolder));
         }
 
+        public static void ForceDeleteDirectory(string path)
+        {
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
+        }
+
         public static void Build(string project, string configuration)
         {
             string[] versions = Directory.GetDirectories(@"C:\WINDOWS\Microsoft.NET\Framework", "v2.0.*");
@@ -37,6 +43,13 @@ namespace AfisBuilder
             Execute(@"C:\Program Files\7-Zip\7z.exe", "a", "-tzip", archive, folder);
             if (!File.Exists(archive))
                 throw new ApplicationException("No ZIP file was created.");
+        }
+
+        public static void CompileWiX(string project)
+        {
+            string bin = @"C:\Program Files\Windows Installer XML v3\bin\";
+            Execute(bin + "candle.exe", project);
+            Execute(bin + "light.exe", Path.GetFileNameWithoutExtension(project) + ".wixobj");
         }
 
         public static void Execute(string command, params string[] parameters)
