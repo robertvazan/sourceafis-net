@@ -88,7 +88,9 @@ namespace AfisBuilder
             string wxsPath = @"AfisBuilder\SourceAFIS.wxs";
             WiX.Load(wxsPath);
             WiX.ScanFolders(workspace);
+            WiX.ScanFiles();
             WiX.AddMissingFolders();
+            WiX.AddMissingFiles();
             WiX.Save(wxsPath);
             Command.CopyTo(wxsPath, workspace);
 
