@@ -12,6 +12,7 @@ namespace AfisBuilder
         static XmlElement Root;
         static XmlElement Product;
         static XmlElement PFiles;
+        static XmlElement Feature;
 
         static string SourceFolder;
         static List<string> Folders;
@@ -24,6 +25,7 @@ namespace AfisBuilder
             Root = Document.DocumentElement;
             Product = GetChildByName(Root, "Product");
             PFiles = GetPFilesDirectory();
+            Feature = GetChildByName(Product, "Feature");
         }
 
         public static void Save(string path)
@@ -217,7 +219,6 @@ namespace AfisBuilder
 
         public static void AddMissingFiles()
         {
-            XmlElement feature = GetChildByName(Product, "Feature");
             foreach (string file in Files)
             {
                 XmlElement directory = GetDirectoryElement(Path.GetDirectoryName(file));
@@ -242,9 +243,57 @@ namespace AfisBuilder
 
                     XmlElement componentref = Document.CreateElement("ComponentRef", "http://schemas.microsoft.com/wix/2006/wi");
                     componentref.SetAttribute("Id", componentid);
-                    feature.AppendChild(componentref);
+                    Feature.AppendChild(componentref);
                 }
             }
+        }
+
+        static void RemoveOldFiles(XmlElement directory, string path)
+        {
+            foreach (XmlNode node in directory.ChildNodes)
+                if (node is XmlElement)
+                {
+                    XmlElement element = (XmlElement)node;
+                    if (element.Name == "Component")
+                    {
+                        XmlElement file = GetChildByName(element, "File");
+                        if (!Files.Contains(path + file.GetAttribute("Name")))
+                        {
+                            string id = element.GetAttribute("Id");
+                            XmlElement componentref = GetChildById(Feature, id);
+                            Feature.RemoveChild(componentref);
+                            directory.RemoveChild(node);
+                        }
+                    }
+                    else if (element.Name == "Directory")
+                        RemoveOldFiles(element, path + element.GetAttribute("Name") + @"\");
+                }
+        }
+
+        public static void RemoveOldFiles()
+        {
+            RemoveOldFiles(PFiles, "");
+        }
+
+        static void RemoveOldFolders(XmlElement directory, string path)
+        {
+            foreach (XmlNode node in directory.ChildNodes)
+                if (node is XmlElement)
+                {
+                    XmlElement child = (XmlElement)node;
+                    if (child.Name == "Directory")
+                    {
+                        if (!Folders.Contains(path + child.GetAttribute("Name")))
+                            directory.RemoveChild(child);
+                        else
+                            RemoveOldFiles(child, path + child.GetAttribute("Name") + @"\");
+                    }
+                }
+        }
+
+        public static void RemoveOldFolders()
+        {
+            RemoveOldFolders(PFiles, "");
         }
     }
 }

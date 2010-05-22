@@ -89,6 +89,8 @@ namespace AfisBuilder
             WiX.Load(wxsPath);
             WiX.ScanFolders(workspace);
             WiX.ScanFiles();
+            WiX.RemoveOldFiles();
+            WiX.RemoveOldFolders();
             WiX.AddMissingFolders();
             WiX.AddMissingFiles();
             WiX.Save(wxsPath);
@@ -103,7 +105,7 @@ namespace AfisBuilder
         {
             SetFolder();
             UpdateVersions();
-            //BuildProjects();
+            BuildProjects();
             AssembleZip();
             AssembleMsi();
             Console.WriteLine("AfisBuilder finished successfully.");
