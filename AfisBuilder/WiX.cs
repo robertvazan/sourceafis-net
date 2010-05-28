@@ -70,6 +70,12 @@ namespace AfisBuilder
             return (XmlElement)list.Item(0);
         }
 
+        static bool HasChildWithName(XmlElement parent, string name)
+        {
+            XmlNodeList list = parent.GetElementsByTagName(name);
+            return list.Count >= 1;
+        }
+
         static XmlElement GetChildById(XmlElement parent, string id)
         {
             foreach (XmlNode node in parent.ChildNodes)
@@ -207,7 +213,7 @@ namespace AfisBuilder
                 if (node is XmlElement)
                 {
                     XmlElement component = (XmlElement)node;
-                    if (component.Name == "Component")
+                    if (component.Name == "Component" && HasChildWithName(component, "File"))
                     {
                         XmlElement file = GetChildByName(component, "File");
                         if (file.GetAttribute("Name") == name)
@@ -254,7 +260,7 @@ namespace AfisBuilder
                 if (node is XmlElement)
                 {
                     XmlElement element = (XmlElement)node;
-                    if (element.Name == "Component")
+                    if (element.Name == "Component" && HasChildWithName(element, "File"))
                     {
                         XmlElement file = GetChildByName(element, "File");
                         if (!Files.Contains(path + file.GetAttribute("Name")))

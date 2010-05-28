@@ -93,7 +93,9 @@
                   <File Id="Documentation_SourceAFIS_html_M_So__imple_Person_Remove_1_ea6fe513.htm" Name="M_SourceAFIS_Simple_Person_Remove_1_ea6fe513.htm" DiskId="1" Source="Documentation\SourceAFIS\html\M_SourceAFIS_Simple_Person_Remove_1_ea6fe513.htm" KeyPath="yes" />
                 </Component>
                 <Component Id="component_Documentation_SourceAFIS_html_N_SourceAFIS_Simple.htm" Guid="8d694e75-9534-4618-92d0-a9f5cbbc84a3">
-                  <File Id="Documentation_SourceAFIS_html_N_SourceAFIS_Simple.htm" Name="N_SourceAFIS_Simple.htm" DiskId="1" Source="Documentation\SourceAFIS\html\N_SourceAFIS_Simple.htm" KeyPath="yes" />
+                  <File Id="Documentation_SourceAFIS_html_N_SourceAFIS_Simple.htm" Name="N_SourceAFIS_Simple.htm" DiskId="1" Source="Documentation\SourceAFIS\html\N_SourceAFIS_Simple.htm" KeyPath="yes">
+                    <Shortcut Id="startmenu_HtmlDocs" Directory="ProgramMenuDir" Name="Documentation (HTML)" WorkingDirectory="INSTALLDIR" Advertise="yes" />
+                  </File>
                 </Component>
                 <Component Id="component_Documentation_SourceAFIS__T_SourceAFIS_Simple_AfisEngine.htm3" Guid="1fbf7060-0505-4cf9-b7ed-7ca8fe4b4981">
                   <File Id="Documentation_SourceAFIS_html_Prop__T_SourceAFIS_Simple_AfisEngine.htm" Name="Properties_T_SourceAFIS_Simple_AfisEngine.htm" DiskId="1" Source="Documentation\SourceAFIS\html\Properties_T_SourceAFIS_Simple_AfisEngine.htm" KeyPath="yes" />
@@ -479,7 +481,9 @@
               <File Id="Documentation_license.txt" Name="license.txt" DiskId="1" Source="Documentation\license.txt" KeyPath="yes" />
             </Component>
             <Component Id="component_Documentation_SourceAFIS.chm" Guid="9c6554de-d390-49c0-b5cc-282e15cd6a96">
-              <File Id="Documentation_SourceAFIS.chm" Name="SourceAFIS.chm" DiskId="1" Source="Documentation\SourceAFIS.chm" KeyPath="yes" />
+              <File Id="Documentation_SourceAFIS.chm" Name="SourceAFIS.chm" DiskId="1" Source="Documentation\SourceAFIS.chm" KeyPath="yes">
+                <Shortcut Id="startmenu_ChmDocs" Directory="ProgramMenuDir" Name="Documentation (CHM)" WorkingDirectory="INSTALLDIR" Advertise="yes" />
+              </File>
             </Component>
             <Component Id="component_Documentation_SourceAFIS.HxS" Guid="a4a64dcc-2d7d-4183-9ce9-efee95416527">
               <File Id="Documentation_SourceAFIS.HxS" Name="SourceAFIS.HxS" DiskId="1" Source="Documentation\SourceAFIS.HxS" KeyPath="yes" />
