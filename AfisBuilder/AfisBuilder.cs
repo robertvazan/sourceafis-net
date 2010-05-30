@@ -87,6 +87,7 @@ namespace AfisBuilder
 
             string wxsPath = @"AfisBuilder\SourceAFIS.wxs";
             WiX.Load(wxsPath);
+            WiX.UpdateVersion(Versions.Release);
             WiX.ScanFolders(workspace);
             WiX.ScanFiles();
             WiX.RemoveOldFiles();
@@ -94,10 +95,11 @@ namespace AfisBuilder
             WiX.AddMissingFolders();
             WiX.AddMissingFiles();
             WiX.Save(wxsPath);
-            Command.CopyTo(wxsPath, workspace);
 
+            string wxsVersioned = "SourceAFIS-" + Versions.Release + ".wxs";
+            File.Copy(wxsPath, workspace + @"\" + wxsVersioned);
             Directory.SetCurrentDirectory(workspace);
-            Command.CompileWiX("SourceAFIS.wxs");
+            Command.CompileWiX(wxsVersioned);
             Directory.SetCurrentDirectory(SolutionFolder);
         }
 
