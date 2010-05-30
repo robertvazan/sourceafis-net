@@ -12,6 +12,8 @@
     </InstallExecuteSequence>
     <PropertyRef Id="NETFRAMEWORK20" />
     <Condition Message="This application requires .NET Framework 2.0. Please install the .NET Framework then run this installer again."><![CDATA[Installed OR NETFRAMEWORK20]]></Condition>
+    <UIRef Id="WixUI_Minimal" />
+    <WixVariable Id="WixUILicenseRtf" Value="..\..\..\..\Data\license.rtf" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder" Name="PFiles">
         <Directory Id="INSTALLDIR" Name="SourceAFIS">
