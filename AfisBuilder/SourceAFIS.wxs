@@ -21,9 +21,7 @@
               <File Id="Bin_SourceAFIS.xml" Name="SourceAFIS.xml" DiskId="1" Source="Bin\SourceAFIS.xml" KeyPath="yes" />
             </Component>
             <Component Id="component_Bin_FingerprintAnalyzer.exe" Guid="a5fd464e-7073-4558-9d9d-9309b470b45a">
-              <File Id="Bin_FingerprintAnalyzer.exe" Name="FingerprintAnalyzer.exe" DiskId="1" Source="Bin\FingerprintAnalyzer.exe" KeyPath="yes">
-                <Shortcut Id="startmenu_FingerprintAnalyzer" Directory="ProgramMenuDir" Name="Fingerprint Analyzer" WorkingDirectory="INSTALLDIR" Icon="FingerprintAnalyzer.exe" IconIndex="0" Advertise="yes" />
-              </File>
+              <File Id="Bin_FingerprintAnalyzer.exe" Name="FingerprintAnalyzer.exe" DiskId="1" Source="Bin\FingerprintAnalyzer.exe" />
             </Component>
           </Directory>
           <Directory Id="Documentation" Name="Documentation">
@@ -93,9 +91,7 @@
                   <File Id="Documentation_SourceAFIS_html_M_So__imple_Person_Remove_1_ea6fe513.htm" Name="M_SourceAFIS_Simple_Person_Remove_1_ea6fe513.htm" DiskId="1" Source="Documentation\SourceAFIS\html\M_SourceAFIS_Simple_Person_Remove_1_ea6fe513.htm" KeyPath="yes" />
                 </Component>
                 <Component Id="component_Documentation_SourceAFIS_html_N_SourceAFIS_Simple.htm" Guid="8d694e75-9534-4618-92d0-a9f5cbbc84a3">
-                  <File Id="Documentation_SourceAFIS_html_N_SourceAFIS_Simple.htm" Name="N_SourceAFIS_Simple.htm" DiskId="1" Source="Documentation\SourceAFIS\html\N_SourceAFIS_Simple.htm" KeyPath="yes">
-                    <Shortcut Id="startmenu_HtmlDocs" Directory="ProgramMenuDir" Name="Documentation (HTML)" WorkingDirectory="INSTALLDIR" Advertise="yes" />
-                  </File>
+                  <File Id="Documentation_SourceAFIS_html_N_SourceAFIS_Simple.htm" Name="N_SourceAFIS_Simple.htm" DiskId="1" Source="Documentation\SourceAFIS\html\N_SourceAFIS_Simple.htm" KeyPath="yes" />
                 </Component>
                 <Component Id="component_Documentation_SourceAFIS__T_SourceAFIS_Simple_AfisEngine.htm3" Guid="1fbf7060-0505-4cf9-b7ed-7ca8fe4b4981">
                   <File Id="Documentation_SourceAFIS_html_Prop__T_SourceAFIS_Simple_AfisEngine.htm" Name="Properties_T_SourceAFIS_Simple_AfisEngine.htm" DiskId="1" Source="Documentation\SourceAFIS\html\Properties_T_SourceAFIS_Simple_AfisEngine.htm" KeyPath="yes" />
@@ -481,9 +477,7 @@
               <File Id="Documentation_license.txt" Name="license.txt" DiskId="1" Source="Documentation\license.txt" KeyPath="yes" />
             </Component>
             <Component Id="component_Documentation_SourceAFIS.chm" Guid="9c6554de-d390-49c0-b5cc-282e15cd6a96">
-              <File Id="Documentation_SourceAFIS.chm" Name="SourceAFIS.chm" DiskId="1" Source="Documentation\SourceAFIS.chm" KeyPath="yes">
-                <Shortcut Id="startmenu_ChmDocs" Directory="ProgramMenuDir" Name="Documentation (CHM)" WorkingDirectory="INSTALLDIR" Advertise="yes" />
-              </File>
+              <File Id="Documentation_SourceAFIS.chm" Name="SourceAFIS.chm" DiskId="1" Source="Documentation\SourceAFIS.chm" KeyPath="yes" />
             </Component>
             <Component Id="component_Documentation_SourceAFIS.HxS" Guid="a4a64dcc-2d7d-4183-9ce9-efee95416527">
               <File Id="Documentation_SourceAFIS.HxS" Name="SourceAFIS.HxS" DiskId="1" Source="Documentation\SourceAFIS.HxS" KeyPath="yes" />
@@ -550,6 +544,21 @@
           <Component Id="ProgramMenuDir" Guid="FB0CD19C-EBEB-4D6E-8DCF-9E4699C16576">
             <RemoveFolder Id="ProgramMenuDir" On="uninstall" />
             <RegistryValue Root="HKCU" Key="Software\[ProductName]" Type="string" Value="" KeyPath="yes" />
+          </Component>
+          <Component Id="component_startmenu_Bin_FingerprintAnalyzer.exe" Guid="fa3e0762-7cc3-4af5-a435-86bd495e3cee">
+            <Shortcut Id="startmenu_FingerprintAnalyzer" Name="Fingerprint Analyzer" WorkingDirectory="INSTALLDIR" Target="[!Bin_FingerprintAnalyzer.exe]" Advertise="no" />
+            <RegistryValue Id="registry_FingerprintAnalyzer" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="FingerprintAnalyzer" Value="1" Type="integer" KeyPath="yes" />
+            <RemoveFolder Id="removefolder_FingerprintAnalyzer" On="uninstall" />
+          </Component>
+          <Component Id="component_startmenu_HtmlDocs" Guid="fe08dfbe-1b55-462c-98dc-03788bf2ce01">
+            <Shortcut Id="startmenu_HtmlDocs" Directory="ProgramMenuDir" Name="Documentation (HTML)" WorkingDirectory="INSTALLDIR" Target="[!Documentation_SourceAFIS_html_N_SourceAFIS_Simple.htm]" Advertise="no" />
+            <RegistryValue Id="registry_HtmlDocs" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="HtmlDocs" Value="1" Type="integer" KeyPath="yes" />
+            <RemoveFolder Id="removefolder_HtmlDocs" On="uninstall" />
+          </Component>
+          <Component Id="component_startmenu_ChmDocs" Guid="5eb9a8a8-ce21-4776-95b8-14c70daa3a72">
+            <Shortcut Id="startmenu_ChmDocs" Directory="ProgramMenuDir" Name="Documentation (CHM)" WorkingDirectory="INSTALLDIR" Target="[!Documentation_SourceAFIS.chm]" Advertise="no" />
+            <RegistryValue Id="registry_ChmDocs" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="ChmDocs" Value="1" Type="integer" KeyPath="yes" />
+            <RemoveFolder Id="removefolder_ChmDocs" On="uninstall" />
           </Component>
         </Directory>
       </Directory>
@@ -724,7 +733,9 @@
       <ComponentRef Id="component_Sample_images_probe.tif" />
       <ComponentRef Id="component_Sample_Properties_AssemblyInfo.cs" />
       <ComponentRef Id="component_Bin_FingerprintAnalyzer.exe" />
+      <ComponentRef Id="component_startmenu_Bin_FingerprintAnalyzer.exe" />
+      <ComponentRef Id="component_startmenu_HtmlDocs" />
+      <ComponentRef Id="component_startmenu_ChmDocs" />
     </Feature>
-    <Icon Id="FingerprintAnalyzer.exe" SourceFile="Bin\FingerprintAnalyzer.exe" />
   </Product>
 </Wix>
