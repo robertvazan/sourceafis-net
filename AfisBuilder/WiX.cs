@@ -301,5 +301,10 @@ namespace AfisBuilder
         {
             RemoveOldFolders(PFiles, "");
         }
+
+        public static void UpdateVersion(string version)
+        {
+            Product.SetAttribute("Version", version);
+        }
     }
 }
