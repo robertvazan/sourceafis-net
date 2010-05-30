@@ -575,6 +575,16 @@
             <RegistryValue Id="registry_Online" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="Online" Value="1" Type="integer" KeyPath="yes" />
             <RemoveFolder Id="removefolder_Online" On="uninstall" />
           </Component>
+          <Component Id="component_startmenu_PFiles" Guid="f5f7ffde-986c-4575-bc8b-438a4e50e861">
+            <Shortcut Id="startmenu_PFiles" Name="Program Files" WorkingDirectory="INSTALLDIR" Target="[INSTALLDIR]" Advertise="no" />
+            <RegistryValue Id="registry_PFiles" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="PFiles" Value="1" Type="integer" KeyPath="yes" />
+            <RemoveFolder Id="removefolder_PFiles" On="uninstall" />
+          </Component>
+          <Component Id="component_startmenu_Sample" Guid="06f3c8f8-7b38-4506-aa4a-a75ee9433f8d">
+            <Shortcut Id="startmenu_Sample" Name="Sample (C#, console)" WorkingDirectory="INSTALLDIR" Target="[Sample]" Advertise="no" />
+            <RegistryValue Id="registry_Sample" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="Sample" Value="1" Type="integer" KeyPath="yes" />
+            <RemoveFolder Id="removefolder_Sample" On="uninstall" />
+          </Component>
         </Directory>
       </Directory>
     </Directory>
@@ -752,6 +762,8 @@
       <ComponentRef Id="component_startmenu_HtmlDocs" />
       <ComponentRef Id="component_startmenu_ChmDocs" />
       <ComponentRef Id="component_startmenu_Online" />
+      <ComponentRef Id="component_startmenu_PFiles" />
+      <ComponentRef Id="component_startmenu_Sample" />
     </Feature>
   </Product>
 </Wix>
