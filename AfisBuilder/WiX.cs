@@ -304,7 +304,11 @@ namespace AfisBuilder
 
         public static void UpdateVersion(string version)
         {
-            Product.SetAttribute("Version", version);
+            Product.SetAttribute("Version", version + ".0");
+
+            XmlElement upgrade = GetChildByName(Product, "Upgrade");
+            XmlElement upgradeVersion = GetChildByName(upgrade, "UpgradeVersion");
+            upgradeVersion.SetAttribute("Maximum", version + ".0");
         }
     }
 }
