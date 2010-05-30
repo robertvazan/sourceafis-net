@@ -49,7 +49,8 @@ namespace AfisBuilder
         {
             string bin = @"C:\Program Files\Windows Installer XML v3\bin\";
             Execute(bin + "candle.exe", project);
-            Execute(bin + "light.exe", "-ext", "WiXNetFxExtension", Path.GetFileNameWithoutExtension(project) + ".wixobj");
+            Execute(bin + "light.exe", "-ext", "WiXNetFxExtension", "-ext", "WixUIExtension",
+                Path.GetFileNameWithoutExtension(project) + ".wixobj");
             if (!File.Exists(Path.GetFileNameWithoutExtension(project) + ".msi"))
                 throw new ApplicationException("No MSI file was created.");
         }
