@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Product Name="SourceAFIS" Id="EF99AD8E-CC3D-491F-BF1F-4F998007A918" UpgradeCode="314DD5F0-4709-4378-915F-22526D7919F5" Language="1033" Codepage="1252" Version="0.6.0" Manufacturer="Robert Vanak">
     <Package Id="*" Keywords="Installer" Description="SourceAFIS Installer" Comments="SourceAFIS is an open-source fingerprint matcher." InstallerVersion="100" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
     <Media Id="1" Cabinet="SourceAFIS.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" />
@@ -561,14 +561,19 @@
             <RemoveFolder Id="removefolder_FingerprintAnalyzer" On="uninstall" />
           </Component>
           <Component Id="component_startmenu_HtmlDocs" Guid="fe08dfbe-1b55-462c-98dc-03788bf2ce01">
-            <Shortcut Id="startmenu_HtmlDocs" Directory="ProgramMenuDir" Name="Documentation (HTML)" WorkingDirectory="INSTALLDIR" Target="[!Documentation_SourceAFIS_html_N_SourceAFIS_Simple.htm]" Advertise="no" />
+            <Shortcut Id="startmenu_HtmlDocs" Name="Documentation (HTML)" WorkingDirectory="INSTALLDIR" Target="[!Documentation_SourceAFIS_html_N_SourceAFIS_Simple.htm]" Advertise="no" />
             <RegistryValue Id="registry_HtmlDocs" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="HtmlDocs" Value="1" Type="integer" KeyPath="yes" />
             <RemoveFolder Id="removefolder_HtmlDocs" On="uninstall" />
           </Component>
           <Component Id="component_startmenu_ChmDocs" Guid="5eb9a8a8-ce21-4776-95b8-14c70daa3a72">
-            <Shortcut Id="startmenu_ChmDocs" Directory="ProgramMenuDir" Name="Documentation (CHM)" WorkingDirectory="INSTALLDIR" Target="[!Documentation_SourceAFIS.chm]" Advertise="no" />
+            <Shortcut Id="startmenu_ChmDocs" Name="Documentation (CHM)" WorkingDirectory="INSTALLDIR" Target="[!Documentation_SourceAFIS.chm]" Advertise="no" />
             <RegistryValue Id="registry_ChmDocs" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="ChmDocs" Value="1" Type="integer" KeyPath="yes" />
             <RemoveFolder Id="removefolder_ChmDocs" On="uninstall" />
+          </Component>
+          <Component Id="component_startmenu_Online" Guid="3408896c-f5ff-4867-be3b-133b68717e79">
+            <util:InternetShortcut Id="startmenu_Online" Name="Project Homepage" Target="http://sourceforge.net/apps/mediawiki/sourceafis/" />
+            <RegistryValue Id="registry_Online" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="Online" Value="1" Type="integer" KeyPath="yes" />
+            <RemoveFolder Id="removefolder_Online" On="uninstall" />
           </Component>
         </Directory>
       </Directory>
@@ -746,6 +751,7 @@
       <ComponentRef Id="component_startmenu_Bin_FingerprintAnalyzer.exe" />
       <ComponentRef Id="component_startmenu_HtmlDocs" />
       <ComponentRef Id="component_startmenu_ChmDocs" />
+      <ComponentRef Id="component_startmenu_Online" />
     </Feature>
   </Product>
 </Wix>
