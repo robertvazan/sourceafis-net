@@ -8,9 +8,16 @@ namespace AfisBuilder
 {
     class Command
     {
+        public static bool Mono = Type.GetType("Mono.Runtime") != null;
+
+        public static string FixPath(string original)
+        {
+            return original.Replace('\\', Path.DirectorySeparatorChar);
+        }
+        
         public static void CopyTo(string file, string folder)
         {
-            File.Copy(file, folder + @"\" + Path.GetFileName(file), true);
+            File.Copy(FixPath(file), FixPath(folder + @"\" + Path.GetFileName(FixPath(file))), true);
         }
 
         public static void CopyDirectory(string from, string to)
@@ -20,15 +27,23 @@ namespace AfisBuilder
                 CopyTo(filename, to);
             foreach (string subfolder in Directory.GetDirectories(from))
                 if (Path.GetFileName(subfolder) != ".svn")
-                    CopyDirectory(subfolder, to + @"\" + Path.GetFileName(subfolder));
+                    CopyDirectory(subfolder, to + Path.DirectorySeparatorChar + Path.GetFileName(subfolder));
         }
 
         public static void ForceDeleteDirectory(string path)
         {
+            path = FixPath(path);
             if (Directory.Exists(path))
                 Directory.Delete(path, true);
         }
 
+        public static void DeleteFileIfExists(string path)
+        {
+            path = FixPath(path);
+            if (File.Exists(path))
+                File.Delete(path);
+        }
+        
         public static void Build(string project, string configuration)
         {
             string[] versions = Directory.GetDirectories(@"C:\WINDOWS\Microsoft.NET\Framework", "v2.0.*");
@@ -38,11 +53,27 @@ namespace AfisBuilder
             Execute(msbuildPath, "/t:Rebuild", "/p:configuration=" + configuration, project);
         }
 
-        public static void Zip(string archive, string folder)
+        public static void BuildSolution(string solution, string configuration)
         {
-            Execute(@"C:\Program Files\7-Zip\7z.exe", "a", "-tzip", archive, folder);
+            Execute("mdtool", "build", "--configuration:" + configuration, FixPath(solution));
+        }
+
+        public static void Zip(string contents)
+        {
+            contents = FixPath(contents);
+            string folder = Path.GetDirectoryName(contents);
+            contents = Path.GetFileName(contents);
+            string archive = contents + ".zip";
+            string oldFolder = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(folder);
+            DeleteFileIfExists(archive);
+            if (!Mono)
+                Execute(@"C:\Program Files\7-Zip\7z.exe", "a", "-tzip", archive, contents);
+            else
+                Execute("zip", "-r", archive, contents);
             if (!File.Exists(archive))
                 throw new ApplicationException("No ZIP file was created.");
+            Directory.SetCurrentDirectory(oldFolder);
         }
 
         public static void CompileWiX(string project)

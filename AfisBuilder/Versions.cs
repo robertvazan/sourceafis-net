@@ -15,7 +15,7 @@ namespace AfisBuilder
         {
             Console.WriteLine("Reading release version");
             Regex = new Regex(@"^\[assembly: AssemblyVersion\(""(\d+.\d+).\*""\)\]$");
-            foreach (string line in File.ReadAllLines(@"SourceAFIS\Properties\AssemblyInfo.cs"))
+            foreach (string line in File.ReadAllLines(Command.FixPath(@"SourceAFIS\Properties\AssemblyInfo.cs")))
             {
                 Match match = Regex.Match(line);
                 if (match.Success)
@@ -27,7 +27,7 @@ namespace AfisBuilder
 
         public static void Update(string project)
         {
-            string path = project + @"\Properties\AssemblyInfo.cs";
+            string path = Command.FixPath(project + @"\Properties\AssemblyInfo.cs");
             Console.WriteLine("Updating version: {0}", path);
             string[] lines = File.ReadAllLines(path);
             bool found = false;
@@ -45,7 +45,21 @@ namespace AfisBuilder
             }
             if (!found)
                 throw new ApplicationException("No version to update.");
-            File.WriteAllLines(path, lines, Encoding.UTF8);
+            if (!Command.Mono)
+                File.WriteAllLines(path, lines, Encoding.UTF8);
+            else
+            {
+                using (FileStream stream = File.Open(path, FileMode.Truncate))
+                {
+                    byte[] preamble = Encoding.UTF8.GetPreamble();
+                    stream.Write(preamble, 0, preamble.Length);
+                    foreach (string line in lines)
+                    {
+                        byte[] bytes = Encoding.UTF8.GetBytes(line + "\r\n");
+                        stream.Write(bytes, 0, bytes.Length);
+                    }
+                }
+            }
         }
     }
 }
