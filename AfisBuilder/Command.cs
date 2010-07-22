@@ -46,7 +46,7 @@ namespace AfisBuilder
         
         public static void Build(string project, string configuration)
         {
-            string[] versions = Directory.GetDirectories(@"C:\WINDOWS\Microsoft.NET\Framework", "v2.0.*");
+            string[] versions = Directory.GetDirectories(@"C:\WINDOWS\Microsoft.NET\Framework", "v3.5.*");
             if (versions.Length == 0)
                 throw new ApplicationException("Cannot find msbuild tool.");
             string msbuildPath = versions[versions.Length - 1] + @"\msbuild.exe";
