@@ -13,9 +13,9 @@ namespace SourceAFIS.Tuning.Optimization
         public bool IsExpired { get { return Lifetime <= 0; } }
 
         public delegate ParameterSet MutationDelegate(ParameterSet initial);
-        public MutationDelegate Mutate = delegate(ParameterSet initial) { return null; };
+        public MutationDelegate Mutate = initial => null;
         public delegate bool RelevancyDelegate(ParameterSet initial, ParameterSet mutated);
-        public RelevancyDelegate IsRelevant = delegate(ParameterSet initial, ParameterSet mutated) { return true; };
+        public RelevancyDelegate IsRelevant = (initial, mutated) => true;
 
         public void Feedback(bool improved)
         {

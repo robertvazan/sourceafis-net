@@ -9,12 +9,12 @@ namespace SourceAFIS.Tuning.Errors
     {
         public delegate float Evaluate(ROCPoint point);
 
-        public static readonly Evaluate EER = delegate(ROCPoint point) { return point.FAR - point.FRR; };
+        public static readonly Evaluate EER = point => point.FAR - point.FRR;
 
-        public static readonly Evaluate PreferFAR = delegate(ROCPoint point) { return point.FAR - Calc.Sq(point.FRR); };
+        public static readonly Evaluate PreferFAR = point => point.FAR - Calc.Sq(point.FRR);
 
-        public static readonly Evaluate FAR100 = delegate(ROCPoint point) { return point.FAR - 0.01f; };
+        public static readonly Evaluate FAR100 = point => point.FAR - 0.01f;
 
-        public static readonly Evaluate ZeroFAR = delegate(ROCPoint point) { return point.FAR; };
+        public static readonly Evaluate ZeroFAR = point => point.FAR;
     }
 }

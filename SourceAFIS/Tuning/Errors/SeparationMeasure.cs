@@ -43,11 +43,9 @@ namespace SourceAFIS.Tuning.Errors
             {
                 float distance = GetAveragesDistance(table);
                 float matchingAverage = GetMatchingAverage(table);
-                float matching = AverageMatching(table,
-                    delegate(float score) { return Calc.Sq(score - matchingAverage); });
+                float matching = AverageMatching(table, score => Calc.Sq(score - matchingAverage));
                 float nonmatchingAverage = GetNonMatchingAverage(table);
-                float nonmatching = AverageNonMatching(table,
-                    delegate(float score) { return Calc.Sq(score - nonmatchingAverage); });
+                float nonmatching = AverageNonMatching(table, score => Calc.Sq(score - nonmatchingAverage));
                 return (distance - (float)Math.Sqrt(matching) - (float)Math.Sqrt(nonmatching)) / distance;
             }
         }
@@ -61,10 +59,10 @@ namespace SourceAFIS.Tuning.Errors
                 float distance = GetMedianDistance(table);
                 float matchingMedian = GetMatchingMedian(table);
                 float matching = AverageMatching(table,
-                    delegate(float score) { return score < matchingMedian ? Calc.Sq(score - matchingMedian) : 0; });
+                    score => score < matchingMedian ? Calc.Sq(score - matchingMedian) : 0);
                 float nonmatchingMedian = GetNonMatchingMedian(table);
                 float nonmatching = AverageNonMatching(table,
-                    delegate(float score) { return score > nonmatchingMedian ? Calc.Sq(score - nonmatchingMedian) : 0; });
+                    score => score > nonmatchingMedian ? Calc.Sq(score - nonmatchingMedian) : 0);
                 return (distance - (float)Math.Sqrt(matching) - (float)Math.Sqrt(nonmatching)) / distance;
             }
         }
@@ -78,10 +76,10 @@ namespace SourceAFIS.Tuning.Errors
                 float distance = GetMedianDistance(table);
                 float matchingMedian = GetMatchingMedian(table);
                 float matching = AverageMatching(table,
-                    delegate(float score) { return score < matchingMedian ? matchingMedian - score : 0; });
+                    score => score < matchingMedian ? matchingMedian - score : 0);
                 float nonmatchingMedian = GetNonMatchingMedian(table);
                 float nonmatching = AverageNonMatching(table,
-                    delegate(float score) { return score > nonmatchingMedian ? score - nonmatchingMedian : 0; });
+                    score => score > nonmatchingMedian ? score - nonmatchingMedian : 0);
                 return (distance - matching - nonmatching) / distance;
             }
         }

@@ -75,7 +75,7 @@ namespace FingerprintAnalyzer
         {
             ToolStripMenuItem menu = new ToolStripMenuItem();
             menu.Text = text;
-            menu.Click += delegate(object sender, EventArgs e) { action(); };
+            menu.Click += (sender, e) => { action(); };
             return menu;
         }
 
@@ -88,7 +88,7 @@ namespace FingerprintAnalyzer
                     new ToolStripSeparator(),
                     CreateMenuItem("Options...", delegate() { OptionsDialog.Show(); OptionsDialog.Focus(); }),
                     new ToolStripSeparator(),
-                    CreateMenuItem("Exit", delegate() { Close(); })
+                    CreateMenuItem("Exit", Close)
                 })
             };
         }

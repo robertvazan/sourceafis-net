@@ -57,7 +57,7 @@ namespace SourceAFIS.Tuning.Optimization
                 if (memory.IsExpired)
                     purged.Add(memory);
             if (purged.Count > 0)
-                Live.RemoveAll(delegate(MutationMemory memory) { return purged.Contains(memory); });
+                Live.RemoveAll(memory => purged.Contains(memory));
         }
 
         protected void Mutate(ParameterValue parameter)
