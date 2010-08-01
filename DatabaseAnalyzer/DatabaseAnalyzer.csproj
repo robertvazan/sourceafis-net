@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{55566F34-65E7-49D0-BA8C-FAD2B161BF5F}</ProjectGuid>
     <OutputType>Exe</OutputType>
@@ -36,6 +36,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />

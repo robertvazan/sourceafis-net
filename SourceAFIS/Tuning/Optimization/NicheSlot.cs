@@ -19,7 +19,7 @@ namespace SourceAFIS.Tuning.Optimization
         public TestReport BestSolution;
         public AccuracyStatistics BestPerformance;
 
-        public Procedure OnChange;
+        public Action OnChange;
 
         public bool Fit(TestReport solution)
         {

@@ -71,7 +71,7 @@ namespace FingerprintAnalyzer
             return menu;
         }
 
-        ToolStripMenuItem CreateMenuItem(string text, Procedure action)
+        ToolStripMenuItem CreateMenuItem(string text, Action action)
         {
             ToolStripMenuItem menu = new ToolStripMenuItem();
             menu.Text = text;

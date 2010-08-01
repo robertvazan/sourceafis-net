@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{35075900-98B2-4F73-A8FE-11E0D2182689}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -18,6 +18,8 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,6 +44,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
@@ -91,7 +96,6 @@
     <Compile Include="General\PointS.cs" />
     <Compile Include="General\PolarPoint.cs" />
     <Compile Include="General\PriorityQueueF.cs" />
-    <Compile Include="General\Procedure.cs" />
     <Compile Include="General\ReversedList.cs" />
     <Compile Include="General\TopListF.cs" />
     <Compile Include="General\Transformation2D.cs" />

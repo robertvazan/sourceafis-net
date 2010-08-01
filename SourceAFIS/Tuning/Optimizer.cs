@@ -14,8 +14,7 @@ namespace SourceAFIS.Tuning
         public NicheSlot NicheSlot = new NicheSlot();
         public MutationSequencer Mutations = new MutationSequencer();
 
-        public delegate void ExceptionEvent(Exception e);
-        public ExceptionEvent OnException;
+        public Action<Exception> OnException;
 
         public void Run()
         {
