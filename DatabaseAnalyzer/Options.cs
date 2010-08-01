@@ -40,13 +40,11 @@ namespace DatabaseAnalyzer
             Action = Root.SelectSingleNode("/database-analyzer/action").Value;
         }
 
-        delegate void ClipFunction(int max);
-
-        void ClipDatabase(string name, ClipFunction function)
+        void ClipDatabase(string name, Action<int> clipMethod)
         {
             XPathNavigator limit = Root.SelectSingleNode("/database-analyzer/test-database/" + name);
             if (limit != null)
-                function(Convert.ToInt32(limit.Value));
+                clipMethod(Convert.ToInt32(limit.Value));
         }
 
         int GetInt(string path, int defaultValue)

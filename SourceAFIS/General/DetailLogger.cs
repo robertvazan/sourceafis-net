@@ -104,7 +104,7 @@ namespace SourceAFIS.General
                 return "";
         }
 
-        public static void RunInContext(string name, Procedure task)
+        public static void RunInContext(string name, Action task)
         {
             ThreadName = name;
             try

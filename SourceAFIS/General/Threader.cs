@@ -32,7 +32,7 @@ namespace SourceAFIS.General
             }
         }
 
-        public static Ticket Schedule(Procedure task)
+        public static Ticket Schedule(Action task)
         {
             TicketImplementation ticket = new TicketImplementation(task);
             
@@ -127,11 +127,11 @@ namespace SourceAFIS.General
 
         sealed class TicketImplementation : Ticket
         {
-            Procedure Task;
+            Action Task;
             ManualResetEvent Finished = new ManualResetEvent(false);
             Exception TaskException;
 
-            public TicketImplementation(Procedure task)
+            public TicketImplementation(Action task)
             {
                 Task = task;
             }
@@ -163,10 +163,10 @@ namespace SourceAFIS.General
         sealed class Worker
         {
             volatile TicketImplementation Ticket;
-            volatile Procedure OnFinished;
+            volatile Action OnFinished;
             AutoResetEvent TaskSubmitted = new AutoResetEvent(false);
 
-            public void Submit(TicketImplementation ticket, Procedure onFinished)
+            public void Submit(TicketImplementation ticket, Action onFinished)
             {
                 Ticket = ticket;
                 OnFinished = onFinished;
