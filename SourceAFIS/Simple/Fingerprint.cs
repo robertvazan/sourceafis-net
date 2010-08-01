@@ -35,7 +35,6 @@ namespace SourceAFIS.Simple
         /// </summary>
         public Fingerprint() { }
 
-        byte[,] ImageValue;
         /// <summary>
         /// Fingerprint image.
         /// </summary>
@@ -64,7 +63,7 @@ namespace SourceAFIS.Simple
         /// <seealso cref="Template"/>
         /// <seealso cref="BitmapImage"/>
         /// <seealso cref="AfisEngine.Extract"/>
-        public byte[,] Image { get { return ImageValue; } set { ImageValue = value; } }
+        public byte[,] Image { get; set; }
 
         /// <summary>
         /// Fingerprint image as <see cref="Bitmap"/> object.
@@ -79,8 +78,8 @@ namespace SourceAFIS.Simple
         [XmlIgnore]
         public Bitmap BitmapImage
         {
-            get { return ImageValue != null ? ImageIO.CreateBitmap(PixelFormat.ToColorB(ImageValue)) : null; }
-            set { ImageValue = value != null ? PixelFormat.ToByte(ImageIO.GetPixels(value)) : null; }
+            get { return Image != null ? ImageIO.CreateBitmap(PixelFormat.ToColorB(Image)) : null; }
+            set { Image = value != null ? PixelFormat.ToByte(ImageIO.GetPixels(value)) : null; }
         }
 
         /// <summary>
@@ -116,7 +115,6 @@ namespace SourceAFIS.Simple
             set { Decoded = value != null ? new SerializedFormat().Deserialize(value) : null; }
         }
 
-        Finger FingerValue;
         /// <summary>
         /// Position of the finger on hand.
         /// </summary>
@@ -131,7 +129,7 @@ namespace SourceAFIS.Simple
         /// </remarks>
         /// <seealso cref="SourceAFIS.Simple.Finger"/>
         [XmlAttribute]
-        public Finger Finger { get { return FingerValue; } set { FingerValue = value; } }
+        public Finger Finger { get; set; }
 
         internal Template Decoded;
 
@@ -142,7 +140,7 @@ namespace SourceAFIS.Simple
         public Fingerprint Clone()
         {
             Fingerprint clone = new Fingerprint();
-            clone.ImageValue = ImageValue != null ? (byte[,])ImageValue.Clone() : null;
+            clone.Image = Image != null ? (byte[,])Image.Clone() : null;
             clone.Decoded = Decoded != null ? Decoded.Clone() : null;
             clone.Finger = Finger;
             return clone;

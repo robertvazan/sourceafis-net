@@ -36,7 +36,7 @@ namespace SourceAFIS.General
 
         void Sort()
         {
-            List.Sort(delegate(Item left, Item right) { return Calc.Compare(left.Key, right.Key); });
+            List.Sort((left, right) => Calc.Compare(left.Key, right.Key));
             if (List.Count > Capacity)
                 List.RemoveRange(Capacity, List.Count - Capacity);
         }
@@ -44,7 +44,7 @@ namespace SourceAFIS.General
         public V[] GetValues()
         {
             Sort();
-            return List.ConvertAll<V>(delegate(Item item) { return item.Value; }).ToArray();
+            return List.ConvertAll<V>(item => item.Value).ToArray();
         }
     }
 }

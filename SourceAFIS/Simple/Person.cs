@@ -35,7 +35,7 @@ namespace SourceAFIS.Simple
         /// </summary>
         /// <remarks>
         /// <para>
-        /// SourceAFIS doesn't use this field. It is provided for applications as an easy means
+        /// SourceAFIS doesn't use this property. It is provided for applications as an easy means
         /// to link <see cref="Person"/> objects back to application-specific data. Applications can store any
         /// integer ID in this field, for example database table key or an array index.
         /// </para>
@@ -45,7 +45,7 @@ namespace SourceAFIS.Simple
         /// </para>
         /// </remarks>
         [XmlAttribute]
-        public int Id;
+        public int Id { get; set; }
 
         List<Fingerprint> InnerList = new List<Fingerprint>();
 

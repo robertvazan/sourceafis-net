@@ -20,10 +20,7 @@ namespace SourceAFIS.Tuning.Optimization
                 Mutate(parameter);
                 return mutated;
             };
-            memory.IsRelevant = delegate(ParameterSet initial, ParameterSet mutated)
-            {
-                return mutated.GetDifference(initial).FieldPath == focusPath;
-            };
+            memory.IsRelevant = (initial, mutated) => mutated.GetDifference(initial).FieldPath == focusPath;
             return memory;
         }
     }

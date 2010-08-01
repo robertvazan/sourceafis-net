@@ -47,10 +47,10 @@ namespace SourceAFIS.Extraction.Filters
                         neighbor.Position = Calc.Round(Calc.Multiply(distance, Angle.ToVector(angle)));
                     } while (neighbor.Position == new Point() || neighbor.Position.Y < 0);
                     neighbor.Orientation = Angle.ToVector(Angle.Add(Angle.ToOrientation(Angle.Atan(neighbor.Position)), Angle.PI));
-                    if (!neighbors.Exists(delegate(NeighborInfo info) { return info.Position == neighbor.Position; }))
+                    if (!neighbors.Exists(info => info.Position == neighbor.Position))
                         neighbors.Add(neighbor);
                 }
-                neighbors.Sort(delegate(NeighborInfo left, NeighborInfo right) { return Calc.CompareYX(left.Position, right.Position); });
+                neighbors.Sort((left, right) => Calc.CompareYX(left.Position, right.Position));
                 allSplits.Add(neighbors);
             }
             return allSplits;

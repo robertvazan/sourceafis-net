@@ -23,9 +23,9 @@ namespace SourceAFIS.Tuning.Errors
 
         public void Average(List<ErrorRange> partial)
         {
-            Rate.Average(partial.ConvertAll<ROCPoint>(delegate(ErrorRange rate) { return rate.Rate; }));
-            Min.Average(partial.ConvertAll<ROCPoint>(delegate(ErrorRange rate) { return rate.Min; }));
-            Max.Average(partial.ConvertAll<ROCPoint>(delegate(ErrorRange rate) { return rate.Max; }));
+            Rate.Average(partial.ConvertAll<ROCPoint>(rate => rate.Rate));
+            Min.Average(partial.ConvertAll<ROCPoint>(rate => rate.Min));
+            Max.Average(partial.ConvertAll<ROCPoint>(rate => rate.Max));
         }
 
         void FindMinMax(ROCCurve ROC, ErrorPolicy.Evaluate policy, out ROCPoint left, out ROCPoint right)

@@ -17,9 +17,9 @@ namespace SourceAFIS.Tuning.Errors
 
         public void Average(List<ROCPoint> partial)
         {
-            FAR = Calc.Average(partial.ConvertAll<float>(delegate(ROCPoint point) { return point.FAR; }));
-            FRR = Calc.Average(partial.ConvertAll<float>(delegate(ROCPoint point) { return point.FRR; }));
-            Threshold = Calc.Average(partial.ConvertAll<float>(delegate(ROCPoint point) { return point.Threshold; }));
+            FAR = Calc.Average(partial.ConvertAll<float>(point => point.FAR));
+            FRR = Calc.Average(partial.ConvertAll<float>(point => point.FRR));
+            Threshold = Calc.Average(partial.ConvertAll<float>(point => point.Threshold));
         }
     }
 }

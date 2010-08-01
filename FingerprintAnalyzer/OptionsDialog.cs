@@ -120,11 +120,11 @@ namespace FingerprintAnalyzer
             table.Anchor = AnchorStyles.Right;
             table.AutoSize = true;
 
-            Button ok = GenerateButton("OK", delegate() { DoOk(); });
-            Button cancel = GenerateButton("Cancel", delegate() { DoCancel(); });
+            Button ok = GenerateButton("OK", DoOk);
+            Button cancel = GenerateButton("Cancel", DoCancel);
             table.Controls.Add(ok);
             table.Controls.Add(cancel);
-            table.Controls.Add(GenerateButton("Defaults", delegate() { DoDefaults();  }));
+            table.Controls.Add(GenerateButton("Defaults", DoDefaults));
 
             AcceptButton = ok;
             CancelButton = cancel;
@@ -136,7 +136,7 @@ namespace FingerprintAnalyzer
         {
             Button button = new Button();
             button.Text = text;
-            button.Click += delegate(object sender, EventArgs e) { action(); };
+            button.Click += (sender, e) => { action(); };
             return button;
         }
 
