@@ -124,6 +124,35 @@ namespace AfisBuilder
             Directory.SetCurrentDirectory(SolutionFolder);
         }
 
+        void RunAnalyzer()
+        {
+            string analyzerDir = Path.Combine(OutputFolder, "Analyzer");
+            Command.ForceDeleteDirectory(analyzerDir);
+            Directory.CreateDirectory(analyzerDir);
+            Directory.SetCurrentDirectory(analyzerDir);
+
+            Analyzer.DatabasePath = Command.FixPath(@"..\..\..\..\Data\TestDatabase");
+            Analyzer.PrepareXmlConfiguration(
+                Command.FixPath(SolutionFolder + @"\Data\DatabaseAnalyzerConfiguration.xml"),
+                "DatabaseAnalyzerConfiguration.xml");
+
+            Command.CopyTo(ZipFolder + @"\Bin\DatabaseAnalyzer.exe", analyzerDir);
+            Command.CopyTo(ZipFolder + @"\Bin\SourceAFIS.dll", analyzerDir);
+            Command.Execute(Path.Combine(analyzerDir, "DatabaseAnalyzer.exe"));
+
+            Analyzer.ReadAccuracy();
+            Analyzer.ReadSpeed();
+            Analyzer.ReadExtractorStats();
+
+            Directory.SetCurrentDirectory(SolutionFolder);
+        }
+
+        void Summary()
+        {
+            Analyzer.ReportStatistics();
+            Console.WriteLine("AfisBuilder finished successfully.");
+        }
+
         public void Run()
         {
             SetFolder();
@@ -132,7 +161,8 @@ namespace AfisBuilder
             AssembleZip();
             if (!Mono)
                 AssembleMsi();
-            Console.WriteLine("AfisBuilder finished successfully.");
+            RunAnalyzer();
+            Summary();
         }
 
         static void Main(string[] args)
