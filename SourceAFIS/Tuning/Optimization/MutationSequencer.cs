@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using SourceAFIS.Meta;
 using SourceAFIS.General;
 
@@ -66,9 +67,7 @@ namespace SourceAFIS.Tuning.Optimization
 
         MutationAdvice PickAdvice(List<MutationAdvice> advices)
         {
-            float confidenceSum = 0;
-            foreach (MutationAdvice advice in advices)
-                confidenceSum += advice.Confidence;
+            float confidenceSum = advices.Sum(advice => advice.Confidence);
 
             float randomWeight = (float)(Random.NextDouble() * confidenceSum);
             for (int i = 0; i < advices.Count; ++i)

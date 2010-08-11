@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using System.Linq;
 using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Matching;
@@ -60,7 +61,7 @@ namespace SourceAFIS.Tuning
                 }
             }
 
-            report.Time.Prepare = (float)prepareTimer.Elapsed.TotalSeconds / TestDatabase.GetFingerprintCount();
+            report.Time.Prepare = (float)prepareTimer.Elapsed.TotalSeconds / TestDatabase.AllViews.Count();
             report.Time.Matching = (float)matchingTimer.Elapsed.TotalSeconds / TestDatabase.GetMatchingPairCount();
             report.Time.NonMatching = (float)nonmatchingTimer.Elapsed.TotalSeconds / TestDatabase.GetNonMatchingPairCount();
 
