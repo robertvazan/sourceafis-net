@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace SourceAFIS.Tuning.Errors
 {
@@ -77,11 +78,8 @@ namespace SourceAFIS.Tuning.Errors
         Counts SumTotals(IEnumerable<Counts> list)
         {
             Counts totals = new Counts();
-            foreach (Counts counts in list)
-            {
-                totals.Matching += counts.Matching;
-                totals.NonMatching += counts.NonMatching;
-            }
+            totals.Matching = list.Sum(counts => counts.Matching);
+            totals.NonMatching = list.Sum(counts => counts.NonMatching);
             return totals;
         }
     }

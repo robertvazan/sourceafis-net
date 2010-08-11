@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SourceAFIS.General;
 using System.Xml.Serialization;
+using System.Linq;
+using SourceAFIS.General;
 
 namespace SourceAFIS.Tuning.Errors
 {
@@ -17,9 +18,9 @@ namespace SourceAFIS.Tuning.Errors
 
         public void Average(List<ROCPoint> partial)
         {
-            FAR = Calc.Average(partial.ConvertAll<float>(point => point.FAR));
-            FRR = Calc.Average(partial.ConvertAll<float>(point => point.FRR));
-            Threshold = Calc.Average(partial.ConvertAll<float>(point => point.Threshold));
+            FAR = partial.Average(point => point.FAR);
+            FRR = partial.Average(point => point.FRR);
+            Threshold = partial.Average(point => point.Threshold);
         }
     }
 }

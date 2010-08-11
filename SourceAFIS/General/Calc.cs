@@ -174,22 +174,6 @@ namespace SourceAFIS.General
             Shuffle(collection, new Random(0));
         }
 
-        public static float Average(IList<float> collection)
-        {
-            float result = 0;
-            foreach (float item in collection)
-                result += item;
-            return result / collection.Count;
-        }
-
-        public static int Sum(IList<int> collection)
-        {
-            int result = 0;
-            foreach (int item in collection)
-                result += item;
-            return result;
-        }
-
         public static int Compare(int left, int right)
         {
             if (left < right)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using SourceAFIS.General;
 
 namespace SourceAFIS.Tuning.Errors
@@ -96,8 +97,7 @@ namespace SourceAFIS.Tuning.Errors
             {
                 float[] scores = table.GetEntry(index).Matching;
                 count += scores.Length;
-                foreach (float score in scores)
-                    sum += transform(score);
+                sum += scores.Sum(score => transform(score));
             }
             return (float)(sum / count);
         }
@@ -110,8 +110,7 @@ namespace SourceAFIS.Tuning.Errors
             {
                 float[] scores = table.GetEntry(index).NonMatching;
                 count += scores.Length;
-                foreach (float score in scores)
-                    sum += transform(score);
+                sum += scores.Sum(score => transform(score));
             }
             return (float)(sum / count);
         }
@@ -152,8 +151,7 @@ namespace SourceAFIS.Tuning.Errors
             {
                 float[] scores = table.GetEntry(index).Matching;
                 count += scores.Length;
-                foreach (float score in scores)
-                    sum += score;
+                sum += scores.Sum();
             }
             return (float)(sum / count);
         }
@@ -166,8 +164,7 @@ namespace SourceAFIS.Tuning.Errors
             {
                 float[] scores = table.GetEntry(index).NonMatching;
                 count += scores.Length;
-                foreach (float score in scores)
-                    sum += score;
+                sum += scores.Sum();
             }
             return (float)(sum / count);
         }

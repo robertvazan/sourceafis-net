@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using SourceAFIS.Meta;
 using SourceAFIS.Tuning.Optimization;
 using SourceAFIS.Tuning.Reports;
@@ -63,8 +64,8 @@ namespace SourceAFIS.Tuning
 
         void SetTimeouts()
         {
-            ExtractorBenchmark.Timeout = NicheSlot.TimeConstraints.Extraction * ExtractorBenchmark.Database.GetFingerprintCount();
-            MatcherBenchmark.Timeout = NicheSlot.TimeConstraints.Prepare * ExtractorBenchmark.Database.GetFingerprintCount() +
+            ExtractorBenchmark.Timeout = NicheSlot.TimeConstraints.Extraction * ExtractorBenchmark.Database.AllViews.Count();
+            MatcherBenchmark.Timeout = NicheSlot.TimeConstraints.Prepare * ExtractorBenchmark.Database.AllViews.Count() +
                 NicheSlot.TimeConstraints.Matching * ExtractorBenchmark.Database.GetMatchingPairCount() +
                 NicheSlot.TimeConstraints.NonMatching * ExtractorBenchmark.Database.GetNonMatchingPairCount();
         }

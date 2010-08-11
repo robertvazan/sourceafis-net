@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Linq;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Visualization;
 
@@ -181,28 +182,9 @@ namespace SourceAFIS.Tuning
 
         object ICloneable.Clone() { return Clone(); }
 
-        public int GetFingerCount()
-        {
-            int count = 0;
-            foreach (Database database in Databases)
-                count += database.Fingers.Count;
-            return count;
-        }
-
-        public int GetFingerprintCount()
-        {
-            int count = 0;
-            foreach (Finger finger in AllFingers)
-                count += finger.Views.Count;
-            return count;
-        }
-
         public int GetMatchingPairCount()
         {
-            int count = 0;
-            foreach (Finger finger in AllFingers)
-                count += finger.Views.Count * (finger.Views.Count - 1);
-            return count;
+            return AllFingers.Sum(finger => finger.Views.Count * (finger.Views.Count - 1));
         }
 
         public int GetNonMatchingPairCount()
