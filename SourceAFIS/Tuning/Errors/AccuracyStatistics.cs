@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
+using System.Linq;
 using SourceAFIS.Tuning.Reports;
 using SourceAFIS.Visualization;
 
@@ -64,11 +65,9 @@ namespace SourceAFIS.Tuning.Errors
             {
                 PerDatabase[db] = new PerDatabaseInfo();
                 PerDatabase[db].Compute(tables[db], measure);
-                AverageError += PerDatabase[db].Scalar;
-                Separation += PerDatabase[db].Separation;
             }
-            AverageError /= tables.Length;
-            Separation /= tables.Length;
+            AverageError = PerDatabase.Average(db => db.Scalar);
+            Separation = PerDatabase.Average(db => db.Separation);
             TopErrors = new TopErrors();
             TopErrors.Compute(tables);
         }
