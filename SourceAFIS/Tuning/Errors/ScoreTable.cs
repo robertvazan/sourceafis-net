@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
+using System.Linq;
 
 namespace SourceAFIS.Tuning.Errors
 {
@@ -29,6 +30,15 @@ namespace SourceAFIS.Tuning.Errors
 
         public Entry[][] Table;
 
+        [XmlIgnore]
+        public IEnumerable<Entry> Entries { get { return from row in Table from entry in row select entry; } }
+
+        [XmlIgnore]
+        public IEnumerable<float> Matching { get { return from entry in Entries from score in entry.Matching select score; } }
+
+        [XmlIgnore]
+        public IEnumerable<float> NonMatching { get { return from entry in Entries from score in entry.NonMatching select score; } }
+
         public void Initialize(TestDatabase.Database database)
         {
             Table = new Entry[database.Fingers.Count][];
@@ -36,58 +46,28 @@ namespace SourceAFIS.Tuning.Errors
                 Table[finger] = new Entry[database.Fingers[finger].Views.Count];
         }
 
-        public IEnumerable<Index> GetAllIndexes()
-        {
-            for (int finger = 0; finger < Table.Length; ++finger)
-                for (int view = 0; view < Table[finger].Length; ++view)
-                    yield return new Index(finger, view);
-        }
-
-        public Entry GetEntry(Index index)
-        {
-            return Table[index.Finger][index.View];
-        }
-
         public ScoreTable GetMultiFingerTable(MultiFingerPolicy policy)
         {
-            ScoreTable combined = new ScoreTable();
-            combined.Table = new Entry[Table.Length][];
-            for (int finger = 0; finger < Table.Length; ++finger)
+            return new ScoreTable
             {
-                combined.Table[finger] = new Entry[Table[finger].Length];
-                for (int view = 0; view < Table[finger].Length; ++view)
-                {
-                    combined.Table[finger][view].Matching = new float[Table[finger][view].Matching.Length];
-                    for (int pair = 0; pair < Table[finger][view].Matching.Length; ++pair)
-                    {
-                        List<float> scores = new List<float>();
-                        for (int multi = 0; multi < Math.Min(policy.ExpectedCount, Table.Length); ++multi)
-                        {
-                            if (view < Table[(finger + multi) % Table.Length].Length
-                                && pair < Table[(finger + multi) % Table.Length][view].Matching.Length)
-                            {
-                                scores.Add(Table[(finger + multi) % Table.Length][view].Matching[pair]);
-                            }
-                        }
-                        combined.Table[finger][view].Matching[pair] = policy.Combine(scores.ToArray());
-                    }
-
-                    combined.Table[finger][view].NonMatching = new float[Table[finger][view].NonMatching.Length];
-                    for (int pair = 0; pair < Table[finger][view].NonMatching.Length; ++pair)
-                    {
-                        List<float> scores = new List<float>();
-                        for (int multi = 0; multi < Math.Min(policy.ExpectedCount, Table[finger].Length); ++multi)
-                        {
-                            if (pair < Table[finger][(view + multi) % Table[finger].Length].NonMatching.Length)
-                            {
-                                scores.Add(Table[finger][(view + multi) % Table[finger].Length].NonMatching[pair]);
-                            }
-                        }
-                        combined.Table[finger][view].NonMatching[pair] = policy.Combine(scores.ToArray());
-                    }
-                }
-            }
-            return combined;
+                Table = (from finger in Enumerable.Range(0, Table.Length)
+                         select (from view in Enumerable.Range(0, Table[finger].Length)
+                                 let combinedFingers = (from multi in Enumerable.Range(0, Math.Min(policy.ExpectedCount, Table.Length))
+                                                        let finger2 = (finger + multi) % Table.Length
+                                                        where view < Table[finger2].Length
+                                                        select finger2).Take(policy.ExpectedCount)
+                                 let newMatching = (from pair in Enumerable.Range(0, Table[finger][view].Matching.Length)
+                                                    select policy.Combine((from finger2 in combinedFingers
+                                                                           let matching2 = Table[finger2][view].Matching
+                                                                           where pair < matching2.Length
+                                                                           select matching2[pair]).ToArray())).ToArray()
+                                 let newNonMatching = (from pair in Enumerable.Range(0, Table[finger][view].NonMatching.Length)
+                                                       select policy.Combine((from finger2 in combinedFingers
+                                                                              let nonmatching2 = Table[finger2][view].NonMatching
+                                                                              where pair < nonmatching2.Length
+                                                                              select nonmatching2[pair]).ToArray())).ToArray()
+                                 select new Entry { Matching = newMatching, NonMatching = newNonMatching }).ToArray()).ToArray()
+            };
         }
     }
 }

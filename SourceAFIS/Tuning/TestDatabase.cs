@@ -46,9 +46,9 @@ namespace SourceAFIS.Tuning
         {
             get
             {
-                foreach (Database database in Databases)
-                    foreach (Finger finger in database.Fingers)
-                        yield return finger;
+                return from database in Databases
+                       from finger in database.Fingers
+                       select finger;
             }
         }
 
@@ -57,10 +57,9 @@ namespace SourceAFIS.Tuning
         {
             get
             {
-                foreach (Database database in Databases)
-                    foreach (Finger finger in database.Fingers)
-                        foreach (View view in finger.Views)
-                            yield return view;
+                return from finger in AllFingers
+                       from view in finger.Views
+                       select view;
             }
         }
 
@@ -189,14 +188,12 @@ namespace SourceAFIS.Tuning
 
         public int GetNonMatchingPairCount()
         {
-            int count = 0;
-            foreach (Database database in Databases)
-                foreach (Finger finger in database.Fingers)
-                    for (int viewIndex = 0; viewIndex < finger.Views.Count; ++viewIndex)
-                        foreach (Finger pairFinger in database.Fingers)
-                            if (pairFinger != finger && viewIndex < pairFinger.Views.Count)
-                                ++count;
-            return count;
+            return (from database in Databases
+                    from finger in database.Fingers
+                    from view in Enumerable.Range(0, finger.Views.Count)
+                    from pairFinger in database.Fingers
+                    where pairFinger != finger && view < pairFinger.Views.Count
+                    select 1).Count();
         }
     }
 }

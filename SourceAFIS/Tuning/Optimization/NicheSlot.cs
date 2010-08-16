@@ -25,8 +25,7 @@ namespace SourceAFIS.Tuning.Optimization
         {
             if (TimeConstraints.Check(solution.Extractor) && TimeConstraints.Check(solution.Matcher))
             {
-                AccuracyStatistics performance = new AccuracyStatistics();
-                performance.Compute(solution.Matcher.ScoreTables, Measure);
+                AccuracyStatistics performance = new AccuracyStatistics(solution.Matcher.ScoreTables, Measure);
 
                 if (BestSolution == null || performance.AverageError < BestPerformance.AverageError
                     || performance.AverageError == BestPerformance.AverageError && performance.Separation > BestPerformance.Separation)

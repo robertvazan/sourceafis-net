@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
+using System.Linq;
 using SourceAFIS.General;
 using SourceAFIS.Tuning.Errors;
 
@@ -27,14 +28,14 @@ namespace SourceAFIS.Tuning.Reports
 
         public PerDatabase[] Databases;
 
-        public void Compute(ScoreTable[] tables)
+        public TopErrors(ScoreTable[] tables)
         {
-            Databases = new PerDatabase[tables.Length];
-            for (int i = 0; i < tables.Length; ++i)
-            {
-                Databases[i].TopFalseAccepts = CollectFalseAccepts(tables[i]);
-                Databases[i].TopFalseRejects = CollectFalseRejects(tables[i]);
-            }
+            Databases = (from table in tables
+                         select new PerDatabase
+                         {
+                             TopFalseAccepts = CollectFalseAccepts(table),
+                             TopFalseRejects = CollectFalseRejects(table)
+                         }).ToArray();
         }
 
         public static Pair[] CollectFalseAccepts(ScoreTable table)

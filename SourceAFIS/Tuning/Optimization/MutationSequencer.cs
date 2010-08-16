@@ -33,10 +33,10 @@ namespace SourceAFIS.Tuning.Optimization
 
         public ParameterSet Mutate(ParameterSet initial)
         {
-            List<MutationAdvice> advices = new List<MutationAdvice>();
-            foreach (MutationAdvisor advisor in Advisors)
-                for (int i = 0; i < MultipleAdvices; ++i)
-                    advices.AddRange(advisor.Advise(initial));
+            var advices = (from advisor in Advisors
+                           from repeat in Enumerable.Range(0, MultipleAdvices)
+                           from advice in advisor.Advise(initial)
+                           select advice).ToList();
             
             AdjustExtractorWeight(advices);
 
