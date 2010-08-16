@@ -52,35 +52,31 @@ namespace SourceAFIS.Tuning.Errors
 
         Dictionary<float, Counts> AggregateByScore(ScoreTable table)
         {
-            Dictionary<float, Counts> countsByThreshold = new Dictionary<float, Counts>();
-            foreach (ScoreTable.Entry[] finger in table.Table)
-                foreach (ScoreTable.Entry view in finger)
-                {
-                    foreach (float score in view.Matching)
-                        UpdateCounts(countsByThreshold, score, 1, 0);
-
-                    foreach (float score in view.NonMatching)
-                        UpdateCounts(countsByThreshold, score, 0, 1);
-                }
-            return countsByThreshold;
-        }
-
-        void UpdateCounts(Dictionary<float, Counts> countsByThreshold, float score, int addMatching, int addNonMatching)
-        {
-            Counts counts = new Counts();
-            if (countsByThreshold.ContainsKey(score))
-                counts = countsByThreshold[score];
-            counts.Matching += addMatching;
-            counts.NonMatching += addNonMatching;
-            countsByThreshold[score] = counts;
+            var matching = from entry in table.Entries
+                           from score in entry.Matching
+                           select new { Score = score, Match = true };
+            var nonmatching = from entry in table.Entries
+                              from score in entry.NonMatching
+                              select new { Score = score, Match = false };
+            var counted = from duplicate in matching.Concat(nonmatching)
+                          group duplicate by duplicate.Score into grouped
+                          select new
+                          {
+                              Score = grouped.Key,
+                              Matching = grouped.Count(groupedDuplicate => groupedDuplicate.Match),
+                              NonMatching = grouped.Count(groupedDuplicate => !groupedDuplicate.Match)
+                          };
+            return counted.ToDictionary(unique => unique.Score,
+                unique => new Counts { Matching = unique.Matching, NonMatching = unique.NonMatching });
         }
 
         Counts SumTotals(IEnumerable<Counts> list)
         {
-            Counts totals = new Counts();
-            totals.Matching = list.Sum(counts => counts.Matching);
-            totals.NonMatching = list.Sum(counts => counts.NonMatching);
-            return totals;
+            return new Counts
+            {
+                Matching = list.Sum(counts => counts.Matching),
+                NonMatching = list.Sum(counts => counts.NonMatching)
+            };
         }
     }
 }

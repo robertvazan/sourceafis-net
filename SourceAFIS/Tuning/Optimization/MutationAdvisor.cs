@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using SourceAFIS.Meta;
 using SourceAFIS.General;
 
@@ -52,12 +53,9 @@ namespace SourceAFIS.Tuning.Optimization
 
         void PurgeExpired()
         {
-            List<MutationMemory> purged = new List<MutationMemory>();
-            foreach (MutationMemory memory in Live)
-                if (memory.IsExpired)
-                    purged.Add(memory);
-            if (purged.Count > 0)
-                Live.RemoveAll(memory => purged.Contains(memory));
+            Live = (from memory in Live
+                    where !memory.IsExpired
+                    select memory).ToList();
         }
 
         protected void Mutate(ParameterValue parameter)

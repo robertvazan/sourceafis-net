@@ -21,7 +21,7 @@ namespace SourceAFIS.Tuning.Errors
             public float Scalar;
             public float Separation;
 
-            public void Compute(ScoreTable table, AccuracyMeasure measure)
+            public PerDatabaseInfo(ScoreTable table, AccuracyMeasure measure)
             {
                 CombinedScores = table.GetMultiFingerTable(measure.MultiFingerPolicy);
                 ROC.Compute(CombinedScores);
@@ -57,19 +57,14 @@ namespace SourceAFIS.Tuning.Errors
         [XmlIgnore]
         public TopErrors TopErrors;
 
-        public void Compute(ScoreTable[] tables, AccuracyMeasure measure)
+        public AccuracyStatistics(ScoreTable[] tables, AccuracyMeasure measure)
         {
             Name = measure.Name;
-            PerDatabase = new PerDatabaseInfo[tables.Length];
-            for (int db = 0; db < tables.Length; ++db)
-            {
-                PerDatabase[db] = new PerDatabaseInfo();
-                PerDatabase[db].Compute(tables[db], measure);
-            }
+            PerDatabase = (from table in tables
+                           select new PerDatabaseInfo(table, measure)).ToArray();
             AverageError = PerDatabase.Average(db => db.Scalar);
             Separation = PerDatabase.Average(db => db.Separation);
-            TopErrors = new TopErrors();
-            TopErrors.Compute(tables);
+            TopErrors = new TopErrors(tables);
         }
 
         public void Save(string folder, bool perDatabase)

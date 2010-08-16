@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
+using System.Linq;
 using SourceAFIS.Tuning.Errors;
 
 namespace SourceAFIS.Tuning.Reports
@@ -23,12 +24,8 @@ namespace SourceAFIS.Tuning.Reports
 
         public void ComputeStatistics()
         {
-            Accuracy = new AccuracyStatistics[AccuracyMeasure.AccuracyLandscape.Count];
-            for (int i = 0; i < Accuracy.Length; ++i)
-            {
-                Accuracy[i] = new AccuracyStatistics();
-                Accuracy[i].Compute(ScoreTables, AccuracyMeasure.AccuracyLandscape[i]);
-            }
+            Accuracy = (from measure in AccuracyMeasure.AccuracyLandscape
+                        select new AccuracyStatistics(ScoreTables, measure)).ToArray();
         }
 
         public void Save(string folder)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using SourceAFIS.Extraction;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Matching;
@@ -216,10 +217,9 @@ namespace SourceAFIS.Simple
                 BestMatchSkipper collector = new BestMatchSkipper(1, SkipBestMatches);
                 foreach (Fingerprint probeFp in probe)
                 {
-                    List<Template> candidateTemplates = new List<Template>();
-                    foreach (Fingerprint candidateFp in candidate)
-                        if (IsCompatibleFinger(probeFp.Finger, candidateFp.Finger))
-                            candidateTemplates.Add(candidateFp.Decoded);
+                    var candidateTemplates = (from candidateFp in candidate
+                                              where IsCompatibleFinger(probeFp.Finger, candidateFp.Finger)
+                                              select candidateFp.Decoded).ToList();
 
                     Matcher.Prepare(probeFp.Decoded);
                     foreach (float score in Matcher.Match(candidateTemplates))
