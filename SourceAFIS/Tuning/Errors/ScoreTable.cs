@@ -39,7 +39,7 @@ namespace SourceAFIS.Tuning.Errors
         [XmlIgnore]
         public IEnumerable<float> NonMatching { get { return from entry in Entries from score in entry.NonMatching select score; } }
 
-        public void Initialize(DatabaseCollection.Database database)
+        public void Initialize(DatabaseCollection.TestDatabase database)
         {
             Table = new Entry[database.Fingers.Count][];
             for (int finger = 0; finger < database.Fingers.Count; ++finger)
