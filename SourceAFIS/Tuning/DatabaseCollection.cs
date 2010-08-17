@@ -18,31 +18,8 @@ namespace SourceAFIS.Tuning
     {
         public List<TestDatabase> Databases = new List<TestDatabase>();
 
-        [Serializable]
-        public sealed class TestDatabase
-        {
-            public string Path;
-            public List<Finger> Fingers = new List<Finger>();
-        }
-
-        [Serializable]
-        public sealed class Finger
-        {
-            public string Name;
-            public List<View> Views = new List<View>();
-        }
-
-        [Serializable]
-        public sealed class View
-        {
-            public string Path;
-            public string FileName;
-            [XmlIgnore]
-            public Template Template;
-        }
-
         [XmlIgnore]
-        public IEnumerable<Finger> AllFingers
+        public IEnumerable<TestDatabase.Finger> AllFingers
         {
             get
             {
@@ -53,7 +30,7 @@ namespace SourceAFIS.Tuning
         }
 
         [XmlIgnore]
-        public IEnumerable<View> AllViews
+        public IEnumerable<TestDatabase.View> AllViews
         {
             get
             {
@@ -81,18 +58,18 @@ namespace SourceAFIS.Tuning
                     string filename = Path.GetFileNameWithoutExtension(filePath);
                     int underscore = filename.LastIndexOf('_');
                     string fingerName = filename.Substring(0, underscore);
-                    
-                    Finger finger;
+
+                    TestDatabase.Finger finger;
                     if (database.Fingers.Count == 0 || database.Fingers[database.Fingers.Count - 1].Name != fingerName)
                     {
-                        finger = new Finger();
+                        finger = new TestDatabase.Finger();
                         database.Fingers.Add(finger);
                         finger.Name = fingerName;
                     }
                     else
                         finger = database.Fingers[database.Fingers.Count - 1];
 
-                    View view = new View();
+                    TestDatabase.View view = new TestDatabase.View();
                     finger.Views.Add(view);
                     view.Path = filePath;
                     view.FileName = filename;
@@ -127,7 +104,7 @@ namespace SourceAFIS.Tuning
 
         public void ClipViewsPerFinger(int max)
         {
-            foreach (Finger finger in AllFingers)
+            foreach (TestDatabase.Finger finger in AllFingers)
                 ClipList(finger.Views, max);
         }
 
@@ -159,13 +136,13 @@ namespace SourceAFIS.Tuning
             {
                 TestDatabase cloneDatabase = new TestDatabase();
                 cloneDatabase.Path = database.Path;
-                foreach (Finger finger in database.Fingers)
+                foreach (TestDatabase.Finger finger in database.Fingers)
                 {
-                    Finger cloneFinger = new Finger();
+                    TestDatabase.Finger cloneFinger = new TestDatabase.Finger();
                     cloneFinger.Name = finger.Name;
-                    foreach (View view in finger.Views)
+                    foreach (TestDatabase.View view in finger.Views)
                     {
-                        View cloneView = new View();
+                        TestDatabase.View cloneView = new TestDatabase.View();
                         cloneView.FileName = view.FileName;
                         cloneView.Path = view.Path;
                         if (view.Template != null)
