@@ -13,7 +13,7 @@ namespace SourceAFIS.Tuning.Reports
         public int MatchingPairCount;
         public int NonMatchingPairCount;
 
-        public void Collect(TestDatabase database)
+        public void Collect(DatabaseCollection database)
         {
             TotalDatabases = database.Databases.Count;
             TotalFingers = database.AllFingers.Count();

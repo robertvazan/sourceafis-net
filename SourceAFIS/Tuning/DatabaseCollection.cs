@@ -14,7 +14,7 @@ using SourceAFIS.Visualization;
 namespace SourceAFIS.Tuning
 {
     [Serializable]
-    public sealed class TestDatabase : ICloneable
+    public sealed class DatabaseCollection : ICloneable
     {
         public List<Database> Databases = new List<Database>();
 
@@ -146,15 +146,15 @@ namespace SourceAFIS.Tuning
             using (FileStream stream = File.OpenRead(path))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                TestDatabase loaded = (TestDatabase)formatter.Deserialize(stream);
+                DatabaseCollection loaded = (DatabaseCollection)formatter.Deserialize(stream);
                 Databases = loaded.Databases;
                 loaded.Databases = null;
             }
         }
 
-        public TestDatabase Clone()
+        public DatabaseCollection Clone()
         {
-            TestDatabase clone = new TestDatabase();
+            DatabaseCollection clone = new DatabaseCollection();
             foreach (Database database in Databases)
             {
                 Database cloneDatabase = new Database();

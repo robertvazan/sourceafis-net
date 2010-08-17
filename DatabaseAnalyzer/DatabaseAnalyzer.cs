@@ -12,7 +12,7 @@ namespace DatabaseAnalyzer
     sealed class DatabaseAnalyzer
     {
         Options Options = new Options();
-        TestDatabase TestDatabase = new TestDatabase();
+        DatabaseCollection TestDatabase = new DatabaseCollection();
         ExtractorBenchmark ExtractorBenchmark = new ExtractorBenchmark();
         MatcherBenchmark MatcherBenchmark = new MatcherBenchmark();
         Optimizer Optimizer = new Optimizer();
