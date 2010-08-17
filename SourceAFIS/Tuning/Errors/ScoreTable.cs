@@ -43,7 +43,7 @@ namespace SourceAFIS.Tuning.Errors
         {
             Table = new Entry[database.Fingers.Count][];
             for (int finger = 0; finger < database.Fingers.Count; ++finger)
-                Table[finger] = new Entry[database.Fingers[finger].Views.Count];
+                Table[finger] = new Entry[database.Views.Count];
         }
 
         public ScoreTable GetMultiFingerTable(MultiFingerPolicy policy)
@@ -54,17 +54,14 @@ namespace SourceAFIS.Tuning.Errors
                          select (from view in Enumerable.Range(0, Table[finger].Length)
                                  let combinedFingers = (from multi in Enumerable.Range(0, Math.Min(policy.ExpectedCount, Table.Length))
                                                         let finger2 = (finger + multi) % Table.Length
-                                                        where view < Table[finger2].Length
                                                         select finger2).Take(policy.ExpectedCount)
                                  let newMatching = (from pair in Enumerable.Range(0, Table[finger][view].Matching.Length)
                                                     select policy.Combine((from finger2 in combinedFingers
                                                                            let matching2 = Table[finger2][view].Matching
-                                                                           where pair < matching2.Length
                                                                            select matching2[pair]).ToArray())).ToArray()
                                  let newNonMatching = (from pair in Enumerable.Range(0, Table[finger][view].NonMatching.Length)
                                                        select policy.Combine((from finger2 in combinedFingers
                                                                               let nonmatching2 = Table[finger2][view].NonMatching
-                                                                              where pair < nonmatching2.Length
                                                                               select nonmatching2[pair]).ToArray())).ToArray()
                                  select new Entry { Matching = newMatching, NonMatching = newNonMatching }).ToArray()).ToArray()
             };

@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
+using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Visualization;
 
@@ -30,82 +31,48 @@ namespace SourceAFIS.Tuning
         }
 
         [XmlIgnore]
-        public IEnumerable<TestDatabase.View> AllViews
+        public IEnumerable<TestDatabase.Fingerprint> AllViews
         {
             get
             {
                 return from finger in AllFingers
-                       from view in finger.Views
+                       from view in finger.Fingerprints
                        select view;
             }
         }
 
         public void Scan(string path)
         {
-            List<string> files = new List<string>();
-            foreach (string extension in new string[] { "bmp", "png", "jpg", "jpeg", "tif" })
-                files.AddRange(Directory.GetFiles(path, "*_*." + extension));
+            List<string> files = (from extension in new string[] { "bmp", "png", "jpg", "jpeg", "tif" }
+                                  from filepath in Directory.GetFiles(path, "*_*." + extension)
+                                  orderby Path.GetFileNameWithoutExtension(filepath).ToLower()
+                                  select filepath).ToList();
 
             if (files.Count > 0)
-            {
-                files.Sort();
-                TestDatabase database = new TestDatabase();
-                Databases.Add(database);
-                database.Path = path;
+                Databases.Add(new TestDatabase(files));
 
-                foreach (string filePath in files)
-                {
-                    string filename = Path.GetFileNameWithoutExtension(filePath);
-                    int underscore = filename.LastIndexOf('_');
-                    string fingerName = filename.Substring(0, underscore);
-
-                    TestDatabase.Finger finger;
-                    if (database.Fingers.Count == 0 || database.Fingers[database.Fingers.Count - 1].Name != fingerName)
-                    {
-                        finger = new TestDatabase.Finger();
-                        database.Fingers.Add(finger);
-                        finger.Name = fingerName;
-                    }
-                    else
-                        finger = database.Fingers[database.Fingers.Count - 1];
-
-                    TestDatabase.View view = new TestDatabase.View();
-                    finger.Views.Add(view);
-                    view.Path = filePath;
-                    view.FileName = filename;
-                }
-            }
-
-            List<string> subfolders = new List<string>(Directory.GetDirectories(path));
-            if (subfolders.Count > 0)
-            {
-                subfolders.Sort();
-                foreach (string subfolder in subfolders)
-                    Scan(subfolder);
-            }
-        }
-
-        void ClipList<T>(List<T> list, int max)
-        {
-            if (list.Count > max)
-                list.RemoveRange(max, list.Count - max);
+            var subfolders = from subfolder in Directory.GetDirectories(path)
+                             orderby Path.GetFileNameWithoutExtension(subfolder).ToLower()
+                             select subfolder;
+            foreach (string subfolder in subfolders)
+                Scan(subfolder);
         }
 
         public void ClipDatabaseCount(int max)
         {
-            ClipList(Databases, max);
+            Databases.RemoveRange(max);
         }
 
         public void ClipFingersPerDatabase(int max)
         {
             foreach (TestDatabase database in Databases)
-                ClipList(database.Fingers, max);
+                database.ClipFingers(max);
         }
 
         public void ClipViewsPerFinger(int max)
         {
-            foreach (TestDatabase.Finger finger in AllFingers)
-                ClipList(finger.Views, max);
+            foreach (TestDatabase database in Databases)
+                database.ClipViews(max);
         }
 
         public void Save(string path)
@@ -131,46 +98,19 @@ namespace SourceAFIS.Tuning
 
         public DatabaseCollection Clone()
         {
-            DatabaseCollection clone = new DatabaseCollection();
-            foreach (TestDatabase database in Databases)
-            {
-                TestDatabase cloneDatabase = new TestDatabase();
-                cloneDatabase.Path = database.Path;
-                foreach (TestDatabase.Finger finger in database.Fingers)
-                {
-                    TestDatabase.Finger cloneFinger = new TestDatabase.Finger();
-                    cloneFinger.Name = finger.Name;
-                    foreach (TestDatabase.View view in finger.Views)
-                    {
-                        TestDatabase.View cloneView = new TestDatabase.View();
-                        cloneView.FileName = view.FileName;
-                        cloneView.Path = view.Path;
-                        if (view.Template != null)
-                            cloneView.Template = view.Template.Clone();
-                        cloneFinger.Views.Add(cloneView);
-                    }
-                    cloneDatabase.Fingers.Add(cloneFinger);
-                }
-                clone.Databases.Add(cloneDatabase);
-            }
-            return clone;
+            return new DatabaseCollection { Databases = this.Databases.CloneItems() };
         }
 
         object ICloneable.Clone() { return Clone(); }
 
         public int GetMatchingPairCount()
         {
-            return AllFingers.Sum(finger => finger.Views.Count * (finger.Views.Count - 1));
+            return Databases.Sum(db => db.Fingers.Count * db.Views.Count * (db.Views.Count - 1));
         }
 
         public int GetNonMatchingPairCount()
         {
-            return (from database in Databases
-                    from finger in database.Fingers
-                    from view in Enumerable.Range(0, finger.Views.Count)
-                    from pairFinger in database.Fingers
-                    where pairFinger != finger && view < pairFinger.Views.Count
-                    select 1).Count();
+            return Databases.Sum(db => db.Views.Count * db.Fingers.Count * (db.Fingers.Count - 1));
         }
     }
 }

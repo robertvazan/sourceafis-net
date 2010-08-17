@@ -35,19 +35,19 @@ namespace SourceAFIS.Tuning
                 for (int fingerIndex = 0; fingerIndex < database.Fingers.Count; ++fingerIndex)
                 {
                     TestDatabase.Finger finger = database.Fingers[fingerIndex];
-                    for (int viewIndex = 0; viewIndex < finger.Views.Count; ++viewIndex)
+                    for (int viewIndex = 0; viewIndex < finger.Fingerprints.Count; ++viewIndex)
                     {
-                        TestDatabase.View view = finger.Views[viewIndex];
+                        TestDatabase.Fingerprint view = finger.Fingerprints[viewIndex];
                         RunPrepare(view.Template, prepareTimer);
 
-                        var matching = (from view2 in finger.Views
+                        var matching = (from view2 in finger.Fingerprints
                                         where view2 != view
                                         select view2.Template).ToList();
                         report.ScoreTables[databaseIndex].Table[fingerIndex][viewIndex].Matching = RunMatch(matching, matchingTimer);
 
                         var nonmatching = (from finger2 in database.Fingers
                                            where finger2 != finger
-                                           select finger2.Views[viewIndex].Template).ToList();
+                                           select finger2.Fingerprints[viewIndex].Template).ToList();
                         report.ScoreTables[databaseIndex].Table[fingerIndex][viewIndex].NonMatching = RunMatch(nonmatching, nonmatchingTimer);
 
                         if (prepareTimer.Elapsed.TotalSeconds + matchingTimer.Elapsed.TotalSeconds +
