@@ -13,7 +13,7 @@ namespace SourceAFIS.Tuning
 {
     public sealed class MatcherBenchmark
     {
-        public TestDatabase TestDatabase = new TestDatabase();
+        public DatabaseCollection TestDatabase = new DatabaseCollection();
         public Matcher Matcher = new Matcher();
         public float Timeout = 300;
 
@@ -30,14 +30,14 @@ namespace SourceAFIS.Tuning
 
             for (int databaseIndex = 0; databaseIndex < TestDatabase.Databases.Count; ++databaseIndex)
             {
-                TestDatabase.Database database = TestDatabase.Databases[databaseIndex];
+                DatabaseCollection.Database database = TestDatabase.Databases[databaseIndex];
                 report.ScoreTables[databaseIndex].Initialize(database);
                 for (int fingerIndex = 0; fingerIndex < database.Fingers.Count; ++fingerIndex)
                 {
-                    TestDatabase.Finger finger = database.Fingers[fingerIndex];
+                    DatabaseCollection.Finger finger = database.Fingers[fingerIndex];
                     for (int viewIndex = 0; viewIndex < finger.Views.Count; ++viewIndex)
                     {
-                        TestDatabase.View view = finger.Views[viewIndex];
+                        DatabaseCollection.View view = finger.Views[viewIndex];
                         RunPrepare(view.Template, prepareTimer);
 
                         var matching = (from view2 in finger.Views

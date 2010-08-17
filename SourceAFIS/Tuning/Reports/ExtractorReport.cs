@@ -14,7 +14,7 @@ namespace SourceAFIS.Tuning.Reports
         public float TemplateSize;
 
         [XmlIgnore]
-        public TestDatabase Templates;
+        public DatabaseCollection Templates;
 
         public void Save(string folder)
         {
@@ -28,7 +28,7 @@ namespace SourceAFIS.Tuning.Reports
 
             using (FileStream stream = File.Open(Path.Combine(folder, "Templates.xml"), FileMode.Create))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(TestDatabase));
+                XmlSerializer serializer = new XmlSerializer(typeof(DatabaseCollection));
                 serializer.Serialize(stream, Templates);
             }
 

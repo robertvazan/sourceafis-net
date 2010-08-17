@@ -9,7 +9,7 @@ namespace DatabaseAnalyzer
 {
     sealed class Options
     {
-        public TestDatabase TestDatabase;
+        public DatabaseCollection TestDatabase;
         public ExtractorBenchmark ExtractorBenchmark;
         public Optimizer Optimizer;
 

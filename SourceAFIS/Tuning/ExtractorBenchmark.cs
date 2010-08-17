@@ -11,7 +11,7 @@ namespace SourceAFIS.Tuning
 {
     public sealed class ExtractorBenchmark
     {
-        public TestDatabase Database = new TestDatabase();
+        public DatabaseCollection Database = new DatabaseCollection();
         public Extractor Extractor = new Extractor();
         public float Timeout = 300;
 
@@ -26,7 +26,7 @@ namespace SourceAFIS.Tuning
             Stopwatch timer = new Stopwatch();
             timer.Start();
 
-            foreach (TestDatabase.View view in report.Templates.AllViews)
+            foreach (DatabaseCollection.View view in report.Templates.AllViews)
             {
                 ColorB[,] image = ImageIO.Load(view.Path);
                 byte[,] grayscale = PixelFormat.ToByte(image);
