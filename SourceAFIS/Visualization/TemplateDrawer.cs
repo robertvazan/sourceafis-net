@@ -7,7 +7,7 @@ using SourceAFIS.Extraction.Templates;
 
 namespace SourceAFIS.Visualization
 {
-    public sealed class TemplateDrawer
+    public static class TemplateDrawer
     {
         const int LineLength = 20;
         const int PenBalast = 1;

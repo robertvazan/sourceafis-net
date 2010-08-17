@@ -6,7 +6,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Visualization
 {
-    public sealed class BlockFiller
+    public static class BlockFiller
     {
         public static T[,] FillBlocks<T>(T[,] input, BlockMap blocks) where T : struct
         {

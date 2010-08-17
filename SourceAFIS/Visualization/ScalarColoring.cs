@@ -5,7 +5,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Visualization
 {
-    public sealed class ScalarColoring
+    public static class ScalarColoring
     {
         public static ColorF Interpolate(float gray, ColorF from, ColorF to)
         {

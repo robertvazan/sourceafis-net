@@ -7,7 +7,7 @@ using SourceAFIS.Extraction;
 
 namespace SourceAFIS.Visualization
 {
-    public sealed class OrientationMarkers
+    public static class OrientationMarkers
     {
         public static BinaryMap Draw(byte[,] orientation, BlockMap blocks, BinaryMap mask)
         {

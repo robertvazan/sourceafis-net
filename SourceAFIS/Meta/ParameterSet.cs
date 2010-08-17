@@ -103,7 +103,7 @@ namespace SourceAFIS.Meta
         {
             ParameterSet result = new ParameterSet();
             foreach (ParameterValue parameter in ByPath.Values)
-                if (Calc.BeginsWith(parameter.FieldPath, beginsWith))
+                if (parameter.FieldPath.BeginsWith(beginsWith))
                     result.Add(parameter.Clone());
             return result;
         }

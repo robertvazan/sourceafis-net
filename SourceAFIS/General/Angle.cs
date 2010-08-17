@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace SourceAFIS.General
 {
-    public sealed class Angle
+    public static class Angle
     {
         public const float PI = (float)Math.PI;
         public const float PI2 = (float)(2 * Math.PI);

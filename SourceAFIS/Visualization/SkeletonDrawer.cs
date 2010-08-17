@@ -7,7 +7,7 @@ using SourceAFIS.Extraction.Model;
 
 namespace SourceAFIS.Visualization
 {
-    public sealed class SkeletonDrawer
+    public static class SkeletonDrawer
     {
         static Point[] Circle = CircleDrawer.Draw(5);
 

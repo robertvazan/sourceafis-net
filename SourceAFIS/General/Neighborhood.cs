@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace SourceAFIS.General
 {
-    public sealed class Neighborhood
+    public static class Neighborhood
     {
         public static readonly Point[] EdgeNeighbors = new Point[] {
             new Point(0, -1),

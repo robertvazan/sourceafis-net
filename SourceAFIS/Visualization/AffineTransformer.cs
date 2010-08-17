@@ -6,7 +6,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Visualization
 {
-    public sealed class AffineTransformer
+    public static class AffineTransformer
     {
         public static ColorF[,] Transform(ColorF[,] input, Size outputSize, Transformation2D transformation)
         {
