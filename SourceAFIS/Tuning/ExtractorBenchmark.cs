@@ -26,7 +26,7 @@ namespace SourceAFIS.Tuning
             Stopwatch timer = new Stopwatch();
             timer.Start();
 
-            foreach (DatabaseCollection.View view in report.Templates.AllViews)
+            foreach (TestDatabase.View view in report.Templates.AllViews)
             {
                 ColorB[,] image = ImageIO.Load(view.Path);
                 byte[,] grayscale = PixelFormat.ToByte(image);

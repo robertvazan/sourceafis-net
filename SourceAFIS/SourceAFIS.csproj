@@ -160,6 +160,7 @@
     <Compile Include="Tuning\Reports\TestReport.cs" />
     <Compile Include="Tuning\Reports\TopErrors.cs" />
     <Compile Include="Tuning\DatabaseCollection.cs" />
+    <Compile Include="Tuning\TestDatabase.cs" />
     <Compile Include="Visualization\AffineTransformer.cs" />
     <Compile Include="Visualization\AlphaLayering.cs" />
     <Compile Include="Visualization\BlockFiller.cs" />
