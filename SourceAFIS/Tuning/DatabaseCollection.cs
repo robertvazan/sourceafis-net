@@ -16,10 +16,10 @@ namespace SourceAFIS.Tuning
     [Serializable]
     public sealed class DatabaseCollection : ICloneable
     {
-        public List<Database> Databases = new List<Database>();
+        public List<TestDatabase> Databases = new List<TestDatabase>();
 
         [Serializable]
-        public sealed class Database
+        public sealed class TestDatabase
         {
             public string Path;
             public List<Finger> Fingers = new List<Finger>();
@@ -72,7 +72,7 @@ namespace SourceAFIS.Tuning
             if (files.Count > 0)
             {
                 files.Sort();
-                Database database = new Database();
+                TestDatabase database = new TestDatabase();
                 Databases.Add(database);
                 database.Path = path;
 
@@ -121,7 +121,7 @@ namespace SourceAFIS.Tuning
 
         public void ClipFingersPerDatabase(int max)
         {
-            foreach (Database database in Databases)
+            foreach (TestDatabase database in Databases)
                 ClipList(database.Fingers, max);
         }
 
@@ -155,9 +155,9 @@ namespace SourceAFIS.Tuning
         public DatabaseCollection Clone()
         {
             DatabaseCollection clone = new DatabaseCollection();
-            foreach (Database database in Databases)
+            foreach (TestDatabase database in Databases)
             {
-                Database cloneDatabase = new Database();
+                TestDatabase cloneDatabase = new TestDatabase();
                 cloneDatabase.Path = database.Path;
                 foreach (Finger finger in database.Fingers)
                 {

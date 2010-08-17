@@ -30,7 +30,7 @@ namespace SourceAFIS.Tuning
 
             for (int databaseIndex = 0; databaseIndex < TestDatabase.Databases.Count; ++databaseIndex)
             {
-                DatabaseCollection.Database database = TestDatabase.Databases[databaseIndex];
+                DatabaseCollection.TestDatabase database = TestDatabase.Databases[databaseIndex];
                 report.ScoreTables[databaseIndex].Initialize(database);
                 for (int fingerIndex = 0; fingerIndex < database.Fingers.Count; ++fingerIndex)
                 {
