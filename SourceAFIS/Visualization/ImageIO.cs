@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace SourceAFIS.Visualization
 {
-    public sealed class ImageIO
+    public static class ImageIO
     {
         public static ColorB[,] GetPixels(Bitmap bmp)
         {

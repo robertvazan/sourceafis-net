@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Reflection;
+using System.Linq;
 
 namespace SourceAFIS.General
 {
-    public sealed class Calc
+    public static class Calc
     {
         public static int DivRoundUp(int input, int divider)
         {
@@ -151,29 +152,6 @@ namespace SourceAFIS.General
             second = tmp;
         }
 
-        public static void Swap<T>(IList<T> list, int first, int second)
-        {
-            T tmp = list[first];
-            list[first] = list[second];
-            list[second] = tmp;
-        }
-
-        public static void Shuffle<T>(IList<T> collection, Random random)
-        {
-            for (int i = 0; i < collection.Count - 1; ++i)
-            {
-                int j = random.Next(collection.Count - i) + i;
-                T tmp = collection[i];
-                collection[i] = collection[j];
-                collection[j] = tmp;
-            }
-        }
-
-        public static void Shuffle<T>(IList<T> collection)
-        {
-            Shuffle(collection, new Random(0));
-        }
-
         public static int Compare(int left, int right)
         {
             if (left < right)
@@ -203,26 +181,6 @@ namespace SourceAFIS.General
         public static int CompareYX(Point left, Point right)
         {
             return ChainCompare(Compare(left.Y, right.Y), Compare(left.X, right.X));
-        }
-
-        class ComparisonComparer<T> : IComparer<T>
-        {
-            readonly Comparison<T> Comparison;
-
-            public ComparisonComparer(Comparison<T> comparison)
-            {
-                Comparison = comparison;
-            }
-
-            public int Compare(T x, T y)
-            {
-                return Comparison(x, y);
-            }
-        }
-
-        public static IComparer<T> GetComparisonComparer<T>(Comparison<T> comparison)
-        {
-            return new ComparisonComparer<T>(comparison);
         }
 
         public static Point[] ConstructLine(Point from, Point to)
@@ -264,7 +222,7 @@ namespace SourceAFIS.General
             return result;
         }
 
-        public static object DeepClone(object root)
+        public static object DeepClone(this object root)
         {
             object clone = root.GetType().GetConstructor(new Type[0]).Invoke(new object[0]);
             foreach (FieldInfo fieldInfo in root.GetType().GetFields())
@@ -272,25 +230,31 @@ namespace SourceAFIS.General
                 if (!fieldInfo.FieldType.IsClass)
                     fieldInfo.SetValue(clone, fieldInfo.GetValue(root));
                 else
-                    fieldInfo.SetValue(clone, DeepClone(fieldInfo.GetValue(root)));
+                    fieldInfo.SetValue(clone, fieldInfo.GetValue(root).DeepClone());
             }
             return clone;
         }
 
-        public static void DeepCopy(object source, object target)
+        public static void DeepCopyTo(this object source, object target)
         {
             foreach (FieldInfo fieldInfo in source.GetType().GetFields())
             {
                 if (!fieldInfo.FieldType.IsClass)
                     fieldInfo.SetValue(target, fieldInfo.GetValue(source));
                 else
-                    DeepCopy(fieldInfo.GetValue(source), fieldInfo.GetValue(target));
+                    fieldInfo.GetValue(source).DeepCopyTo(fieldInfo.GetValue(target));
             }
         }
 
-        public static bool BeginsWith(string outer, string inner)
+        public static bool BeginsWith(this string outer, string inner)
         {
             return outer.Length >= inner.Length && outer.Substring(0, inner.Length) == inner;
+        }
+
+        public static float Median(this IEnumerable<float> sequence)
+        {
+            List<float> sorted = sequence.OrderBy(item => item).ToList();
+            return sorted[(sorted.Count - 1) / 2];
         }
     }
 }

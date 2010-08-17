@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SourceAFIS.Visualization
 {
-    public sealed class ImageDiff
+    public static class ImageDiff
     {
         public static float[,] Diff(float[,] initial, float[,] updated)
         {

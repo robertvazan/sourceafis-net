@@ -23,10 +23,10 @@ namespace FingerprintAnalyzer
         {
             OnChange = delegate() { };
 
-            Defaults = (Options)Calc.DeepClone(options);
+            Defaults = (Options)options.DeepClone();
             PersistentStore.Load(options);
             Options = options;
-            LastCommit = (Options)Calc.DeepClone(options);
+            LastCommit = (Options)options.DeepClone();
 
             SuspendLayout();
             
@@ -56,13 +56,13 @@ namespace FingerprintAnalyzer
 
         void DoOk()
         {
-            Calc.DeepCopy(Options, LastCommit);
+            Options.DeepCopyTo(LastCommit);
             Hide();
         }
 
         void DoCancel()
         {
-            Calc.DeepCopy(LastCommit, Options);
+            LastCommit.DeepCopyTo(Options);
             RefreshData();
             Hide();
             OnChange();
@@ -70,7 +70,7 @@ namespace FingerprintAnalyzer
 
         void DoDefaults()
         {
-            Calc.DeepCopy(Defaults, Options);
+            Defaults.DeepCopyTo(Options);
             RefreshData();
             OnChange();
         }

@@ -5,7 +5,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Visualization
 {
-    public sealed class AlphaLayering
+    public static class AlphaLayering
     {
         public static void Layer(ColorF[,] bottom, ColorF[,] top)
         {

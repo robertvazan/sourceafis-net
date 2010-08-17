@@ -5,7 +5,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Visualization
 {
-    public sealed class GlobalContrast
+    public static class GlobalContrast
     {
         public static float[,] GetNormalized(float[,] image)
         {

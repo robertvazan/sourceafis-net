@@ -6,7 +6,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Visualization
 {
-    public sealed class CircleDrawer
+    public static class CircleDrawer
     {
         public static Point[] Draw(int radius)
         {

@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace SourceAFIS.General
 {
-    public sealed class Threader
+    public static class Threader
     {
         public abstract class Ticket
         {

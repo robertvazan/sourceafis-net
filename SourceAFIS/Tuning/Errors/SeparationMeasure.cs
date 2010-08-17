@@ -40,9 +40,9 @@ namespace SourceAFIS.Tuning.Errors
             public override float Measure(ScoreTable table)
             {
                 float distance = GetMedianDistance(table);
-                float matchingMedian = GetMatchingMedian(table);
+                float matchingMedian = table.Matching.Median();
                 float matching = table.Matching.Average(score => score < matchingMedian ? Calc.Sq(score - matchingMedian) : 0);
-                float nonmatchingMedian = GetNonMatchingMedian(table);
+                float nonmatchingMedian = table.NonMatching.Median();
                 float nonmatching = table.NonMatching.Average(
                     score => score > nonmatchingMedian ? Calc.Sq(score - nonmatchingMedian) : 0);
                 return (distance - (float)Math.Sqrt(matching) - (float)Math.Sqrt(nonmatching)) / distance;
@@ -56,9 +56,9 @@ namespace SourceAFIS.Tuning.Errors
             public override float Measure(ScoreTable table)
             {
                 float distance = GetMedianDistance(table);
-                float matchingMedian = GetMatchingMedian(table);
+                float matchingMedian = table.Matching.Median();
                 float matching = table.Matching.Average(score => score < matchingMedian ? matchingMedian - score : 0);
-                float nonmatchingMedian = GetNonMatchingMedian(table);
+                float nonmatchingMedian = table.NonMatching.Median();
                 float nonmatching = table.NonMatching.Average(score => score > nonmatchingMedian ? score - nonmatchingMedian : 0);
                 return (distance - matching - nonmatching) / distance;
             }
@@ -68,21 +68,7 @@ namespace SourceAFIS.Tuning.Errors
 
         protected float GetMedianDistance(ScoreTable table)
         {
-            return GetMatchingMedian(table) - GetNonMatchingMedian(table);
-        }
-
-        protected float GetMatchingMedian(ScoreTable table)
-        {
-            List<float> all = new List<float>(table.Matching);
-            all.Sort();
-            return all[all.Count / 2];
-        }
-
-        protected float GetNonMatchingMedian(ScoreTable table)
-        {
-            List<float> all = new List<float>(table.NonMatching);
-            all.Sort();
-            return all[all.Count / 2];
+            return table.Matching.Median() - table.NonMatching.Median();
         }
 
         protected float GetAveragesDistance(ScoreTable table)

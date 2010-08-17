@@ -8,7 +8,7 @@ using SourceAFIS.Extraction.Templates;
 
 namespace SourceAFIS.Visualization
 {
-    public sealed class PairingMarkers
+    public static class PairingMarkers
     {
         static Point[] Circle = CircleDrawer.Draw(5);
 

@@ -60,7 +60,7 @@ namespace SourceAFIS.Tuning.Optimization
             foreach (MutationAdvice advice in advices)
             {
                 ParameterValue parameter = advice.Mutated.GetDifference(advice.Initial);
-                if (Calc.BeginsWith(parameter.FieldPath, "Extractor."))
+                if (parameter.FieldPath.BeginsWith("Extractor."))
                     advice.Confidence *= ExtractorWeight;
             }
         }
