@@ -235,6 +235,28 @@ namespace SourceAFIS.General
             return clone;
         }
 
+        public static object ShallowClone(this object root)
+        {
+            object clone = root.GetType().GetConstructor(new Type[0]).Invoke(new object[0]);
+            foreach (FieldInfo fieldInfo in root.GetType().GetFields())
+                fieldInfo.SetValue(clone, fieldInfo.GetValue(root));
+            return clone;
+        }
+
+        public static IEnumerable<T> CloneItems<T>(this IEnumerable<T> sequence)
+            where T : ICloneable
+        {
+            return from item in sequence
+                   select (T)item.Clone();
+        }
+
+        public static List<T> CloneItems<T>(this List<T> sequence)
+            where T : ICloneable
+        {
+            return (from item in sequence
+                    select (T)item.Clone()).ToList();
+        }
+
         public static void DeepCopyTo(this object source, object target)
         {
             foreach (FieldInfo fieldInfo in source.GetType().GetFields())
@@ -255,6 +277,12 @@ namespace SourceAFIS.General
         {
             List<float> sorted = sequence.OrderBy(item => item).ToList();
             return sorted[(sorted.Count - 1) / 2];
+        }
+
+        public static void RemoveRange<T>(this List<T> list, int start)
+        {
+            if (start < list.Count)
+                list.RemoveRange(start, list.Count - start);
         }
     }
 }

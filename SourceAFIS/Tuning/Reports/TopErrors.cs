@@ -49,13 +49,7 @@ namespace SourceAFIS.Tuning.Reports
                         item.Probe.Finger = finger;
                         item.Probe.View = view;
                         item.Candidate = item.Probe;
-                        for (int i = 0; i <= pair; ++i)
-                        {
-                            do
-                            {
-                                item.Candidate.Finger = (item.Candidate.Finger + 1) % table.Table.Length;
-                            } while (view >= table.Table[item.Candidate.Finger].Length);
-                        }
+                        item.Candidate.Finger = (item.Candidate.Finger + pair + 1) % table.Table.Length;
                         item.Score = table.Table[finger][view].NonMatching[pair];
                         top.Add(-table.Table[finger][view].NonMatching[pair], item);
                     }
