@@ -43,7 +43,7 @@ namespace SourceAFIS.Tuning.Errors
         {
             Table = new Entry[database.Fingers.Count][];
             for (int finger = 0; finger < database.Fingers.Count; ++finger)
-                Table[finger] = new Entry[database.Views.Count];
+                Table[finger] = new Entry[database.ViewCount];
         }
 
         public ScoreTable GetMultiFingerTable(MultiFingerPolicy policy)
