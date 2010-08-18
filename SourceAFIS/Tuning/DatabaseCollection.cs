@@ -31,12 +31,12 @@ namespace SourceAFIS.Tuning
         }
 
         [XmlIgnore]
-        public IEnumerable<TestDatabase.Fingerprint> AllViews
+        public IEnumerable<TestDatabase.View> AllViews
         {
             get
             {
                 return from finger in AllFingers
-                       from view in finger.Fingerprints
+                       from view in finger.Views
                        select view;
             }
         }
@@ -105,12 +105,12 @@ namespace SourceAFIS.Tuning
 
         public int GetMatchingPairCount()
         {
-            return Databases.Sum(db => db.Fingers.Count * db.Views.Count * (db.Views.Count - 1));
+            return Databases.Sum(db => db.Fingers.Count * db.ViewCount * (db.ViewCount - 1));
         }
 
         public int GetNonMatchingPairCount()
         {
-            return Databases.Sum(db => db.Views.Count * db.Fingers.Count * (db.Fingers.Count - 1));
+            return Databases.Sum(db => db.ViewCount * db.Fingers.Count * (db.Fingers.Count - 1));
         }
     }
 }

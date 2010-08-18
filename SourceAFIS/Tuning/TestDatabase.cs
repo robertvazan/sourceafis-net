@@ -14,7 +14,7 @@ namespace SourceAFIS.Tuning
     {
         public string DatabasePath;
         public List<Finger> Fingers;
-        public List<View> Views;
+        public int ViewCount { get { return Fingers[0].Views.Count; } }
 
         public TestDatabase(List<string> files)
         {
@@ -30,23 +30,14 @@ namespace SourceAFIS.Tuning
 
             Fingers = (from file in details
                        group file by file.FingerName into finger
-                       let fingerprints = (from file in finger
-                                           select new Fingerprint(file.FilePath))
-                       select new Finger(finger.Key, fingerprints)).ToList();
+                       let views = (from file in finger
+                                    select new View(file.FilePath))
+                       select new Finger(finger.Key, views)).ToList();
 
             int minViews = (from finger in Fingers
-                            select finger.Fingerprints.Count).Min();
+                            select finger.Views.Count).Min();
 
-            InitViews(minViews);
             ClipViews(minViews);
-        }
-
-        void InitViews(int count)
-        {
-            Views = (from index in Enumerable.Range(0, count)
-                     let fingerprints = (from finger in Fingers
-                                         select finger.Fingerprints[index])
-                     select new View(index, fingerprints)).ToList();
         }
 
         TestDatabase() { }
@@ -58,63 +49,46 @@ namespace SourceAFIS.Tuning
                 DatabasePath = this.DatabasePath,
                 Fingers = this.Fingers.CloneItems()
             };
-            clone.InitViews(Views.Count);
             return clone;
         }
 
         public void ClipFingers(int limit)
         {
             Fingers.RemoveRange(limit);
-            foreach (View view in Views)
-                view.Fingerprints.RemoveRange(limit);
         }
 
         public void ClipViews(int limit)
         {
-            Views.RemoveRange(limit);
             foreach (Finger finger in Fingers)
-                finger.Fingerprints.RemoveRange(limit);
+                finger.Views.RemoveRange(limit);
         }
 
         [Serializable]
         public sealed class Finger : ICloneable
         {
             public string Name;
-            public List<Fingerprint> Fingerprints;
+            public List<View> Views;
 
-            public Finger(string name, IEnumerable<Fingerprint> fingerprints)
+            public Finger(string name, IEnumerable<View> views)
             {
                 Name = name;
-                Fingerprints = fingerprints.ToList();
+                Views = views.ToList();
             }
 
             private Finger() { }
 
-            public object Clone() { return new Finger { Name = this.Name, Fingerprints = this.Fingerprints.CloneItems() }; }
+            public object Clone() { return new Finger { Name = this.Name, Views = this.Views.CloneItems() }; }
         }
 
         [Serializable]
-        public sealed class View
-        {
-            public readonly int Index;
-            public List<Fingerprint> Fingerprints;
-
-            public View(int index, IEnumerable<Fingerprint> fingerprints)
-            {
-                Index = index;
-                Fingerprints = fingerprints.ToList();
-            }
-        }
-
-        [Serializable]
-        public sealed class Fingerprint : ICloneable
+        public sealed class View : ICloneable
         {
             public string FilePath;
             public string FileName;
             [XmlIgnore]
             public Template Template;
 
-            public Fingerprint(string path)
+            public View(string path)
             {
                 FilePath = path;
                 FileName = Path.GetFileNameWithoutExtension(path);
