@@ -31,35 +31,22 @@ namespace SourceAFIS.Tuning
             for (int databaseIndex = 0; databaseIndex < TestDatabase.Databases.Count; ++databaseIndex)
             {
                 TestDatabase database = TestDatabase.Databases[databaseIndex];
-                report.ScoreTables[databaseIndex].Initialize(database);
-                for (int fingerIndex = 0; fingerIndex < database.Fingers.Count; ++fingerIndex)
+                report.ScoreTables[databaseIndex].Initialize(database.Fingers.Count, database.ViewCount);
+                foreach (DatabaseIndex probe in database.AllIndexes)
                 {
-                    TestDatabase.Finger finger = database.Fingers[fingerIndex];
-                    for (int viewIndex = 0; viewIndex < finger.Views.Count; ++viewIndex)
+                    RunPrepare(database[probe].Template, prepareTimer);
+                    CollectMatches(database, database.GetMatchingPairs(probe), report.ScoreTables[databaseIndex], matchingTimer);
+                    CollectMatches(database, database.GetNonMatchingPairs(probe), report.ScoreTables[databaseIndex], nonmatchingTimer);
+
+                    if (prepareTimer.Elapsed.TotalSeconds + matchingTimer.Elapsed.TotalSeconds +
+                        nonmatchingTimer.Elapsed.TotalSeconds > Timeout)
                     {
-                        TestDatabase.View view = finger.Views[viewIndex];
-                        RunPrepare(view.Template, prepareTimer);
-
-                        var matching = (from view2 in finger.Views
-                                        where view2 != view
-                                        select view2.Template).ToList();
-                        report.ScoreTables[databaseIndex].Table[fingerIndex][viewIndex].Matching = RunMatch(matching, matchingTimer);
-
-                        var nonmatching = (from finger2 in database.Fingers
-                                           where finger2 != finger
-                                           select finger2.Views[viewIndex].Template).ToList();
-                        report.ScoreTables[databaseIndex].Table[fingerIndex][viewIndex].NonMatching = RunMatch(nonmatching, nonmatchingTimer);
-
-                        if (prepareTimer.Elapsed.TotalSeconds + matchingTimer.Elapsed.TotalSeconds +
-                            nonmatchingTimer.Elapsed.TotalSeconds > Timeout)
-                        {
-                            throw new TimeoutException("Timeout in matcher");
-                        }
+                        throw new TimeoutException("Timeout in matcher");
                     }
                 }
             }
 
-            report.Time.Prepare = (float)prepareTimer.Elapsed.TotalSeconds / TestDatabase.AllViews.Count();
+            report.Time.Prepare = (float)prepareTimer.Elapsed.TotalSeconds / TestDatabase.FpCount;
             report.Time.Matching = (float)matchingTimer.Elapsed.TotalSeconds / TestDatabase.GetMatchingPairCount();
             report.Time.NonMatching = (float)nonmatchingTimer.Elapsed.TotalSeconds / TestDatabase.GetNonMatchingPairCount();
 
@@ -73,6 +60,16 @@ namespace SourceAFIS.Tuning
             timer.Start();
             Matcher.Prepare(template);
             timer.Stop();
+        }
+
+        void CollectMatches(TestDatabase database, IEnumerable<TestPair> pairSource, ScoreTable table, Stopwatch timer)
+        {
+            var pairs = pairSource.ToList();
+            var templates = from pair in pairs
+                            select database[pair.Candidate].Template;
+            var scores = RunMatch(templates.ToList(), timer);
+            foreach (int i in Enumerable.Range(0, scores.Length))
+                table[pairs[i]] = scores[i];
         }
 
         float[] RunMatch(List<Template> templates, Stopwatch timer)

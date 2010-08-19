@@ -16,8 +16,8 @@ namespace SourceAFIS.Tuning.Reports
         public void Collect(DatabaseCollection database)
         {
             TotalDatabases = database.Databases.Count;
-            TotalFingers = database.AllFingers.Count();
-            TotalViews = database.AllViews.Count();
+            TotalFingers = database.FingerCount;
+            TotalViews = database.FpCount;
             MatchingPairCount = database.GetMatchingPairCount();
             NonMatchingPairCount = database.GetNonMatchingPairCount();
         }

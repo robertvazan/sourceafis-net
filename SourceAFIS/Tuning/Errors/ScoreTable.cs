@@ -6,32 +6,21 @@ using System.Linq;
 
 namespace SourceAFIS.Tuning.Errors
 {
-    public sealed class ScoreTable
+    public sealed class ScoreTable : DatabaseLayout
     {
-        public struct Entry
+        struct Entry
         {
             public float[] Matching;
             public float[] NonMatching;
         }
 
-        public struct Index
-        {
-            [XmlAttribute]
-            public int Finger;
-            [XmlAttribute]
-            public int View;
+        public override int FingerCount { get { return Table.Length; } }
+        public override int ViewCount { get { return Table[0].Length; } }
 
-            public Index(int finger, int view)
-            {
-                Finger = finger;
-                View = view;
-            }
-        }
-
-        public Entry[][] Table;
+        Entry[][] Table;
 
         [XmlIgnore]
-        public IEnumerable<Entry> Entries { get { return from row in Table from entry in row select entry; } }
+        IEnumerable<Entry> Entries { get { return from finger in Table from entry in finger select entry; } }
 
         [XmlIgnore]
         public IEnumerable<float> Matching { get { return from entry in Entries from score in entry.Matching select score; } }
@@ -39,32 +28,52 @@ namespace SourceAFIS.Tuning.Errors
         [XmlIgnore]
         public IEnumerable<float> NonMatching { get { return from entry in Entries from score in entry.NonMatching select score; } }
 
-        public void Initialize(TestDatabase database)
+        [XmlIgnore]
+        public float this[TestPair pair]
         {
-            Table = new Entry[database.Fingers.Count][];
-            for (int finger = 0; finger < database.Fingers.Count; ++finger)
-                Table[finger] = new Entry[database.ViewCount];
+            get
+            {
+                Entry entry = Table[pair.Probe.Finger][pair.Probe.View];
+                if (pair.IsMatching)
+                    return entry.Matching[(ViewCount + pair.Candidate.View - pair.Probe.View - 1) % ViewCount];
+                else
+                    return entry.NonMatching[(FingerCount + pair.Candidate.Finger - pair.Probe.Finger - 1) % FingerCount];
+            }
+            set
+            {
+                Entry entry = Table[pair.Probe.Finger][pair.Probe.View];
+                if (pair.IsMatching)
+                    entry.Matching[(ViewCount + pair.Candidate.View - pair.Probe.View - 1) % ViewCount] = value;
+                else
+                    entry.NonMatching[(FingerCount + pair.Candidate.Finger - pair.Probe.Finger - 1) % FingerCount] = value;
+            }
+        }
+
+        public void Initialize(int fingers, int views)
+        {
+            Table = (from finger in Enumerable.Range(0, fingers)
+                     select (from view in Enumerable.Range(0, views)
+                             select new Entry
+                             {
+                                 Matching = new float[views - 1],
+                                 NonMatching = new float[fingers - 1]
+                             }).ToArray()).ToArray();
         }
 
         public ScoreTable GetMultiFingerTable(MultiFingerPolicy policy)
         {
-            return new ScoreTable
+            ScoreTable combined = new ScoreTable();
+            combined.Initialize(FingerCount, ViewCount);
+            foreach (TestPair pair in AllPairs)
             {
-                Table = (from finger in Enumerable.Range(0, Table.Length)
-                         select (from view in Enumerable.Range(0, Table[finger].Length)
-                                 let combinedFingers = (from multi in Enumerable.Range(0, Math.Min(policy.ExpectedCount, Table.Length))
-                                                        let finger2 = (finger + multi) % Table.Length
-                                                        select finger2).Take(policy.ExpectedCount)
-                                 let newMatching = (from pair in Enumerable.Range(0, Table[finger][view].Matching.Length)
-                                                    select policy.Combine((from finger2 in combinedFingers
-                                                                           let matching2 = Table[finger2][view].Matching
-                                                                           select matching2[pair]).ToArray())).ToArray()
-                                 let newNonMatching = (from pair in Enumerable.Range(0, Table[finger][view].NonMatching.Length)
-                                                       select policy.Combine((from finger2 in combinedFingers
-                                                                              let nonmatching2 = Table[finger2][view].NonMatching
-                                                                              select nonmatching2[pair]).ToArray())).ToArray()
-                                 select new Entry { Matching = newMatching, NonMatching = newNonMatching }).ToArray()).ToArray()
-            };
+                var probeSequence = GetConsequentFingers(pair.Probe).Take(policy.ExpectedCount).ToList();
+                var candidateSequence = GetConsequentFingers(pair.Candidate).Take(policy.ExpectedCount).ToList();
+                var scores = from offset in Enumerable.Range(0, probeSequence.Count)
+                             let combinedPair = new TestPair(probeSequence[offset], candidateSequence[offset])
+                             select this[combinedPair];
+                combined[pair] = policy.Combine(scores.ToArray());
+            }
+            return combined;
         }
     }
 }

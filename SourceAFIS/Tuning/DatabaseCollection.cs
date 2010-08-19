@@ -20,26 +20,10 @@ namespace SourceAFIS.Tuning
         public List<TestDatabase> Databases = new List<TestDatabase>();
 
         [XmlIgnore]
-        public IEnumerable<TestDatabase.Finger> AllFingers
-        {
-            get
-            {
-                return from database in Databases
-                       from finger in database.Fingers
-                       select finger;
-            }
-        }
+        public int FingerCount { get { return Databases.Sum(db => db.FingerCount); } }
 
         [XmlIgnore]
-        public IEnumerable<TestDatabase.View> AllViews
-        {
-            get
-            {
-                return from finger in AllFingers
-                       from view in finger.Views
-                       select view;
-            }
-        }
+        public int FpCount { get { return Databases.Sum(db => db.FpCount); } }
 
         public void Scan(string path)
         {
