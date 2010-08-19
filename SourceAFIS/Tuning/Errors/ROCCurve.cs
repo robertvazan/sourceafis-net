@@ -52,11 +52,9 @@ namespace SourceAFIS.Tuning.Errors
 
         Dictionary<float, Counts> AggregateByScore(ScoreTable table)
         {
-            var matching = from entry in table.Entries
-                           from score in entry.Matching
+            var matching = from score in table.Matching
                            select new { Score = score, Match = true };
-            var nonmatching = from entry in table.Entries
-                              from score in entry.NonMatching
+            var nonmatching = from score in table.NonMatching
                               select new { Score = score, Match = false };
             var counted = from duplicate in matching.Concat(nonmatching)
                           group duplicate by duplicate.Score into grouped

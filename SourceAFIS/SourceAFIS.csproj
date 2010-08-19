@@ -130,6 +130,8 @@
     <Compile Include="Simple\Finger.cs" />
     <Compile Include="Simple\Fingerprint.cs" />
     <Compile Include="Simple\Person.cs" />
+    <Compile Include="Tuning\DatabaseIndex.cs" />
+    <Compile Include="Tuning\DatabaseLayout.cs" />
     <Compile Include="Tuning\Errors\AccuracyMeasure.cs" />
     <Compile Include="Tuning\Errors\AccuracyStatistics.cs" />
     <Compile Include="Tuning\Errors\ErrorPolicy.cs" />
@@ -161,6 +163,7 @@
     <Compile Include="Tuning\Reports\TopErrors.cs" />
     <Compile Include="Tuning\DatabaseCollection.cs" />
     <Compile Include="Tuning\TestDatabase.cs" />
+    <Compile Include="Tuning\TestPair.cs" />
     <Compile Include="Visualization\AffineTransformer.cs" />
     <Compile Include="Visualization\AlphaLayering.cs" />
     <Compile Include="Visualization\BlockFiller.cs" />

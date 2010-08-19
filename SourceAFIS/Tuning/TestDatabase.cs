@@ -10,11 +10,18 @@ using SourceAFIS.Extraction.Templates;
 namespace SourceAFIS.Tuning
 {
     [Serializable]
-    public sealed class TestDatabase : ICloneable
+    public sealed class TestDatabase : DatabaseLayout, ICloneable
     {
         public string DatabasePath;
         public List<Finger> Fingers;
-        public int ViewCount { get { return Fingers[0].Views.Count; } }
+
+        public override int FingerCount { get { return Fingers.Count; } }
+        public override int ViewCount { get { return Fingers[0].Views.Count; } }
+
+        public View this[DatabaseIndex index]
+        {
+            get { return Fingers[index.Finger].Views[index.View]; }
+        }
 
         public TestDatabase(List<string> files)
         {

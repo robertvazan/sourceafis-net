@@ -26,19 +26,23 @@ namespace SourceAFIS.Tuning
             Stopwatch timer = new Stopwatch();
             timer.Start();
 
-            foreach (TestDatabase.View view in report.Templates.AllViews)
+            foreach (TestDatabase database in report.Templates.Databases)
             {
-                ColorB[,] image = ImageIO.Load(view.FilePath);
-                byte[,] grayscale = PixelFormat.ToByte(image);
-                TemplateBuilder builder = Extractor.Extract(grayscale, 500);
-                view.Template = templateFormat.Export(builder);
+                foreach (DatabaseIndex index in database.AllIndexes)
+                {
+                    ColorB[,] image = ImageIO.Load(database[index].FilePath);
+                    byte[,] grayscale = PixelFormat.ToByte(image);
+                    TemplateBuilder builder = Extractor.Extract(grayscale, 500);
+                    Template template = templateFormat.Export(builder);
+                    database[index].Template = template;
 
-                report.MinutiaCount += view.Template.Minutiae.Length;
-                report.TemplateSize += templateFormat.Serialize(view.Template).Length;
-                ++count;
+                    report.MinutiaCount += template.Minutiae.Length;
+                    report.TemplateSize += templateFormat.Serialize(template).Length;
+                    ++count;
 
-                if (timer.Elapsed.TotalSeconds > Timeout)
-                    throw new TimeoutException("Timeout in extractor");
+                    if (timer.Elapsed.TotalSeconds > Timeout)
+                        throw new TimeoutException("Timeout in extractor");
+                }
             }
 
             timer.Stop();

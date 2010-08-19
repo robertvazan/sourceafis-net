@@ -12,18 +12,17 @@ namespace SourceAFIS.Tuning.Reports
     {
         public const int TopErrorCount = 20;
 
-        public struct Pair
+        public struct TopPair
         {
-            public ScoreTable.Index Probe;
-            public ScoreTable.Index Candidate;
+            public TestPair Pair;
             [XmlAttribute]
             public float Score;
         }
         
         public struct PerDatabase
         {
-            public Pair[] TopFalseAccepts;
-            public Pair[] TopFalseRejects;
+            public TopPair[] TopFalseAccepts;
+            public TopPair[] TopFalseRejects;
         }
 
         public PerDatabase[] Databases;
@@ -33,45 +32,23 @@ namespace SourceAFIS.Tuning.Reports
             Databases = (from table in tables
                          select new PerDatabase
                          {
-                             TopFalseAccepts = CollectFalseAccepts(table),
-                             TopFalseRejects = CollectFalseRejects(table)
+                             TopFalseAccepts = CollectFalseAccepts(table).ToArray(),
+                             TopFalseRejects = CollectFalseRejects(table).ToArray()
                          }).ToArray();
         }
 
-        public static Pair[] CollectFalseAccepts(ScoreTable table)
+        public static IEnumerable<TopPair> CollectFalseAccepts(ScoreTable table)
         {
-            TopListF<Pair> top = new TopListF<Pair>(TopErrorCount);
-            for (int finger = 0; finger < table.Table.Length; ++finger)
-                for (int view = 0; view < table.Table[finger].Length; ++view)
-                    for (int pair = 0; pair < table.Table[finger][view].NonMatching.Length; ++pair)
-                    {
-                        Pair item = new Pair();
-                        item.Probe.Finger = finger;
-                        item.Probe.View = view;
-                        item.Candidate = item.Probe;
-                        item.Candidate.Finger = (item.Candidate.Finger + pair + 1) % table.Table.Length;
-                        item.Score = table.Table[finger][view].NonMatching[pair];
-                        top.Add(-table.Table[finger][view].NonMatching[pair], item);
-                    }
-            return top.GetValues();
+            return (from pair in table.NonMatchingPairs
+                    orderby table[pair] descending
+                    select new TopPair { Pair = pair, Score = table[pair] }).Take(TopErrorCount);
         }
 
-        public static Pair[] CollectFalseRejects(ScoreTable table)
+        public static IEnumerable<TopPair> CollectFalseRejects(ScoreTable table)
         {
-            TopListF<Pair> top = new TopListF<Pair>(TopErrorCount);
-            for (int finger = 0; finger < table.Table.Length; ++finger)
-                for (int view = 0; view < table.Table[finger].Length; ++view)
-                    for (int pair = 0; pair < table.Table[finger][view].Matching.Length; ++pair)
-                    {
-                        Pair item = new Pair();
-                        item.Probe.Finger = finger;
-                        item.Probe.View = view;
-                        item.Candidate.Finger = finger;
-                        item.Candidate.View = (view + pair + 1) % table.Table[finger].Length;
-                        item.Score = table.Table[finger][view].Matching[pair];
-                        top.Add(table.Table[finger][view].Matching[pair], item);
-                    }
-            return top.GetValues();
+            return (from pair in table.MatchingPairs
+                    orderby table[pair]
+                    select new TopPair { Pair = pair, Score = table[pair] }).Take(TopErrorCount);
         }
     }
 }
