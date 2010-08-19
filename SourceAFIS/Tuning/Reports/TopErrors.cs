@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using System.Linq;
 using SourceAFIS.General;
 using SourceAFIS.Tuning.Errors;
+using SourceAFIS.Tuning.Database;
 
 namespace SourceAFIS.Tuning.Reports
 {

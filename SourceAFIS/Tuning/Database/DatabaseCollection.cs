@@ -12,7 +12,7 @@ using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Visualization;
 
-namespace SourceAFIS.Tuning
+namespace SourceAFIS.Tuning.Database
 {
     [Serializable]
     public sealed class DatabaseCollection : ICloneable

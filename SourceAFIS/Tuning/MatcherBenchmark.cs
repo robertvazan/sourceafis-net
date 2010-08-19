@@ -8,6 +8,7 @@ using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Matching;
 using SourceAFIS.Tuning.Errors;
 using SourceAFIS.Tuning.Reports;
+using SourceAFIS.Tuning.Database;
 
 namespace SourceAFIS.Tuning
 {

@@ -6,6 +6,7 @@ using SourceAFIS.Extraction;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Visualization;
 using SourceAFIS.Tuning.Reports;
+using SourceAFIS.Tuning.Database;
 
 namespace SourceAFIS.Tuning
 {
