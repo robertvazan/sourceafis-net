@@ -6,6 +6,7 @@ using System.IO;
 using SourceAFIS.Meta;
 using SourceAFIS.Tuning;
 using SourceAFIS.Tuning.Reports;
+using SourceAFIS.Tuning.Database;
 
 namespace DatabaseAnalyzer
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SourceAFIS.Tuning
+namespace SourceAFIS.Tuning.Database
 {
     public abstract class DatabaseLayout
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace SourceAFIS.Tuning
+namespace SourceAFIS.Tuning.Database
 {
     public struct DatabaseIndex
     {

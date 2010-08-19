@@ -4,6 +4,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using SourceAFIS.Tuning;
+using SourceAFIS.Tuning.Database;
 
 namespace DatabaseAnalyzer
 {

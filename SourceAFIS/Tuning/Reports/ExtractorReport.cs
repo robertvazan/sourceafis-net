@@ -4,6 +4,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 using SourceAFIS.Tuning;
+using SourceAFIS.Tuning.Database;
 
 namespace SourceAFIS.Tuning.Reports
 {

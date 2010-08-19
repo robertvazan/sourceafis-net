@@ -7,7 +7,7 @@ using System.IO;
 using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
 
-namespace SourceAFIS.Tuning
+namespace SourceAFIS.Tuning.Database
 {
     [Serializable]
     public sealed class TestDatabase : DatabaseLayout, ICloneable
