@@ -97,7 +97,6 @@
     <Compile Include="General\PolarPoint.cs" />
     <Compile Include="General\PriorityQueueF.cs" />
     <Compile Include="General\ReversedList.cs" />
-    <Compile Include="General\TopListF.cs" />
     <Compile Include="General\Transformation2D.cs" />
     <Compile Include="Matching\Matcher.cs" />
     <Compile Include="Matching\Minutia\EdgeConstructor.cs" />
