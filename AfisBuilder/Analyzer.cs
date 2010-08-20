@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using System.Globalization;
 
 namespace AfisBuilder
@@ -16,46 +17,28 @@ namespace AfisBuilder
 
         public static void PrepareXmlConfiguration(string sourcePath, string targetPath)
         {
-            XmlDocument document = new XmlDocument();
-            document.Load(sourcePath);
-
-            XmlElement root = document.DocumentElement;
-            XmlElement db = (XmlElement)(root.GetElementsByTagName("test-database")[0]);
-            XmlElement scan = (XmlElement)(root.GetElementsByTagName("scan")[0]);
-            scan.InnerText = DatabasePath;
-
+            XDocument document = new XDocument(sourcePath);
+            document.Root.Element("test-database").SetElementValue("scan", DatabasePath);
             document.Save(targetPath);
         }
 
         public static void ReadAccuracy()
         {
-            XmlDocument document = new XmlDocument();
-            document.Load(Command.FixPath(@"Matcher\Accuracy\Standard\Accuracy.xml"));
-            XmlElement root = document.DocumentElement;
-            XmlElement average = (XmlElement)(root.GetElementsByTagName("AverageError")[0]);
-            Accuracy = Convert.ToSingle(average.InnerText, CultureInfo.InvariantCulture);
+            XElement root = new XDocument(Command.FixPath(@"Matcher\Accuracy\Standard\Accuracy.xml")).Root;
+            Accuracy = Convert.ToSingle(root.Element("AverageError"), CultureInfo.InvariantCulture);
         }
 
         public static void ReadSpeed()
         {
-            XmlDocument document = new XmlDocument();
-            document.Load(Command.FixPath(@"Matcher\MatcherTime.xml"));
-            XmlElement root = document.DocumentElement;
-            XmlElement average = (XmlElement)(root.GetElementsByTagName("NonMatching")[0]);
-            Speed = 1 / Convert.ToSingle(average.InnerText, CultureInfo.InvariantCulture);
+            XElement root = new XDocument(Command.FixPath(@"Matcher\MatcherTime.xml")).Root;
+            Speed = 1 / Convert.ToSingle(root.Element("NonMatching"), CultureInfo.InvariantCulture);
         }
 
         public static void ReadExtractorStats()
         {
-            XmlDocument document = new XmlDocument();
-            document.Load(Command.FixPath(@"Extractor\ExtractorReport.xml"));
-            XmlElement root = document.DocumentElement;
-            
-            XmlElement time = (XmlElement)(root.GetElementsByTagName("Time")[0]);
-            ExtractionTime = Convert.ToSingle(time.InnerText, CultureInfo.InvariantCulture);
-
-            XmlElement size = (XmlElement)(root.GetElementsByTagName("TemplateSize")[0]);
-            TemplateSize = Convert.ToSingle(size.InnerText, CultureInfo.InvariantCulture);
+            XElement root = new XDocument(Command.FixPath(@"Extractor\ExtractorReport.xml")).Root;
+            ExtractionTime = Convert.ToSingle(root.Element("Time"), CultureInfo.InvariantCulture);
+            TemplateSize = Convert.ToSingle(root.Element("TemplateSize"), CultureInfo.InvariantCulture);
         }
 
         public static void ReportStatistics()
