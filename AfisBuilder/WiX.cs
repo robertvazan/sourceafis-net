@@ -1,18 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using System.IO;
 
 namespace AfisBuilder
 {
-    class WiX
+    static class WiX
     {
-        static XmlDocument Document;
-        static XmlElement Root;
-        static XmlElement Product;
-        static XmlElement PFiles;
-        static XmlElement Feature;
+        static XDocument Document;
+        static XElement Root;
+        static XElement Product;
+        static XElement PFiles;
+        static XElement Feature;
 
         static string SourceFolder;
         static List<string> Folders;
@@ -20,12 +22,11 @@ namespace AfisBuilder
 
         public static void Load(string path)
         {
-            Document = new XmlDocument();
-            Document.Load(path);
-            Root = Document.DocumentElement;
-            Product = GetChildByName(Root, "Product");
-            PFiles = GetPFilesDirectory();
-            Feature = GetChildByName(Product, "Feature");
+            Document = new XDocument(path);
+            Root = Document.Root;
+            Product = Root.Element("Product");
+            PFiles = Product.ElementById("TARGETDIR").ElementById("ProgramFilesFolder").ElementById("INSTALLDIR");
+            Feature = Product.Element("Feature");
         }
 
         public static void Save(string path)
@@ -60,93 +61,28 @@ namespace AfisBuilder
             }
         }
 
-        static XmlElement GetChildByName(XmlElement parent, string name)
+        static XElement ElementById(this XElement parent, string id)
         {
-            XmlNodeList list = parent.GetElementsByTagName(name);
-            if (list.Count == 0)
-                throw new ApplicationException("No element with such name.");
-            if (list.Count > 1)
-                throw new ApplicationException("Multiple elements with such name.");
-            return (XmlElement)list.Item(0);
+            return (from child in parent.Elements()
+                    where (string)child.Attribute("Id") == id
+                    select child).FirstOrDefault();
         }
 
-        static bool HasChildWithName(XmlElement parent, string name)
+        static XElement ElementByNameAttribute(this XElement parent, string name)
         {
-            XmlNodeList list = parent.GetElementsByTagName(name);
-            return list.Count >= 1;
+            return (from child in parent.Elements()
+                    where (string)child.Attribute("Name") == name
+                    select child).FirstOrDefault();
         }
 
-        static XmlElement GetChildById(XmlElement parent, string id)
-        {
-            foreach (XmlNode node in parent.ChildNodes)
-            {
-                if (node is XmlElement)
-                {
-                    XmlElement element = (XmlElement)node;
-                    if (element.GetAttribute("Id") == id)
-                        return element;
-                }
-            }
-            throw new ApplicationException("No element with such Id.");
-        }
-
-        static bool HasChildWithId(XmlElement parent, string id)
-        {
-            foreach (XmlNode node in parent.ChildNodes)
-            {
-                if (node is XmlElement)
-                {
-                    XmlElement element = (XmlElement)node;
-                    if (element.GetAttribute("Id") == id)
-                        return true;
-                }
-            }
-            return false;
-        }
-
-        static XmlElement GetChildByNameAttr(XmlElement parent, string name)
-        {
-            foreach (XmlNode node in parent.ChildNodes)
-            {
-                if (node is XmlElement)
-                {
-                    XmlElement element = (XmlElement)node;
-                    if (element.GetAttribute("Name") == name)
-                        return element;
-                }
-            }
-            throw new ApplicationException("No element with such Id.");
-        }
-
-        static bool HasChildWithNameAttr(XmlElement parent, string name)
-        {
-            foreach (XmlNode node in parent.ChildNodes)
-            {
-                if (node is XmlElement)
-                {
-                    XmlElement element = (XmlElement)node;
-                    if (element.GetAttribute("Name") == name)
-                        return true;
-                }
-            }
-            return false;
-        }
-
-        static XmlElement GetPFilesDirectory()
-        {
-            XmlElement targetdir = GetChildById(Product, "TARGETDIR");
-            XmlElement pffolder = GetChildById(targetdir, "ProgramFilesFolder");
-            return GetChildById(pffolder, "INSTALLDIR");
-        }
-
-        static XmlElement GetDirectoryElement(string path)
+        static XElement GetDirectoryElement(string path)
         {
             if (path == "")
                 return PFiles;
             else
             {
-                XmlElement parent = GetDirectoryElement(Path.GetDirectoryName(path));
-                return GetChildByNameAttr(parent, Path.GetFileName(path));
+                XElement parent = GetDirectoryElement(Path.GetDirectoryName(path));
+                return parent.ElementByNameAttribute(Path.GetFileName(path));
             }
         }
 
@@ -154,15 +90,15 @@ namespace AfisBuilder
         {
             foreach (string folder in Folders)
             {
-                XmlElement parent = GetDirectoryElement(Path.GetDirectoryName(folder));
+                XElement parent = GetDirectoryElement(Path.GetDirectoryName(folder));
                 string name = Path.GetFileName(folder);
                 string id = GetUniqueId(folder);
-                if (!HasChildWithNameAttr(parent, name))
+                if (parent.ElementByNameAttribute(name) != null)
                 {
-                    XmlElement element = Document.CreateElement("Directory", "http://schemas.microsoft.com/wix/2006/wi");
-                    element.SetAttribute("Id", id);
-                    element.SetAttribute("Name", name);
-                    parent.AppendChild(element);
+                    XElement element = new XElement("{http://schemas.microsoft.com/wix/2006/wi}Directory");
+                    element.SetAttributeValue("Id", id);
+                    element.SetAttributeValue("Name", name);
+                    parent.Add(element);
                 }
             }
         }
@@ -178,14 +114,11 @@ namespace AfisBuilder
                 return filtered.Substring(0, EndLength) + "__" + filtered.Substring(filtered.Length - EndLength, EndLength);
         }
 
-        static bool ContainsIdAlready(XmlElement element, string id)
+        static bool ContainsIdAlready(XElement element, string id)
         {
-            if (element.GetAttribute("Id") == id)
+            if ((string)element.Attribute("Id") == id)
                 return true;
-            foreach (XmlNode node in element.ChildNodes)
-                if (node is XmlElement && ContainsIdAlready((XmlElement)node, id))
-                    return true;
-            return false;
+            return element.Elements().Any(child => ContainsIdAlready(child, id));
         }
 
         static bool ContainsIdAlready(string id)
@@ -207,73 +140,54 @@ namespace AfisBuilder
             throw new ApplicationException("Cannot generate unique ID.");
         }
 
-        public static bool ContainsFile(XmlElement directory, string name)
+        public static bool ContainsFile(XElement directory, string name)
         {
-            foreach (XmlNode node in directory.ChildNodes)
-                if (node is XmlElement)
-                {
-                    XmlElement component = (XmlElement)node;
-                    if (component.Name == "Component" && HasChildWithName(component, "File"))
-                    {
-                        XmlElement file = GetChildByName(component, "File");
-                        if (file.GetAttribute("Name") == name)
-                            return true;
-                    }
-                }
-            return false;
+            return (from component in directory.Elements("Component")
+                    let file = component.Element("File")
+                    where file != null && (string)file.Attribute("Name") == name
+                    select component).Any();
         }
 
         public static void AddMissingFiles()
         {
             foreach (string file in Files)
             {
-                XmlElement directory = GetDirectoryElement(Path.GetDirectoryName(file));
+                XElement directory = GetDirectoryElement(Path.GetDirectoryName(file));
                 string name = Path.GetFileName(file);
                 string fileid = GetUniqueId(file);
                 string componentid = GetUniqueId("component_" + file);
                 
                 if (!ContainsFile(directory, name))
                 {
-                    XmlElement component = Document.CreateElement("Component", "http://schemas.microsoft.com/wix/2006/wi");
-                    component.SetAttribute("Id", componentid);
-                    component.SetAttribute("Guid", Guid.NewGuid().ToString());
-                    directory.AppendChild(component);
-                    
-                    XmlElement fileref = Document.CreateElement("File", "http://schemas.microsoft.com/wix/2006/wi");
-                    fileref.SetAttribute("Id", fileid);
-                    fileref.SetAttribute("Name", name);
-                    fileref.SetAttribute("DiskId", "1");
-                    fileref.SetAttribute("Source", file);
-                    fileref.SetAttribute("KeyPath", "yes");
-                    component.AppendChild(fileref);
-
-                    XmlElement componentref = Document.CreateElement("ComponentRef", "http://schemas.microsoft.com/wix/2006/wi");
-                    componentref.SetAttribute("Id", componentid);
-                    Feature.AppendChild(componentref);
+                    directory.Add(new XElement("{http://schemas.microsoft.com/wix/2006/wi}Component",
+                        new XAttribute("Id", componentid),
+                        new XAttribute("Guid", Guid.NewGuid().ToString()),
+                        new XElement("{http://schemas.microsoft.com/wix/2006/wi}File",
+                            new XAttribute("Id", fileid),
+                            new XAttribute("Name", name),
+                            new XAttribute("DiskId", "1"),
+                            new XAttribute("Source", file),
+                            new XAttribute("KeyPath", "yes"))));
+                    Feature.Add(new XElement("{http://schemas.microsoft.com/wix/2006/wi}ComponentRef",
+                        new XAttribute("Id", componentid)));
                 }
             }
         }
 
-        static void RemoveOldFiles(XmlElement directory, string path)
+        static void RemoveOldFiles(XElement directory, string path)
         {
-            foreach (XmlNode node in directory.ChildNodes)
-                if (node is XmlElement)
-                {
-                    XmlElement element = (XmlElement)node;
-                    if (element.Name == "Component" && HasChildWithName(element, "File"))
-                    {
-                        XmlElement file = GetChildByName(element, "File");
-                        if (!Files.Contains(path + file.GetAttribute("Name")))
-                        {
-                            string id = element.GetAttribute("Id");
-                            XmlElement componentref = GetChildById(Feature, id);
-                            Feature.RemoveChild(componentref);
-                            directory.RemoveChild(node);
-                        }
-                    }
-                    else if (element.Name == "Directory")
-                        RemoveOldFiles(element, path + element.GetAttribute("Name") + @"\");
-                }
+            var removedComponents = (from component in directory.Elements("Component")
+                                     let file = component.Element("File")
+                                     where file != null && !Files.Contains(path + (string)file.Attribute("Name"))
+                                     let componentref = Feature.ElementById((string)component.Attribute("Id"))
+                                     select new { component, componentref }).ToList();
+            foreach (var removed in removedComponents)
+            {
+                removed.componentref.Remove();
+                removed.component.Remove();
+            }
+            foreach (XElement subdir in directory.Elements("Directory"))
+                RemoveOldFiles(subdir, path + subdir.Attribute("Name") + @"\");
         }
 
         public static void RemoveOldFiles()
@@ -281,20 +195,14 @@ namespace AfisBuilder
             RemoveOldFiles(PFiles, "");
         }
 
-        static void RemoveOldFolders(XmlElement directory, string path)
+        static void RemoveOldFolders(XElement directory, string path)
         {
-            foreach (XmlNode node in directory.ChildNodes)
-                if (node is XmlElement)
-                {
-                    XmlElement child = (XmlElement)node;
-                    if (child.Name == "Directory")
-                    {
-                        if (!Folders.Contains(path + child.GetAttribute("Name")))
-                            directory.RemoveChild(child);
-                        else
-                            RemoveOldFiles(child, path + child.GetAttribute("Name") + @"\");
-                    }
-                }
+            var removed = (from subdir in directory.Elements("Directory")
+                           where !Folders.Contains(path + subdir.Attribute("Name"))
+                           select subdir).ToList();
+            removed.ForEach(subdir => subdir.Remove());
+            foreach (XElement subdir in directory.Elements("Directory"))
+                RemoveOldFiles(subdir, path + subdir.Attribute("Name") + @"\");
         }
 
         public static void RemoveOldFolders()
@@ -304,11 +212,8 @@ namespace AfisBuilder
 
         public static void UpdateVersion(string version)
         {
-            Product.SetAttribute("Version", version + ".0");
-
-            XmlElement upgrade = GetChildByName(Product, "Upgrade");
-            XmlElement upgradeVersion = GetChildByName(upgrade, "UpgradeVersion");
-            upgradeVersion.SetAttribute("Maximum", version + ".0");
+            Product.SetAttributeValue("Version", version + ".0");
+            Product.Element("Upgrade").Element("UpgradeVersion").SetAttributeValue("Maximum", version + ".0");
         }
     }
 }
