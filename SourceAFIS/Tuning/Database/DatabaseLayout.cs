@@ -5,6 +5,7 @@ using System.Text;
 
 namespace SourceAFIS.Tuning.Database
 {
+    [Serializable]
     public abstract class DatabaseLayout
     {
         public abstract int FingerCount { get; }
