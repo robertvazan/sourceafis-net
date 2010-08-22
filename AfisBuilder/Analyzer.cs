@@ -24,21 +24,21 @@ namespace AfisBuilder
 
         public static void ReadAccuracy()
         {
-            XElement root = new XDocument(Command.FixPath(@"Matcher\Accuracy\Standard\Accuracy.xml")).Root;
-            Accuracy = Convert.ToSingle(root.Element("AverageError"), CultureInfo.InvariantCulture);
+            XElement root = XDocument.Load(Command.FixPath(@"Matcher\Accuracy\Standard\Accuracy.xml")).Root;
+            Accuracy = Convert.ToSingle((string)root.Element("AverageError"), CultureInfo.InvariantCulture);
         }
 
         public static void ReadSpeed()
         {
-            XElement root = new XDocument(Command.FixPath(@"Matcher\MatcherTime.xml")).Root;
-            Speed = 1 / Convert.ToSingle(root.Element("NonMatching"), CultureInfo.InvariantCulture);
+            XElement root = XDocument.Load(Command.FixPath(@"Matcher\MatcherTime.xml")).Root;
+            Speed = 1 / Convert.ToSingle((string)root.Element("NonMatching"), CultureInfo.InvariantCulture);
         }
 
         public static void ReadExtractorStats()
         {
-            XElement root = new XDocument(Command.FixPath(@"Extractor\ExtractorReport.xml")).Root;
-            ExtractionTime = Convert.ToSingle(root.Element("Time"), CultureInfo.InvariantCulture);
-            TemplateSize = Convert.ToSingle(root.Element("TemplateSize"), CultureInfo.InvariantCulture);
+            XElement root = XDocument.Load(Command.FixPath(@"Extractor\ExtractorReport.xml")).Root;
+            ExtractionTime = Convert.ToSingle((string)root.Element("Time"), CultureInfo.InvariantCulture);
+            TemplateSize = Convert.ToSingle((string)root.Element("TemplateSize"), CultureInfo.InvariantCulture);
         }
 
         public static void ReportStatistics()

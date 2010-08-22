@@ -28,6 +28,8 @@ namespace SourceAFIS.Tuning.Reports
 
         public PerDatabase[] Databases;
 
+        TopErrors() { }
+
         public TopErrors(ScoreTable[] tables)
         {
             Databases = (from table in tables
