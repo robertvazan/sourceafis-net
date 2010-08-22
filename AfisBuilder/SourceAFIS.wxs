@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Name="SourceAFIS" Id="EF99AD8E-CC3D-491F-BF1F-4F998007A918" UpgradeCode="314DD5F0-4709-4378-915F-22526D7919F5" Language="1033" Codepage="1252" Version="1.0.0" Manufacturer="Robert Vanak">
+  <Product Name="SourceAFIS" Id="EF99AD8E-CC3D-491F-BF1F-4F998007A918" UpgradeCode="314DD5F0-4709-4378-915F-22526D7919F5" Language="1033" Codepage="1252" Version="1.1.0" Manufacturer="Robert Vanak">
     <Package Id="*" Keywords="Installer" Description="SourceAFIS Installer" Comments="SourceAFIS is an open-source fingerprint matcher." InstallerVersion="100" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
     <Media Id="1" Cabinet="SourceAFIS.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" />
     <Property Id="DiskPrompt" Value="SourceAFIS Installation [1]" />
     <Upgrade Id="314DD5F0-4709-4378-915F-22526D7919F5">
-      <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="0.1.0" IncludeMinimum="yes" Maximum="1.0.0" IncludeMaximum="no" />
+      <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="0.1.0" IncludeMinimum="yes" Maximum="1.1.0" IncludeMaximum="no" />
     </Upgrade>
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallInitialize" />
@@ -54,12 +54,6 @@
                 </Component>
                 <Component Id="component_Documentation_SourceAFIS___SourceAFIS_Simple_Person_ctor.htm" Guid="00fb7df2-6981-494f-82e2-58355c35cfce">
                   <File Id="Documentation_SourceAFIS_html_C_SourceAFIS_Simple_Person_ctor.htm" Name="C_SourceAFIS_Simple_Person_ctor.htm" DiskId="1" Source="Documentation\SourceAFIS\html\C_SourceAFIS_Simple_Person_ctor.htm" KeyPath="yes" />
-                </Component>
-                <Component Id="component_Documentation_SourceAFIS__lds_T_SourceAFIS_Simple_Person.htm" Guid="cc9e7b63-db14-49f4-9e68-87448b62482e">
-                  <File Id="Documentation_SourceAFIS_html_Fields_T_SourceAFIS_Simple_Person.htm" Name="Fields_T_SourceAFIS_Simple_Person.htm" DiskId="1" Source="Documentation\SourceAFIS\html\Fields_T_SourceAFIS_Simple_Person.htm" KeyPath="yes" />
-                </Component>
-                <Component Id="component_Documentation_SourceAFIS___F_SourceAFIS_Simple_Person_Id.htm" Guid="a38082f2-89cb-455b-9dba-e85b7e88dfff">
-                  <File Id="Documentation_SourceAFIS_html_F_SourceAFIS_Simple_Person_Id.htm" Name="F_SourceAFIS_Simple_Person_Id.htm" DiskId="1" Source="Documentation\SourceAFIS\html\F_SourceAFIS_Simple_Person_Id.htm" KeyPath="yes" />
                 </Component>
                 <Component Id="component_Documentation_SourceAFIS__T_SourceAFIS_Simple_AfisEngine.htm2" Guid="95889048-f505-4bae-952f-5afc0edd19dd">
                   <File Id="Documentation_SourceAFIS_html_Meth__T_SourceAFIS_Simple_AfisEngine.htm" Name="Methods_T_SourceAFIS_Simple_AfisEngine.htm" DiskId="1" Source="Documentation\SourceAFIS\html\Methods_T_SourceAFIS_Simple_AfisEngine.htm" KeyPath="yes" />
@@ -156,6 +150,9 @@
                 </Component>
                 <Component Id="component_Documentation_SourceAFIS_html_T_SourceAFIS_Simple_Person.htm" Guid="1b5784dd-7f2a-403c-b39c-642b98fccbda">
                   <File Id="Documentation_SourceAFIS_html_T_SourceAFIS_Simple_Person.htm" Name="T_SourceAFIS_Simple_Person.htm" DiskId="1" Source="Documentation\SourceAFIS\html\T_SourceAFIS_Simple_Person.htm" KeyPath="yes" />
+                </Component>
+                <Component Id="component_Documentation_SourceAFIS___P_SourceAFIS_Simple_Person_Id.htm" Guid="7a5ef637-91fd-4f3f-a32a-74a57ddc62ed">
+                  <File Id="Documentation_SourceAFIS_html_P_SourceAFIS_Simple_Person_Id.htm" Name="P_SourceAFIS_Simple_Person_Id.htm" DiskId="1" Source="Documentation\SourceAFIS\html\P_SourceAFIS_Simple_Person_Id.htm" KeyPath="yes" />
                 </Component>
               </Directory>
               <Directory Id="Documentation_SourceAFIS_icons" Name="icons">
@@ -605,8 +602,6 @@
       <ComponentRef Id="component_Documentation_SourceAFIS__rceAFIS_Simple_AfisEngine_ctor.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__ceAFIS_Simple_Fingerprint_ctor.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS___SourceAFIS_Simple_Person_ctor.htm" />
-      <ComponentRef Id="component_Documentation_SourceAFIS__lds_T_SourceAFIS_Simple_Person.htm" />
-      <ComponentRef Id="component_Documentation_SourceAFIS___F_SourceAFIS_Simple_Person_Id.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__T_SourceAFIS_Simple_AfisEngine.htm2" />
       <ComponentRef Id="component_Documentation_SourceAFIS___SourceAFIS_Simple_Fingerprint.htm2" />
       <ComponentRef Id="component_Documentation_SourceAFIS__ods_T_SourceAFIS_Simple_Person.htm" />
@@ -764,6 +759,7 @@
       <ComponentRef Id="component_startmenu_Online" />
       <ComponentRef Id="component_startmenu_PFiles" />
       <ComponentRef Id="component_startmenu_Sample" />
+      <ComponentRef Id="component_Documentation_SourceAFIS___P_SourceAFIS_Simple_Person_Id.htm" />
     </Feature>
   </Product>
 </Wix>

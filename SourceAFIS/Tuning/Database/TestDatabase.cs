@@ -95,6 +95,8 @@ namespace SourceAFIS.Tuning.Database
             [XmlIgnore]
             public Template Template;
 
+            public View() { }
+
             public View(string path)
             {
                 FilePath = path;
