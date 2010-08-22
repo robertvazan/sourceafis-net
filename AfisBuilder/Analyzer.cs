@@ -17,7 +17,7 @@ namespace AfisBuilder
 
         public static void PrepareXmlConfiguration(string sourcePath, string targetPath)
         {
-            XDocument document = new XDocument(sourcePath);
+            XDocument document = XDocument.Load(sourcePath);
             document.Root.Element("test-database").SetElementValue("scan", DatabasePath);
             document.Save(targetPath);
         }

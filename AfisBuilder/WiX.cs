@@ -10,6 +10,7 @@ namespace AfisBuilder
 {
     static class WiX
     {
+        static XNamespace Ns = "http://schemas.microsoft.com/wix/2006/wi";
         static XDocument Document;
         static XElement Root;
         static XElement Product;
@@ -22,11 +23,11 @@ namespace AfisBuilder
 
         public static void Load(string path)
         {
-            Document = new XDocument(path);
+            Document = XDocument.Load(path);
             Root = Document.Root;
-            Product = Root.Element("Product");
+            Product = Root.WixElement("Product");
             PFiles = Product.ElementById("TARGETDIR").ElementById("ProgramFilesFolder").ElementById("INSTALLDIR");
-            Feature = Product.Element("Feature");
+            Feature = Product.WixElement("Feature");
         }
 
         public static void Save(string path)
@@ -93,12 +94,11 @@ namespace AfisBuilder
                 XElement parent = GetDirectoryElement(Path.GetDirectoryName(folder));
                 string name = Path.GetFileName(folder);
                 string id = GetUniqueId(folder);
-                if (parent.ElementByNameAttribute(name) != null)
+                if (parent != null && parent.ElementByNameAttribute(name) == null)
                 {
-                    XElement element = new XElement("{http://schemas.microsoft.com/wix/2006/wi}Directory");
-                    element.SetAttributeValue("Id", id);
-                    element.SetAttributeValue("Name", name);
-                    parent.Add(element);
+                    parent.Add(new XElement(Ns + "Directory",
+                        new XAttribute("Id", id),
+                        new XAttribute("Name", name)));
                 }
             }
         }
@@ -142,8 +142,8 @@ namespace AfisBuilder
 
         public static bool ContainsFile(XElement directory, string name)
         {
-            return (from component in directory.Elements("Component")
-                    let file = component.Element("File")
+            return (from component in directory.WixElements("Component")
+                    let file = component.WixElement("File")
                     where file != null && (string)file.Attribute("Name") == name
                     select component).Any();
         }
@@ -176,8 +176,8 @@ namespace AfisBuilder
 
         static void RemoveOldFiles(XElement directory, string path)
         {
-            var removedComponents = (from component in directory.Elements("Component")
-                                     let file = component.Element("File")
+            var removedComponents = (from component in directory.WixElements("Component")
+                                     let file = component.WixElement("File")
                                      where file != null && !Files.Contains(path + (string)file.Attribute("Name"))
                                      let componentref = Feature.ElementById((string)component.Attribute("Id"))
                                      select new { component, componentref }).ToList();
@@ -186,8 +186,8 @@ namespace AfisBuilder
                 removed.componentref.Remove();
                 removed.component.Remove();
             }
-            foreach (XElement subdir in directory.Elements("Directory"))
-                RemoveOldFiles(subdir, path + subdir.Attribute("Name") + @"\");
+            foreach (XElement subdir in directory.WixElements("Directory"))
+                RemoveOldFiles(subdir, path + (string)subdir.Attribute("Name") + @"\");
         }
 
         public static void RemoveOldFiles()
@@ -197,12 +197,12 @@ namespace AfisBuilder
 
         static void RemoveOldFolders(XElement directory, string path)
         {
-            var removed = (from subdir in directory.Elements("Directory")
-                           where !Folders.Contains(path + subdir.Attribute("Name"))
+            var removed = (from subdir in directory.WixElements("Directory")
+                           where !Folders.Contains(path + (string)subdir.Attribute("Name"))
                            select subdir).ToList();
             removed.ForEach(subdir => subdir.Remove());
-            foreach (XElement subdir in directory.Elements("Directory"))
-                RemoveOldFiles(subdir, path + subdir.Attribute("Name") + @"\");
+            foreach (XElement subdir in directory.WixElements("Directory"))
+                RemoveOldFiles(subdir, path + (string)subdir.Attribute("Name") + @"\");
         }
 
         public static void RemoveOldFolders()
@@ -213,7 +213,17 @@ namespace AfisBuilder
         public static void UpdateVersion(string version)
         {
             Product.SetAttributeValue("Version", version + ".0");
-            Product.Element("Upgrade").Element("UpgradeVersion").SetAttributeValue("Maximum", version + ".0");
+            Product.WixElement("Upgrade").WixElement("UpgradeVersion").SetAttributeValue("Maximum", version + ".0");
+        }
+
+        static XElement WixElement(this XElement parent, string name)
+        {
+            return parent.Element(Ns + name);
+        }
+
+        static IEnumerable<XElement> WixElements(this XElement parent, string name)
+        {
+            return parent.Elements(Ns + name);
         }
     }
 }
