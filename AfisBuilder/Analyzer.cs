@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -18,7 +18,9 @@ namespace AfisBuilder
         public static void PrepareXmlConfiguration(string sourcePath, string targetPath)
         {
             XDocument document = XDocument.Load(sourcePath);
-            document.Root.Element("test-database").SetElementValue("scan", DatabasePath);
+            document.Root.Element("test-database").Element("scan").SetValue(DatabasePath);
+			if (Command.Mono)
+	            document.Root.Element("extractor-benchmark").Element("max-seconds").SetValue(1800);
             document.Save(targetPath);
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +18,7 @@ namespace SourceAFIS.Tuning.Database
         public override int FingerCount { get { return Fingers.Count; } }
         public override int ViewCount { get { return Fingers[0].Views.Count; } }
 
+		[XmlIgnore]
         public View this[DatabaseIndex index]
         {
             get { return Fingers[index.Finger].Views[index.View]; }
