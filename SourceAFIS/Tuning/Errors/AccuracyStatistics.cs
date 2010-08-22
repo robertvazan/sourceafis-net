@@ -21,6 +21,8 @@ namespace SourceAFIS.Tuning.Errors
             public float Scalar;
             public float Separation;
 
+            PerDatabaseInfo() { }
+
             public PerDatabaseInfo(ScoreTable table, AccuracyMeasure measure)
             {
                 CombinedScores = table.GetMultiFingerTable(measure.MultiFingerPolicy);
@@ -56,6 +58,8 @@ namespace SourceAFIS.Tuning.Errors
         public float Separation;
         [XmlIgnore]
         public TopErrors TopErrors;
+
+        AccuracyStatistics() { }
 
         public AccuracyStatistics(ScoreTable[] tables, AccuracyMeasure measure)
         {
