@@ -1,16 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace SourceAFIS.Tuning.Database
 {
     [Serializable]
     public abstract class DatabaseLayout
     {
+		[XmlAttribute]
         public abstract int FingerCount { get; }
+		[XmlAttribute]
         public abstract int ViewCount { get; }
         
+		[XmlAttribute]
         public int FpCount { get { return FingerCount * ViewCount; } }
 
         public IEnumerable<DatabaseIndex> GetConsequentViews(DatabaseIndex probe)
@@ -42,6 +46,7 @@ namespace SourceAFIS.Tuning.Database
             return GetMatchingPairs(probe).Concat(GetNonMatchingPairs(probe));
         }
 
+		[XmlIgnore]
         public IEnumerable<DatabaseIndex> AllIndexes
         {
             get
@@ -52,6 +57,7 @@ namespace SourceAFIS.Tuning.Database
             }
         }
 
+		[XmlIgnore]
         public IEnumerable<TestPair> MatchingPairs
         {
             get
@@ -62,6 +68,7 @@ namespace SourceAFIS.Tuning.Database
             }
         }
 
+		[XmlIgnore]
         public IEnumerable<TestPair> NonMatchingPairs
         {
             get
@@ -72,6 +79,7 @@ namespace SourceAFIS.Tuning.Database
             }
         }
 
+		[XmlIgnore]
         public IEnumerable<TestPair> AllPairs { get { return MatchingPairs.Concat(NonMatchingPairs); } }
     }
 }
