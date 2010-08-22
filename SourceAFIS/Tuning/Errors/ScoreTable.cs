@@ -9,7 +9,7 @@ namespace SourceAFIS.Tuning.Errors
 {
     public sealed class ScoreTable : DatabaseLayout
     {
-        struct Entry
+        public struct Entry
         {
             public float[] Matching;
             public float[] NonMatching;
@@ -18,7 +18,7 @@ namespace SourceAFIS.Tuning.Errors
         public override int FingerCount { get { return Table.Length; } }
         public override int ViewCount { get { return Table[0].Length; } }
 
-        Entry[][] Table;
+        public Entry[][] Table;
 
         [XmlIgnore]
         IEnumerable<Entry> Entries { get { return from finger in Table from entry in finger select entry; } }
