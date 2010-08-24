@@ -103,6 +103,7 @@ namespace AfisBuilder
         void AssembleMsi()
         {
             string workspace = OutputFolder + @"\msi";
+            Console.WriteLine("Assembling MSI package: {0}", workspace);
             Command.ForceDeleteDirectory(workspace);
             Command.CopyDirectory(ZipFolder, workspace);
 
@@ -122,6 +123,20 @@ namespace AfisBuilder
             Directory.SetCurrentDirectory(workspace);
             Command.CompileWiX(wxsVersioned);
             Directory.SetCurrentDirectory(SolutionFolder);
+        }
+
+        void AssembleFvcSubmission()
+        {
+            string fvcFolder = Command.FixPath(OutputFolder + @"\SourceAFIS-FVC-" + Versions.Release);
+            Console.WriteLine("Assembling FVC-onGoing submission: {0}", ZipFolder);
+            Command.ForceDeleteDirectory(fvcFolder);
+            Directory.CreateDirectory(fvcFolder);
+
+            Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", fvcFolder);
+            Command.CopyTo(@"FvcEnroll\bin\Release\enroll.exe", fvcFolder);
+            Command.CopyTo(@"FvcMatch\bin\Release\match.exe", fvcFolder);
+
+            Command.ZipFiles(fvcFolder, new[] { "SourceAFIS.dll", "enroll.exe", "match.exe" });
         }
 
         void RunAnalyzer()
@@ -160,7 +175,10 @@ namespace AfisBuilder
             BuildProjects();
             AssembleZip();
             if (!Mono)
+            {
                 AssembleMsi();
+                AssembleFvcSubmission();
+            }
             RunAnalyzer();
             Summary();
         }
