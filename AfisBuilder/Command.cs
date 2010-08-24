@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace AfisBuilder
 {
@@ -22,7 +23,7 @@ namespace AfisBuilder
 
         public static void CopyDirectory(string from, string to)
         {
-            Directory.CreateDirectory(to);
+            Directory.CreateDirectory(FixPath(to));
             foreach (string filename in Directory.GetFiles(from))
                 CopyTo(filename, to);
             foreach (string subfolder in Directory.GetDirectories(from))
@@ -71,6 +72,19 @@ namespace AfisBuilder
                 Execute(@"C:\Program Files\7-Zip\7z.exe", "a", "-tzip", archive, contents);
             else
                 Execute("zip", "-r", archive, contents);
+            if (!File.Exists(archive))
+                throw new ApplicationException("No ZIP file was created.");
+            Directory.SetCurrentDirectory(oldFolder);
+        }
+
+        public static void ZipFiles(string folder, string[] contents)
+        {
+            folder = FixPath(folder);
+            string archive = Path.GetFileName(folder) + ".zip";
+            string oldFolder = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(folder);
+            DeleteFileIfExists(archive);
+            Execute(@"C:\Program Files\7-Zip\7z.exe", new[] { "a", "-tzip", archive }.Concat(contents).ToArray());
             if (!File.Exists(archive))
                 throw new ApplicationException("No ZIP file was created.");
             Directory.SetCurrentDirectory(oldFolder);
