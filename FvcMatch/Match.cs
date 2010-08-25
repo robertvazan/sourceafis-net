@@ -28,8 +28,8 @@ namespace FvcMatch
             }
         }
 
-        const double ScoreScaling = 100;
-        const double BendingThreshold = 0.5;
+        const double ScoreScaling = 50;
+        const double BendingThreshold = 0.4;
         const double BendingFactor = 3;
 
         static float FixScore(float score)
