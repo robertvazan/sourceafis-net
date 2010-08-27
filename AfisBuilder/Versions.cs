@@ -14,7 +14,7 @@ namespace AfisBuilder
         public static void Collect()
         {
             Console.WriteLine("Reading release version");
-            Regex = new Regex(@"^\[assembly: AssemblyVersion\(""(\d+.\d+).\*""\)\]$");
+            Regex = new Regex(@"^\[assembly: AssemblyVersion\(""(\d+\.\d+\.\d+)\.\*""\)\]$");
             foreach (string line in File.ReadAllLines(Command.FixPath(@"SourceAFIS\Properties\AssemblyInfo.cs")))
             {
                 Match match = Regex.Match(line);
