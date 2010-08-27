@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Threading;
+using System.Globalization;
 
 namespace AfisBuilder
 {
@@ -170,6 +172,7 @@ namespace AfisBuilder
 
         public void Run()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             SetFolder();
             UpdateVersions();
             BuildProjects();
