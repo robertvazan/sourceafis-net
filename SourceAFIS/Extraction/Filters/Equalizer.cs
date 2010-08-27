@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
-using SourceAFIS.Visualization;
 using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
@@ -20,6 +19,15 @@ namespace SourceAFIS.Extraction.Filters
         const float RangeMin = -1;
         const float RangeMax = 1;
         const float RangeSize = RangeMax - RangeMin;
+
+        static readonly float[] ToFloatTable;
+
+        static Equalizer()
+        {
+            ToFloatTable = new float[256];
+            for (int i = 0; i < 256; ++i)
+                ToFloatTable[i] = i / 255f;
+        }
 
         float[, ,] ComputeEqualization(BlockMap blocks, short[, ,] histogram, BinaryMap blockMask)
         {
@@ -51,7 +59,7 @@ namespace SourceAFIS.Extraction.Filters
                     for (int i = 0; i < 256; ++i)
                     {
                         float width = histogram[corner.Y, corner.X, i] * widthWeigth;
-                        float equalized = top + PixelFormat.ToFloat((byte)i) * width;
+                        float equalized = top + ToFloatTable[i] * width;
                         top += width;
 
                         float limited = equalized;

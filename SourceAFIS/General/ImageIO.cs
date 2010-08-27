@@ -6,11 +6,11 @@ using System.Drawing.Imaging;
 using SystemPixelFormat = System.Drawing.Imaging.PixelFormat;
 using System.Runtime.InteropServices;
 
-namespace SourceAFIS.Visualization
+namespace SourceAFIS.General
 {
     public static class ImageIO
     {
-        public static ColorB[,] GetPixels(Bitmap bmp)
+        public static byte[,] GetPixels(Bitmap bmp)
         {
             int width = bmp.Width;
             int height = bmp.Height;
@@ -26,19 +26,17 @@ namespace SourceAFIS.Visualization
                 bmp.UnlockBits(data);
             }
 
-            ColorB[,] result = new ColorB[height, width];
+            byte[,] result = new byte[height, width];
             for (int y = 0; y < height; ++y)
                 for (int x = 0; x < width; ++x)
                 {
                     int offset = (height - 1 - y) * data.Stride + x * 3;
-                    result[y, x].B = bytes[offset + 0];
-                    result[y, x].G = bytes[offset + 1];
-                    result[y, x].R = bytes[offset + 2];
+                    result[y, x] = (byte)((bytes[offset + 0] + bytes[offset + 1] + bytes[offset + 2]) / 3);
                 }
             return result;
         }
 
-        public static Bitmap CreateBitmap(ColorB[,] pixels)
+        public static Bitmap CreateBitmap(byte[,] pixels)
         {
             int width = pixels.GetLength(1);
             int height = pixels.GetLength(0);
@@ -50,9 +48,9 @@ namespace SourceAFIS.Visualization
                 for (int x = 0; x < width; ++x)
                 {
                     int offset = (height - 1 - y) * data.Stride + x * 3;
-                    bytes[offset + 0] = pixels[y, x].B;
-                    bytes[offset + 1] = pixels[y, x].G;
-                    bytes[offset + 2] = pixels[y, x].R;
+                    bytes[offset + 0] = pixels[y, x];
+                    bytes[offset + 1] = pixels[y, x];
+                    bytes[offset + 2] = pixels[y, x];
                 }
 
             try
@@ -66,7 +64,7 @@ namespace SourceAFIS.Visualization
             return bmp;
         }
 
-        public static ColorB[,] Load(string filename)
+        public static byte[,] Load(string filename)
         {
             using (Image fromFile = Bitmap.FromFile(filename))
             {
@@ -75,6 +73,17 @@ namespace SourceAFIS.Visualization
                     return GetPixels(bmp);
                 }
             }
+        }
+
+        public static byte[,] GetInverted(byte[,] image)
+        {
+            byte[,] result = (byte[,])image.Clone();
+            Threader.Split(image.GetLength(0), delegate(int y)
+            {
+                for (int x = 0; x < image.GetLength(1); ++x)
+                    result[y, x] = (byte)(255 - image[y, x]);
+            });
+            return result;
         }
     }
 }

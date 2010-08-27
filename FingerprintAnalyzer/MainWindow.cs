@@ -96,11 +96,11 @@ namespace FingerprintAnalyzer
         void RefreshCanvas()
         {
             if (ProbePath != null)
-                Logs.Probe.InputImage = PixelFormat.ToByte(ImageIO.Load(ProbePath));
+                Logs.Probe.InputImage = ImageIO.Load(ProbePath);
             else
                 Logs.Probe.InputImage = null;
             if (CandidatePath != null)
-                Logs.Candidate.InputImage = PixelFormat.ToByte(ImageIO.Load(CandidatePath));
+                Logs.Candidate.InputImage = ImageIO.Load(CandidatePath);
             else
                 Logs.Candidate.InputImage = null;
 

@@ -77,7 +77,7 @@ namespace FingerprintAnalyzer
                 }
             }
 
-            OutputImage = ImageIO.CreateBitmap(PixelFormat.ToColorB(output));
+            OutputImage = ImageSerialization.CreateBitmap(PixelFormat.ToColorB(output));
         }
 
         void BlendMatch(ColorF[,] output, Transformation2D transformation)

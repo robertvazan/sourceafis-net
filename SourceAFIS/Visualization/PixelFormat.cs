@@ -33,6 +33,22 @@ namespace SourceAFIS.Visualization
             return output;
         }
 
+        public static byte ToByte(ColorF color)
+        {
+            return ToByte(ToColorB(color));
+        }
+
+        public static byte[,] ToByte(ColorF[,] input)
+        {
+            byte[,] output = new byte[input.GetLength(0), input.GetLength(1)];
+            Threader.Split(input.GetLength(0), delegate(int y)
+            {
+                for (int x = 0; x < input.GetLength(1); ++x)
+                    output[y, x] = ToByte(input[y, x]);
+            });
+            return output;
+        }
+
         static readonly float[] ToFloatTable = CreateToFloatTable();
         
         static float[] CreateToFloatTable()
