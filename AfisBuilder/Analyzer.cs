@@ -27,20 +27,20 @@ namespace AfisBuilder
         public static void ReadAccuracy()
         {
             XElement root = XDocument.Load(Command.FixPath(@"Matcher\Accuracy\Standard\Accuracy.xml")).Root;
-            Accuracy = Convert.ToSingle((string)root.Element("AverageError"), CultureInfo.InvariantCulture);
+            Accuracy = (float)root.Element("AverageError");
         }
 
         public static void ReadSpeed()
         {
             XElement root = XDocument.Load(Command.FixPath(@"Matcher\MatcherTime.xml")).Root;
-            Speed = 1 / Convert.ToSingle((string)root.Element("NonMatching"), CultureInfo.InvariantCulture);
+            Speed = 1 / (float)root.Element("NonMatching");
         }
 
         public static void ReadExtractorStats()
         {
             XElement root = XDocument.Load(Command.FixPath(@"Extractor\ExtractorReport.xml")).Root;
-            ExtractionTime = Convert.ToSingle((string)root.Element("Time"), CultureInfo.InvariantCulture);
-            TemplateSize = Convert.ToSingle((string)root.Element("TemplateSize"), CultureInfo.InvariantCulture);
+            ExtractionTime = (float)root.Element("Time");
+            TemplateSize = (float)root.Element("TemplateSize");
         }
 
         public static void ReportStatistics()
