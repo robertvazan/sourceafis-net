@@ -4,6 +4,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 using System.Linq;
+using SourceAFIS.General;
 using SourceAFIS.Tuning.Reports;
 using SourceAFIS.Visualization;
 
@@ -48,7 +49,7 @@ namespace SourceAFIS.Tuning.Errors
                     serializer.Serialize(stream, ROC);
                 }
 
-                ImageIO.CreateBitmap(PixelFormat.ToColorB(new ROCGraph().Draw(ROC))).Save(Path.Combine(folder, "ROC.png"));
+                ImageIO.CreateBitmap(PixelFormat.ToByte(new ROCGraph().Draw(ROC))).Save(Path.Combine(folder, "ROC.png"));
             }
         }
 

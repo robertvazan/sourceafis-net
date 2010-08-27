@@ -171,10 +171,11 @@
     <Compile Include="Visualization\GlobalContrast.cs" />
     <Compile Include="Visualization\GrayscaleInverter.cs" />
     <Compile Include="Visualization\ImageDiff.cs" />
-    <Compile Include="Visualization\ImageIO.cs" />
+    <Compile Include="General\ImageIO.cs" />
     <Compile Include="General\RectangleC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Visualization\ColorF.cs" />
+    <Compile Include="Visualization\ImageSerialization.cs" />
     <Compile Include="Visualization\OrientationMarkers.cs" />
     <Compile Include="Visualization\PairingMarkers.cs" />
     <Compile Include="Visualization\PixelFormat.cs" />

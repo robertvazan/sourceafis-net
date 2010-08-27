@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Xml.Serialization;
+using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
-using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Simple
 {
@@ -78,8 +78,8 @@ namespace SourceAFIS.Simple
         [XmlIgnore]
         public Bitmap BitmapImage
         {
-            get { return Image != null ? ImageIO.CreateBitmap(PixelFormat.ToColorB(Image)) : null; }
-            set { Image = value != null ? PixelFormat.ToByte(ImageIO.GetPixels(value)) : null; }
+            get { return Image != null ? ImageIO.CreateBitmap(Image) : null; }
+            set { Image = value != null ? ImageIO.GetPixels(value) : null; }
         }
 
         /// <summary>

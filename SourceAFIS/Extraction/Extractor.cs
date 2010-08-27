@@ -4,7 +4,6 @@ using System.Text;
 using System.Drawing;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
-using SourceAFIS.Visualization;
 using SourceAFIS.Extraction.Filters;
 using SourceAFIS.Extraction.Model;
 using SourceAFIS.Extraction.Templates;
@@ -75,7 +74,7 @@ namespace SourceAFIS.Extraction
             TemplateBuilder template = null;
             DpiAdjuster.Adjust(this, dpi, delegate()
             {
-                byte[,] image = GrayscaleInverter.GetInverted(invertedImage);
+                byte[,] image = ImageIO.GetInverted(invertedImage);
 
                 BlockMap blocks = new BlockMap(new Size(image.GetLength(1), image.GetLength(0)), BlockSize);
                 Logger.Log("BlockMap", blocks);
