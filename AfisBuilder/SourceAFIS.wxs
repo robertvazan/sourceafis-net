@@ -36,6 +36,9 @@
             <Component Id="component_Bin_SourceAFIS.Tuning.dll" Guid="e78fdc07-3a4e-487f-9f72-5a6403a92144">
               <File Id="Bin_SourceAFIS.Tuning.dll" Name="SourceAFIS.Tuning.dll" DiskId="1" Source="Bin\SourceAFIS.Tuning.dll" KeyPath="yes" />
             </Component>
+            <Component Id="component_Bin_SourceAFIS.Visualization.dll" Guid="324f7fe8-7833-4f37-9e36-71107a88e411">
+              <File Id="Bin_SourceAFIS.Visualization.dll" Name="SourceAFIS.Visualization.dll" DiskId="1" Source="Bin\SourceAFIS.Visualization.dll" KeyPath="yes" />
+            </Component>
           </Directory>
           <Directory Id="Documentation" Name="Documentation">
             <Directory Id="Documentation_SourceAFIS" Name="SourceAFIS">
@@ -764,6 +767,7 @@
       <ComponentRef Id="component_startmenu_Sample" />
       <ComponentRef Id="component_Documentation_SourceAFIS___P_SourceAFIS_Simple_Person_Id.htm" />
       <ComponentRef Id="component_Bin_SourceAFIS.Tuning.dll" />
+      <ComponentRef Id="component_Bin_SourceAFIS.Visualization.dll" />
     </Feature>
   </Product>
 </Wix>

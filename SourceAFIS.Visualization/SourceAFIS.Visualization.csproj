@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7DD4AD3F-2836-4187-A6E7-D271F13F943E}</ProjectGuid>
+    <ProjectGuid>{5570647C-1F35-4FE7-9E9B-FF193154DD95}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SourceAFIS.Tuning</RootNamespace>
-    <AssemblyName>SourceAFIS.Tuning</AssemblyName>
+    <RootNamespace>SourceAFIS.Visualization</RootNamespace>
+    <AssemblyName>SourceAFIS.Visualization</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
@@ -48,55 +48,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database\DatabaseCollection.cs" />
-    <Compile Include="Database\DatabaseIndex.cs" />
-    <Compile Include="Database\DatabaseLayout.cs" />
-    <Compile Include="Database\TestDatabase.cs" />
-    <Compile Include="Database\TestPair.cs" />
-    <Compile Include="Errors\AccuracyMeasure.cs" />
-    <Compile Include="Errors\AccuracyStatistics.cs" />
-    <Compile Include="Errors\ErrorPolicy.cs" />
-    <Compile Include="Errors\ErrorRange.cs" />
-    <Compile Include="Errors\MultiFingerPolicy.cs" />
-    <Compile Include="Errors\ROCCurve.cs" />
-    <Compile Include="Errors\ROCPoint.cs" />
-    <Compile Include="Errors\ScalarErrorMeasure.cs" />
-    <Compile Include="Errors\ScoreTable.cs" />
-    <Compile Include="Errors\SeparationMeasure.cs" />
-    <Compile Include="ExtractorBenchmark.cs" />
-    <Compile Include="MatcherBenchmark.cs" />
-    <Compile Include="Optimization\AxisFocusMutation.cs" />
-    <Compile Include="Optimization\ManualMutation.cs" />
-    <Compile Include="Optimization\MutationAdvice.cs" />
-    <Compile Include="Optimization\MutationAdvisor.cs" />
-    <Compile Include="Optimization\MutationMemory.cs" />
-    <Compile Include="Optimization\MutationSequencer.cs" />
-    <Compile Include="Optimization\NicheSlot.cs" />
-    <Compile Include="Optimization\RandomMutation.cs" />
-    <Compile Include="Optimization\TimeConstraints.cs" />
-    <Compile Include="Optimizer.cs" />
+    <Compile Include="AffineTransformer.cs" />
+    <Compile Include="AlphaLayering.cs" />
+    <Compile Include="BlockFiller.cs" />
+    <Compile Include="CircleDrawer.cs" />
+    <Compile Include="ColorB.cs" />
+    <Compile Include="ColorF.cs" />
+    <Compile Include="GlobalContrast.cs" />
+    <Compile Include="GrayscaleInverter.cs" />
+    <Compile Include="ImageDiff.cs" />
+    <Compile Include="ImageSerialization.cs" />
+    <Compile Include="OrientationMarkers.cs" />
+    <Compile Include="PairingMarkers.cs" />
+    <Compile Include="PixelFormat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reports\DatabaseStatistics.cs" />
-    <Compile Include="Reports\ExtractorReport.cs" />
-    <Compile Include="Reports\MatcherReport.cs" />
-    <Compile Include="Reports\MatcherTimings.cs" />
-    <Compile Include="Reports\ROCGraph.cs" />
-    <Compile Include="Reports\TestConfiguration.cs" />
-    <Compile Include="Reports\TestReport.cs" />
-    <Compile Include="Reports\TopErrors.cs" />
+    <Compile Include="ScalarColoring.cs" />
+    <Compile Include="SkeletonDrawer.cs" />
+    <Compile Include="TemplateDrawer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SourceAFIS.Visualization\SourceAFIS.Visualization.csproj">
-      <Project>{5570647C-1F35-4FE7-9E9B-FF193154DD95}</Project>
-      <Name>SourceAFIS.Visualization</Name>
-    </ProjectReference>
+    <None Include="KeyPair.snk" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\SourceAFIS\SourceAFIS.csproj">
       <Project>{35075900-98B2-4F73-A8FE-11E0D2182689}</Project>
       <Name>SourceAFIS</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="KeyPair.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
