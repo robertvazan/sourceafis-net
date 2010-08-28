@@ -33,6 +33,9 @@
             <Component Id="component_Bin_FingerprintAnalyzer.exe" Guid="a5fd464e-7073-4558-9d9d-9309b470b45a">
               <File Id="Bin_FingerprintAnalyzer.exe" Name="FingerprintAnalyzer.exe" DiskId="1" Source="Bin\FingerprintAnalyzer.exe" />
             </Component>
+            <Component Id="component_Bin_SourceAFIS.Tuning.dll" Guid="e78fdc07-3a4e-487f-9f72-5a6403a92144">
+              <File Id="Bin_SourceAFIS.Tuning.dll" Name="SourceAFIS.Tuning.dll" DiskId="1" Source="Bin\SourceAFIS.Tuning.dll" KeyPath="yes" />
+            </Component>
           </Directory>
           <Directory Id="Documentation" Name="Documentation">
             <Directory Id="Documentation_SourceAFIS" Name="SourceAFIS">
@@ -760,6 +763,7 @@
       <ComponentRef Id="component_startmenu_PFiles" />
       <ComponentRef Id="component_startmenu_Sample" />
       <ComponentRef Id="component_Documentation_SourceAFIS___P_SourceAFIS_Simple_Person_Id.htm" />
+      <ComponentRef Id="component_Bin_SourceAFIS.Tuning.dll" />
     </Feature>
   </Product>
 </Wix>
