@@ -25,6 +25,7 @@ namespace AfisBuilder
         void UpdateVersions()
         {
             Versions.Collect();
+            Versions.Update("SourceAFIS.Tuning");
             Versions.Update("DatabaseAnalyzer");
             Versions.Update("FingerprintAnalyzer");
             if (!Mono)
@@ -40,6 +41,7 @@ namespace AfisBuilder
             if (!Mono)
             {
                 Command.Build(@"SourceAFIS\SourceAFIS.csproj", "Release");
+                Command.Build(@"SourceAFIS.Tuning\SourceAFIS.Tuning.csproj", "Release");
                 Command.Build(@"DatabaseAnalyzer\DatabaseAnalyzer.csproj", "Release");
                 Command.Build(@"FingerprintAnalyzer\FingerprintAnalyzer.csproj", "Release");
                 Command.Build(@"FvcEnroll\FvcEnroll.csproj", "Release");
@@ -69,6 +71,7 @@ namespace AfisBuilder
             Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", prefix + "Bin");
             if (!Mono)
                 Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.xml", prefix + "Bin");
+            Command.CopyTo(@"SourceAFIS.Tuning\bin\Release\SourceAFIS.Tuning.dll", prefix + "Bin");
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe", prefix + "Bin");
             Command.CopyTo(@"Data\DatabaseAnalyzerConfiguration.xml", prefix + "Bin");
             Command.CopyTo(@"FingerprintAnalyzer\bin\Release\FingerprintAnalyzer.exe", prefix + "Bin");
@@ -155,6 +158,7 @@ namespace AfisBuilder
 
             Command.CopyTo(ZipFolder + @"\Bin\DatabaseAnalyzer.exe", analyzerDir);
             Command.CopyTo(ZipFolder + @"\Bin\SourceAFIS.dll", analyzerDir);
+            Command.CopyTo(ZipFolder + @"\Bin\SourceAFIS.Tuning.dll", analyzerDir);
             Command.Execute(Path.Combine(analyzerDir, "DatabaseAnalyzer.exe"));
 
             Analyzer.ReadAccuracy();

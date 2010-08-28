@@ -5,8 +5,9 @@ using System.Drawing;
 using SourceAFIS.General;
 using SourceAFIS.Tuning;
 using SourceAFIS.Tuning.Errors;
+using SourceAFIS.Visualization;
 
-namespace SourceAFIS.Visualization
+namespace SourceAFIS.Tuning.Reports
 {
     public sealed class ROCGraph
     {
