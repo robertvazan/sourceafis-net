@@ -4,6 +4,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Globalization;
+using System.IO;
 
 namespace AfisBuilder
 {
@@ -26,19 +27,19 @@ namespace AfisBuilder
 
         public static void ReadAccuracy()
         {
-            XElement root = XDocument.Load(Command.FixPath(@"Matcher\Accuracy\Standard\Accuracy.xml")).Root;
+            XElement root = XDocument.Load(Path.Combine("Matcher", "Accuracy", "Standard", "Accuracy.xml")).Root;
             Accuracy = (float)root.Element("AverageError");
         }
 
         public static void ReadSpeed()
         {
-            XElement root = XDocument.Load(Command.FixPath(@"Matcher\MatcherTime.xml")).Root;
+            XElement root = XDocument.Load(Path.Combine("Matcher", "MatcherTime.xml")).Root;
             Speed = 1 / (float)root.Element("NonMatching");
         }
 
         public static void ReadExtractorStats()
         {
-            XElement root = XDocument.Load(Command.FixPath(@"Extractor\ExtractorReport.xml")).Root;
+            XElement root = XDocument.Load(Path.Combine("Extractor", "ExtractorReport.xml")).Root;
             ExtractionTime = (float)root.Element("Time");
             TemplateSize = (float)root.Element("TemplateSize");
         }

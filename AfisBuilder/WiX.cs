@@ -41,7 +41,7 @@ namespace AfisBuilder
             {
                 string name = Path.GetFileName(subfolder);
                 Folders.Add(prefix + name);
-                ScanFolders(where + @"\" + name, prefix + name + @"\");
+                ScanFolders(Path.Combine(where, name), prefix + name + @"\");
             }
         }
 
@@ -57,8 +57,8 @@ namespace AfisBuilder
             Files = new List<string>();
             foreach (string folder in Folders)
             {
-                foreach (string path in Directory.GetFiles(SourceFolder + @"\" + folder))
-                    Files.Add(folder + @"\" + Path.GetFileName(path));
+                foreach (string path in Directory.GetFiles(Path.Combine(SourceFolder, folder)))
+                    Files.Add(Path.Combine(folder, Path.GetFileName(path)));
             }
         }
 

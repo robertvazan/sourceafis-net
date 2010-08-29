@@ -18,7 +18,7 @@ namespace AfisBuilder
         
         public static void CopyTo(string file, string folder)
         {
-            File.Copy(FixPath(file), FixPath(folder + @"\" + Path.GetFileName(FixPath(file))), true);
+            File.Copy(FixPath(file), Path.Combine(FixPath(folder), Path.GetFileName(FixPath(file))), true);
         }
 
         public static void CopyDirectory(string from, string to)
