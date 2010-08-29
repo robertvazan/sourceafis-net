@@ -18,7 +18,7 @@ namespace AfisBuilder
         void SetFolder()
         {
             OutputFolder = Directory.GetCurrentDirectory();
-            Directory.SetCurrentDirectory(Command.FixPath(@"..\..\.."));
+            Directory.SetCurrentDirectory(Path.Combine("..", "..", ".."));
             SolutionFolder = Directory.GetCurrentDirectory();
         }
 
@@ -51,8 +51,8 @@ namespace AfisBuilder
             }
             else
                 Command.BuildSolution("SourceAFIS.Mono.sln", "Release");
-            Command.CopyTo(Command.FixPath(@"SourceAFIS\bin\Release\SourceAFIS.dll"), @"Sample\dll");
-            Command.ForceDeleteDirectory(Command.FixPath(@"Sample\bin"));
+            Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", @"Sample\dll");
+            Command.ForceDeleteDirectory(@"Sample\bin");
             if (!Mono)
                 Command.Build(@"Sample\Sample.csproj", "Debug");
             else
@@ -63,7 +63,7 @@ namespace AfisBuilder
 
         void AssembleZip()
         {
-            ZipFolder = Command.FixPath(OutputFolder + @"\SourceAFIS-" + Versions.Release);
+            ZipFolder = Path.Combine(OutputFolder, "SourceAFIS-" + Versions.Release);
             Console.WriteLine("Assembling ZIP archive: {0}", ZipFolder);
             Command.ForceDeleteDirectory(ZipFolder);
             Directory.CreateDirectory(ZipFolder);
@@ -110,7 +110,7 @@ namespace AfisBuilder
 
         void AssembleMsi()
         {
-            string workspace = OutputFolder + @"\msi";
+            string workspace = Command.FixPath(OutputFolder + @"\msi");
             Console.WriteLine("Assembling MSI package: {0}", workspace);
             Command.ForceDeleteDirectory(workspace);
             Command.CopyDirectory(ZipFolder, workspace);
@@ -127,7 +127,7 @@ namespace AfisBuilder
             WiX.Save(wxsPath);
 
             string wxsVersioned = "SourceAFIS-" + Versions.Release + ".wxs";
-            File.Copy(wxsPath, workspace + @"\" + wxsVersioned);
+            File.Copy(wxsPath, Path.Combine(workspace, wxsVersioned));
             Directory.SetCurrentDirectory(workspace);
             Command.CompileWiX(wxsVersioned);
             Directory.SetCurrentDirectory(SolutionFolder);
@@ -135,7 +135,7 @@ namespace AfisBuilder
 
         void AssembleFvcSubmission()
         {
-            string fvcFolder = Command.FixPath(OutputFolder + @"\SourceAFIS-FVC-" + Versions.Release);
+            string fvcFolder = Path.Combine(OutputFolder, "SourceAFIS-FVC-" + Versions.Release);
             Console.WriteLine("Assembling FVC-onGoing submission: {0}", ZipFolder);
             Command.ForceDeleteDirectory(fvcFolder);
             Directory.CreateDirectory(fvcFolder);
@@ -154,9 +154,9 @@ namespace AfisBuilder
             Directory.CreateDirectory(analyzerDir);
             Directory.SetCurrentDirectory(analyzerDir);
 
-            Analyzer.DatabasePath = Command.FixPath(@"..\..\..\..\Data\TestDatabase");
+            Analyzer.DatabasePath = Path.Combine("..", "..", "..", "..", "Data", "TestDatabase");
             Analyzer.PrepareXmlConfiguration(
-                Command.FixPath(SolutionFolder + @"\Data\DatabaseAnalyzerConfiguration.xml"),
+                Path.Combine(SolutionFolder, "Data", "DatabaseAnalyzerConfiguration.xml"),
                 "DatabaseAnalyzerConfiguration.xml");
 
             Command.CopyTo(ZipFolder + @"\Bin\DatabaseAnalyzer.exe", analyzerDir);
