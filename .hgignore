@@ -2,3 +2,6 @@ glob:bin
 glob:obj
 glob:*.suo
 glob:Data/TestDatabase
+glob:*.pidb
+glob:*.userprefs
+
