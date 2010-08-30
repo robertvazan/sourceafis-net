@@ -11,7 +11,7 @@
       <RemoveExistingProducts After="InstallInitialize" />
     </InstallExecuteSequence>
     <PropertyRef Id="NETFRAMEWORK35" />
-    <Condition Message="This application requires .NET Framework 3.5. Please install the .NET Framework then run this installer again."><![CDATA[Installed OR NETFRAMEWORK35]]></Condition>
+    <Condition Message="This application requires .NET Framework 4. Please install the .NET Framework then run this installer again."><![CDATA[Installed OR NETFRAMEWORK4]]></Condition>
     <UIRef Id="WixUI_Minimal" />
     <WixVariable Id="WixUILicenseRtf" Value="..\..\..\..\Data\license.rtf" />
     <Directory Id="TARGETDIR" Name="SourceDir">
