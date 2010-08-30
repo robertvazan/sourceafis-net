@@ -51,6 +51,7 @@ namespace AfisBuilder
             }
             else
                 Command.BuildSolution("SourceAFIS.Mono.sln", "Release");
+            Directory.CreateDirectory(Path.Combine("Sample", "dll"));
             Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", @"Sample\dll");
             Command.ForceDeleteDirectory(@"Sample\bin");
             if (!Mono)
