@@ -15,7 +15,7 @@ namespace SourceAFIS.Tuning
     public sealed class MatcherBenchmark
     {
         public DatabaseCollection TestDatabase = new DatabaseCollection();
-        public Matcher Matcher = new Matcher();
+        public ParallelMatcher Matcher = new ParallelMatcher();
         public float Timeout = 300;
 
         public MatcherReport Run()

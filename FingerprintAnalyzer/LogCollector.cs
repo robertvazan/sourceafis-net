@@ -65,7 +65,7 @@ namespace FingerprintAnalyzer
 
         DetailLogger Logger = new DetailLogger();
         Extractor Extractor = new Extractor();
-        Matcher Matcher = new Matcher();
+        ParallelMatcher Matcher = new ParallelMatcher();
 
         public LogCollector()
         {
