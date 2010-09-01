@@ -18,6 +18,8 @@ namespace SourceAFIS.Tuning
         public ParallelMatcher Matcher = new ParallelMatcher();
         public float Timeout = 300;
 
+        ParallelMatcher.PreparedProbe PreparedProbe;
+
         public MatcherReport Run()
         {
             MatcherReport report = new MatcherReport();
@@ -57,7 +59,7 @@ namespace SourceAFIS.Tuning
         void RunPrepare(Template template, Stopwatch timer)
         {
             timer.Start();
-            Matcher.Prepare(template);
+            PreparedProbe = Matcher.Prepare(template);
             timer.Stop();
         }
 
@@ -74,7 +76,7 @@ namespace SourceAFIS.Tuning
         float[] RunMatch(List<Template> templates, Stopwatch timer)
         {
             timer.Start();
-            float[] scores = Matcher.Match(templates);
+            float[] scores = Matcher.Match(PreparedProbe, templates);
             timer.Stop();
             return scores;
         }

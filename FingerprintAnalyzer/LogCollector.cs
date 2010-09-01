@@ -127,8 +127,8 @@ namespace FingerprintAnalyzer
         {
             if (Probe.InputImage != null && Candidate.InputImage != null)
             {
-                Matcher.Prepare(Probe.Template);
-                Matcher.Match(new Template[] { Candidate.Template });
+                ParallelMatcher.PreparedProbe prepared = Matcher.Prepare(Probe.Template);
+                Matcher.Match(prepared, new Template[] { Candidate.Template });
                 Match.RootIndex = Logger.Retrieve<int>("Matcher.MinutiaMatcher.BestRootIndex");
                 Match.AnyMatch = Match.RootIndex >= 0;
                 if (Match.AnyMatch)

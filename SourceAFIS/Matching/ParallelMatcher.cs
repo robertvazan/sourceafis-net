@@ -14,7 +14,11 @@ namespace SourceAFIS.Matching
         [Nested]
         public MinutiaMatcher MinutiaMatcher = new MinutiaMatcher();
 
-        ProbeIndex ProbeIndex;
+        public class PreparedProbe
+        {
+            public ProbeIndex ProbeIndex = new ProbeIndex();
+        }
+
         Queue<MinutiaMatcher> Matchers = new Queue<MinutiaMatcher>();
 
         MinutiaMatcher DequeueMatcher()
@@ -25,8 +29,13 @@ namespace SourceAFIS.Matching
                     matcher = Matchers.Dequeue();
             if (matcher == null)
                 matcher = ParameterSet.ClonePrototype(MinutiaMatcher);
-            if (ProbeIndex != null)
-                matcher.SelectProbe(ProbeIndex);
+            return matcher;
+        }
+
+        MinutiaMatcher DequeueMatcher(PreparedProbe probe)
+        {
+            MinutiaMatcher matcher = DequeueMatcher();
+            matcher.SelectProbe(probe.ProbeIndex);
             return matcher;
         }
 
@@ -36,26 +45,27 @@ namespace SourceAFIS.Matching
                 Matchers.Enqueue(matcher);
         }
 
-        public void Prepare(Template probe)
+        public PreparedProbe Prepare(Template probe)
         {
+            PreparedProbe prepared = new PreparedProbe();
             MinutiaMatcher matcher = DequeueMatcher();
-            ProbeIndex = new ProbeIndex();
             try
             {
-                matcher.BuildIndex(probe, ProbeIndex);
+                matcher.BuildIndex(probe, prepared.ProbeIndex);
             }
             finally
             {
                 EnqueueMatcher(matcher);
             }
+            return prepared;
         }
 
-        public float[] Match(IList<Template> candidates)
+        public float[] Match(PreparedProbe probe, IList<Template> candidates)
         {
             float[] scores = new float[candidates.Count];
             
             Parallel.For(0, candidates.Count,
-                () => DequeueMatcher(),
+                () => DequeueMatcher(probe),
                 (i, state, matcher) => { scores[i] = matcher.Match(candidates[i]); return matcher; },
                 (matcher) => { EnqueueMatcher(matcher); });
 
