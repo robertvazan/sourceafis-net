@@ -138,7 +138,8 @@ namespace SourceAFIS.Extraction.Filters
         PointF[,] Smooth(PointF[,] orientation, BinaryMap mask)
         {
             PointF[,] smoothed = new PointF[mask.Height, mask.Width];
-            for (int y = 0; y < mask.Height; ++y)
+            Parallel.For(0, mask.Height, delegate(int y)
+            {
                 for (int x = 0; x < mask.Width; ++x)
                     if (mask.GetBit(x, y))
                     {
@@ -152,16 +153,19 @@ namespace SourceAFIS.Extraction.Filters
                                     sum = Calc.Add(sum, orientation[ny, nx]);
                         smoothed[y, x] = sum;
                     }
+            });
             return smoothed;
         }
 
         byte[,] ToAngles(PointF[,] vectors, BinaryMap mask)
         {
             byte[,] angles = new byte[mask.Height, mask.Width];
-            for (int y = 0; y < mask.Height; ++y)
+            Parallel.For(0, mask.Height, delegate(int y)
+            {
                 for (int x = 0; x < mask.Width; ++x)
                     if (mask.GetBit(x, y))
                         angles[y, x] = Angle.ToByte(Angle.Atan(vectors[y, x]));
+            });
             return angles;
         }
 
