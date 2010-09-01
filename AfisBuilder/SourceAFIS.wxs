@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Name="SourceAFIS" Id="EF99AD8E-CC3D-491F-BF1F-4F998007A918" UpgradeCode="314DD5F0-4709-4378-915F-22526D7919F5" Language="1033" Codepage="1252" Version="1.1.0" Manufacturer="Robert Vanak">
+  <Product Name="SourceAFIS" Id="EF99AD8E-CC3D-491F-BF1F-4F998007A918" UpgradeCode="314DD5F0-4709-4378-915F-22526D7919F5" Language="1033" Codepage="1252" Version="1.2.0" Manufacturer="Robert Vanak">
     <Package Id="*" Keywords="Installer" Description="SourceAFIS Installer" Comments="SourceAFIS is an open-source fingerprint matcher." InstallerVersion="100" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
     <Media Id="1" Cabinet="SourceAFIS.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" />
     <Property Id="DiskPrompt" Value="SourceAFIS Installation [1]" />
     <Upgrade Id="314DD5F0-4709-4378-915F-22526D7919F5">
-      <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="0.1.0" IncludeMinimum="yes" Maximum="1.1.0" IncludeMaximum="no" />
+      <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="0.1.0" IncludeMinimum="yes" Maximum="1.2.0" IncludeMaximum="no" />
     </Upgrade>
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallInitialize" />
@@ -38,6 +38,9 @@
             </Component>
             <Component Id="component_Bin_SourceAFIS.Visualization.dll" Guid="324f7fe8-7833-4f37-9e36-71107a88e411">
               <File Id="Bin_SourceAFIS.Visualization.dll" Name="SourceAFIS.Visualization.dll" DiskId="1" Source="Bin\SourceAFIS.Visualization.dll" KeyPath="yes" />
+            </Component>
+            <Component Id="component_Bin_SourceAFIS.Mobile.dll" Guid="e9f7c2b8-0cc2-4817-8720-ec8b9cb724e0">
+              <File Id="Bin_SourceAFIS.Mobile.dll" Name="SourceAFIS.Mobile.dll" DiskId="1" Source="Bin\SourceAFIS.Mobile.dll" KeyPath="yes" />
             </Component>
           </Directory>
           <Directory Id="Documentation" Name="Documentation">
@@ -768,6 +771,7 @@
       <ComponentRef Id="component_Documentation_SourceAFIS___P_SourceAFIS_Simple_Person_Id.htm" />
       <ComponentRef Id="component_Bin_SourceAFIS.Tuning.dll" />
       <ComponentRef Id="component_Bin_SourceAFIS.Visualization.dll" />
+      <ComponentRef Id="component_Bin_SourceAFIS.Mobile.dll" />
     </Feature>
   </Product>
 </Wix>
