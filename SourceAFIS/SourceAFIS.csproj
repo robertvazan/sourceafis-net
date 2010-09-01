@@ -119,7 +119,6 @@
     <Compile Include="Meta\ObjectTree.cs" />
     <Compile Include="General\Range.cs" />
     <Compile Include="General\RangeF.cs" />
-    <Compile Include="General\Threader.cs" />
     <Compile Include="Meta\ParameterSet.cs" />
     <Compile Include="Meta\ParameterValue.cs" />
     <Compile Include="Simple\AfisEngine.cs" />

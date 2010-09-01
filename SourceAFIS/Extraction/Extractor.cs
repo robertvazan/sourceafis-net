@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.Threading.Tasks;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 using SourceAFIS.Extraction.Filters;
@@ -102,10 +103,9 @@ namespace SourceAFIS.Extraction
 
                 SkeletonBuilder ridges = null;
                 SkeletonBuilder valleys = null;
-                Threader.Ticket ridgeTicket = Threader.Schedule(delegate() { ridges = ProcessSkeleton("Ridges", binary, innerMask); });
-                Threader.Ticket valleyTicket = Threader.Schedule(delegate() { valleys = ProcessSkeleton("Valleys", inverted, innerMask); });
-                ridgeTicket.Wait();
-                valleyTicket.Wait();
+                Parallel.Invoke(
+                    () => { ridges = ProcessSkeleton("Ridges", binary, innerMask); },
+                    () => { valleys = ProcessSkeleton("Valleys", inverted, innerMask); });
 
                 template = new TemplateBuilder();
                 MinutiaCollector.Collect(ridges, TemplateBuilder.MinutiaType.Ending, template);
