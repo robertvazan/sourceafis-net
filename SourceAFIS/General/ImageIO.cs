@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using SystemPixelFormat = System.Drawing.Imaging.PixelFormat;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace SourceAFIS.General
 {
@@ -78,7 +79,7 @@ namespace SourceAFIS.General
         public static byte[,] GetInverted(byte[,] image)
         {
             byte[,] result = (byte[,])image.Clone();
-            Threader.Split(image.GetLength(0), delegate(int y)
+            Parallel.For(0, image.GetLength(0), delegate(int y)
             {
                 for (int x = 0; x < image.GetLength(1); ++x)
                     result[y, x] = (byte)(255 - image[y, x]);

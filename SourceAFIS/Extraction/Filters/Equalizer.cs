@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.Threading.Tasks;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 
@@ -43,7 +44,7 @@ namespace SourceAFIS.Extraction.Filters
             }
 
             float[, ,] equalization = new float[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
-            Threader.Split<Point>(blocks.AllCorners, delegate(Point corner)
+            Parallel.ForEach(blocks.AllCorners, delegate(Point corner)
             {
                 if (blockMask.GetBitSafe(corner.X, corner.Y, false)
                     || blockMask.GetBitSafe(corner.X - 1, corner.Y, false)
@@ -77,7 +78,7 @@ namespace SourceAFIS.Extraction.Filters
         float[,] PerformEqualization(BlockMap blocks, byte[,] image, float[, ,] equalization, BinaryMap blockMask)
         {
             float[,] result = new float[blocks.PixelCount.Height, blocks.PixelCount.Width];
-            Threader.Split<Point>(blocks.AllBlocks, delegate(Point block)
+            Parallel.ForEach(blocks.AllBlocks, delegate(Point block)
             {
                 if (blockMask.GetBit(block))
                 {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using SourceAFIS.General;
 
 namespace SourceAFIS.Visualization
@@ -9,7 +10,7 @@ namespace SourceAFIS.Visualization
     {
         public static void Layer(ColorF[,] bottom, ColorF[,] top)
         {
-            Threader.Split(bottom.GetLength(0), delegate(int y)
+            Parallel.For(0, bottom.GetLength(0), delegate(int y)
             {
                 for (int x = 0; x < bottom.GetLength(1); ++x)
                 {

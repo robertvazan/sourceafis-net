@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.Threading.Tasks;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 
@@ -78,7 +79,7 @@ namespace SourceAFIS.Extraction.Filters
             List<List<NeighborInfo>> neighbors = PrepareNeighbors();
 
             PointF[,] orientation = new PointF[input.GetLength(0), input.GetLength(1)];
-            Threader.Split(mask.Height, delegate(int blockY)
+            Parallel.For(0, mask.Height, delegate(int blockY)
             {
                 Range validMaskRange = GetMaskLineRange(mask, blockY);
                 if (validMaskRange.Length > 0)
@@ -115,7 +116,7 @@ namespace SourceAFIS.Extraction.Filters
         PointF[,] SumBlocks(PointF[,] orientation, BlockMap blocks, BinaryMap mask)
         {
             PointF[,] sums = new PointF[blocks.BlockCount.Height, blocks.BlockCount.Width];
-            Threader.Split<Point>(blocks.AllBlocks, delegate(Point block)
+            Parallel.ForEach(blocks.AllBlocks, delegate(Point block)
             {
                 if (mask.GetBit(block))
                 {

@@ -160,7 +160,6 @@ namespace SourceAFIS.Simple
         /// </summary>
         public AfisEngine()
         {
-            Matcher.Initialize();
         }
 
         /// <summary>

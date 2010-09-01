@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using SourceAFIS.Meta;
 using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
@@ -14,39 +15,49 @@ namespace SourceAFIS.Matching
         public MinutiaMatcher MinutiaMatcher = new MinutiaMatcher();
 
         ProbeIndex ProbeIndex;
-        MinutiaMatcher[] Matchers;
+        Queue<MinutiaMatcher> Matchers = new Queue<MinutiaMatcher>();
 
-        public void Initialize()
+        MinutiaMatcher DequeueMatcher()
         {
-            Matchers = new MinutiaMatcher[Threader.HwThreadCount];
-            for (int i = 0; i < Matchers.Length; ++i)
-                Matchers[i] = ParameterSet.ClonePrototype(MinutiaMatcher);
+            MinutiaMatcher matcher = null;
+            lock (Matchers)
+                if (Matchers.Count > 0)
+                    matcher = Matchers.Dequeue();
+            if (matcher == null)
+                matcher = ParameterSet.ClonePrototype(MinutiaMatcher);
+            if (ProbeIndex != null)
+                matcher.SelectProbe(ProbeIndex);
+            return matcher;
+        }
+
+        void EnqueueMatcher(MinutiaMatcher matcher)
+        {
+            lock (Matchers)
+                Matchers.Enqueue(matcher);
         }
 
         public void Prepare(Template probe)
         {
+            MinutiaMatcher matcher = DequeueMatcher();
             ProbeIndex = new ProbeIndex();
-            Matchers[0].BuildIndex(probe, ProbeIndex);
-            for (int i = 0; i < Matchers.Length; ++i)
-                Matchers[i].SelectProbe(ProbeIndex);
+            try
+            {
+                matcher.BuildIndex(probe, ProbeIndex);
+            }
+            finally
+            {
+                EnqueueMatcher(matcher);
+            }
         }
 
         public float[] Match(IList<Template> candidates)
         {
             float[] scores = new float[candidates.Count];
             
-            Action<Range>[] rangeMatchers = new Action<Range>[Matchers.Length];
-            for (int i = 0; i < rangeMatchers.Length; ++i)
-            {
-                MinutiaMatcher matcher = Matchers[i];
-                rangeMatchers[i] = delegate(Range subrange)
-                {
-                    for (int j = subrange.Begin; j < subrange.End; ++j)
-                        scores[j] = matcher.Match(candidates[j]);
-                };
-            }
-
-            Threader.Split(new Range(candidates.Count), rangeMatchers);
+            Parallel.For(0, candidates.Count,
+                () => DequeueMatcher(),
+                (i, state, matcher) => { scores[i] = matcher.Match(candidates[i]); return matcher; },
+                (matcher) => { EnqueueMatcher(matcher); });
 
             return scores;
         }

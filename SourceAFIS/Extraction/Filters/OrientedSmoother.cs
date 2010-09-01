@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.Threading.Tasks;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 
@@ -19,7 +20,7 @@ namespace SourceAFIS.Extraction.Filters
         {
             Point[][] lines = Lines.Construct();
             float[,] output = new float[input.GetLength(0), input.GetLength(1)];
-            Threader.Split<Point>(blocks.AllBlocks, delegate(Point block)
+            Parallel.ForEach(blocks.AllBlocks, delegate(Point block)
             {
                 if (mask.GetBit(block))
                 {

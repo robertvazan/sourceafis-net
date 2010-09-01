@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.Threading.Tasks;
 using SourceAFIS.General;
 
 namespace SourceAFIS.Visualization
@@ -11,7 +12,7 @@ namespace SourceAFIS.Visualization
         public static T[,] FillBlocks<T>(T[,] input, BlockMap blocks) where T : struct
         {
             T[,] output = new T[blocks.PixelCount.Height, blocks.PixelCount.Width];
-            Threader.Split<Point>(blocks.AllBlocks, delegate(Point block)
+            Parallel.ForEach(blocks.AllBlocks, delegate(Point block)
             {
                 T fill = input[block.Y, block.X];
                 RectangleC area = blocks.BlockAreas[block];
@@ -25,7 +26,7 @@ namespace SourceAFIS.Visualization
         public static T[,] FillCornerAreas<T>(T[,] input, BlockMap blocks) where T : struct
         {
             T[,] output = new T[blocks.PixelCount.Height, blocks.PixelCount.Width];
-            Threader.Split<Point>(blocks.AllCorners, delegate(Point corner)
+            Parallel.ForEach(blocks.AllCorners, delegate(Point corner)
             {
                 T fill = input[corner.Y, corner.X];
                 RectangleC area = blocks.CornerAreas[corner];
