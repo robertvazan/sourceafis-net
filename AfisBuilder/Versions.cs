@@ -27,7 +27,11 @@ namespace AfisBuilder
 
         public static void Update(string project)
         {
-            string path = Command.FixPath(project + @"\Properties\AssemblyInfo.cs");
+            UpdateIn(Command.FixPath(project + @"\Properties\AssemblyInfo.cs"));
+        }
+
+        public static void UpdateIn(string path)
+        {
             Console.WriteLine("Updating version: {0}", path);
             string[] lines = File.ReadAllLines(path);
             bool found = false;
