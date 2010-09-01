@@ -9,7 +9,7 @@ using SourceAFIS.Matching.Minutia;
 
 namespace SourceAFIS.Matching
 {
-    public sealed class Matcher
+    public sealed class ParallelMatcher
     {
         [Nested]
         public MinutiaMatcher MinutiaMatcher = new MinutiaMatcher();

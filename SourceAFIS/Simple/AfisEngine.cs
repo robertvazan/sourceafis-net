@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Threading.Tasks;
 using SourceAFIS.Extraction;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Matching;
@@ -153,7 +154,7 @@ namespace SourceAFIS.Simple
         }
 
         Extractor Extractor = new Extractor();
-        Matcher Matcher = new Matcher();
+        ParallelMatcher Matcher = new ParallelMatcher();
 
         /// <summary>
         /// Create new SourceAFIS engine.
