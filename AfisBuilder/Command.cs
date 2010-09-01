@@ -51,7 +51,7 @@ namespace AfisBuilder
             if (versions.Length == 0)
                 throw new ApplicationException("Cannot find msbuild tool.");
             string msbuildPath = versions[versions.Length - 1] + @"\msbuild.exe";
-            Execute(msbuildPath, "/t:Build", "/p:configuration=" + configuration, project);
+            Execute(msbuildPath, "/t:Build", "\"/p:configuration=" + configuration + "\"", project);
         }
 
         public static void BuildSolution(string solution, string configuration)

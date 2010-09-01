@@ -42,6 +42,7 @@ namespace AfisBuilder
             if (!Mono)
             {
                 Command.Build(@"SourceAFIS\SourceAFIS.csproj", "Release");
+                Command.Build(@"SourceAFIS\SourceAFIS.Mobile.csproj", "Release Mobile");
                 Command.Build(@"SourceAFIS.Visualization\SourceAFIS.Visualization.csproj", "Release");
                 Command.Build(@"SourceAFIS.Tuning\SourceAFIS.Tuning.csproj", "Release");
                 Command.Build(@"DatabaseAnalyzer\DatabaseAnalyzer.csproj", "Release");
@@ -73,7 +74,10 @@ namespace AfisBuilder
             Directory.CreateDirectory(prefix + "Bin");
             Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", prefix + "Bin");
             if (!Mono)
+            {
                 Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.xml", prefix + "Bin");
+                Command.CopyTo(@"SourceAFIS\bin\Release Mobile\SourceAFIS.Mobile.dll", prefix + "Bin");
+            }
             Command.CopyTo(@"SourceAFIS.Tuning\bin\Release\SourceAFIS.Visualization.dll", prefix + "Bin");
             Command.CopyTo(@"SourceAFIS.Tuning\bin\Release\SourceAFIS.Tuning.dll", prefix + "Bin");
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe", prefix + "Bin");
