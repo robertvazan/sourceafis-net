@@ -15,3 +15,4 @@ glob:DocProject/buildhelp
 glob:Sample/dll
 glob:*.hhp
 glob:*.HxF
+glob:*.user

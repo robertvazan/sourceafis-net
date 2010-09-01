@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if !COMPACT_FRAMEWORK
 using System.Drawing;
+#endif
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 

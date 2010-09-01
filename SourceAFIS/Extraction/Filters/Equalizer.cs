@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if !COMPACT_FRAMEWORK
 using System.Drawing;
 using System.Threading.Tasks;
+#endif
 using SourceAFIS.General;
+using SourceAFIS.Dummy;
 using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters

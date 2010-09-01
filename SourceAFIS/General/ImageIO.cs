@@ -1,16 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if !COMPACT_FRAMEWORK
 using System.Drawing;
 using System.Drawing.Imaging;
 using SystemPixelFormat = System.Drawing.Imaging.PixelFormat;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+#endif
+using System.Runtime.InteropServices;
+using SourceAFIS.Dummy;
 
 namespace SourceAFIS.General
 {
     public static class ImageIO
     {
+#if !COMPACT_FRAMEWORK
         public static byte[,] GetPixels(Bitmap bmp)
         {
             int width = bmp.Width;
@@ -75,6 +79,7 @@ namespace SourceAFIS.General
                 }
             }
         }
+#endif
 
         public static byte[,] GetInverted(byte[,] image)
         {

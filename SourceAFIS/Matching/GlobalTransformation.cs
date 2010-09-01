@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if !COMPACT_FRAMEWORK
 using System.Drawing;
+#endif
 using SourceAFIS.General;
+using SourceAFIS.Dummy;
 using SourceAFIS.Meta;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Matching.Minutia;
