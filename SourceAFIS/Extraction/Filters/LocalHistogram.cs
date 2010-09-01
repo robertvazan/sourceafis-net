@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.Threading.Tasks;
 using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Filters
@@ -11,7 +12,7 @@ namespace SourceAFIS.Extraction.Filters
         public short[, ,] Analyze(BlockMap blocks, byte[,] image)
         {
             short[, ,] histogram = new short[blocks.BlockCount.Height, blocks.BlockCount.Width, 256];
-            Threader.Split<Point>(blocks.AllBlocks, delegate(Point block)
+            Parallel.ForEach(blocks.AllBlocks, delegate(Point block)
             {
                 RectangleC area = blocks.BlockAreas[block];
                 for (int y = area.Bottom; y < area.Top; ++y)
@@ -25,7 +26,7 @@ namespace SourceAFIS.Extraction.Filters
         {
             Point[] blocksAround = new Point[] { new Point(0, 0), new Point(-1, 0), new Point(0, -1), new Point(-1, -1) };
             short[, ,] output = new short[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
-            Threader.Split<Point>(blocks.AllCorners, delegate(Point corner)
+            Parallel.ForEach(blocks.AllCorners, delegate(Point corner)
             {
                 foreach (Point relative in blocksAround)
                 {
@@ -43,7 +44,7 @@ namespace SourceAFIS.Extraction.Filters
         public short[, ,] Smooth(BlockMap blocks, short[, ,] input)
         {
             short[, ,] output = new short[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
-            Threader.Split<Point>(blocks.AllCorners, delegate(Point corner)
+            Parallel.ForEach(blocks.AllCorners, delegate(Point corner)
             {
                 for (int i = 0; i < 256; ++i)
                     output[corner.Y, corner.X, i] = input[corner.Y, corner.X, i];

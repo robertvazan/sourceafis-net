@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using SourceAFIS.General;
 
 namespace SourceAFIS.Visualization
@@ -19,7 +20,7 @@ namespace SourceAFIS.Visualization
         public static ColorF[,] Interpolate(float[,] input, ColorF from, ColorF to)
         {
             ColorF[,] output = new ColorF[input.GetLength(0), input.GetLength(1)];
-            Threader.Split(input.GetLength(0), delegate(int y)
+            Parallel.For(0, input.GetLength(0), delegate(int y)
             {
                 for (int x = 0; x < input.GetLength(1); ++x)
                     output[y, x] = Interpolate(input[y, x], from, to);

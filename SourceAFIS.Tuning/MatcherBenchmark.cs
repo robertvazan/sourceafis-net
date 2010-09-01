@@ -20,8 +20,6 @@ namespace SourceAFIS.Tuning
 
         public MatcherReport Run()
         {
-            Matcher.Initialize();
-
             MatcherReport report = new MatcherReport();
             report.SetDatabaseCount(TestDatabase.Databases.Count);
 

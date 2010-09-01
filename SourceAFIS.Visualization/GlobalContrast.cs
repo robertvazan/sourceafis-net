@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using SourceAFIS.General;
 
 namespace SourceAFIS.Visualization
@@ -24,7 +25,7 @@ namespace SourceAFIS.Visualization
             RangeF oldRange = GetMinMax(image);
             if (oldRange.Length < 0.000001f)
                 oldRange.End = oldRange.Begin + 1f;
-            Threader.Split(image.GetLength(0), delegate(int y)
+            Parallel.For(0, image.GetLength(0), delegate(int y)
             {
                 for (int x = 0; x < image.GetLength(1); ++x)
                     image[y, x] = newRange.Interpolate(oldRange.GetFraction(image[y, x]));

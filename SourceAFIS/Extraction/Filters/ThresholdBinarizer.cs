@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.Threading.Tasks;
 using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Filters
@@ -13,7 +14,7 @@ namespace SourceAFIS.Extraction.Filters
         public BinaryMap Binarize(float[,] input, float[,] baseline, BinaryMap mask, BlockMap blocks)
         {
             BinaryMap binarized = new BinaryMap(input.GetLength(1), input.GetLength(0));
-            Threader.SplitY(blocks.BlockCount, delegate(Point block)
+            Parallel.ForEach(blocks.AllBlocks, delegate(Point block)
             {
                 if (mask.GetBit(block))
                 {
