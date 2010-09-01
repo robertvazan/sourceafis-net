@@ -4,6 +4,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using SourceAFIS.Tuning.Errors;
 
 namespace SourceAFIS.Tuning.Reports
@@ -24,7 +25,7 @@ namespace SourceAFIS.Tuning.Reports
 
         public void ComputeStatistics()
         {
-            Accuracy = (from measure in AccuracyMeasure.AccuracyLandscape
+            Accuracy = (from measure in AccuracyMeasure.AccuracyLandscape.AsParallel().AsOrdered()
                         select new AccuracyStatistics(ScoreTables, measure)).ToArray();
         }
 
@@ -46,22 +47,21 @@ namespace SourceAFIS.Tuning.Reports
         {
             Directory.CreateDirectory(folder);
 
-            for (int i = 0; i < ScoreTables.Length; ++i)
+            Parallel.For(0, ScoreTables.Length, delegate(int i)
             {
                 using (FileStream stream = File.Open(Path.Combine(folder, String.Format("Database{0}.xml", i + 1)), FileMode.Create))
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(ScoreTable));
                     serializer.Serialize(stream, ScoreTables[i]);
                 }
-            }
+            });
         }
 
         void SaveAccuracy(string folder)
         {
             Directory.CreateDirectory(folder);
 
-            for (int i = 0; i < Accuracy.Length; ++i)
-                Accuracy[i].Save(Path.Combine(folder, Accuracy[i].Name), true);
+            Parallel.ForEach(Accuracy, accuracy => { accuracy.Save(Path.Combine(folder, accuracy.Name), true); });
         }
     }
 }
