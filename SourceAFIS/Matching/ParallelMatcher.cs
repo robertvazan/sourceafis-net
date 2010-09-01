@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if !COMPACT_FRAMEWORK
 using System.Threading.Tasks;
+#endif
 using SourceAFIS.Meta;
 using SourceAFIS.General;
+using SourceAFIS.Dummy;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Matching.Minutia;
 

@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if !COMPACT_FRAMEWORK
 using System.Drawing;
+#endif
 using System.Xml.Serialization;
 using SourceAFIS.General;
+using SourceAFIS.Dummy;
 using SourceAFIS.Extraction.Templates;
 
 namespace SourceAFIS.Simple
@@ -65,6 +68,7 @@ namespace SourceAFIS.Simple
         /// <seealso cref="AfisEngine.Extract"/>
         public byte[,] Image { get; set; }
 
+#if !COMPACT_FRAMEWORK
         /// <summary>
         /// Fingerprint image as <see cref="Bitmap"/> object.
         /// </summary>
@@ -81,7 +85,9 @@ namespace SourceAFIS.Simple
             get { return Image != null ? ImageIO.CreateBitmap(Image) : null; }
             set { Image = value != null ? ImageIO.GetPixels(value) : null; }
         }
+#endif
 
+#if !COMPACT_FRAMEWORK
         /// <summary>
         /// Fingerprint template.
         /// </summary>
@@ -114,6 +120,7 @@ namespace SourceAFIS.Simple
             get { return Decoded != null ? new SerializedFormat().Serialize(Decoded) : null; }
             set { Decoded = value != null ? new SerializedFormat().Deserialize(value) : null; }
         }
+#endif
 
         /// <summary>
         /// Position of the finger on hand.
@@ -131,7 +138,12 @@ namespace SourceAFIS.Simple
         [XmlAttribute]
         public Finger Finger { get; set; }
 
-        internal Template Decoded;
+#if !COMPACT_FRAMEWORK
+        internal
+#else
+        public
+#endif
+        Template Decoded;
 
         /// <summary>
         /// Create deep copy of the <see cref="Fingerprint"/>.

@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+#if !COMPACT_FRAMEWORK
 using System.Drawing;
 using System.Threading.Tasks;
+#endif
 using SourceAFIS.General;
+using SourceAFIS.Dummy;
 using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
@@ -48,7 +52,7 @@ namespace SourceAFIS.Extraction.Filters
                         neighbor.Position = Calc.Round(Calc.Multiply(distance, Angle.ToVector(angle)));
                     } while (neighbor.Position == new Point() || neighbor.Position.Y < 0);
                     neighbor.Orientation = Angle.ToVector(Angle.Add(Angle.ToOrientation(Angle.Atan(neighbor.Position)), Angle.PI));
-                    if (!neighbors.Exists(info => info.Position == neighbor.Position))
+                    if (!neighbors.Any(info => info.Position == neighbor.Position))
                         neighbors.Add(neighbor);
                 }
                 neighbors.Sort((left, right) => Calc.CompareYX(left.Position, right.Position));

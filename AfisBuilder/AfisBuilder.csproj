@@ -54,7 +54,9 @@
     <Compile Include="WiX.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SourceAFIS.wxs" />
+    <Content Include="SourceAFIS.wxs">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

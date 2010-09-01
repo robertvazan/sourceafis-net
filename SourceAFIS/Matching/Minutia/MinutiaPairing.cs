@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SourceAFIS.Dummy;
 using SourceAFIS.Extraction.Templates;
 
 namespace SourceAFIS.Matching.Minutia

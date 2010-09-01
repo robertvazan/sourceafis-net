@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+#if !COMPACT_FRAMEWORK
 using System.Threading.Tasks;
+#endif
+using SourceAFIS.General;
+using SourceAFIS.Dummy;
 using SourceAFIS.Extraction;
 using SourceAFIS.Extraction.Templates;
 using SourceAFIS.Matching;

@@ -4,7 +4,12 @@ using System.Text;
 
 namespace SourceAFIS.General
 {
-    public class AssertException : ApplicationException
+    public class AssertException
+#if !COMPACT_FRAMEWORK
+        : ApplicationException
+#else
+        : Exception
+#endif
     {
         public static void Check(bool condition)
         {
