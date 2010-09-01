@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 #if !COMPACT_FRAMEWORK
 using System.Drawing;
+using System.Threading.Tasks;
 #endif
 using SourceAFIS.General;
 using SourceAFIS.Dummy;
@@ -18,11 +19,13 @@ namespace SourceAFIS.Extraction.Filters
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
-        static readonly bool[] IsRemovable = ConstructRemovable();
+        static readonly bool[] IsRemovable;
+        static readonly bool[] IsEnding;
 
-        static bool[] ConstructRemovable()
+        static Thinner()
         {
-            bool[] removable = new bool[256];
+            IsRemovable = new bool[256];
+            IsEnding = new bool[256];
             for (uint mask = 0; mask < 256; ++mask)
             {
                 bool TL = (mask & 1) != 0;
@@ -41,9 +44,9 @@ namespace SourceAFIS.Extraction.Filters
                 bool vertical = !CL && !CR && (TL || TC || TR) && (BL || BC || BR);
                 bool end = (count == 1);
 
-                removable[mask] = !diagonal && !horizontal && !vertical && !end;
+                IsRemovable[mask] = !diagonal && !horizontal && !vertical && !end;
+                IsEnding[mask] = end;
             }
-            return removable;
         }
 
         static bool IsFalseEnding(BinaryMap binary, Point ending)
@@ -88,22 +91,26 @@ namespace SourceAFIS.Extraction.Filters
                     }
                     border.AndNot(skeleton);
 
-                    for (int y = 1; y < input.Height - 1; ++y)
-                        for (int xw = 0; xw < input.WordWidth; ++xw)
-                            if (border.IsWordNonZero(xw, y))
-                                for (int x = xw << BinaryMap.WordShift; x < (xw << BinaryMap.WordShift) + BinaryMap.WordSize; ++x)
-                                    if (x > 0 && x < input.Width - 1 && border.GetBit(x, y))
-                                    {
-                                        if (IsRemovable[intermediate.GetNeighborhood(x, y)]
-                                            || Calc.CountBits(intermediate.GetNeighborhood(x, y)) == 1
-                                            && IsFalseEnding(intermediate, new Point(x, y)))
-                                        {
-                                            removedAnything = true;
-                                            intermediate.SetBitZero(x, y);
-                                        }
-                                        else
-                                            skeleton.SetBitOne(x, y);
-                                    }
+                    for (int odd = 0; odd < 2; ++odd)
+                        Parallel.For(1, input.Height - 1, delegate(int y)
+                        {
+                            if (y % 2 == odd)
+                                for (int xw = 0; xw < input.WordWidth; ++xw)
+                                    if (border.IsWordNonZero(xw, y))
+                                        for (int x = xw << BinaryMap.WordShift; x < (xw << BinaryMap.WordShift) + BinaryMap.WordSize; ++x)
+                                            if (x > 0 && x < input.Width - 1 && border.GetBit(x, y))
+                                            {
+                                                uint neighbors = intermediate.GetNeighborhood(x, y);
+                                                if (IsRemovable[neighbors]
+                                                    || IsEnding[neighbors] && IsFalseEnding(intermediate, new Point(x, y)))
+                                                {
+                                                    removedAnything = true;
+                                                    intermediate.SetBitZero(x, y);
+                                                }
+                                                else
+                                                    skeleton.SetBitOne(x, y);
+                                            }
+                        });
                 }
             }
 
