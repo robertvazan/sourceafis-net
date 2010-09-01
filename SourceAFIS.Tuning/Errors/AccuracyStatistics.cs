@@ -4,6 +4,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using SourceAFIS.General;
 using SourceAFIS.Tuning.Reports;
 using SourceAFIS.Visualization;
@@ -65,7 +66,7 @@ namespace SourceAFIS.Tuning.Errors
         public AccuracyStatistics(ScoreTable[] tables, AccuracyMeasure measure)
         {
             Name = measure.Name;
-            PerDatabase = (from table in tables
+            PerDatabase = (from table in tables.AsParallel().AsOrdered()
                            select new PerDatabaseInfo(table, measure)).ToArray();
             AverageError = PerDatabase.Average(db => db.Scalar);
             Separation = PerDatabase.Average(db => db.Separation);
@@ -89,8 +90,8 @@ namespace SourceAFIS.Tuning.Errors
             }
 
             if (perDatabase)
-                for (int i = 0; i < PerDatabase.Length; ++i)
-                    PerDatabase[i].Save(Path.Combine(folder, String.Format("Database{0}", i + 1)));
+                Parallel.For(0, PerDatabase.Length,
+                    (i) => { PerDatabase[i].Save(Path.Combine(folder, String.Format("Database{0}", i + 1))); });
         }
     }
 }
