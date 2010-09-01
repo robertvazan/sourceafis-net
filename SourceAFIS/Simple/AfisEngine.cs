@@ -215,16 +215,19 @@ namespace SourceAFIS.Simple
             lock (this)
             {
                 BestMatchSkipper collector = new BestMatchSkipper(1, SkipBestMatches);
-                foreach (Fingerprint probeFp in probe)
-                {
-                    var candidateTemplates = (from candidateFp in candidate
-                                              where IsCompatibleFinger(probeFp.Finger, candidateFp.Finger)
-                                              select candidateFp.Decoded).ToList();
+                Parallel.ForEach(probe, probeFp =>
+                    {
+                        var candidateTemplates = (from candidateFp in candidate
+                                                  where IsCompatibleFinger(probeFp.Finger, candidateFp.Finger)
+                                                  select candidateFp.Decoded).ToList();
 
-                    ParallelMatcher.PreparedProbe probeIndex = Matcher.Prepare(probeFp.Decoded);
-                    foreach (float score in Matcher.Match(probeIndex, candidateTemplates))
-                        collector.AddScore(0, score);
-                }
+                        ParallelMatcher.PreparedProbe probeIndex = Matcher.Prepare(probeFp.Decoded);
+                        float[] scores = Matcher.Match(probeIndex, candidateTemplates);
+
+                        lock (collector)
+                            foreach (float score in scores)
+                                collector.AddScore(0, score);
+                    });
 
                 return ApplyThreshold(collector.GetSkipScore(0));
             }
@@ -257,16 +260,18 @@ namespace SourceAFIS.Simple
             {
                 TCandidate[] candidates = new List<TCandidate>(candidateSource).ToArray();
                 BestMatchSkipper collector = new BestMatchSkipper(candidates.Length, SkipBestMatches);
-                foreach (Fingerprint probeFp in probe)
-                {
-                    List<int> personsByFingerprint = new List<int>();
-                    List<Template> candidateTemplates = FlattenHierarchy(candidates, probeFp.Finger, out personsByFingerprint);
+                Parallel.ForEach(probe, probeFp =>
+                    {
+                        List<int> personsByFingerprint = new List<int>();
+                        List<Template> candidateTemplates = FlattenHierarchy(candidates, probeFp.Finger, out personsByFingerprint);
 
-                    ParallelMatcher.PreparedProbe probeIndex = Matcher.Prepare(probeFp.Decoded);
-                    float[] scores = Matcher.Match(probeIndex, candidateTemplates);
-                    for (int i = 0; i < scores.Length; ++i)
-                        collector.AddScore(personsByFingerprint[i], scores[i]);
-                }
+                        ParallelMatcher.PreparedProbe probeIndex = Matcher.Prepare(probeFp.Decoded);
+                        float[] scores = Matcher.Match(probeIndex, candidateTemplates);
+
+                        lock (collector)
+                            for (int i = 0; i < scores.Length; ++i)
+                                collector.AddScore(personsByFingerprint[i], scores[i]);
+                    });
 
                 int bestPersonIndex;
                 float bestScore = collector.GetBestScore(out bestPersonIndex);
