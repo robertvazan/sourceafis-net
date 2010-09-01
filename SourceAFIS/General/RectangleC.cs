@@ -128,53 +128,17 @@ namespace SourceAFIS.General
                 Top = point.Y + 1;
         }
 
-        sealed class RectEnumerator : IEnumerator<Point>
-        {
-            RectangleC Rect;
-            Point At;
-
-            public RectEnumerator(RectangleC rect)
-            {
-                Rect = rect;
-                At.X = rect.X - 1;
-                At.Y = rect.Y;
-            }
-
-            public Point Current { get { return At; } }
-            object IEnumerator.Current { get { return At; } }
-
-            public bool MoveNext()
-            {
-                ++At.X;
-                if (At.X >= Rect.Right)
-                {
-                    ++At.Y;
-                    if (At.Y >= Rect.Top)
-                        return false;
-                    At.X = Rect.Left;
-                }
-                return true;
-            }
-
-            public void Reset()
-            {
-                At.X = Rect.X - 1;
-                At.Y = Rect.Y;
-            }
-
-            public void Dispose()
-            {
-            }
-        }
-
         IEnumerator<Point> IEnumerable<Point>.GetEnumerator()
         {
-            return new RectEnumerator(this);
+            Point point = new Point();
+            for (point.Y = Bottom; point.Y < Top; ++point.Y)
+                for (point.X = Left; point.X < Right; ++point.X)
+                    yield return point;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return new RectEnumerator(this);
+            return ((IEnumerable<Point>)this).GetEnumerator();
         }
 
         int IList<Point>.IndexOf(Point point) { throw new NotImplementedException(); }
