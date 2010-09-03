@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Tuning", "Source
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Visualization", "SourceAFIS.Visualization\SourceAFIS.Visualization.csproj", "{5570647C-1F35-4FE7-9E9B-FF193154DD95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleApiTests", "SimpleApiTests\SimpleApiTests.csproj", "{21B0CCCA-0239-4C01-BC3D-FF34EE0E3EDB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{5570647C-1F35-4FE7-9E9B-FF193154DD95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5570647C-1F35-4FE7-9E9B-FF193154DD95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5570647C-1F35-4FE7-9E9B-FF193154DD95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21B0CCCA-0239-4C01-BC3D-FF34EE0E3EDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21B0CCCA-0239-4C01-BC3D-FF34EE0E3EDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21B0CCCA-0239-4C01-BC3D-FF34EE0E3EDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21B0CCCA-0239-4C01-BC3D-FF34EE0E3EDB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
