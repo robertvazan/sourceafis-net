@@ -56,11 +56,20 @@ namespace SourceAFIS.Simple
         /// <value>
         /// An array containing all <see cref="Fingerprint"/>s belonging to this <see cref="Person"/>.
         /// </value>
+        /// <remarks>
+        /// <see cref="AllFingerprints"/> property exists primarily to facilitate XML serialization.
+        /// Use <see cref="this"/> to access fingerprints contained in <see cref="Person"/> object.
+        /// </remarks>
         /// <seealso cref="this"/>
         public Fingerprint[] AllFingerprints
         {
             get { return InnerList.ToArray(); }
-            set { InnerList = new List<Fingerprint>(value); }
+            set
+            {
+                foreach (Fingerprint fp in value)
+                    CheckNull(fp);
+                InnerList = new List<Fingerprint>(value);
+            }
         }
 
         /// <summary>
@@ -96,6 +105,7 @@ namespace SourceAFIS.Simple
         /// <param name="index">Position of the <see cref="Fingerprint"/> within person's fingerprint collection.</param>
         /// <value>Fingerprint at the specified index.</value>
         /// <seealso cref="AllFingerprints"/>
+        [XmlIgnore]
         public Fingerprint this[int index]
         {
             get { return InnerList[index]; }
@@ -119,6 +129,7 @@ namespace SourceAFIS.Simple
         public Person Clone()
         {
             Person clone = new Person();
+            clone.Id = Id;
             foreach (Fingerprint fp in InnerList)
                 clone.Add(fp.Clone());
             return clone;
