@@ -8,8 +8,8 @@
     <ProjectGuid>{21B0CCCA-0239-4C01-BC3D-FF34EE0E3EDB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnitTests</RootNamespace>
-    <AssemblyName>NUnitTests</AssemblyName>
+    <RootNamespace>SourceAFIS.Tests</RootNamespace>
+    <AssemblyName>SourceAFIS.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
