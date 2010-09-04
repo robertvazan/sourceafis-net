@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 
-namespace NUnitTests
+namespace SourceAFIS.Tests
 {
     static class Settings
     {
