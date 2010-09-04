@@ -23,7 +23,7 @@ namespace SimpleApiTests
             Assert.AreEqual(Finger.Any, fp.Finger);
             Assert.IsNull(fp.Template);
             Assert.IsNull(fp.Image);
-            Assert.IsNull(fp.BitmapImage);
+            Assert.IsNull(fp.AsBitmap);
         }
 
         [Test]
@@ -38,17 +38,17 @@ namespace SimpleApiTests
         }
 
         [Test]
-        public void BitmapImage()
+        public void AsBitmap()
         {
             Fingerprint fp = new Fingerprint();
             Bitmap bitmap = Settings.SomeFingerprint;
 
-            fp.BitmapImage = bitmap;
+            fp.AsBitmap = bitmap;
             Assert.IsNotNull(fp.Image);
             Assert.AreEqual(bitmap.Height, fp.Image.GetLength(0));
             Assert.AreEqual(bitmap.Width, fp.Image.GetLength(1));
 
-            Bitmap bitmap2 = fp.BitmapImage;
+            Bitmap bitmap2 = fp.AsBitmap;
             Assert.AreNotSame(bitmap, bitmap2);
             Assert.AreEqual(bitmap.Height, bitmap2.Height);
             Assert.AreEqual(bitmap.Width, bitmap2.Width);
@@ -57,19 +57,19 @@ namespace SimpleApiTests
             bitmap2.Save(saved, ImageFormat.Bmp);
             Bitmap bitmap3 = new Bitmap(Bitmap.FromStream(saved));
 
-            Fingerprint fp2 = new Fingerprint() { BitmapImage = bitmap3 };
+            Fingerprint fp2 = new Fingerprint() { AsBitmap = bitmap3 };
             Assert.AreEqual(bitmap.Height, fp.Image.GetLength(0));
             Assert.AreEqual(bitmap.Width, fp.Image.GetLength(1));
             Assert.AreEqual(fp.Image, fp2.Image);
 
-            fp.BitmapImage = null;
+            fp.AsBitmap = null;
             Assert.IsNull(fp.Image);
         }
 
         [Test]
         public void Template()
         {
-            Fingerprint fp1 = new Fingerprint() { BitmapImage = Settings.SomeFingerprint };
+            Fingerprint fp1 = new Fingerprint() { AsBitmap = Settings.SomeFingerprint };
             Assert.IsNull(fp1.Template);
 
             AfisEngine afis = new AfisEngine();
@@ -86,7 +86,7 @@ namespace SimpleApiTests
 
             Person person1 = new Person() { fp1 };
             Person person2 = new Person() { fp2 };
-            Person person3 = new Person() { new Fingerprint() { BitmapImage = Settings.NonMatchingFingerprint } };
+            Person person3 = new Person() { new Fingerprint() { AsBitmap = Settings.NonMatchingFingerprint } };
             afis.Extract(person3[0]);
             afis.Threshold = 0;
             Assert.That(afis.Verify(person1, person2) > afis.Verify(person1, person3));
@@ -109,9 +109,9 @@ namespace SimpleApiTests
         {
             AfisEngine afis = new AfisEngine();
             afis.Threshold = 0;
-            Person person1 = new Person() { new Fingerprint() { BitmapImage = Settings.SomeFingerprint } };
+            Person person1 = new Person() { new Fingerprint() { AsBitmap = Settings.SomeFingerprint } };
             afis.Extract(person1[0]);
-            Person person2 = new Person() { new Fingerprint() { BitmapImage = Settings.MatchingFingerprint } };
+            Person person2 = new Person() { new Fingerprint() { AsBitmap = Settings.MatchingFingerprint } };
             afis.Extract(person2[0]);
 
             person1[0].Finger = Finger.RightThumb;
@@ -133,7 +133,7 @@ namespace SimpleApiTests
             Assert.That(afis.Verify(person1, person2) > 0);
             Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
 
-            Person person3 = new Person() { new Fingerprint() { BitmapImage = Settings.MatchingFingerprint } };
+            Person person3 = new Person() { new Fingerprint() { AsBitmap = Settings.MatchingFingerprint } };
             afis.Extract(person3[0]);
             person1[0].Finger = Finger.LeftIndex;
             person2[0].Finger = Finger.LeftIndex;
@@ -147,7 +147,7 @@ namespace SimpleApiTests
         public void Clone()
         {
             Fingerprint fp1 = new Fingerprint();
-            fp1.BitmapImage = Settings.SomeFingerprint;
+            fp1.AsBitmap = Settings.SomeFingerprint;
             fp1.Finger = Finger.RightThumb;
             AfisEngine afis = new AfisEngine();
             afis.Extract(fp1);
@@ -168,7 +168,7 @@ namespace SimpleApiTests
         public void Serialize()
         {
             Fingerprint fp1 = new Fingerprint();
-            fp1.BitmapImage = Settings.SomeFingerprint;
+            fp1.AsBitmap = Settings.SomeFingerprint;
             fp1.Finger = Finger.RightThumb;
             AfisEngine afis = new AfisEngine();
             afis.Extract(fp1);
@@ -189,7 +189,7 @@ namespace SimpleApiTests
         public void XmlSerialize()
         {
             Fingerprint fp1 = new Fingerprint();
-            fp1.BitmapImage = Settings.SomeFingerprint;
+            fp1.AsBitmap = Settings.SomeFingerprint;
             fp1.Finger = Finger.RightThumb;
             AfisEngine afis = new AfisEngine();
             afis.Extract(fp1);

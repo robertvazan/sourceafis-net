@@ -39,12 +39,12 @@ namespace Sample
             // Initialize empty fingerprint object and set properties
             MyFingerprint fp = new MyFingerprint();
             fp.Filename = filename;
-            // Load image from the file, fp.BitmapImage makes a copy of the image, so that we can dispose it afterwards
+            // Load image from the file, fp.AsBitmap makes a copy of the image, so that we can dispose it afterwards
             Console.WriteLine(" Loading image from {0}...", filename);
             using (Image fromFile = Bitmap.FromFile(filename))
                 using (Bitmap bitmap = new Bitmap(fromFile))
-                    fp.BitmapImage = bitmap;
-            // Above update of fp.BitmapImage initialized also raw image in fp.Image
+                    fp.AsBitmap = bitmap;
+            // Above update of fp.AsBitmap initialized also raw image in fp.Image
             // Check raw image dimensions, Y axis is first, X axis is second
             Console.WriteLine(" Image size = {0} x {1} (width x height)", fp.Image.GetLength(1), fp.Image.GetLength(0));
 
