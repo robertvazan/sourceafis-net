@@ -24,17 +24,56 @@ namespace SimpleApiTests
             Assert.IsNull(fp.Template);
             Assert.IsNull(fp.Image);
             Assert.IsNull(fp.AsBitmap);
+            Assert.IsNull(fp.AsImageData);
         }
 
         [Test]
         public void Image()
         {
             Fingerprint fp = new Fingerprint();
-            byte[,] image = new byte[100, 100];
+            byte[,] image = new byte[200, 200];
             fp.Image = image;
             Assert.AreSame(image, fp.Image);
+            
             fp.Image = null;
             Assert.IsNull(fp.Image);
+
+            Assert.Throws<ApplicationException>(() => { fp.Image = new byte[50, 200]; });
+            Assert.Throws<ApplicationException>(() => { fp.Image = new byte[200, 50]; });
+        }
+
+        [Test]
+        public void AsImageData()
+        {
+            Fingerprint fp = new Fingerprint();
+            Bitmap bitmap = Settings.SomeFingerprint;
+
+            fp.AsBitmap = bitmap;
+            byte[] data = fp.AsImageData;
+            Assert.IsNotNull(data);
+            Assert.AreEqual(bitmap.Height * bitmap.Width + 8, data.Length);
+
+            Fingerprint fp2 = new Fingerprint() { AsImageData = data };
+            Assert.AreEqual(bitmap.Height, fp.Image.GetLength(0));
+            Assert.AreEqual(bitmap.Width, fp.Image.GetLength(1));
+
+            byte[] data2 = fp2.AsImageData;
+            Assert.AreNotSame(data, data2);
+            Assert.AreEqual(data, data2);
+
+            fp.AsImageData = null;
+            Assert.IsNull(fp.Image);
+
+            Assert.Throws<ApplicationException>(() => { fp.AsImageData = new byte[3]; });
+            Assert.Throws<ApplicationException>(() => { fp.AsImageData = new byte[100]; });
+            Assert.Throws<ApplicationException>(() =>
+            {
+                fp.AsImageData = BitConverter.GetBytes(200).Concat(BitConverter.GetBytes(200)).Concat(new byte[100]).ToArray();
+            });
+            Assert.Throws<ApplicationException>(() =>
+            {
+                fp.AsImageData = BitConverter.GetBytes(200).Concat(BitConverter.GetBytes(200)).Concat(new byte[100000]).ToArray();
+            });
         }
 
         [Test]
@@ -64,6 +103,8 @@ namespace SimpleApiTests
 
             fp.AsBitmap = null;
             Assert.IsNull(fp.Image);
+
+            Assert.Throws<ApplicationException>(() => { fp.AsBitmap = new Bitmap(50, 50); });
         }
 
         [Test]
@@ -94,18 +135,12 @@ namespace SimpleApiTests
 
             fp1.Template = null;
             Assert.IsNull(fp1.Template);
+
+            Assert.Catch(() => { fp1.Template = new byte[100]; });
         }
 
         [Test]
-        public void Finger_GetSet()
-        {
-            Fingerprint fp = new Fingerprint();
-            fp.Finger = Finger.LeftIndex;
-            Assert.AreEqual(Finger.LeftIndex, fp.Finger);
-        }
-
-        [Test]
-        public void Finger_Skipping()
+        public void FingerTest()
         {
             AfisEngine afis = new AfisEngine();
             afis.Threshold = 0;
@@ -115,6 +150,7 @@ namespace SimpleApiTests
             afis.Extract(person2[0]);
 
             person1[0].Finger = Finger.RightThumb;
+            Assert.AreEqual(Finger.RightThumb, person1[0].Finger);
             person2[0].Finger = Finger.RightThumb;
             Assert.That(afis.Verify(person1, person2) > 0);
             Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
@@ -141,6 +177,8 @@ namespace SimpleApiTests
             Assert.That(afis.Identify(person1, new[] { person2, person3 }) == person2);
             person1[0].Finger = Finger.RightMiddle;
             Assert.That(afis.Identify(person1, new[] { person2, person3 }) == person3);
+
+            Assert.Catch(() => { person1[0].Finger = (Finger)(-1); });
         }
 
         [Test]
