@@ -89,7 +89,7 @@ namespace Sample
             // Look up the probe using Threshold = 10
             Afis.Threshold = 10;
             Console.WriteLine("Identifying {0} in database of {1} persons...", probe.Name, database.Count);
-            MyPerson match = Afis.Identify(probe, database);
+            MyPerson match = Afis.Identify(probe, database) as MyPerson;
             // Null result means that there is no candidate with similarity score above threshold
             if (match == null)
             {
