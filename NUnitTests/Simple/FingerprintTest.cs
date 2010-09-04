@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 using NUnit.Framework;
 using SourceAFIS.Simple;
 
-namespace NUnitTests
+namespace NUnitTests.Simple
 {
     [TestFixture]
     public class FingerprintTest
