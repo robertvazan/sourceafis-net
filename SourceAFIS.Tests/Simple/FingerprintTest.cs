@@ -200,6 +200,11 @@ namespace SourceAFIS.Tests.Simple
             Assert.IsNull(fp3.Image);
             Assert.AreEqual(Finger.Any, fp3.Finger);
             Assert.IsNull(fp3.Template);
+
+            Fingerprint fp4 = (fp2 as ICloneable).Clone() as Fingerprint;
+            Assert.AreEqual(fp1.Image, fp4.Image);
+            Assert.AreEqual(Finger.RightThumb, fp4.Finger);
+            Assert.AreEqual(fp1.Template, fp4.Template);
         }
 
         [Test]
