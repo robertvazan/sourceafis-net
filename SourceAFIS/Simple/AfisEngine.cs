@@ -241,7 +241,7 @@ namespace SourceAFIS.Simple
         /// Compares one <see cref="Person"/> against a set of other <see cref="Person"/>s and returns the best match.
         /// </summary>
         /// <param name="probe">Person to look up in the collection.</param>
-        /// <param name="candidateSource">Collection of persons that will be searched.</param>
+        /// <param name="candidates">Collection of persons that will be searched.</param>
         /// <returns>Best matching <see cref="Person"/> in the collection or <see langword="null"/> if there is no match.</returns>
         /// <remarks>
         /// <para>
@@ -258,16 +258,16 @@ namespace SourceAFIS.Simple
         /// <seealso cref="Threshold"/>
         /// <seealso cref="SkipBestMatches"/>
         /// <seealso cref="Verify"/>
-        public TCandidate Identify<TCandidate>(Person probe, IEnumerable<TCandidate> candidateSource) where TCandidate : Person
+        public Person Identify(Person probe, IEnumerable<Person> candidates)
         {
             lock (this)
             {
-                TCandidate[] candidates = new List<TCandidate>(candidateSource).ToArray();
-                BestMatchSkipper collector = new BestMatchSkipper(candidates.Length, SkipBestMatches);
+                Person[] candidateArray = new List<Person>(candidates).ToArray();
+                BestMatchSkipper collector = new BestMatchSkipper(candidateArray.Length, SkipBestMatches);
                 Parallel.ForEach(probe, probeFp =>
                     {
                         List<int> personsByFingerprint = new List<int>();
-                        List<Template> candidateTemplates = FlattenHierarchy(candidates, probeFp.Finger, out personsByFingerprint);
+                        List<Template> candidateTemplates = FlattenHierarchy(candidateArray, probeFp.Finger, out personsByFingerprint);
 
                         ParallelMatcher.PreparedProbe probeIndex = Matcher.Prepare(probeFp.Decoded);
                         float[] scores = Matcher.Match(probeIndex, candidateTemplates);
@@ -280,7 +280,7 @@ namespace SourceAFIS.Simple
                 int bestPersonIndex;
                 float bestScore = collector.GetBestScore(out bestPersonIndex);
                 if (bestPersonIndex >= 0 && bestScore >= Threshold)
-                    return candidates[bestPersonIndex];
+                    return candidateArray[bestPersonIndex];
                 else
                     return null;
             }
