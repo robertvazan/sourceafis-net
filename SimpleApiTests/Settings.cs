@@ -11,7 +11,7 @@ namespace SimpleApiTests
     {
         public static string RootFolder = Path.Combine("..", "..", "..");
         public static string DatabasePath = Path.Combine(RootFolder, "Data", "TestDatabase");
-        public static string SomeDatabase = Path.Combine(DatabasePath, "FVC2000", "DB1_B");
+        public static string SomeDatabase = Path.Combine(DatabasePath, "FVC2000", "DB2_B");
 
         public static string SomeFingerprintPath = Path.Combine(SomeDatabase, "101_1.tif");
         public static string MatchingFingerprintPath = Path.Combine(SomeDatabase, "101_2.tif");

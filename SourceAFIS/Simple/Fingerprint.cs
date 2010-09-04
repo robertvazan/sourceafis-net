@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 #endif
 using System.Xml.Serialization;
+using System.IO;
 using SourceAFIS.General;
 using SourceAFIS.Dummy;
 using SourceAFIS.Extraction.Templates;
@@ -38,6 +39,8 @@ namespace SourceAFIS.Simple
         /// </summary>
         public Fingerprint() { }
 
+        byte[,] ImageData;
+
         /// <summary>
         /// Fingerprint image.
         /// </summary>
@@ -65,8 +68,86 @@ namespace SourceAFIS.Simple
         /// </remarks>
         /// <seealso cref="Template"/>
         /// <seealso cref="AsBitmap"/>
+        /// <seealso cref="AsImageData"/>
         /// <seealso cref="AfisEngine.Extract"/>
-        public byte[,] Image { get; set; }
+        [XmlIgnore]
+        public byte[,] Image
+        {
+            get { return ImageData; }
+            set
+            {
+                if (value == null)
+                    ImageData = null;
+                else
+                {
+                    if (value.GetLength(0) < 100 || value.GetLength(1) < 100)
+                        throw new ApplicationException("Fingerprint image is too small.");
+                    ImageData = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fingerprint image as raw image in byte array.
+        /// </summary>
+        /// <value>
+        /// Fingerprint image from <see cref="Image"/> property converted to raw image
+        /// (one-dimensional byte array) or <see langword="null"/> if <see cref="Image"/>
+        /// is <see langword="null"/>.
+        /// </value>
+        /// <seealso cref="Image"/>
+        /// <seealso cref="AsBitmap"/>
+        /// <seealso cref="Template"/>
+        /// <seealso cref="AfisEngine.Extract"/>
+        public byte[] AsImageData
+        {
+            get
+            {
+                byte[,] image = Image;
+                if (image == null)
+                    return null;
+                else
+                {
+                    int height = image.GetLength(0);
+                    int width = image.GetLength(1);
+
+                    byte[] packed = new byte[8 + image.Length];
+                    BitConverter.GetBytes(height).CopyTo(packed, 0);
+                    BitConverter.GetBytes(width).CopyTo(packed, 4);
+
+                    for (int y = 0; y < height; ++y)
+                        for (int x = 0; x < width; ++x)
+                            packed[8 + y * width + x] = image[y, x];
+
+                    return packed;
+                }
+            }
+            set
+            {
+                if (value == null)
+                    Image = null;
+                else
+                {
+                    if (value.Length <= 8)
+                        throw new ApplicationException("Raw image array is too short.");
+                    
+                    int height = BitConverter.ToInt32(value, 0);
+                    int width = BitConverter.ToInt32(value, 4);
+
+                    if (height <= 0 || width <= 0)
+                        throw new ApplicationException("Invalid image dimensions in raw image array.");
+                    if (8 + width * height != value.Length)
+                        throw new ApplicationException("Incorrect length of raw image array.");
+
+                    byte[,] unpacked = new byte[height, width];
+                    for (int y = 0; y < height; ++y)
+                        for (int x = 0; x < width; ++x)
+                            unpacked[y, x] = value[8 + y * width + x];
+
+                    Image = unpacked;
+                }
+            }
+        }
 
 #if !COMPACT_FRAMEWORK
         /// <summary>
@@ -77,6 +158,7 @@ namespace SourceAFIS.Simple
         /// object or <see langword="null"/> if <see cref="Image"/> is <see langword="null"/>.
         /// </value>
         /// <seealso cref="Image"/>
+        /// <seealso cref="AsImageData"/>
         /// <seealso cref="Template"/>
         /// <seealso cref="AfisEngine.Extract"/>
         [XmlIgnore]
@@ -114,13 +196,14 @@ namespace SourceAFIS.Simple
         /// <seealso cref="Image"/>
         /// <seealso cref="AfisEngine.Extract"/>
         /// <seealso cref="SourceAFIS.Extraction.Templates.SerializedFormat"/>
-        [XmlAttribute]
         public byte[] Template
         {
             get { return Decoded != null ? new SerializedFormat().Serialize(Decoded) : null; }
             set { Decoded = value != null ? new SerializedFormat().Deserialize(value) : null; }
         }
 #endif
+
+        Finger FingerPosition;
 
         /// <summary>
         /// Position of the finger on hand.
@@ -136,7 +219,16 @@ namespace SourceAFIS.Simple
         /// </remarks>
         /// <seealso cref="SourceAFIS.Simple.Finger"/>
         [XmlAttribute]
-        public Finger Finger { get; set; }
+        public Finger Finger
+        {
+            get { return FingerPosition; }
+            set
+            {
+                if (!Enum.IsDefined(typeof(Finger), value))
+                    throw new ApplicationException("Invalid finger position.");
+                FingerPosition = value;
+            }
+        }
 
 #if !COMPACT_FRAMEWORK
         internal
