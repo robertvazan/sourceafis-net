@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 
-namespace SimpleApiTests
+namespace NUnitTests
 {
     static class Settings
     {
