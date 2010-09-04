@@ -27,7 +27,7 @@ namespace FvcEnroll
                 using (Image image = Image.FromFile(args[0]))
                 {
                     using (Bitmap bitmap = new Bitmap(image))
-                        fp.BitmapImage = bitmap;
+                        fp.AsBitmap = bitmap;
                 }
                 afis.Extract(fp);
                 File.WriteAllBytes(args[1], fp.Template);
