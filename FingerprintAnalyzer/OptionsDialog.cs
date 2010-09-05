@@ -23,10 +23,10 @@ namespace FingerprintAnalyzer
         {
             OnChange = delegate() { };
 
-            Defaults = (Options)options.DeepClone();
+            Defaults = options.DeepClone();
             PersistentStore.Load(options);
             Options = options;
-            LastCommit = (Options)options.DeepClone();
+            LastCommit = options.DeepClone();
 
             SuspendLayout();
             

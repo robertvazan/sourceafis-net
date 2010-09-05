@@ -74,7 +74,7 @@ namespace SourceAFIS.Tuning.Database
             using (FileStream stream = File.OpenRead(path))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                DatabaseCollection loaded = (DatabaseCollection)formatter.Deserialize(stream);
+                DatabaseCollection loaded = formatter.Deserialize(stream) as DatabaseCollection;
                 Databases = loaded.Databases;
                 loaded.Databases = null;
             }

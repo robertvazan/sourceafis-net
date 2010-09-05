@@ -225,9 +225,9 @@ namespace SourceAFIS.General
             return result;
         }
 
-        public static object DeepClone(this object root)
+        public static T DeepClone<T>(this T root) where T : class
         {
-            object clone = root.GetType().GetConstructor(new Type[0]).Invoke(new object[0]);
+            T clone = typeof(T).GetConstructor(new Type[0]).Invoke(new object[0]) as T;
             foreach (FieldInfo fieldInfo in root.GetType().GetFields())
             {
                 if (!fieldInfo.FieldType.IsClass)
@@ -247,17 +247,17 @@ namespace SourceAFIS.General
         }
 
         public static IEnumerable<T> CloneItems<T>(this IEnumerable<T> sequence)
-            where T : ICloneable
+            where T : class, ICloneable
         {
             return from item in sequence
-                   select (T)item.Clone();
+                   select item.Clone() as T;
         }
 
         public static List<T> CloneItems<T>(this List<T> sequence)
-            where T : ICloneable
+            where T : class, ICloneable
         {
             return (from item in sequence
-                    select (T)item.Clone()).ToList();
+                    select item.Clone() as T).ToList();
         }
 
         public static void DeepCopyTo(this object source, object target)
