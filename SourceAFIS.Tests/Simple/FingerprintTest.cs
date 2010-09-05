@@ -221,7 +221,7 @@ namespace SourceAFIS.Tests.Simple
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, fp1);
             stream.Position = 0;
-            Fingerprint fp2 = (Fingerprint)formatter.Deserialize(stream);
+            Fingerprint fp2 = formatter.Deserialize(stream) as Fingerprint;
 
             Assert.AreEqual(fp1.Image, fp2.Image);
             Assert.AreEqual(fp1.Finger, fp2.Finger);
@@ -242,7 +242,7 @@ namespace SourceAFIS.Tests.Simple
             XmlSerializer serializer = new XmlSerializer(typeof(Fingerprint));
             serializer.Serialize(stream, fp1);
             stream.Position = 0;
-            Fingerprint fp2 = (Fingerprint)serializer.Deserialize(stream);
+            Fingerprint fp2 = serializer.Deserialize(stream) as Fingerprint;
 
             Assert.AreEqual(fp1.Image, fp2.Image);
             Assert.AreEqual(fp1.Finger, fp2.Finger);

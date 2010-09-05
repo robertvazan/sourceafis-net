@@ -57,7 +57,7 @@ namespace SourceAFIS.Meta
             ObjectReference = instance;
             Field = field;
             foreach (object attribute in field.GetCustomAttributes(typeof(ParameterAttribute), true))
-                Attribute = (ParameterAttribute)attribute;
+                Attribute = attribute as ParameterAttribute;
             ReadAttribute();
             ReadValue();
         }
@@ -69,7 +69,7 @@ namespace SourceAFIS.Meta
             FieldPath = objectPath + "." + field.Name;
             Field = field;
             foreach (object attribute in field.GetCustomAttributes(typeof(ParameterAttribute), true))
-                Attribute = (ParameterAttribute)attribute;
+                Attribute = attribute as ParameterAttribute;
             ReadAttribute();
             ReadValue();
         }

@@ -45,7 +45,7 @@ namespace SourceAFIS.Meta
                         Parameter parameter = new Parameter();
                         parameter.Value = new ParameterValue(path, tree, field);
                         parameter.OriginalValue = parameter.Value.Value.Double;
-                        parameter.Attribute = (DpiAdjustedAttribute)attribute;
+                        parameter.Attribute = attribute as DpiAdjustedAttribute;
                         Parameters.Add(parameter);
                     }
             }

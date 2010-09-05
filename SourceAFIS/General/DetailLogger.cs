@@ -87,7 +87,7 @@ namespace SourceAFIS.General
             {
                 object logged;
                 if (data is ICloneable)
-                    logged = ((ICloneable)data).Clone();
+                    logged = (data as ICloneable).Clone();
                 else
                     logged = data;
                 string qualifiedPath = path + GetThreadName();
@@ -134,7 +134,7 @@ namespace SourceAFIS.General
                         if (copyTree.Contains(path))
                         {
                             object copyReference = copyTree.GetObject(path);
-                            field.SetValue(copyReference, ((ActiveHook)hook).Clone());
+                            field.SetValue(copyReference, (hook as ActiveHook).Clone());
                         }
                     }
                 }

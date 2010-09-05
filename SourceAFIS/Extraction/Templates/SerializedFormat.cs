@@ -36,7 +36,7 @@ namespace SourceAFIS.Extraction.Templates
         {
 #if !COMPACT_FRAMEWORK
             BinaryFormatter formatter = new BinaryFormatter();
-            return (Template)formatter.Deserialize(stream);
+            return formatter.Deserialize(stream) as Template;
 #else
             throw new AssertException();
 #endif

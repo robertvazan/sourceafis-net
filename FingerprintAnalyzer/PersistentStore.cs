@@ -104,7 +104,7 @@ namespace FingerprintAnalyzer
                         if (fieldInfo.FieldType == typeof(bool))
                             fieldInfo.SetValue(root, Convert.ToBoolean(key.GetValue(fieldInfo.Name)));
                         if (fieldInfo.FieldType.IsEnum)
-                            fieldInfo.SetValue(root, Enum.Parse(fieldInfo.FieldType, (string)key.GetValue(fieldInfo.Name)));
+                            fieldInfo.SetValue(root, Enum.Parse(fieldInfo.FieldType, key.GetValue(fieldInfo.Name) as string));
                     }
                     if (fieldInfo.FieldType.IsClass)
                     {
