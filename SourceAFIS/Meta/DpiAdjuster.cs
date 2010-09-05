@@ -67,7 +67,7 @@ namespace SourceAFIS.Meta
         public void Adjust(object root, int dpi, Action function)
         {
             ObjectTree tree = new ObjectTree();
-            tree.Scan(this, "Dpi");
+            tree.Scan(root, "Dpi");
             Initialize(tree);
             try
             {
