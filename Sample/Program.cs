@@ -58,7 +58,7 @@ namespace Sample
             MyPerson person = new MyPerson();
             person.Name = name;
             // Add fingerprint to the person
-            person.Add(fp);
+            person.Fingerprints.Add(fp);
 
             return person;
         }

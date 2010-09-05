@@ -12,11 +12,7 @@ namespace FvcMatch
     {
         static Person LoadTemplate(string path)
         {
-            Fingerprint fp = new Fingerprint();
-            fp.Template = File.ReadAllBytes(path);
-            Person person = new Person();
-            person.Add(fp);
-            return person;
+            return new Person(new Fingerprint() { Template = File.ReadAllBytes(path) });
         }
 
         static void WriteLog(string[] args, string status, float similarity)

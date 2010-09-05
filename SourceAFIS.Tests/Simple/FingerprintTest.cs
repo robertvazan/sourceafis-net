@@ -125,10 +125,10 @@ namespace SourceAFIS.Tests.Simple
             Assert.AreEqual(fp1.Template, fp2.Template);
             Assert.IsNull(fp2.Image);
 
-            Person person1 = new Person() { fp1 };
-            Person person2 = new Person() { fp2 };
-            Person person3 = new Person() { new Fingerprint() { AsBitmap = Settings.NonMatchingFingerprint } };
-            afis.Extract(person3[0]);
+            Person person1 = new Person(fp1);
+            Person person2 = new Person(fp2);
+            Person person3 = new Person(new Fingerprint() { AsBitmap = Settings.NonMatchingFingerprint });
+            afis.Extract(person3.Fingerprints[0]);
             afis.Threshold = 0;
             Assert.That(afis.Verify(person1, person2) > afis.Verify(person1, person3));
             Assert.AreEqual(afis.Verify(person1, person3), afis.Verify(person2, person3));
@@ -144,41 +144,41 @@ namespace SourceAFIS.Tests.Simple
         {
             AfisEngine afis = new AfisEngine();
             afis.Threshold = 0;
-            Person person1 = new Person() { new Fingerprint() { AsBitmap = Settings.SomeFingerprint } };
-            afis.Extract(person1[0]);
-            Person person2 = new Person() { new Fingerprint() { AsBitmap = Settings.MatchingFingerprint } };
-            afis.Extract(person2[0]);
+            Person person1 = new Person(new Fingerprint() { AsBitmap = Settings.SomeFingerprint });
+            afis.Extract(person1.Fingerprints[0]);
+            Person person2 = new Person(new Fingerprint() { AsBitmap = Settings.MatchingFingerprint });
+            afis.Extract(person2.Fingerprints[0]);
 
-            person1[0].Finger = Finger.RightThumb;
-            Assert.AreEqual(Finger.RightThumb, person1[0].Finger);
-            person2[0].Finger = Finger.RightThumb;
+            person1.Fingerprints[0].Finger = Finger.RightThumb;
+            Assert.AreEqual(Finger.RightThumb, person1.Fingerprints[0].Finger);
+            person2.Fingerprints[0].Finger = Finger.RightThumb;
             Assert.That(afis.Verify(person1, person2) > 0);
             Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
 
-            person2[0].Finger = Finger.LeftIndex;
+            person2.Fingerprints[0].Finger = Finger.LeftIndex;
             Assert.That(afis.Verify(person1, person2) == 0);
             Assert.That(afis.Identify(person1, new[] { person2 }) == null);
 
-            person1[0].Finger = Finger.Any;
+            person1.Fingerprints[0].Finger = Finger.Any;
             Assert.That(afis.Verify(person1, person2) > 0);
             Assert.That(afis.Verify(person2, person1) > 0);
             Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
             Assert.That(afis.Identify(person2, new[] { person1 }) == person1);
 
-            person2[0].Finger = Finger.Any;
+            person2.Fingerprints[0].Finger = Finger.Any;
             Assert.That(afis.Verify(person1, person2) > 0);
             Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
 
-            Person person3 = new Person() { new Fingerprint() { AsBitmap = Settings.MatchingFingerprint } };
-            afis.Extract(person3[0]);
-            person1[0].Finger = Finger.LeftIndex;
-            person2[0].Finger = Finger.LeftIndex;
-            person3[0].Finger = Finger.RightMiddle;
+            Person person3 = new Person(new Fingerprint() { AsBitmap = Settings.MatchingFingerprint });
+            afis.Extract(person3.Fingerprints[0]);
+            person1.Fingerprints[0].Finger = Finger.LeftIndex;
+            person2.Fingerprints[0].Finger = Finger.LeftIndex;
+            person3.Fingerprints[0].Finger = Finger.RightMiddle;
             Assert.That(afis.Identify(person1, new[] { person2, person3 }) == person2);
-            person1[0].Finger = Finger.RightMiddle;
+            person1.Fingerprints[0].Finger = Finger.RightMiddle;
             Assert.That(afis.Identify(person1, new[] { person2, person3 }) == person3);
 
-            Assert.Catch(() => { person1[0].Finger = (Finger)(-1); });
+            Assert.Catch(() => { person1.Fingerprints[0].Finger = (Finger)(-1); });
         }
 
         [Test]
