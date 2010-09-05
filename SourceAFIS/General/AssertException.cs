@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SourceAFIS.Dummy;
 
 namespace SourceAFIS.General
 {
-    public class AssertException
-#if !COMPACT_FRAMEWORK
-        : ApplicationException
-#else
-        : Exception
-#endif
+    public class AssertException : ApplicationException
     {
         public static void Check(bool condition)
         {

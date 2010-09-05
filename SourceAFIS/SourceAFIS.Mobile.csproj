@@ -49,6 +49,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dummy\ApplicationException.cs" />
     <Compile Include="Dummy\Dummy.cs" />
     <Compile Include="Dummy\ICloneable.cs" />
     <Compile Include="Dummy\ParallelLoopState.cs" />
