@@ -28,6 +28,7 @@ namespace AfisBuilder
             Versions.UpdateIn(@"SourceAFIS\Properties\AssemblyInfoMobile.cs");
             Versions.Update("SourceAFIS.Visualization");
             Versions.Update("SourceAFIS.Tuning");
+            Versions.Update("SourceAFIS.Tests");
             Versions.Update("DatabaseAnalyzer");
             Versions.Update("FingerprintAnalyzer");
             if (!Mono)
@@ -46,6 +47,7 @@ namespace AfisBuilder
                 Command.Build(@"SourceAFIS\SourceAFIS.Mobile.csproj", "Release Mobile");
                 Command.Build(@"SourceAFIS.Visualization\SourceAFIS.Visualization.csproj", "Release");
                 Command.Build(@"SourceAFIS.Tuning\SourceAFIS.Tuning.csproj", "Release");
+                Command.Build(@"SourceAFIS.Tests\SourceAFIS.Tests.csproj", "Release");
                 Command.Build(@"DatabaseAnalyzer\DatabaseAnalyzer.csproj", "Release");
                 Command.Build(@"FingerprintAnalyzer\FingerprintAnalyzer.csproj", "Release");
                 Command.Build(@"FvcEnroll\FvcEnroll.csproj", "Release");
@@ -153,6 +155,15 @@ namespace AfisBuilder
             Command.ZipFiles(fvcFolder, new[] { "SourceAFIS.dll", "enroll.exe", "match.exe" });
         }
 
+        void RunNUnitTests()
+        {
+            Command.Execute(
+                @"C:\Program Files\NUnit 2.5.7\bin\net-2.0\nunit-console.exe",
+                @"/xml=SourceAFIS.Tests\bin\Release\TestResult.xml",
+                "/labels", "/nodots",
+                @"SourceAFIS.Tests\bin\Release\SourceAFIS.Tests.dll");
+        }
+
         void RunAnalyzer()
         {
             string analyzerDir = Path.Combine(OutputFolder, "Analyzer");
@@ -196,6 +207,8 @@ namespace AfisBuilder
                 AssembleMsi();
                 AssembleFvcSubmission();
             }
+            if (!Mono)
+                RunNUnitTests();
             RunAnalyzer();
             Summary();
         }
