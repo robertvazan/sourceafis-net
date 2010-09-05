@@ -218,10 +218,12 @@ namespace SourceAFIS.Simple
         {
             lock (this)
             {
+                probe.CheckForNulls();
+                candidate.CheckForNulls();
                 BestMatchSkipper collector = new BestMatchSkipper(1, SkipBestMatches);
-                Parallel.ForEach(probe, probeFp =>
+                Parallel.ForEach(probe.Fingerprints, probeFp =>
                     {
-                        var candidateTemplates = (from candidateFp in candidate
+                        var candidateTemplates = (from candidateFp in candidate.Fingerprints
                                                   where IsCompatibleFinger(probeFp.Finger, candidateFp.Finger)
                                                   select candidateFp.Decoded).ToList();
 
@@ -262,9 +264,10 @@ namespace SourceAFIS.Simple
         {
             lock (this)
             {
-                Person[] candidateArray = new List<Person>(candidates).ToArray();
+                probe.CheckForNulls();
+                Person[] candidateArray = candidates.ToArray();
                 BestMatchSkipper collector = new BestMatchSkipper(candidateArray.Length, SkipBestMatches);
-                Parallel.ForEach(probe, probeFp =>
+                Parallel.ForEach(probe.Fingerprints, probeFp =>
                     {
                         List<int> personsByFingerprint = new List<int>();
                         List<Template> candidateTemplates = FlattenHierarchy(candidateArray, probeFp.Finger, out personsByFingerprint);
@@ -298,9 +301,10 @@ namespace SourceAFIS.Simple
             for (int personIndex = 0; personIndex < persons.Length; ++personIndex)
             {
                 Person person = persons[personIndex];
-                for (int i = 0; i < person.Count; ++i)
+                person.CheckForNulls();
+                for (int i = 0; i < person.Fingerprints.Count; ++i)
                 {
-                    Fingerprint fingerprint = person[i];
+                    Fingerprint fingerprint = person.Fingerprints[i];
                     if (IsCompatibleFinger(finger, fingerprint.Finger))
                     {
                         templates.Add(fingerprint.Decoded);
