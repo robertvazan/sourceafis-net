@@ -169,7 +169,9 @@ namespace SourceAFIS.Simple
         }
 #endif
 
-#if !COMPACT_FRAMEWORK
+        static readonly CompactFormat CompactFormat = new CompactFormat();
+        static readonly SerializedFormat SerializedFormat = new SerializedFormat();
+
         /// <summary>
         /// Fingerprint template.
         /// </summary>
@@ -198,10 +200,9 @@ namespace SourceAFIS.Simple
         /// <seealso cref="SourceAFIS.Extraction.Templates.SerializedFormat"/>
         public byte[] Template
         {
-            get { return Decoded != null ? new SerializedFormat().Serialize(Decoded) : null; }
-            set { Decoded = value != null ? new SerializedFormat().Deserialize(value) : null; }
+            get { return Decoded != null ? CompactFormat.Export(SerializedFormat.Import(Decoded)) : null; }
+            set { Decoded = value != null ? SerializedFormat.Export(CompactFormat.Import(value)) : null; }
         }
-#endif
 
         Finger FingerPosition;
 

@@ -77,6 +77,7 @@
     <Compile Include="Extraction\Model\SkeletonBuilder.cs" />
     <Compile Include="Extraction\Model\SkeletonShadow.cs" />
     <Compile Include="Extraction\Model\TailRemover.cs" />
+    <Compile Include="Extraction\Templates\CompactFormat.cs" />
     <Compile Include="Extraction\Templates\ITemplateFormat.cs" />
     <Compile Include="Extraction\Templates\MinutiaCollector.cs" />
     <Compile Include="Extraction\Templates\SerializedFormat.cs" />
