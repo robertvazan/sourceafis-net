@@ -47,6 +47,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dummy\ApplicationException.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Extraction\Templates\Template.cs" />
     <Compile Include="Extraction\Templates\TemplateBuilder.cs" />
     <Compile Include="Extraction\Templates\TemplateFormatBase.cs" />
+    <Compile Include="Extraction\Templates\XmlFormat.cs" />
     <Compile Include="General\Angle.cs" />
     <Compile Include="General\AssertException.cs" />
     <Compile Include="General\BinaryMap.cs" />
