@@ -171,6 +171,7 @@ namespace SourceAFIS.Simple
 
         static readonly CompactFormat CompactFormat = new CompactFormat();
         static readonly SerializedFormat SerializedFormat = new SerializedFormat();
+        static readonly IsoFormat IsoFormat = new IsoFormat();
 
         /// <summary>
         /// Fingerprint template.
@@ -188,11 +189,14 @@ namespace SourceAFIS.Simple
         /// <see cref="Template"/> is required by <see cref="AfisEngine.Verify"/> and <see cref="AfisEngine.Identify"/>.
         /// </para>
         /// <para>
-        /// If you need access to the internal structure of the template, have a look at
-        /// <see cref="SourceAFIS.Extraction.Templates.SerializedFormat"/> class in SourceAFIS source code.
-        /// Format of the template may however change in later versions of SourceAFIS.
+        /// Format of the template may change in later versions of SourceAFIS.
         /// Applications are recommended to keep the original <see cref="Image"/> in order to be able
         /// to regenerate the <see cref="Template"/>.
+        /// </para>
+        /// <para>
+        /// If you need access to the internal structure of the template, use
+        /// <see cref="SourceAFIS.Extraction.Templates.CompactFormat"/> to convert it to
+        /// <see cref="SourceAFIS.Extraction.Templates.TemplateBuilder"/>.
         /// </para>
         /// </remarks>
         /// <seealso cref="Image"/>
@@ -202,6 +206,35 @@ namespace SourceAFIS.Simple
         {
             get { return Decoded != null ? CompactFormat.Export(SerializedFormat.Import(Decoded)) : null; }
             set { Decoded = value != null ? SerializedFormat.Export(CompactFormat.Import(value)) : null; }
+        }
+
+        /// <summary>
+        /// Fingerprint template in standard ISO format.
+        /// </summary>
+        /// <value>
+        /// Value of <see cref="Template"/> converted to standard ISO/IEC 19794-2 (2005) format.
+        /// This property is <see langword="null"/> if <see cref="Template"/> is <see langword="null"/>.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// Use this property for two-way exchange of fingerprint templates with other biometric
+        /// systems. For general use in SourceAFIS, use <see cref="Template"/> property which
+        /// contains native template that is fine-tuned for best accuracy and performance in SourceAFIS.
+        /// </para>
+        /// <para>
+        /// SourceAFIS contains partial implementation of ISO/IEC 19794-2 (2005) standard.
+        /// Multi-fingerprint ISO templates must be split into individual fingerprints before
+        /// they are used in SourceAFIS. Value of <see cref="Fingerprint.Finger"/> property is not
+        /// automatically stored in the ISO template. It must be decoded separately.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="Image"/>
+        /// <seealso cref="AfisEngine.Extract"/>
+        /// <seealso cref="SourceAFIS.Extraction.Templates.SerializedFormat"/>
+        public byte[] AsIsoTemplate
+        {
+            get { return Decoded != null ? IsoFormat.Export(SerializedFormat.Import(Decoded)) : null; }
+            set { Decoded = value != null ? SerializedFormat.Export(IsoFormat.Import(value)) : null; }
         }
 
         Finger FingerPosition;
