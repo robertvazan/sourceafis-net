@@ -201,7 +201,9 @@ namespace SourceAFIS.Simple
         /// </remarks>
         /// <seealso cref="Image"/>
         /// <seealso cref="AfisEngine.Extract"/>
-        /// <seealso cref="SourceAFIS.Extraction.Templates.SerializedFormat"/>
+        /// <seealso cref="AsIsoTemplate"/>
+        /// <seealso cref="SourceAFIS.Extraction.Templates.CompactFormat"/>
+        /// <seealso cref="SourceAFIS.Extraction.Templates.TemplateBuilder"/>
         public byte[] Template
         {
             get { return Decoded != null ? CompactFormat.Export(SerializedFormat.Import(Decoded)) : null; }
@@ -228,9 +230,10 @@ namespace SourceAFIS.Simple
         /// automatically stored in the ISO template. It must be decoded separately.
         /// </para>
         /// </remarks>
-        /// <seealso cref="Image"/>
+        /// <seealso cref="Template"/>
         /// <seealso cref="AfisEngine.Extract"/>
-        /// <seealso cref="SourceAFIS.Extraction.Templates.SerializedFormat"/>
+        /// <seealso cref="SourceAFIS.Extraction.Templates.IsoFormat"/>
+        /// <seealso cref="SourceAFIS.Extraction.Templates.TemplateBuilder"/>
         public byte[] AsIsoTemplate
         {
             get { return Decoded != null ? IsoFormat.Export(SerializedFormat.Import(Decoded)) : null; }
