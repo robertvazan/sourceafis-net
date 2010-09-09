@@ -53,6 +53,7 @@
     <Compile Include="Dummy\ApplicationException.cs" />
     <Compile Include="Dummy\Dummy.cs" />
     <Compile Include="Dummy\ICloneable.cs" />
+    <Compile Include="Dummy\IPAddress.cs" />
     <Compile Include="Dummy\ParallelLoopState.cs" />
     <Compile Include="Dummy\SerializableAttribute.cs" />
     <Compile Include="Extraction\Filters\AbsoluteContrast.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Extraction\Model\SkeletonShadow.cs" />
     <Compile Include="Extraction\Model\TailRemover.cs" />
     <Compile Include="Extraction\Templates\CompactFormat.cs" />
+    <Compile Include="Extraction\Templates\IsoFormat.cs" />
     <Compile Include="Extraction\Templates\ITemplateFormat.cs" />
     <Compile Include="Extraction\Templates\MinutiaCollector.cs" />
     <Compile Include="Extraction\Templates\SerializedFormat.cs" />
