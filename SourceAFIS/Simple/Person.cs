@@ -18,7 +18,7 @@ namespace SourceAFIS.Simple
     /// it is possible to match two <see cref="Person"/>s directly instead of iterating over their <see cref="Fingerprint"/>s.
     /// </para>
     /// <para>
-    /// <see cref="Id"/> field is provided as simple means to bind <see cref="Person"/> objects to application-specific
+    /// <see cref="Id"/> property is provided as simple means to bind <see cref="Person"/> objects to application-specific
     /// information. If you need more flexibility, inherit from <see cref="Person"/> class and add
     /// application-specific fields as necessary.
     /// </para>
