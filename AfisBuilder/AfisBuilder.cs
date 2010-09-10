@@ -35,6 +35,7 @@ namespace AfisBuilder
             {
                 Versions.Update("FvcEnroll");
                 Versions.Update("FvcMatch");
+                Versions.Update("FvcIso");
             }
             Versions.Update("Sample");
         }
@@ -52,6 +53,7 @@ namespace AfisBuilder
                 Command.Build(@"FingerprintAnalyzer\FingerprintAnalyzer.csproj", "Release");
                 Command.Build(@"FvcEnroll\FvcEnroll.csproj", "Release");
                 Command.Build(@"FvcMatch\FvcMatch.csproj", "Release");
+                Command.Build(@"FvcIso\FvcIso.csproj", "Release");
             }
             else
                 Command.BuildSolution("SourceAFIS.Mono.sln", "Release");
@@ -155,6 +157,19 @@ namespace AfisBuilder
             Command.ZipFiles(fvcFolder, new[] { "SourceAFIS.dll", "enroll.exe", "match.exe" });
         }
 
+        void AssembleFvcIsoSubmission()
+        {
+            string fvcFolder = Path.Combine(OutputFolder, "SourceAFIS-FVCISO-" + Versions.Release);
+            Console.WriteLine("Assembling FVC-onGoing ISO submission: {0}", ZipFolder);
+            Command.ForceDeleteDirectory(fvcFolder);
+            Directory.CreateDirectory(fvcFolder);
+
+            Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", fvcFolder);
+            Command.CopyTo(@"FvcIso\bin\Release\match.exe", fvcFolder);
+
+            Command.ZipFiles(fvcFolder, new[] { "SourceAFIS.dll", "match.exe" });
+        }
+
         void RunNUnitTests()
         {
             Command.Execute(
@@ -206,6 +221,7 @@ namespace AfisBuilder
             {
                 AssembleMsi();
                 AssembleFvcSubmission();
+                AssembleFvcIsoSubmission();
             }
             if (!Mono)
                 RunNUnitTests();
