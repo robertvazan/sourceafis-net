@@ -11,18 +11,16 @@ namespace FingerprintAnalyzer
 {
     sealed class OptionsDialog : Form
     {
-        public Action OnChange;
+        public event Action OnChange;
 
-        List<Action> ResumeLayoutQueue = new List<Action>();
-        List<Action> RefreshQueue = new List<Action>();
+        event Action ResumeLayoutEvent;
+        event Action RefreshEvent;
         Options Options;
         Options Defaults;
         Options LastCommit;
 
         public OptionsDialog(Options options)
         {
-            OnChange = delegate() { };
-
             Defaults = options.DeepClone();
             PersistentStore.Load(options);
             Options = options;
@@ -35,10 +33,10 @@ namespace FingerprintAnalyzer
             FormClosing += OnClose;
             Controls.Add(GenerateDialog(options));
 
-            RefreshData();
-            foreach (Action resume in ResumeLayoutQueue)
-                resume();
-            ResumeLayoutQueue.Clear();
+            if (RefreshEvent != null)
+                RefreshEvent();
+            if (ResumeLayoutEvent != null)
+                ResumeLayoutEvent();
             ResumeLayout(false);
             PersistentStore.Load(this);
         }
@@ -63,29 +61,27 @@ namespace FingerprintAnalyzer
         void DoCancel()
         {
             LastCommit.DeepCopyTo(Options);
-            RefreshData();
+            if (RefreshEvent != null)
+                RefreshEvent();
             Hide();
-            OnChange();
+            if (OnChange != null)
+                OnChange();
         }
 
         void DoDefaults()
         {
             Defaults.DeepCopyTo(Options);
-            RefreshData();
-            OnChange();
-        }
-
-        void RefreshData()
-        {
-            foreach (Action refresh in RefreshQueue)
-                refresh();
+            if (RefreshEvent != null)
+                RefreshEvent();
+            if (OnChange != null)
+                OnChange();
         }
 
         TableLayoutPanel GetDefaultTable(int columns, int rows)
         {
             TableLayoutPanel table = new TableLayoutPanel();
             table.SuspendLayout();
-            ResumeLayoutQueue.Add(delegate() { table.ResumeLayout(false); });
+            ResumeLayoutEvent += delegate() { table.ResumeLayout(false); };
             table.ColumnCount = columns;
             table.RowCount = rows;
             if (columns == 1)
@@ -184,7 +180,7 @@ namespace FingerprintAnalyzer
                     {
                         tabControl = new TabControl();
                         tabControl.SuspendLayout();
-                        ResumeLayoutQueue.Add(delegate() { tabControl.ResumeLayout(false); });
+                        ResumeLayoutEvent += delegate() { tabControl.ResumeLayout(false); };
                         tabControl.Height = 200;
                     }
                     TabPage page = GenerateTabPage(root, fieldInfo);
@@ -198,11 +194,11 @@ namespace FingerprintAnalyzer
         {
             TabPage page = new TabPage();
             page.SuspendLayout();
-            ResumeLayoutQueue.Add(delegate()
+            ResumeLayoutEvent += delegate()
             {
                 page.ResumeLayout(false);
                 page.PerformLayout();
-            });
+            };
             page.Text = fieldInfo.Name;
             page.AutoScroll = true;
             page.Controls.Add(GenerateStack(fieldInfo.GetValue(root)));
@@ -216,9 +212,10 @@ namespace FingerprintAnalyzer
             result.Click += delegate(object sender, EventArgs e)
             {
                 fieldInfo.SetValue(root, result.Checked);
-                OnChange();
+                if (OnChange != null)
+                    OnChange();
             };
-            RefreshQueue.Add(delegate() { result.Checked = (bool)fieldInfo.GetValue(root); });
+            RefreshEvent += delegate() { result.Checked = (bool)fieldInfo.GetValue(root); };
             return result;
         }
 
@@ -239,10 +236,11 @@ namespace FingerprintAnalyzer
                 if (combo.SelectedIndex >= 0)
                 {
                     fieldInfo.SetValue(root, Enum.Parse(fieldInfo.FieldType, combo.Text));
-                    OnChange();
+                    if (OnChange != null)
+                        OnChange();
                 }
             };
-            RefreshQueue.Add(delegate() { combo.Text = Enum.GetName(fieldInfo.FieldType, fieldInfo.GetValue(root)); });
+            RefreshEvent += delegate() { combo.Text = Enum.GetName(fieldInfo.FieldType, fieldInfo.GetValue(root)); };
 
             TableLayoutPanel table = GetDefaultTable(2, 1);
             table.AutoSize = true;
