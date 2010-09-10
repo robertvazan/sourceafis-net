@@ -13,7 +13,7 @@ namespace SourceAFIS.Tuning.Optimization
         public float ExtractorWeight = 0.2f;
 
         public delegate void MutationEvent(ParameterValue initial, ParameterValue mutated);
-        public MutationEvent OnMutation;
+        public event MutationEvent OnMutation;
 
         Random Random = new Random();
 
