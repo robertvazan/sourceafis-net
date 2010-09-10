@@ -9,7 +9,7 @@ namespace SourceAFIS.Extraction.Templates
 {
     public sealed class CompactFormat : TemplateFormatBase<byte[]>
     {
-        // Template format:
+        // Template format (all numbers are big-endian):
         // 4B magic
         // 1B version (current = 1)
         // 2B total length (including magic)
