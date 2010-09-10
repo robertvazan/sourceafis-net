@@ -234,6 +234,7 @@ namespace SourceAFIS.Simple
         /// <seealso cref="AfisEngine.Extract"/>
         /// <seealso cref="SourceAFIS.Extraction.Templates.IsoFormat"/>
         /// <seealso cref="SourceAFIS.Extraction.Templates.TemplateBuilder"/>
+        [XmlIgnore]
         public byte[] AsIsoTemplate
         {
             get { return Decoded != null ? IsoFormat.Export(SerializedFormat.Import(Decoded)) : null; }
