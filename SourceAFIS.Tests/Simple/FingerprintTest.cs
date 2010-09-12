@@ -25,6 +25,7 @@ namespace SourceAFIS.Tests.Simple
             Assert.IsNull(fp.Image);
             Assert.IsNull(fp.AsBitmap);
             Assert.IsNull(fp.AsImageData);
+            Assert.IsNull(fp.AsIsoTemplate);
         }
 
         [Test]
@@ -137,6 +138,44 @@ namespace SourceAFIS.Tests.Simple
             Assert.IsNull(fp1.Template);
 
             Assert.Catch(() => { fp1.Template = new byte[100]; });
+            Assert.Catch(() => { fp1.Template = fp2.AsIsoTemplate; });
+        }
+
+        [Test]
+        public void AsIsoTemplate()
+        {
+            Fingerprint fp1 = new Fingerprint() { AsBitmap = Settings.SomeFingerprint };
+            Assert.IsNull(fp1.AsIsoTemplate);
+
+            AfisEngine afis = new AfisEngine();
+            afis.Extract(fp1);
+            Assert.IsNotNull(fp1.AsIsoTemplate);
+
+            Fingerprint fp2 = new Fingerprint() { AsIsoTemplate = fp1.AsIsoTemplate };
+            Assert.AreEqual(fp1.AsIsoTemplate, fp2.AsIsoTemplate);
+            Assert.IsNotNull(fp2.Template);
+            Assert.IsNull(fp2.Image);
+
+            Person person1 = new Person(fp1);
+            Person person2 = new Person(fp2);
+            Person person3 = new Person(new Fingerprint() { AsBitmap = Settings.NonMatchingFingerprint });
+            afis.Extract(person3.Fingerprints[0]);
+            afis.Threshold = 0;
+            Assert.That(afis.Verify(person1, person2) > afis.Verify(person1, person3));
+
+            string isoFolder = Path.Combine(Settings.DataPath, "IsoTemplates");
+            fp1.AsIsoTemplate = File.ReadAllBytes(Path.Combine(isoFolder, "1_1.ist"));
+            fp2.AsIsoTemplate = File.ReadAllBytes(Path.Combine(isoFolder, "1_2.ist"));
+            person3.Fingerprints[0].AsIsoTemplate = File.ReadAllBytes(Path.Combine(isoFolder, "2_2.ist"));
+            Assert.That(afis.Verify(person1, person2) > afis.Verify(person2, person3));
+            fp2.AsIsoTemplate = File.ReadAllBytes(Path.Combine(isoFolder, "2_1.ist"));
+            Assert.That(afis.Verify(person1, person2) < afis.Verify(person2, person3));
+
+            fp1.AsIsoTemplate = null;
+            Assert.IsNull(fp1.AsIsoTemplate);
+
+            Assert.Catch(() => { fp1.Template = new byte[100]; });
+            Assert.Catch(() => { fp1.AsIsoTemplate = fp2.Template; });
         }
 
         [Test]

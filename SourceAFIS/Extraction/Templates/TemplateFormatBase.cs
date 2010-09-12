@@ -16,7 +16,7 @@ namespace SourceAFIS.Extraction.Templates
         {
             MemoryStream stream = new MemoryStream();
             Serialize(stream, template);
-            return stream.GetBuffer();
+            return stream.ToArray();
         }
 
         public T Deserialize(byte[] serialized)

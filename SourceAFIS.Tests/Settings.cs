@@ -10,7 +10,8 @@ namespace SourceAFIS.Tests
     static class Settings
     {
         public static string RootFolder = Path.Combine("..", "..", "..");
-        public static string DatabasePath = Path.Combine(RootFolder, "Data", "TestDatabase");
+        public static string DataPath = Path.Combine(RootFolder, "Data");
+        public static string DatabasePath = Path.Combine(DataPath, "TestDatabase");
         public static string SomeDatabase = Path.Combine(DatabasePath, "FVC2000", "DB2_B");
 
         public static string SomeFingerprintPath = Path.Combine(SomeDatabase, "101_1.tif");

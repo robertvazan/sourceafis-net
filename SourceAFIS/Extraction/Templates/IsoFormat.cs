@@ -124,7 +124,7 @@ namespace SourceAFIS.Extraction.Templates
             writer.Close();
 
             // update length
-            byte[] template = stream.GetBuffer();
+            byte[] template = stream.ToArray();
             BitConverter.GetBytes(IPAddress.HostToNetworkOrder(template.Length)).CopyTo(template, 8);
 
             return template;
@@ -191,7 +191,7 @@ namespace SourceAFIS.Extraction.Templates
                 minutia.Type = (xPacked & (ushort)0xc000) == 0x8000 ? TemplateBuilder.MinutiaType.Bifurcation : TemplateBuilder.MinutiaType.Ending;
 
                 //      2B minutia position Y in pixels (upper 2b ignored, zeroed)
-                minutia.Position.Y = (ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16()) & (ushort)0x3fff;
+                minutia.Position.Y = height - ((ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16()) & (ushort)0x3fff);
 
                 //      1B direction, compatible with SourceAFIS angles
                 minutia.Direction = reader.ReadByte();
