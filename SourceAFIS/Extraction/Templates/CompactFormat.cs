@@ -62,7 +62,7 @@ namespace SourceAFIS.Extraction.Templates
                 writer.Close();
 
                 // update length
-                byte[] template = stream.GetBuffer();
+                byte[] template = stream.ToArray();
                 BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)template.Length)).CopyTo(template, 5);
 
                 return template;
