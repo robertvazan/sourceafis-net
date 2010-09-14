@@ -23,7 +23,8 @@ namespace SourceAFIS.Tuning
             report.Templates = Database.Clone();
 
             int count = 0;
-            SerializedFormat templateFormat = new SerializedFormat();
+            SerializedFormat serializedFormat = new SerializedFormat();
+            CompactFormat compactFormat = new CompactFormat();
 
             Stopwatch timer = new Stopwatch();
             timer.Start();
@@ -34,11 +35,11 @@ namespace SourceAFIS.Tuning
                 {
                     byte[,] grayscale = ImageIO.Load(database[index].FilePath);
                     TemplateBuilder builder = Extractor.Extract(grayscale, 500);
-                    Template template = templateFormat.Export(builder);
+                    Template template = serializedFormat.Export(builder);
                     database[index].Template = template;
 
                     report.MinutiaCount += template.Minutiae.Length;
-                    report.TemplateSize += templateFormat.Serialize(template).Length;
+                    report.TemplateSize += compactFormat.Export(builder).Length;
                     ++count;
 
                     if (timer.Elapsed.TotalSeconds > Timeout)
