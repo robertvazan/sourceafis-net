@@ -86,8 +86,10 @@ namespace AfisBuilder
             Command.CopyTo(@"SourceAFIS.Tuning\bin\Release\SourceAFIS.Visualization.dll", prefix + "Bin");
             Command.CopyTo(@"SourceAFIS.Tuning\bin\Release\SourceAFIS.Tuning.dll", prefix + "Bin");
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe", prefix + "Bin");
+            Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe.config", prefix + "Bin");
             Command.CopyTo(@"Data\DatabaseAnalyzerConfiguration.xml", prefix + "Bin");
             Command.CopyTo(@"FingerprintAnalyzer\bin\Release\FingerprintAnalyzer.exe", prefix + "Bin");
+            Command.CopyTo(@"FingerprintAnalyzer\bin\Release\FingerprintAnalyzer.exe.config", prefix + "Bin");
 
             Directory.CreateDirectory(prefix + "Documentation");
             Command.CopyTo(@"Data\license.txt", prefix + "Documentation");
@@ -152,9 +154,11 @@ namespace AfisBuilder
 
             Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", fvcFolder);
             Command.CopyTo(@"FvcEnroll\bin\Release\enroll.exe", fvcFolder);
+            Command.CopyTo(@"FvcEnroll\bin\Release\enroll.exe.config", fvcFolder);
             Command.CopyTo(@"FvcMatch\bin\Release\match.exe", fvcFolder);
+            Command.CopyTo(@"FvcMatch\bin\Release\match.exe.config", fvcFolder);
 
-            Command.ZipFiles(fvcFolder, new[] { "SourceAFIS.dll", "enroll.exe", "match.exe" });
+            Command.ZipFiles(fvcFolder, new[] { "SourceAFIS.dll", "enroll.exe", "enroll.exe.config", "match.exe", "match.exe.config" });
         }
 
         void AssembleFvcIsoSubmission()
@@ -166,8 +170,9 @@ namespace AfisBuilder
 
             Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", fvcFolder);
             Command.CopyTo(@"FvcIso\bin\Release\match.exe", fvcFolder);
+            Command.CopyTo(@"FvcIso\bin\Release\match.exe.config", fvcFolder);
 
-            Command.ZipFiles(fvcFolder, new[] { "SourceAFIS.dll", "match.exe" });
+            Command.ZipFiles(fvcFolder, new[] { "SourceAFIS.dll", "match.exe", "match.exe.config" });
         }
 
         void RunNUnitTests()

@@ -42,6 +42,12 @@
             <Component Id="component_Bin_SourceAFIS.Mobile.dll" Guid="e9f7c2b8-0cc2-4817-8720-ec8b9cb724e0">
               <File Id="Bin_SourceAFIS.Mobile.dll" Name="SourceAFIS.Mobile.dll" DiskId="1" Source="Bin\SourceAFIS.Mobile.dll" KeyPath="yes" />
             </Component>
+            <Component Id="component_Bin_DatabaseAnalyzer.exe.config" Guid="eafd52d3-6fc1-48d1-a117-8a420c73bbbe">
+              <File Id="Bin_DatabaseAnalyzer.exe.config" Name="DatabaseAnalyzer.exe.config" DiskId="1" Source="Bin\DatabaseAnalyzer.exe.config" KeyPath="yes" />
+            </Component>
+            <Component Id="component_Bin_FingerprintAnalyzer.exe.config" Guid="81f27d7a-a094-4179-8142-cbbfabbfcec7">
+              <File Id="Bin_FingerprintAnalyzer.exe.config" Name="FingerprintAnalyzer.exe.config" DiskId="1" Source="Bin\FingerprintAnalyzer.exe.config" KeyPath="yes" />
+            </Component>
           </Directory>
           <Directory Id="Documentation" Name="Documentation">
             <Directory Id="Documentation_SourceAFIS" Name="SourceAFIS">
@@ -764,6 +770,8 @@
       <ComponentRef Id="component_Documentation_SourceAFIS__mple_Fingerprint_AsIsoTemplate.htm" />
       <ComponentRef Id="component_Sample_app.config" />
       <ComponentRef Id="component_Sample_bin_Debug_Sample.exe.config" />
+      <ComponentRef Id="component_Bin_DatabaseAnalyzer.exe.config" />
+      <ComponentRef Id="component_Bin_FingerprintAnalyzer.exe.config" />
     </Feature>
   </Product>
 </Wix>
