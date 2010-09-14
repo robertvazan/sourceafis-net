@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Name="SourceAFIS" Id="EF99AD8E-CC3D-491F-BF1F-4F998007A918" UpgradeCode="314DD5F0-4709-4378-915F-22526D7919F5" Language="1033" Codepage="1252" Version="1.2.0" Manufacturer="Robert Vanak">
+  <Product Name="SourceAFIS" Id="EF99AD8E-CC3D-491F-BF1F-4F998007A918" UpgradeCode="314DD5F0-4709-4378-915F-22526D7919F5" Language="1033" Codepage="1252" Version="1.3.0" Manufacturer="Robert Vanak">
     <Package Id="*" Keywords="Installer" Description="SourceAFIS Installer" Comments="SourceAFIS is an open-source fingerprint matcher." InstallerVersion="100" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
     <Media Id="1" Cabinet="SourceAFIS.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" />
     <Property Id="DiskPrompt" Value="SourceAFIS Installation [1]" />
     <Upgrade Id="314DD5F0-4709-4378-915F-22526D7919F5">
-      <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="0.1.0" IncludeMinimum="yes" Maximum="1.2.0" IncludeMaximum="no" />
+      <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="0.1.0" IncludeMinimum="yes" Maximum="1.3.0" IncludeMaximum="no" />
     </Upgrade>
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallInitialize" />
@@ -505,6 +505,9 @@
                 <Component Id="component_Sample_bin_Debug_SourceAFIS.dll" Guid="cc7f646a-00ca-4116-b08c-19f821f70a79">
                   <File Id="Sample_bin_Debug_SourceAFIS.dll" Name="SourceAFIS.dll" DiskId="1" Source="Sample\bin\Debug\SourceAFIS.dll" KeyPath="yes" />
                 </Component>
+                <Component Id="component_Sample_bin_Debug_Sample.exe.config" Guid="ef34ff6e-1f28-4766-a638-6aed99429f4f">
+                  <File Id="Sample_bin_Debug_Sample.exe.config" Name="Sample.exe.config" DiskId="1" Source="Sample\bin\Debug\Sample.exe.config" KeyPath="yes" />
+                </Component>
               </Directory>
             </Directory>
             <Directory Id="Sample_dll" Name="dll">
@@ -539,6 +542,9 @@
             </Component>
             <Component Id="component_Sample_Sample.sln" Guid="8f0acbe7-9a0a-433c-b299-eb7154ba33c8">
               <File Id="Sample_Sample.sln" Name="Sample.sln" DiskId="1" Source="Sample\Sample.sln" KeyPath="yes" />
+            </Component>
+            <Component Id="component_Sample_app.config" Guid="8689a500-fdaa-47a1-8618-7ff24881603d">
+              <File Id="Sample_app.config" Name="app.config" DiskId="1" Source="Sample\app.config" KeyPath="yes" />
             </Component>
           </Directory>
         </Directory>
@@ -756,6 +762,8 @@
       <ComponentRef Id="component_Documentation_SourceAFIS__Simple_Fingerprint_AsImageData.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__FIS_Simple_Person_Fingerprints.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__mple_Fingerprint_AsIsoTemplate.htm" />
+      <ComponentRef Id="component_Sample_app.config" />
+      <ComponentRef Id="component_Sample_bin_Debug_Sample.exe.config" />
     </Feature>
   </Product>
 </Wix>
