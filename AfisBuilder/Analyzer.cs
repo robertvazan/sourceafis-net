@@ -50,7 +50,7 @@ namespace AfisBuilder
             Console.WriteLine("    EER: {0:F2}%", Accuracy * 100);
             Console.WriteLine("    Speed: {0:F0} fp/s", Speed);
             Console.WriteLine("    Extraction time: {0:F0}ms", ExtractionTime * 1000);
-            Console.WriteLine("    Template size: {0:F1} KB", TemplateSize / 1024);
+            Console.WriteLine("    Template size: {0:F2} KB", TemplateSize / 1024);
         }
     }
 }
