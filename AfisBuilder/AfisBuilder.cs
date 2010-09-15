@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using System.Globalization;
+using System.Linq;
 
 namespace AfisBuilder
 {
@@ -14,6 +15,7 @@ namespace AfisBuilder
         string OutputFolder;
         string SolutionFolder;
         string ZipFolder;
+        string MsiFolder;
 
         void SetFolder()
         {
@@ -59,6 +61,7 @@ namespace AfisBuilder
                 Command.BuildSolution("SourceAFIS.Mono.sln", "Release");
             Directory.CreateDirectory(Path.Combine("Sample", "dll"));
             Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", @"Sample\dll");
+            Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.xml", @"Sample\dll");
             Command.ForceDeleteDirectory(@"Sample\bin");
             if (!Mono)
                 Command.Build(@"Sample\Sample.csproj", "Debug");
@@ -122,15 +125,15 @@ namespace AfisBuilder
 
         void AssembleMsi()
         {
-            string workspace = Command.FixPath(OutputFolder + @"\msi");
-            Console.WriteLine("Assembling MSI package: {0}", workspace);
-            Command.ForceDeleteDirectory(workspace);
-            Command.CopyDirectory(ZipFolder, workspace);
+            MsiFolder = Path.Combine(OutputFolder, "msi");
+            Console.WriteLine("Assembling MSI package: {0}", MsiFolder);
+            Command.ForceDeleteDirectory(MsiFolder);
+            Command.CopyDirectory(ZipFolder, MsiFolder);
 
             string wxsPath = @"AfisBuilder\SourceAFIS.wxs";
             WiX.Load(wxsPath);
             WiX.UpdateVersion(Versions.Release);
-            WiX.ScanFolders(workspace);
+            WiX.ScanFolders(MsiFolder);
             WiX.ScanFiles();
             WiX.RemoveOldFiles();
             WiX.RemoveOldFolders();
@@ -139,8 +142,8 @@ namespace AfisBuilder
             WiX.Save(wxsPath);
 
             string wxsVersioned = "SourceAFIS-" + Versions.Release + ".wxs";
-            File.Copy(wxsPath, Path.Combine(workspace, wxsVersioned));
-            Directory.SetCurrentDirectory(workspace);
+            File.Copy(wxsPath, Path.Combine(MsiFolder, wxsVersioned));
+            Directory.SetCurrentDirectory(MsiFolder);
             Command.CompileWiX(wxsVersioned);
             Directory.SetCurrentDirectory(SolutionFolder);
         }
@@ -177,11 +180,19 @@ namespace AfisBuilder
 
         void RunNUnitTests()
         {
-            Command.Execute(
-                @"C:\Program Files\NUnit 2.5.7\bin\net-2.0\nunit-console.exe",
-                @"/xml=SourceAFIS.Tests\bin\Release\TestResult.xml",
-                "/labels", "/nodots",
-                @"SourceAFIS.Tests\bin\Release\SourceAFIS.Tests.dll");
+            string folder = @"SourceAFIS.Tests\bin\Release";
+            Command.CopyTo(Path.Combine(MsiFolder, "SourceAFIS-" + Versions.Release + ".msi"), folder);
+            Directory.SetCurrentDirectory(folder);
+
+            string nunit = (from nunitRoot in Directory.GetDirectories(@"C:\Program Files", "NUnit *.*.*")
+                            orderby nunitRoot
+                            select Path.Combine(nunitRoot, "bin", "net-2.0", "nunit-console.exe")).Last();
+
+            Command.Execute(nunit, "/labels", "/nodots", "/exclude=Executable", "SourceAFIS.Tests.dll");
+
+            Command.Execute(nunit, "/labels", "/nodots", "/run=SourceAFIS.Tests.Executable.Installer", "SourceAFIS.Tests.dll");
+
+            Directory.SetCurrentDirectory(SolutionFolder);
         }
 
         void RunAnalyzer()

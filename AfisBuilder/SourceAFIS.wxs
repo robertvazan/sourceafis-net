@@ -514,11 +514,17 @@
                 <Component Id="component_Sample_bin_Debug_Sample.exe.config" Guid="ef34ff6e-1f28-4766-a638-6aed99429f4f">
                   <File Id="Sample_bin_Debug_Sample.exe.config" Name="Sample.exe.config" DiskId="1" Source="Sample\bin\Debug\Sample.exe.config" KeyPath="yes" />
                 </Component>
+                <Component Id="component_Sample_bin_Debug_SourceAFIS.xml" Guid="1fae2315-1924-490d-9794-e3fa79f73244">
+                  <File Id="Sample_bin_Debug_SourceAFIS.xml" Name="SourceAFIS.xml" DiskId="1" Source="Sample\bin\Debug\SourceAFIS.xml" KeyPath="yes" />
+                </Component>
               </Directory>
             </Directory>
             <Directory Id="Sample_dll" Name="dll">
               <Component Id="component_Sample_dll_SourceAFIS.dll" Guid="d7b4563d-10b7-459b-a2c8-50e1bb053b3a">
                 <File Id="Sample_dll_SourceAFIS.dll" Name="SourceAFIS.dll" DiskId="1" Source="Sample\dll\SourceAFIS.dll" KeyPath="yes" />
+              </Component>
+              <Component Id="component_Sample_dll_SourceAFIS.xml" Guid="c2488adb-030d-4684-85e1-826920432547">
+                <File Id="Sample_dll_SourceAFIS.xml" Name="SourceAFIS.xml" DiskId="1" Source="Sample\dll\SourceAFIS.xml" KeyPath="yes" />
               </Component>
             </Directory>
             <Directory Id="Sample_images" Name="images">
@@ -772,6 +778,8 @@
       <ComponentRef Id="component_Sample_bin_Debug_Sample.exe.config" />
       <ComponentRef Id="component_Bin_DatabaseAnalyzer.exe.config" />
       <ComponentRef Id="component_Bin_FingerprintAnalyzer.exe.config" />
+      <ComponentRef Id="component_Sample_bin_Debug_SourceAFIS.xml" />
+      <ComponentRef Id="component_Sample_dll_SourceAFIS.xml" />
     </Feature>
   </Product>
 </Wix>
