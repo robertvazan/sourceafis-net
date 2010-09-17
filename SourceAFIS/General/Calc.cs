@@ -227,7 +227,7 @@ namespace SourceAFIS.General
 
         public static T DeepClone<T>(this T root) where T : class
         {
-            T clone = typeof(T).GetConstructor(new Type[0]).Invoke(new object[0]) as T;
+            T clone = root.GetType().GetConstructor(new Type[0]).Invoke(new object[0]) as T;
             foreach (FieldInfo fieldInfo in root.GetType().GetFields())
             {
                 if (!fieldInfo.FieldType.IsClass)
