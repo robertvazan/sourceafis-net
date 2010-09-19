@@ -17,8 +17,8 @@
             </ComboBox>
             <ComboBox Height="23" Name="TopErrorsDatabase" Margin="2" DockPanel.Dock="Right" />
             <ComboBox Height="23" Name="TopErrorsMeasure" Margin="2" DockPanel.Dock="Right" />
-            <Button Content="Open..." Height="23" Name="TopErrorsLoad" DockPanel.Dock="Right" Margin="2" />
-            <TextBox Height="23" Name="TopErrorsPath" Margin="2" MinWidth="50" />
+            <Button Content="Open" Height="23" Name="TopErrorsOpen" DockPanel.Dock="Right" Margin="2" />
+            <TextBox Height="23" Name="TopErrorsPath" Margin="2" MinWidth="50" TextAlignment="Right" />
         </DockPanel>
         <Grid Name="ViewGrid">
             <Grid.ColumnDefinitions>
@@ -29,14 +29,18 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <StackPanel Name="LeftPathPanel" Orientation="Horizontal">
-                <Label Content="left path placeholder" Height="28" Name="label3" />
-            </StackPanel>
-            <StackPanel Grid.Column="1" Name="RightPathPanel" Orientation="Horizontal">
-                <Label Content="right path placeholder" Height="28" Name="label4" />
-            </StackPanel>
             <Canvas Grid.Row="1" Name="LeftCanvas" />
             <Canvas Grid.Column="1" Grid.Row="1" Name="RightCanvas" />
+            <DockPanel Name="LeftControls">
+                <Button Content="Save" Height="23" Name="LeftSave" DockPanel.Dock="Right" Margin="2" />
+                <Button Content="Open" Height="23" Name="LeftOpen" Margin="2" DockPanel.Dock="Right" />
+                <TextBox Height="23" Name="LeftPath" Margin="2" TextAlignment="Right" />
+            </DockPanel>
+            <DockPanel Grid.Column="1" Name="RightControls">
+                <Button Content="Save" Height="23" Name="RightSave" DockPanel.Dock="Right" Margin="2" />
+                <Button Content="Open" Height="23" Name="RightOpen" DockPanel.Dock="Right" Margin="2" />
+                <TextBox Height="23" Name="RightPath" Margin="2" TextAlignment="Right" />
+            </DockPanel>
         </Grid>
     </DockPanel>
 </Window>
