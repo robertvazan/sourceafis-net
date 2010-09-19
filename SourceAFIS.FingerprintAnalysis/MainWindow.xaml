@@ -5,4 +5,30 @@
     <Window.Resources>
         <converters:BooleanToVisibility x:Key="BoolToVisibility" />
     </Window.Resources>
+    <DockPanel Name="TopLevelPanel">
+        <StackPanel Name="RightPanel" DockPanel.Dock="Right">
+            <Label Content="right panel placeholder" Height="28" Name="label1" />
+        </StackPanel>
+        <StackPanel Name="TopErrorsPanel" DockPanel.Dock="Top" Orientation="Horizontal">
+            <Label Content="top errors placeholder" Height="28" Name="label2" />
+        </StackPanel>
+        <Grid Name="ViewGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel Name="LeftPathPanel" Orientation="Horizontal">
+                <Label Content="left path placeholder" Height="28" Name="label3" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Name="RightPathPanel" Orientation="Horizontal">
+                <Label Content="right path placeholder" Height="28" Name="label4" />
+            </StackPanel>
+            <Canvas Grid.Row="1" Name="LeftCanvas" />
+            <Canvas Grid.Column="1" Grid.Row="1" Name="RightCanvas" />
+        </Grid>
+    </DockPanel>
 </Window>
