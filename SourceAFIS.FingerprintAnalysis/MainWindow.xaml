@@ -9,9 +9,17 @@
         <StackPanel Name="RightPanel" DockPanel.Dock="Right">
             <Label Content="right panel placeholder" Height="28" Name="label1" />
         </StackPanel>
-        <StackPanel Name="TopErrorsPanel" DockPanel.Dock="Top" Orientation="Horizontal">
-            <Label Content="top errors placeholder" Height="28" Name="label2" />
-        </StackPanel>
+        <DockPanel Name="TopErrorsPanel" DockPanel.Dock="Top" Margin="0">
+            <ComboBox Height="23" Name="TopErrorsPair" DockPanel.Dock="Right" Margin="2" />
+            <ComboBox Height="23" Name="TopErrorsType" DockPanel.Dock="Right" Margin="2">
+                <ComboBoxItem Content="False Accepts" IsSelected="True" />
+                <ComboBoxItem Content="False Rejects" />
+            </ComboBox>
+            <ComboBox Height="23" Name="TopErrorsDatabase" Margin="2" DockPanel.Dock="Right" />
+            <ComboBox Height="23" Name="TopErrorsMeasure" Margin="2" DockPanel.Dock="Right" />
+            <Button Content="Open..." Height="23" Name="TopErrorsLoad" DockPanel.Dock="Right" Margin="2" />
+            <TextBox Height="23" Name="TopErrorsPath" Margin="2" MinWidth="50" />
+        </DockPanel>
         <Grid Name="ViewGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
