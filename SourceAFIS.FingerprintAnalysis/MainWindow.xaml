@@ -29,8 +29,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Canvas Grid.Row="1" Name="LeftCanvas" />
-            <Canvas Grid.Column="1" Grid.Row="1" Name="RightCanvas" />
             <DockPanel Name="LeftControls">
                 <Button Content="Save" Height="23" Name="LeftSave" DockPanel.Dock="Right" Margin="2" />
                 <Button Content="Open" Height="23" Name="LeftOpen" Margin="2" DockPanel.Dock="Right" />
@@ -41,6 +39,12 @@
                 <Button Content="Open" Height="23" Name="RightOpen" DockPanel.Dock="Right" Margin="2" />
                 <TextBox Height="23" Name="RightPath" Margin="2" TextAlignment="Right" />
             </DockPanel>
+            <Viewbox Grid.Row="1" Name="LeftViewBox">
+                <Canvas Height="640" Name="LeftCanvas" Width="480" />
+            </Viewbox>
+            <Viewbox Grid.Column="1" Grid.Row="1" Name="RightViewBox">
+                <Canvas Name="RightCanvas" Width="480" Height="640" />
+            </Viewbox>
         </Grid>
     </DockPanel>
 </Window>
