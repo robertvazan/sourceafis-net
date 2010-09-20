@@ -5,22 +5,15 @@
     <Window.Resources>
         <converters:BooleanToVisibility x:Key="BoolToVisibility" />
     </Window.Resources>
-    <DockPanel Name="TopLevelPanel">
-        <StackPanel Name="RightPanel" DockPanel.Dock="Right">
-            <Label Content="right panel placeholder" Height="28" Name="label1" />
-        </StackPanel>
-        <DockPanel Name="TopErrorsPanel" DockPanel.Dock="Top" Margin="0">
-            <ComboBox Height="23" Name="TopErrorsPair" DockPanel.Dock="Right" Margin="2" />
-            <ComboBox Height="23" Name="TopErrorsType" DockPanel.Dock="Right" Margin="2">
-                <ComboBoxItem Content="False Accepts" IsSelected="True" />
-                <ComboBoxItem Content="False Rejects" />
-            </ComboBox>
-            <ComboBox Height="23" Name="TopErrorsDatabase" Margin="2" DockPanel.Dock="Right" />
-            <ComboBox Height="23" Name="TopErrorsMeasure" Margin="2" DockPanel.Dock="Right" />
-            <Button Content="Open" Height="23" Name="TopErrorsOpen" DockPanel.Dock="Right" Margin="2" />
-            <TextBox Height="23" Name="TopErrorsPath" Margin="2" MinWidth="50" TextAlignment="Right" />
-        </DockPanel>
-        <Grid Name="ViewGrid">
+    <DockPanel Name="OptionsDockPanel">
+        <ScrollViewer Name="OptionScrollView" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Right">
+            <StackPanel Name="OptionsPanel">
+                <Label Content="right panel placeholder" Height="28" Name="label1" />
+                <Label Content="right panel placeholder" Height="28" Name="label2" />
+                <Label Content="right panel placeholder" Height="28" Name="label3" />
+            </StackPanel>
+        </ScrollViewer>
+        <Grid Name="MainGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -30,21 +23,14 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <DockPanel Name="LeftControls">
-                <Button Content="Save" Height="23" Name="LeftSave" DockPanel.Dock="Right" Margin="2" />
                 <Button Content="Open" Height="23" Name="LeftOpen" Margin="2" DockPanel.Dock="Right" />
                 <TextBox Height="23" Name="LeftPath" Margin="2" TextAlignment="Right" />
             </DockPanel>
             <DockPanel Grid.Column="1" Name="RightControls">
-                <Button Content="Save" Height="23" Name="RightSave" DockPanel.Dock="Right" Margin="2" />
                 <Button Content="Open" Height="23" Name="RightOpen" DockPanel.Dock="Right" Margin="2" />
                 <TextBox Height="23" Name="RightPath" Margin="2" TextAlignment="Right" />
             </DockPanel>
-            <Viewbox Grid.Row="1" Name="LeftViewBox">
-                <Canvas Height="640" Name="LeftCanvas" Width="480" />
-            </Viewbox>
-            <Viewbox Grid.Column="1" Grid.Row="1" Name="RightViewBox">
-                <Canvas Name="RightCanvas" Width="480" Height="640" />
-            </Viewbox>
+            <Image Grid.ColumnSpan="2" Grid.Row="1" Name="LeftImage" Stretch="Uniform" />
         </Grid>
     </DockPanel>
 </Window>
