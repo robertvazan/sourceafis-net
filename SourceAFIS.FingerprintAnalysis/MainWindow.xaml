@@ -2,9 +2,6 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Height="432" Width="738" Title="Fingerprint Analysis"
         xmlns:converters="clr-namespace:SourceAFIS.FingerprintAnalysis">
-    <Window.Resources>
-        <converters:BooleanToVisibility x:Key="BoolToVisibility" />
-    </Window.Resources>
     <DockPanel Name="OptionsDockPanel">
         <ScrollViewer Name="OptionScrollView" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Right">
             <StackPanel Name="OptionsPanel">
