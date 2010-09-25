@@ -6,7 +6,6 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     sealed class Options
     {
-        public bool EnableImageDisplay = true;
         public LayerType DisplayLayer = LayerType.OriginalImage;
         public SkeletonType SkeletonType = SkeletonType.Ridges;
         public QuickCompare CompareWith = QuickCompare.None;
