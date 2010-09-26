@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    enum SkeletonType
+    public enum SkeletonType
     {
         Ridges,
         Valleys

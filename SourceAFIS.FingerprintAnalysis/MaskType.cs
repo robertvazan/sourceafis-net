@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    enum MaskType
+    public enum MaskType
     {
         None,
         Segmentation,

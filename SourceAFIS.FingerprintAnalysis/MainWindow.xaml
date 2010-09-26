@@ -1,23 +1,62 @@
 ﻿<Window x:Class="SourceAFIS.FingerprintAnalysis.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Height="432" Width="738" Title="Fingerprint Analysis"
-        xmlns:converters="clr-namespace:SourceAFIS.FingerprintAnalysis">
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:SourceAFIS.FingerprintAnalysis">
+    <Window.Resources>
+        <local:Options x:Key="OptionsData" />
+        <ObjectDataProvider MethodName="GetValues"
+                        ObjectType="{x:Type sys:Enum}"
+                        x:Key="LayerTypeValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:LayerType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider MethodName="GetValues"
+                        ObjectType="{x:Type sys:Enum}"
+                        x:Key="SkeletonTypeValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:SkeletonType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider MethodName="GetValues"
+                        ObjectType="{x:Type sys:Enum}"
+                        x:Key="QuickCompareValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:QuickCompare" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider MethodName="GetValues"
+                        ObjectType="{x:Type sys:Enum}"
+                        x:Key="DiffTypeValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:DiffType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider MethodName="GetValues"
+                        ObjectType="{x:Type sys:Enum}"
+                        x:Key="MaskTypeValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:MaskType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
     <DockPanel Name="OptionsDockPanel" Margin="2">
         <ScrollViewer Name="OptionScrollView" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Right">
-            <StackPanel Name="OptionsPanel">
-                <ComboBox Height="23" Name="DisplayLayer" Margin="2" />
-                <ComboBox Height="23" Name="SkeletonType" Margin="2" />
-                <ComboBox Height="23" Name="CompareWith" Margin="2" />
-                <ComboBox Height="23" Name="CompareWithLayer" Margin="2" />
-                <ComboBox Height="23" Name="DiffType" Margin="2" />
-                <ComboBox Height="23" Name="Mask" Margin="2" />
-                <CheckBox Content="Contrast" Height="16" Name="Contrast" Margin="2" />
-                <CheckBox Content="Absolute contrast" Height="16" Name="AbsoluteContrast" Margin="2" />
-                <CheckBox Content="Relative contrast" Height="16" Name="RelativeContrast" Margin="2" />
-                <CheckBox Content="Low contrast majority" Height="16" Name="LowContrastMajority" Margin="2" />
-                <CheckBox Content="Orientation field" Height="16" Name="Orientation" Margin="2" />
-                <CheckBox Content="Minutiae" Height="16" Name="MinutiaCollector" Margin="2" />
-                <CheckBox Content="Paired minutiae" Height="16" Name="PairedMinutiae" Margin="2" />
+            <StackPanel Name="OptionsPanel" DataContext="{StaticResource OptionsData}">
+                <ComboBox Height="23" Name="DisplayLayer" Margin="2" SelectedItem="{Binding Path=DisplayLayer}" ItemsSource="{Binding Source={StaticResource LayerTypeValues}}" />
+                <ComboBox Height="23" Name="SkeletonType" Margin="2" SelectedItem="{Binding Path=SkeletonType}" ItemsSource="{Binding Source={StaticResource SkeletonTypeValues}}" />
+                <ComboBox Height="23" Name="CompareWith" Margin="2" SelectedItem="{Binding Path=CompareWith}" ItemsSource="{Binding Source={StaticResource QuickCompareValues}}" />
+                <ComboBox Height="23" Name="CompareWithLayer" Margin="2" SelectedItem="{Binding Path=CompareWithLayer}" ItemsSource="{Binding Source={StaticResource LayerTypeValues}}" />
+                <ComboBox Height="23" Name="DiffType" Margin="2" SelectedItem="{Binding Path=DiffType}" ItemsSource="{Binding Source={StaticResource DiffTypeValues}}" />
+                <ComboBox Height="23" Name="Mask" Margin="2" SelectedItem="{Binding Path=Mask}" ItemsSource="{Binding Source={StaticResource MaskTypeValues}}" />
+                <CheckBox Content="Contrast" Height="16" Name="Contrast" Margin="2" IsChecked="{Binding Path=Contrast}" />
+                <CheckBox Content="Absolute contrast" Height="16" Name="AbsoluteContrast" Margin="2" IsChecked="{Binding Path=AbsoluteContrast}" />
+                <CheckBox Content="Relative contrast" Height="16" Name="RelativeContrast" Margin="2" IsChecked="{Binding Path=RelativeContrast}" />
+                <CheckBox Content="Low contrast majority" Height="16" Name="LowContrastMajority" Margin="2" IsChecked="{Binding Path=LowContrastMajority}" />
+                <CheckBox Content="Orientation field" Height="16" Name="Orientation" Margin="2" IsChecked="{Binding Path=Orientation}" />
+                <CheckBox Content="Minutiae" Height="16" Name="MinutiaCollector" Margin="2" IsChecked="{Binding Path=MinutiaCollector}" />
+                <CheckBox Content="Paired minutiae" Height="16" Name="PairedMinutiae" Margin="2" IsChecked="{Binding Path=PairedMinutiae}" />
             </StackPanel>
         </ScrollViewer>
         <Grid Name="MainGrid">
