@@ -2,12 +2,22 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Height="432" Width="738" Title="Fingerprint Analysis"
         xmlns:converters="clr-namespace:SourceAFIS.FingerprintAnalysis">
-    <DockPanel Name="OptionsDockPanel">
+    <DockPanel Name="OptionsDockPanel" Margin="2">
         <ScrollViewer Name="OptionScrollView" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Right">
             <StackPanel Name="OptionsPanel">
-                <Label Content="right panel placeholder" Height="28" Name="label1" />
-                <Label Content="right panel placeholder" Height="28" Name="label2" />
-                <Label Content="right panel placeholder" Height="28" Name="label3" />
+                <ComboBox Height="23" Name="DisplayLayer" Margin="2" />
+                <ComboBox Height="23" Name="SkeletonType" Margin="2" />
+                <ComboBox Height="23" Name="CompareWith" Margin="2" />
+                <ComboBox Height="23" Name="CompareWithLayer" Margin="2" />
+                <ComboBox Height="23" Name="DiffType" Margin="2" />
+                <ComboBox Height="23" Name="Mask" Margin="2" />
+                <CheckBox Content="Contrast" Height="16" Name="Contrast" Margin="2" />
+                <CheckBox Content="Absolute contrast" Height="16" Name="AbsoluteContrast" Margin="2" />
+                <CheckBox Content="Relative contrast" Height="16" Name="RelativeContrast" Margin="2" />
+                <CheckBox Content="Low contrast majority" Height="16" Name="LowContrastMajority" Margin="2" />
+                <CheckBox Content="Orientation field" Height="16" Name="Orientation" Margin="2" />
+                <CheckBox Content="Minutiae" Height="16" Name="MinutiaCollector" Margin="2" />
+                <CheckBox Content="Paired minutiae" Height="16" Name="PairedMinutiae" Margin="2" />
             </StackPanel>
         </ScrollViewer>
         <Grid Name="MainGrid">
