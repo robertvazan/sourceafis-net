@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    enum LayerType
+    public enum LayerType
     {
         OriginalImage,
         Equalized,

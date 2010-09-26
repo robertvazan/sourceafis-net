@@ -19,9 +19,12 @@ namespace SourceAFIS.FingerprintAnalysis
     /// </summary>
     public partial class MainWindow : Window
     {
+        Options Options;
+
         public MainWindow()
         {
             InitializeComponent();
+            Options = FindResource("OptionsData") as Options;
         }
     }
 }

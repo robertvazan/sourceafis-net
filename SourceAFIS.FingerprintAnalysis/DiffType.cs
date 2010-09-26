@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    enum DiffType
+    public enum DiffType
     {
         Proportional,
         Normalized,

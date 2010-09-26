@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    enum QuickCompare
+    public enum QuickCompare
     {
         None,
         Previous,
