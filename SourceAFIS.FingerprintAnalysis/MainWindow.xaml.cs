@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
@@ -25,6 +26,20 @@ namespace SourceAFIS.FingerprintAnalysis
         {
             InitializeComponent();
             Options = FindResource("OptionsData") as Options;
+        }
+
+        private void LeftOpen_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() == true)
+                Options.ProbePath = dialog.FileName;
+        }
+
+        private void RightOpen_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() == true)
+                Options.CandidatePath = dialog.FileName;
         }
     }
 }
