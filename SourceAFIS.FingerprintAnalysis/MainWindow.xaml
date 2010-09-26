@@ -41,9 +41,9 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>
-    <DockPanel Name="OptionsDockPanel" Margin="2">
+    <DockPanel Name="OptionsDockPanel" Margin="2" DataContext="{StaticResource OptionsData}">
         <ScrollViewer Name="OptionScrollView" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Right">
-            <StackPanel Name="OptionsPanel" DataContext="{StaticResource OptionsData}">
+            <StackPanel Name="OptionsPanel">
                 <ComboBox Height="23" Name="DisplayLayer" Margin="2" SelectedItem="{Binding Path=DisplayLayer}" ItemsSource="{Binding Source={StaticResource LayerTypeValues}}" />
                 <ComboBox Height="23" Name="SkeletonType" Margin="2" SelectedItem="{Binding Path=SkeletonType}" ItemsSource="{Binding Source={StaticResource SkeletonTypeValues}}" />
                 <ComboBox Height="23" Name="CompareWith" Margin="2" SelectedItem="{Binding Path=CompareWith}" ItemsSource="{Binding Source={StaticResource QuickCompareValues}}" />
@@ -69,12 +69,12 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <DockPanel Name="LeftControls">
-                <Button Content="Open" Height="23" Name="LeftOpen" Margin="2" DockPanel.Dock="Right" />
-                <TextBox Height="23" Name="LeftPath" Margin="2" TextAlignment="Right" />
+                <Button Content="Open" Height="23" Name="LeftOpen" Margin="2" DockPanel.Dock="Right" Click="LeftOpen_Click" />
+                <TextBox Height="23" Name="LeftPath" Margin="2" TextAlignment="Right" Text="{Binding Path=ProbePath}" />
             </DockPanel>
             <DockPanel Grid.Column="1" Name="RightControls">
-                <Button Content="Open" Height="23" Name="RightOpen" DockPanel.Dock="Right" Margin="2" />
-                <TextBox Height="23" Name="RightPath" Margin="2" TextAlignment="Right" />
+                <Button Content="Open" Height="23" Name="RightOpen" DockPanel.Dock="Right" Margin="2" Click="RightOpen_Click" />
+                <TextBox Height="23" Name="RightPath" Margin="2" TextAlignment="Right" Text="{Binding Path=CandidatePath}" />
             </DockPanel>
             <Image Grid.ColumnSpan="2" Grid.Row="1" Name="LeftImage" Stretch="Uniform" />
         </Grid>

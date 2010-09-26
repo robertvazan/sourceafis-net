@@ -6,6 +6,8 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     public class Options
     {
+        public string ProbePath { get; set; }
+        public string CandidatePath { get; set; }
         public LayerType DisplayLayer { get; set; }
         public SkeletonType SkeletonType { get; set; }
         public QuickCompare CompareWith { get; set; }
