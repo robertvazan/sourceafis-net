@@ -6,7 +6,7 @@ using SourceAFIS.General;
 using SourceAFIS.Visualization;
 using SourceAFIS.Matching;
 
-namespace FingerprintAnalyzer
+namespace SourceAFIS.FingerprintAnalysis
 {
     sealed class Blender
     {
@@ -22,7 +22,7 @@ namespace FingerprintAnalyzer
 
         GlobalTransformation GlobalTransformation = new GlobalTransformation();
 
-        delegate ColorF[,] BlendLayer(LogCollector.ExtractionData data, ExtractionOptions options, Palette palette);
+        delegate ColorF[,] BlendLayer(LogCollector.ExtractionData data, Palette palette);
 
         class Palette
         {
@@ -68,10 +68,10 @@ namespace FingerprintAnalyzer
                 {
                     if (transformation != null)
                     {
-                        AlphaLayering.Layer(output, AffineTransformer.Transform(layer(Logs.Candidate, Options.Candidate, CandidatePalette),
+                        AlphaLayering.Layer(output, AffineTransformer.Transform(layer(Logs.Candidate, CandidatePalette),
                             new Size(Logs.Probe.InputImage.GetLength(1), Logs.Probe.InputImage.GetLength(0)), transformation));
                     }
-                    AlphaLayering.Layer(output, layer(Logs.Probe, Options.Probe, ProbePalette));
+                    AlphaLayering.Layer(output, layer(Logs.Probe, ProbePalette));
                     if (layer == BlendMarkers && transformation != null)
                         BlendMatch(output, transformation);
                 }
@@ -82,18 +82,19 @@ namespace FingerprintAnalyzer
 
         void BlendMatch(ColorF[,] output, Transformation2D transformation)
         {
-            if (Options.Match.PairedInProbe)
+            if (Options.PairedMinutiae)
+            {
                 PairingMarkers.DrawProbe(output, Logs.Match.Pairing, Logs.Probe.Template);
-            if (Options.Match.PairedInCandidate)
                 PairingMarkers.DrawCandidate(output, Logs.Match.Pairing, Logs.Candidate.Template, transformation);
+            }
         }
 
-        ColorF[,] BlendImage(LogCollector.ExtractionData data, ExtractionOptions options, Palette palette)
+        ColorF[,] BlendImage(LogCollector.ExtractionData data, Palette palette)
         {
-            LogCollector.SkeletonData skeletonData = GetSkeletonData(options, data);
-            if (options.EnableImageDisplay)
+            LogCollector.SkeletonData skeletonData = GetSkeletonData(data);
+            if (Options.EnableImageDisplay)
             {
-                LayerType displayLayerType = options.DisplayLayer;
+                LayerType displayLayerType = Options.DisplayLayer;
                 float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, data, skeletonData));
                 return ScalarColoring.Interpolate(GlobalContrast.GetNormalized(displayLayer), ColorF.Transparent, palette.Image);
             }
@@ -101,21 +102,21 @@ namespace FingerprintAnalyzer
                 return GetEmptyLayer(data);
         }
 
-        ColorF[,] BlendDiff(LogCollector.ExtractionData data, ExtractionOptions options, Palette palette)
+        ColorF[,] BlendDiff(LogCollector.ExtractionData data, Palette palette)
         {
-            if (options.EnableImageDisplay)
+            if (Options.EnableImageDisplay)
             {
-                LogCollector.SkeletonData skeletonData = GetSkeletonData(options, data);
-                LayerType displayLayerType = options.DisplayLayer;
+                LogCollector.SkeletonData skeletonData = GetSkeletonData(data);
+                LayerType displayLayerType = Options.DisplayLayer;
                 LayerType compareLayerType = displayLayerType;
-                if (options.CompareWith != QuickCompare.None)
+                if (Options.CompareWith != QuickCompare.None)
                 {
-                    if (options.CompareWith == QuickCompare.OtherLayer)
-                        compareLayerType = options.CompareWithLayer;
+                    if (Options.CompareWith == QuickCompare.OtherLayer)
+                        compareLayerType = Options.CompareWithLayer;
                     else
                     {
                         int compareLayerIndex;
-                        if (options.CompareWith == QuickCompare.Next)
+                        if (Options.CompareWith == QuickCompare.Next)
                             compareLayerIndex = (int)displayLayerType + 1;
                         else
                             compareLayerIndex = (int)displayLayerType - 1;
@@ -133,11 +134,11 @@ namespace FingerprintAnalyzer
                         diff = ImageDiff.Diff(compareLayer, displayLayer);
                     else
                         diff = ImageDiff.Diff(displayLayer, compareLayer);
-                    if (options.DiffType == DiffType.Normalized)
+                    if (Options.DiffType == DiffType.Normalized)
                         diff = ImageDiff.Normalize(diff, 10);
-                    if (options.DiffType == DiffType.Fog)
+                    if (Options.DiffType == DiffType.Fog)
                         diff = ImageDiff.Binarize(diff, 0.05f, 0.5f);
-                    if (options.DiffType == DiffType.Binary)
+                    if (Options.DiffType == DiffType.Binary)
                         diff = ImageDiff.Binarize(diff, 0.05f, 1);
                     return ImageDiff.Render(diff);
                 }
@@ -148,31 +149,31 @@ namespace FingerprintAnalyzer
                 return GetEmptyLayer(data);
         }
 
-        ColorF[,] BlendMarkers(LogCollector.ExtractionData data, ExtractionOptions options, Palette palette)
+        ColorF[,] BlendMarkers(LogCollector.ExtractionData data, Palette palette)
         {
             ColorF[,] output = GetEmptyLayer(data);
-            LayerBlocks(options.Contrast, output, PixelFormat.ToFloat(data.BlockContrast));
-            LayerMask(options.AbsoluteContrast, output, data.AbsoluteContrast, TransparentRed);
-            LayerMask(options.RelativeContrast, output, data.RelativeContrast, TransparentRed);
-            LayerMask(options.LowContrastMajority, output, data.LowContrastMajority, TransparentRed);
+            LayerBlocks(Options.Contrast, output, PixelFormat.ToFloat(data.BlockContrast));
+            LayerMask(Options.AbsoluteContrast, output, data.AbsoluteContrast, TransparentRed);
+            LayerMask(Options.RelativeContrast, output, data.RelativeContrast, TransparentRed);
+            LayerMask(Options.LowContrastMajority, output, data.LowContrastMajority, TransparentRed);
 
-            if (options.Orientation)
+            if (Options.Orientation)
             {
                 BinaryMap markers = OrientationMarkers.Draw(data.Orientation, data.Blocks, data.SegmentationMask);
                 AlphaLayering.Layer(output, ScalarColoring.Mask(markers, ColorF.Transparent, ColorF.Red));
             }
 
-            if (options.MinutiaCollector)
+            if (Options.MinutiaCollector)
                 TemplateDrawer.Draw(output, data.MinutiaCollector, palette.Ending, palette.Bifurcation);
             return output;
         }
 
-        ColorF[,] BlendMask(LogCollector.ExtractionData data, ExtractionOptions options, Palette palette)
+        ColorF[,] BlendMask(LogCollector.ExtractionData data, Palette palette)
         {
             BinaryMap mask = null;
-            if (options.Mask == MaskType.Segmentation)
+            if (Options.Mask == MaskType.Segmentation)
                 mask = BlockFiller.FillBlocks(data.SegmentationMask.GetInverted(), data.Blocks);
-            if (options.Mask == MaskType.Inner)
+            if (Options.Mask == MaskType.Inner)
                 mask = data.InnerMask.GetInverted();
             if (mask != null)
                 return ScalarColoring.Mask(mask, ColorF.Transparent, LightFog);
@@ -185,9 +186,9 @@ namespace FingerprintAnalyzer
             return new ColorF[data.InputImage.GetLength(0), data.InputImage.GetLength(1)];
         }
 
-        LogCollector.SkeletonData GetSkeletonData(ExtractionOptions options, LogCollector.ExtractionData data)
+        LogCollector.SkeletonData GetSkeletonData(LogCollector.ExtractionData data)
         {
-            if (options.SkeletonType == SkeletonType.Ridges)
+            if (Options.SkeletonType == SkeletonType.Ridges)
                 return data.Ridges;
             else
                 return data.Valleys;

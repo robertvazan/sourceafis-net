@@ -7,6 +7,8 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     public class Options : INotifyPropertyChanged
     {
+        public bool EnableImageDisplay = true;
+
         string ProbePathValue = "";
         public string ProbePath
         {

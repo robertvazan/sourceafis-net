@@ -10,7 +10,7 @@ using SourceAFIS.Visualization;
 using SourceAFIS.Matching;
 using SourceAFIS.Matching.Minutia;
 
-namespace FingerprintAnalyzer
+namespace SourceAFIS.FingerprintAnalysis
 {
     sealed class LogCollector
     {
