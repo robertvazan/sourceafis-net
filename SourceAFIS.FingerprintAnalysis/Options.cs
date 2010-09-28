@@ -21,19 +21,97 @@ namespace SourceAFIS.FingerprintAnalysis
             set { CandidatePathValue = value; OnPropertyChanged("CandidatePath"); }
         }
 
-        public LayerType DisplayLayer { get; set; }
-        public SkeletonType SkeletonType { get; set; }
-        public QuickCompare CompareWith { get; set; }
-        public LayerType CompareWithLayer { get; set; }
-        public DiffType DiffType { get; set; }
-        public MaskType Mask { get; set; }
-        public bool Contrast { get; set; }
-        public bool AbsoluteContrast { get; set; }
-        public bool RelativeContrast { get; set; }
-        public bool LowContrastMajority { get; set; }
-        public bool Orientation { get; set; }
-        public bool MinutiaCollector { get; set; }
-        public bool PairedMinutiae { get; set; }
+        LayerType DisplayLayerValue;
+        public LayerType DisplayLayer
+        {
+            get { return DisplayLayerValue; }
+            set { DisplayLayerValue = value; OnPropertyChanged("DisplayLayer"); }
+        }
+
+        SkeletonType SkeletonTypeValue;
+        public SkeletonType SkeletonType
+        {
+            get { return SkeletonTypeValue; }
+            set { SkeletonTypeValue = value; OnPropertyChanged("SkeletonType"); }
+        }
+
+        QuickCompare CompareWithValue;
+        public QuickCompare CompareWith
+        {
+            get { return CompareWithValue; }
+            set { CompareWithValue = value; OnPropertyChanged("CompareWith"); }
+        }
+
+        LayerType CompareWithLayerValue;
+        public LayerType CompareWithLayer
+        {
+            get { return CompareWithLayerValue; }
+            set { CompareWithLayerValue = value; OnPropertyChanged("CompareWithLayer"); }
+        }
+
+        DiffType DiffTypeValue;
+        public DiffType DiffType
+        {
+            get { return DiffTypeValue; }
+            set { DiffTypeValue = value; OnPropertyChanged("DiffType"); }
+        }
+
+        MaskType MaskValue;
+        public MaskType Mask
+        {
+            get { return MaskValue; }
+            set { MaskValue = value; OnPropertyChanged("Mask"); }
+        }
+
+        bool ContrastValue;
+        public bool Contrast
+        {
+            get { return ContrastValue; }
+            set { ContrastValue = value; OnPropertyChanged("Contrast"); }
+        }
+
+        bool AbsoluteContrastValue;
+        public bool AbsoluteContrast
+        {
+            get { return AbsoluteContrastValue; }
+            set { AbsoluteContrastValue = value; OnPropertyChanged("AbsoluteContrast"); }
+        }
+
+        bool RelativeContrastValue;
+        public bool RelativeContrast
+        {
+            get { return RelativeContrastValue; }
+            set { RelativeContrastValue = value; OnPropertyChanged("RelativeContrast"); }
+        }
+
+        bool LowContrastMajorityValue;
+        public bool LowContrastMajority
+        {
+            get { return LowContrastMajorityValue; }
+            set { LowContrastMajorityValue = value; OnPropertyChanged("LowContrastMajority"); }
+        }
+
+        bool OrientationValue;
+        public bool Orientation
+        {
+            get { return OrientationValue; }
+            set { OrientationValue = value; OnPropertyChanged("Orientation"); }
+        }
+
+        bool MinutiaCollectorValue;
+        public bool MinutiaCollector
+        {
+            get { return MinutiaCollectorValue; }
+            set { MinutiaCollectorValue = value; OnPropertyChanged("MinutiaCollector"); }
+        }
+
+        bool PairedMinutiaeValue;
+        public bool PairedMinutiae
+        {
+            get { return PairedMinutiaeValue; }
+            set { PairedMinutiaeValue = value; OnPropertyChanged("PairedMinutiae"); }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
