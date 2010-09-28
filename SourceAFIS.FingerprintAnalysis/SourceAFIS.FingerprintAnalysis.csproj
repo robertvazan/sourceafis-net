@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -52,6 +53,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Blender.cs" />
+    <Compile Include="LogCollector.cs" />
     <Compile Include="QuickCompare.cs" />
     <Compile Include="SkeletonType.cs" />
     <Page Include="MainWindow.xaml">
@@ -94,6 +97,16 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SourceAFIS.Visualization\SourceAFIS.Visualization.csproj">
+      <Project>{5570647C-1F35-4FE7-9E9B-FF193154DD95}</Project>
+      <Name>SourceAFIS.Visualization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SourceAFIS\SourceAFIS.csproj">
+      <Project>{35075900-98B2-4F73-A8FE-11E0D2182689}</Project>
+      <Name>SourceAFIS</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
