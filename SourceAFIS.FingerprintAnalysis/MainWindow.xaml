@@ -70,11 +70,11 @@
             </Grid.RowDefinitions>
             <DockPanel Name="LeftControls">
                 <Button Content="Open" Height="23" Name="LeftOpen" Margin="2" DockPanel.Dock="Right" Click="LeftOpen_Click" />
-                <TextBox Height="23" Name="LeftPath" Margin="2" TextAlignment="Right" Text="{Binding Path=ProbePath}" />
+                <TextBox Height="23" Name="LeftPath" Margin="2" TextAlignment="Right" Text="{Binding Path=ProbePath}" IsReadOnly="True" />
             </DockPanel>
             <DockPanel Grid.Column="1" Name="RightControls">
                 <Button Content="Open" Height="23" Name="RightOpen" DockPanel.Dock="Right" Margin="2" Click="RightOpen_Click" />
-                <TextBox Height="23" Name="RightPath" Margin="2" TextAlignment="Right" Text="{Binding Path=CandidatePath}" />
+                <TextBox Height="23" Name="RightPath" Margin="2" TextAlignment="Right" Text="{Binding Path=CandidatePath}" IsReadOnly="True" />
             </DockPanel>
             <Image Grid.ColumnSpan="2" Grid.Row="1" Name="LeftImage" Stretch="Uniform" />
         </Grid>
