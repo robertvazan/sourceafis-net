@@ -15,9 +15,6 @@ using Microsoft.Win32;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         Options Options;
