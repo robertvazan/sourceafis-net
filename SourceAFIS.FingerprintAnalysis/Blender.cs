@@ -12,7 +12,7 @@ namespace SourceAFIS.FingerprintAnalysis
     {
         public LogCollector Logs;
 
-        public Options Options = new Options();
+        public Options Options;
 
         public Bitmap OutputImage;
 
