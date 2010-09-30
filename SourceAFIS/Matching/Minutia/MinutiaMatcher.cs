@@ -54,22 +54,28 @@ namespace SourceAFIS.Matching.Minutia
 
             int rootIndex = 0;
             float bestScore = 0;
-            int bestRootIndex = -1;
+            MinutiaPair bestRoot = new MinutiaPair();
             foreach (MinutiaPair root in RootSelector.GetRoots(Probe.Template, candidate))
             {
-                Logger.Log("Root", root);
                 float score = TryRoot(root, candidate);
                 if (score > bestScore)
                 {
                     bestScore = score;
-                    bestRootIndex = rootIndex;
+                    bestRoot = root;
                 }
                 ++rootIndex;
                 if (rootIndex >= MaxTriedRoots)
                     break;
             }
-            Logger.Log("BestRootIndex", bestRootIndex);
             Logger.Log("Score", bestScore);
+            if (bestScore > 0 && Logger.IsActive)
+            {
+                Pairing.Reset();
+                Pairing.Add(bestRoot);
+                BuildPairing(candidate);
+                Logger.Log("Root", bestRoot);
+                Logger.Log("Pairing", Pairing);
+            }
             return bestScore;
         }
 
@@ -100,7 +106,6 @@ namespace SourceAFIS.Matching.Minutia
                     break;
                 Pairing.Add(PairSelector.Dequeue());
             }
-            Logger.Log("Pairing", Pairing);
         }
 
         void CollectEdges(Template candidate)

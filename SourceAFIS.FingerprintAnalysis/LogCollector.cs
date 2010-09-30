@@ -53,7 +53,7 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public sealed class MatchData
         {
-            public int RootIndex;
+            public float Score;
             public bool AnyMatch;
             public MinutiaPair Root;
             public MinutiaPairing Pairing;
@@ -129,12 +129,12 @@ namespace SourceAFIS.FingerprintAnalysis
             {
                 ParallelMatcher.PreparedProbe prepared = Matcher.Prepare(Probe.Template);
                 Matcher.Match(prepared, new Template[] { Candidate.Template });
-                Match.RootIndex = Logger.Retrieve<int>("Matcher.MinutiaMatcher.BestRootIndex");
-                Match.AnyMatch = Match.RootIndex >= 0;
+                Match.Score = Logger.Retrieve<float>("Matcher.MinutiaMatcher.Score");
+                Match.AnyMatch = Match.Score > 0;
                 if (Match.AnyMatch)
                 {
-                    Match.Root = Logger.Retrieve<MinutiaPair>("Matcher.MinutiaMatcher.Root", Match.RootIndex);
-                    Match.Pairing = Logger.Retrieve<MinutiaPairing>("Matcher.MinutiaMatcher.Pairing", Match.RootIndex);
+                    Match.Root = Logger.Retrieve<MinutiaPair>("Matcher.MinutiaMatcher.Root");
+                    Match.Pairing = Logger.Retrieve<MinutiaPairing>("Matcher.MinutiaMatcher.Pairing");
                 }
                 Logger.Clear();
             }

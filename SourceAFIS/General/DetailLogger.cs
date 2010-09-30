@@ -11,12 +11,14 @@ namespace SourceAFIS.General
     {
         public abstract class Hook
         {
+            public abstract bool IsActive { get; }
             public abstract void Log(object data);
             public abstract void Log(string part, object data);
         }
 
         class NullHook : Hook
         {
+            public override bool IsActive { get { return false; } }
             public override void Log(object data) { }
             public override void Log(string part, object data) { }
         }
@@ -31,6 +33,8 @@ namespace SourceAFIS.General
                 Logger = logger;
                 Path = path;
             }
+
+            public override bool IsActive { get { return true; } }
 
             public override void Log(object data)
             {
