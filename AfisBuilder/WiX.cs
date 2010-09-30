@@ -202,7 +202,7 @@ namespace AfisBuilder
                            select subdir).ToList();
             removed.ForEach(subdir => subdir.Remove());
             foreach (XElement subdir in directory.WixElements("Directory"))
-                RemoveOldFiles(subdir, path + (string)subdir.Attribute("Name") + @"\");
+                RemoveOldFolders(subdir, path + (string)subdir.Attribute("Name") + @"\");
         }
 
         public static void RemoveOldFolders()

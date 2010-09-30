@@ -32,7 +32,7 @@ namespace SourceAFIS.Tests.Executable
             Assert.That(Directory.Exists(bin));
             Assert.That(File.Exists(Path.Combine(bin, "SourceAFIS.dll")));
             Assert.That(File.Exists(Path.Combine(bin, "SourceAFIS.Visualization.dll")));
-            Assert.That(File.Exists(Path.Combine(bin, "FingerprintAnalyzer.exe")));
+            Assert.That(File.Exists(Path.Combine(bin, "SourceAFIS.FingerprintAnalysis.exe")));
 
             string sample = Path.Combine(pfiles, "Sample");
             Assert.That(Directory.Exists(sample));
@@ -52,7 +52,7 @@ namespace SourceAFIS.Tests.Executable
             Assert.That(Directory.Exists(start));
             Assert.That(File.Exists(Path.Combine(start, "Program Files.lnk")));
             Assert.That(File.Exists(Path.Combine(start, "Project Homepage.lnk")));
-            Assert.That(File.Exists(Path.Combine(start, "Fingerprint Analyzer.lnk")));
+            Assert.That(File.Exists(Path.Combine(start, "Fingerprint Analysis.lnk")));
 
             TearDown();
 
