@@ -32,7 +32,7 @@ namespace AfisBuilder
             Versions.Update("SourceAFIS.Tuning");
             Versions.Update("SourceAFIS.Tests");
             Versions.Update("DatabaseAnalyzer");
-            Versions.Update("FingerprintAnalyzer");
+            Versions.Update("SourceAFIS.FingerprintAnalysis");
             if (!Mono)
             {
                 Versions.Update("FvcEnroll");
@@ -52,7 +52,7 @@ namespace AfisBuilder
                 Command.Build(@"SourceAFIS.Tuning\SourceAFIS.Tuning.csproj", "Release");
                 Command.Build(@"SourceAFIS.Tests\SourceAFIS.Tests.csproj", "Release");
                 Command.Build(@"DatabaseAnalyzer\DatabaseAnalyzer.csproj", "Release");
-                Command.Build(@"FingerprintAnalyzer\FingerprintAnalyzer.csproj", "Release");
+                Command.Build(@"SourceAFIS.FingerprintAnalysis\SourceAFIS.FingerprintAnalysis.csproj", "Release");
                 Command.Build(@"FvcEnroll\FvcEnroll.csproj", "Release");
                 Command.Build(@"FvcMatch\FvcMatch.csproj", "Release");
                 Command.Build(@"FvcIso\FvcIso.csproj", "Release");
@@ -91,8 +91,7 @@ namespace AfisBuilder
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe", prefix + "Bin");
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe.config", prefix + "Bin");
             Command.CopyTo(@"Data\DatabaseAnalyzerConfiguration.xml", prefix + "Bin");
-            Command.CopyTo(@"FingerprintAnalyzer\bin\Release\FingerprintAnalyzer.exe", prefix + "Bin");
-            Command.CopyTo(@"FingerprintAnalyzer\bin\Release\FingerprintAnalyzer.exe.config", prefix + "Bin");
+            Command.CopyTo(@"SourceAFIS.FingerprintAnalysis\bin\Release\SourceAFIS.FingerprintAnalysis.exe", prefix + "Bin");
 
             Directory.CreateDirectory(prefix + "Documentation");
             Command.CopyTo(@"Data\license.txt", prefix + "Documentation");
@@ -118,6 +117,7 @@ namespace AfisBuilder
             Command.CopyDirectory("Sample", prefix + "Sample");
             Command.DeleteFileIfExists(prefix + @"Sample\Sample.suo");
             Command.ForceDeleteDirectory(prefix + @"Sample\obj");
+            Command.ForceDeleteDirectory(prefix + @"Sample\bin\Release");
             Command.DeleteFileIfExists(prefix + @"Sample\bin\Debug\Sample.exe.mdb");
 
             Command.Zip(ZipFolder);

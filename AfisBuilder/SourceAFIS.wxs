@@ -30,9 +30,6 @@
             <Component Id="component_Bin_SourceAFIS.xml" Guid="5386fdd5-bf09-44b8-ac67-0806ed8ec3a1">
               <File Id="Bin_SourceAFIS.xml" Name="SourceAFIS.xml" DiskId="1" Source="Bin\SourceAFIS.xml" KeyPath="yes" />
             </Component>
-            <Component Id="component_Bin_FingerprintAnalyzer.exe" Guid="a5fd464e-7073-4558-9d9d-9309b470b45a">
-              <File Id="Bin_FingerprintAnalyzer.exe" Name="FingerprintAnalyzer.exe" DiskId="1" Source="Bin\FingerprintAnalyzer.exe" />
-            </Component>
             <Component Id="component_Bin_SourceAFIS.Tuning.dll" Guid="e78fdc07-3a4e-487f-9f72-5a6403a92144">
               <File Id="Bin_SourceAFIS.Tuning.dll" Name="SourceAFIS.Tuning.dll" DiskId="1" Source="Bin\SourceAFIS.Tuning.dll" KeyPath="yes" />
             </Component>
@@ -45,8 +42,8 @@
             <Component Id="component_Bin_DatabaseAnalyzer.exe.config" Guid="eafd52d3-6fc1-48d1-a117-8a420c73bbbe">
               <File Id="Bin_DatabaseAnalyzer.exe.config" Name="DatabaseAnalyzer.exe.config" DiskId="1" Source="Bin\DatabaseAnalyzer.exe.config" KeyPath="yes" />
             </Component>
-            <Component Id="component_Bin_FingerprintAnalyzer.exe.config" Guid="81f27d7a-a094-4179-8142-cbbfabbfcec7">
-              <File Id="Bin_FingerprintAnalyzer.exe.config" Name="FingerprintAnalyzer.exe.config" DiskId="1" Source="Bin\FingerprintAnalyzer.exe.config" KeyPath="yes" />
+            <Component Id="component_Bin_SourceAFIS.FingerprintAnalysis.exe" Guid="ad51f675-85f6-4bca-97e6-dbf18a60a742">
+              <File Id="Bin_SourceAFIS.FingerprintAnalysis.exe" Name="SourceAFIS.FingerprintAnalysis.exe" DiskId="1" Source="Bin\SourceAFIS.FingerprintAnalysis.exe" KeyPath="yes" />
             </Component>
           </Directory>
           <Directory Id="Documentation" Name="Documentation">
@@ -567,10 +564,10 @@
             <RemoveFolder Id="ProgramMenuDir" On="uninstall" />
             <RegistryValue Root="HKCU" Key="Software\[ProductName]" Type="string" Value="" KeyPath="yes" />
           </Component>
-          <Component Id="component_startmenu_Bin_FingerprintAnalyzer.exe" Guid="fa3e0762-7cc3-4af5-a435-86bd495e3cee">
-            <Shortcut Id="startmenu_FingerprintAnalyzer" Name="Fingerprint Analyzer" WorkingDirectory="INSTALLDIR" Target="[!Bin_FingerprintAnalyzer.exe]" Advertise="no" />
-            <RegistryValue Id="registry_FingerprintAnalyzer" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="FingerprintAnalyzer" Value="1" Type="integer" KeyPath="yes" />
-            <RemoveFolder Id="removefolder_FingerprintAnalyzer" On="uninstall" />
+          <Component Id="component_startmenu_Bin_SourceAFIS.FingerprintAnalysis.exe" Guid="fa3e0762-7cc3-4af5-a435-86bd495e3cee">
+            <Shortcut Id="startmenu_FingerprintAnalysis" Name="Fingerprint Analysis" WorkingDirectory="INSTALLDIR" Target="[!Bin_SourceAFIS.FingerprintAnalysis.exe]" Advertise="no" />
+            <RegistryValue Id="registry_FingerprintAnalysis" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="FingerprintAnalysis" Value="1" Type="integer" KeyPath="yes" />
+            <RemoveFolder Id="removefolder_FingerprintAnalysis" On="uninstall" />
           </Component>
           <Component Id="component_startmenu_HtmlDocs" Guid="fe08dfbe-1b55-462c-98dc-03788bf2ce01">
             <Shortcut Id="startmenu_HtmlDocs" Name="Documentation (HTML)" WorkingDirectory="INSTALLDIR" Target="[!Documentation_SourceAFIS_html_N_SourceAFIS_Simple.htm]" Advertise="no" />
@@ -756,8 +753,7 @@
       <ComponentRef Id="component_Sample_images_candidate3.tif" />
       <ComponentRef Id="component_Sample_images_probe.tif" />
       <ComponentRef Id="component_Sample_Properties_AssemblyInfo.cs" />
-      <ComponentRef Id="component_Bin_FingerprintAnalyzer.exe" />
-      <ComponentRef Id="component_startmenu_Bin_FingerprintAnalyzer.exe" />
+      <ComponentRef Id="component_startmenu_Bin_SourceAFIS.FingerprintAnalysis.exe" />
       <ComponentRef Id="component_startmenu_HtmlDocs" />
       <ComponentRef Id="component_startmenu_ChmDocs" />
       <ComponentRef Id="component_startmenu_Online" />
@@ -777,9 +773,9 @@
       <ComponentRef Id="component_Sample_app.config" />
       <ComponentRef Id="component_Sample_bin_Debug_Sample.exe.config" />
       <ComponentRef Id="component_Bin_DatabaseAnalyzer.exe.config" />
-      <ComponentRef Id="component_Bin_FingerprintAnalyzer.exe.config" />
       <ComponentRef Id="component_Sample_bin_Debug_SourceAFIS.xml" />
       <ComponentRef Id="component_Sample_dll_SourceAFIS.xml" />
+      <ComponentRef Id="component_Bin_SourceAFIS.FingerprintAnalysis.exe" />
     </Feature>
   </Product>
 </Wix>
