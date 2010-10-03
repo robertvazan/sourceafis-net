@@ -39,6 +39,8 @@ namespace SourceAFIS.FingerprintAnalysis
             Blender.Options = Options;
             Blender.Logs = Collector;
             Options.PropertyChanged += (source, args) => { OnOptionsChange(); };
+            Options.Probe.PropertyChanged += (source, args) => { OnOptionsChange(); };
+            Options.Candidate.PropertyChanged += (source, args) => { OnOptionsChange(); };
             OnOptionsChange();
         }
 
@@ -46,24 +48,24 @@ namespace SourceAFIS.FingerprintAnalysis
         {
             OpenFileDialog dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == true)
-                Options.ProbePath = dialog.FileName;
+                Options.Probe.Path = dialog.FileName;
         }
 
         private void RightOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == true)
-                Options.CandidatePath = dialog.FileName;
+                Options.Candidate.Path = dialog.FileName;
         }
 
         void OnOptionsChange()
         {
-            if (Options.ProbePath != "")
-                Collector.Probe.InputImage = ImageIO.Load(Options.ProbePath);
+            if (Options.Probe.Path != "")
+                Collector.Probe.InputImage = ImageIO.Load(Options.Probe.Path);
             else
                 Collector.Probe.InputImage = null;
-            if (Options.CandidatePath != "")
-                Collector.Candidate.InputImage = ImageIO.Load(Options.CandidatePath);
+            if (Options.Candidate.Path != "")
+                Collector.Candidate.InputImage = ImageIO.Load(Options.Candidate.Path);
             else
                 Collector.Candidate.InputImage = null;
 

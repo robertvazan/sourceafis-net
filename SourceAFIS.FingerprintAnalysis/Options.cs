@@ -58,18 +58,18 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public bool EnableImageDisplay = true;
 
-        string ProbePathValue = "";
-        public string ProbePath
+        FingerprintOptions ProbeValue = new FingerprintOptions();
+        public FingerprintOptions Probe
         {
-            get { return ProbePathValue; }
-            set { ProbePathValue = value; OnPropertyChanged("ProbePath"); }
+            get { return ProbeValue; }
+            set { ProbeValue = value; OnPropertyChanged("Probe"); }
         }
 
-        string CandidatePathValue = "";
-        public string CandidatePath
+        FingerprintOptions CandidateValue = new FingerprintOptions();
+        public FingerprintOptions Candidate
         {
-            get { return CandidatePathValue; }
-            set { CandidatePathValue = value; OnPropertyChanged("CandidatePath"); }
+            get { return CandidateValue; }
+            set { CandidateValue = value; OnPropertyChanged("Candidate"); }
         }
 
         Layer DisplayLayerValue;
