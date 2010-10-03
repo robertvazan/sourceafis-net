@@ -7,7 +7,7 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     public class Options : INotifyPropertyChanged
     {
-        public enum LayerType
+        public enum Layer
         {
             OriginalImage,
             Equalized,
@@ -33,7 +33,7 @@ namespace SourceAFIS.FingerprintAnalysis
             Valleys
         }
 
-        public enum QuickCompare
+        public enum QuickCompareType
         {
             None,
             Previous,
@@ -72,29 +72,29 @@ namespace SourceAFIS.FingerprintAnalysis
             set { CandidatePathValue = value; OnPropertyChanged("CandidatePath"); }
         }
 
-        LayerType DisplayLayerValue;
-        public LayerType DisplayLayer
+        Layer DisplayLayerValue;
+        public Layer DisplayLayer
         {
             get { return DisplayLayerValue; }
             set { DisplayLayerValue = value; OnPropertyChanged("DisplayLayer"); }
         }
 
-        SkeletonType SelectedSkeletonValue;
-        public SkeletonType SelectedSkeleton
+        SkeletonType SkeletonValue;
+        public SkeletonType Skeleton
         {
-            get { return SelectedSkeletonValue; }
-            set { SelectedSkeletonValue = value; OnPropertyChanged("SelectedSkeleton"); }
+            get { return SkeletonValue; }
+            set { SkeletonValue = value; OnPropertyChanged("Skeleton"); }
         }
 
-        QuickCompare CompareWithValue;
-        public QuickCompare CompareWith
+        QuickCompareType CompareWithValue;
+        public QuickCompareType CompareWith
         {
             get { return CompareWithValue; }
             set { CompareWithValue = value; OnPropertyChanged("CompareWith"); }
         }
 
-        LayerType CompareWithLayerValue;
-        public LayerType CompareWithLayer
+        Layer CompareWithLayerValue;
+        public Layer CompareWithLayer
         {
             get { return CompareWithLayerValue; }
             set { CompareWithLayerValue = value; OnPropertyChanged("CompareWithLayer"); }
@@ -149,11 +149,11 @@ namespace SourceAFIS.FingerprintAnalysis
             set { OrientationValue = value; OnPropertyChanged("Orientation"); }
         }
 
-        bool MinutiaCollectorValue;
-        public bool MinutiaCollector
+        bool MinutiaeValue;
+        public bool Minutiae
         {
-            get { return MinutiaCollectorValue; }
-            set { MinutiaCollectorValue = value; OnPropertyChanged("MinutiaCollector"); }
+            get { return MinutiaeValue; }
+            set { MinutiaeValue = value; OnPropertyChanged("Minutiae"); }
         }
 
         bool PairedMinutiaeValue;
@@ -162,7 +162,6 @@ namespace SourceAFIS.FingerprintAnalysis
             get { return PairedMinutiaeValue; }
             set { PairedMinutiaeValue = value; OnPropertyChanged("PairedMinutiae"); }
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 

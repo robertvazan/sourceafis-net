@@ -94,7 +94,7 @@ namespace SourceAFIS.FingerprintAnalysis
             LogCollector.SkeletonData skeletonData = GetSkeletonData(data);
             if (Options.EnableImageDisplay)
             {
-                Options.LayerType displayLayerType = Options.DisplayLayer;
+                Options.Layer displayLayerType = Options.DisplayLayer;
                 float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, data, skeletonData));
                 return ScalarColoring.Interpolate(GlobalContrast.GetNormalized(displayLayer), ColorF.Transparent, palette.Image);
             }
@@ -107,21 +107,21 @@ namespace SourceAFIS.FingerprintAnalysis
             if (Options.EnableImageDisplay)
             {
                 LogCollector.SkeletonData skeletonData = GetSkeletonData(data);
-                Options.LayerType displayLayerType = Options.DisplayLayer;
-                Options.LayerType compareLayerType = displayLayerType;
-                if (Options.CompareWith != Options.QuickCompare.None)
+                Options.Layer displayLayerType = Options.DisplayLayer;
+                Options.Layer compareLayerType = displayLayerType;
+                if (Options.CompareWith != Options.QuickCompareType.None)
                 {
-                    if (Options.CompareWith == Options.QuickCompare.OtherLayer)
+                    if (Options.CompareWith == Options.QuickCompareType.OtherLayer)
                         compareLayerType = Options.CompareWithLayer;
                     else
                     {
                         int compareLayerIndex;
-                        if (Options.CompareWith == Options.QuickCompare.Next)
+                        if (Options.CompareWith == Options.QuickCompareType.Next)
                             compareLayerIndex = (int)displayLayerType + 1;
                         else
                             compareLayerIndex = (int)displayLayerType - 1;
-                        if (Enum.IsDefined(typeof(Options.LayerType), compareLayerIndex))
-                            compareLayerType = (Options.LayerType)Enum.Parse(typeof(Options.LayerType), compareLayerIndex.ToString());
+                        if (Enum.IsDefined(typeof(Options.Layer), compareLayerIndex))
+                            compareLayerType = (Options.Layer)Enum.Parse(typeof(Options.Layer), compareLayerIndex.ToString());
                     }
                 }
 
@@ -163,7 +163,7 @@ namespace SourceAFIS.FingerprintAnalysis
                 AlphaLayering.Layer(output, ScalarColoring.Mask(markers, ColorF.Transparent, ColorF.Red));
             }
 
-            if (Options.MinutiaCollector)
+            if (Options.Minutiae)
                 TemplateDrawer.Draw(output, data.MinutiaCollector, palette.Ending, palette.Bifurcation);
             return output;
         }
@@ -188,32 +188,32 @@ namespace SourceAFIS.FingerprintAnalysis
 
         LogCollector.SkeletonData GetSkeletonData(LogCollector.ExtractionData data)
         {
-            if (Options.SelectedSkeleton == Options.SkeletonType.Ridges)
+            if (Options.Skeleton == Options.SkeletonType.Ridges)
                 return data.Ridges;
             else
                 return data.Valleys;
         }
 
-        float[,] GetLayer(Options.LayerType type, LogCollector.ExtractionData data, LogCollector.SkeletonData skeleton)
+        float[,] GetLayer(Options.Layer type, LogCollector.ExtractionData data, LogCollector.SkeletonData skeleton)
         {
             switch (type)
             {
-                case Options.LayerType.OriginalImage: return GrayscaleInverter.GetInverted(PixelFormat.ToFloat(data.InputImage));
-                case Options.LayerType.Equalized: return data.Equalized;
-                case Options.LayerType.SmoothedRidges: return data.SmoothedRidges;
-                case Options.LayerType.OrthogonalSmoothing: return data.OrthogonalSmoothing;
-                case Options.LayerType.Binarized: return PixelFormat.ToFloat(data.Binarized);
-                case Options.LayerType.BinarySmoothing: return PixelFormat.ToFloat(data.BinarySmoothing);
-                case Options.LayerType.RemovedCrosses: return PixelFormat.ToFloat(data.RemovedCrosses);
-                case Options.LayerType.Thinned: return PixelFormat.ToFloat(skeleton.Thinned);
-                case Options.LayerType.RidgeTracer: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.RidgeTracer, data.Binarized.Size));
-                case Options.LayerType.DotRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.DotRemover, data.Binarized.Size));
-                case Options.LayerType.PoreRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.PoreRemover, data.Binarized.Size));
-                case Options.LayerType.GapRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.GapRemover, data.Binarized.Size));
-                case Options.LayerType.TailRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.TailRemover, data.Binarized.Size));
-                case Options.LayerType.FragmentRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.FragmentRemover, data.Binarized.Size));
-                case Options.LayerType.MinutiaMask: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.MinutiaMask, data.Binarized.Size));
-                case Options.LayerType.BranchMinutiaRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.BranchMinutiaRemover, data.Binarized.Size));
+                case Options.Layer.OriginalImage: return GrayscaleInverter.GetInverted(PixelFormat.ToFloat(data.InputImage));
+                case Options.Layer.Equalized: return data.Equalized;
+                case Options.Layer.SmoothedRidges: return data.SmoothedRidges;
+                case Options.Layer.OrthogonalSmoothing: return data.OrthogonalSmoothing;
+                case Options.Layer.Binarized: return PixelFormat.ToFloat(data.Binarized);
+                case Options.Layer.BinarySmoothing: return PixelFormat.ToFloat(data.BinarySmoothing);
+                case Options.Layer.RemovedCrosses: return PixelFormat.ToFloat(data.RemovedCrosses);
+                case Options.Layer.Thinned: return PixelFormat.ToFloat(skeleton.Thinned);
+                case Options.Layer.RidgeTracer: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.RidgeTracer, data.Binarized.Size));
+                case Options.Layer.DotRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.DotRemover, data.Binarized.Size));
+                case Options.Layer.PoreRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.PoreRemover, data.Binarized.Size));
+                case Options.Layer.GapRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.GapRemover, data.Binarized.Size));
+                case Options.Layer.TailRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.TailRemover, data.Binarized.Size));
+                case Options.Layer.FragmentRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.FragmentRemover, data.Binarized.Size));
+                case Options.Layer.MinutiaMask: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.MinutiaMask, data.Binarized.Size));
+                case Options.Layer.BranchMinutiaRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.BranchMinutiaRemover, data.Binarized.Size));
                 default: throw new AssertException();
             }
         }
