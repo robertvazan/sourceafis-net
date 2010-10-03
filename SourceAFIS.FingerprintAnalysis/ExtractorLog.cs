@@ -62,12 +62,30 @@ namespace SourceAFIS.FingerprintAnalysis
 
         DetailLogger Logger = new DetailLogger();
         Extractor Extractor = new Extractor();
+
+        Dictionary<string, string> LogByProperty = new Dictionary<string,string>();
         
         public ExtractorLog()
         {
             ObjectTree tree = new ObjectTree();
             tree.Scan(Extractor, "Extractor");
             Logger.Attach(tree);
+
+            LogByProperty.Add("Blocks", "Extractor.BlockMap");
+            LogByProperty.Add("BlockContrast", "Extractor.Mask.Contrast");
+            LogByProperty.Add("AbsoluteContrast", "Extractor.Mask.AbsoluteContrast");
+            LogByProperty.Add("RelativeContrast", "Extractor.Mask.RelativeContrast");
+            LogByProperty.Add("LowContrastMajority", "Extractor.Mask.LowContrastMajority");
+            LogByProperty.Add("SegmentationMask", "Extractor.Mask");
+            LogByProperty.Add("Equalized", "Extractor.Equalizer");
+            LogByProperty.Add("Orientation", "Extractor.Orientation");
+            LogByProperty.Add("SmoothedRidges", "Extractor.RidgeSmoother");
+            LogByProperty.Add("OrthogonalSmoothing", "Extractor.OrthogonalSmoother");
+            LogByProperty.Add("Binarized", "Extractor.Binarizer");
+            LogByProperty.Add("BinarySmoothing", "Extractor.BinarySmoothingResult");
+            LogByProperty.Add("RemovedCrosses", "Extractor.CrossRemover");
+            LogByProperty.Add("InnerMask", "Extractor.InnerMask");
+            LogByProperty.Add("MinutiaCollector", "Extractor.MinutiaCollector");
         }
 
         void OnOptionChanged(object source, PropertyChangedEventArgs args)
@@ -103,21 +121,8 @@ namespace SourceAFIS.FingerprintAnalysis
                 Logger.Clear();
                 Extractor.Extract(InputImage, 500);
 
-                Blocks = Logger.Retrieve<BlockMap>("Extractor.BlockMap");
-                BlockContrast = Logger.Retrieve<byte[,]>("Extractor.Mask.Contrast");
-                AbsoluteContrast = Logger.Retrieve<BinaryMap>("Extractor.Mask.AbsoluteContrast");
-                RelativeContrast = Logger.Retrieve<BinaryMap>("Extractor.Mask.RelativeContrast");
-                LowContrastMajority = Logger.Retrieve<BinaryMap>("Extractor.Mask.LowContrastMajority");
-                SegmentationMask = Logger.Retrieve<BinaryMap>("Extractor.Mask");
-                Equalized = Logger.Retrieve<float[,]>("Extractor.Equalizer");
-                Orientation = Logger.Retrieve<byte[,]>("Extractor.Orientation");
-                SmoothedRidges = Logger.Retrieve<float[,]>("Extractor.RidgeSmoother");
-                OrthogonalSmoothing = Logger.Retrieve<float[,]>("Extractor.OrthogonalSmoother");
-                Binarized = Logger.Retrieve<BinaryMap>("Extractor.Binarizer");
-                BinarySmoothing = Logger.Retrieve<BinaryMap>("Extractor.BinarySmoothingResult");
-                RemovedCrosses = Logger.Retrieve<BinaryMap>("Extractor.CrossRemover");
-                InnerMask = Logger.Retrieve<BinaryMap>("Extractor.InnerMask");
-                MinutiaCollector = Logger.Retrieve<TemplateBuilder>("Extractor.MinutiaCollector");
+                foreach (var pair in LogByProperty)
+                    this.GetType().GetProperty(pair.Key).SetValue(this, Logger.Retrieve<object>(pair.Value), null);
                 Template = new SerializedFormat().Export(MinutiaCollector);
                 
                 Logger.Clear();
