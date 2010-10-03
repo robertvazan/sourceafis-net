@@ -7,6 +7,55 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     public class Options : INotifyPropertyChanged
     {
+        public enum LayerType
+        {
+            OriginalImage,
+            Equalized,
+            SmoothedRidges,
+            OrthogonalSmoothing,
+            Binarized,
+            BinarySmoothing,
+            RemovedCrosses,
+            Thinned,
+            RidgeTracer,
+            DotRemover,
+            PoreRemover,
+            GapRemover,
+            TailRemover,
+            FragmentRemover,
+            MinutiaMask,
+            BranchMinutiaRemover
+        }
+
+        public enum SkeletonType
+        {
+            Ridges,
+            Valleys
+        }
+
+        public enum QuickCompare
+        {
+            None,
+            Previous,
+            Next,
+            OtherLayer
+        }
+        
+        public enum DiffType
+        {
+            Proportional,
+            Normalized,
+            Fog,
+            Binary
+        }
+
+        public enum MaskType
+        {
+            None,
+            Segmentation,
+            Inner
+        }
+
         public bool EnableImageDisplay = true;
 
         string ProbePathValue = "";
@@ -30,11 +79,11 @@ namespace SourceAFIS.FingerprintAnalysis
             set { DisplayLayerValue = value; OnPropertyChanged("DisplayLayer"); }
         }
 
-        SkeletonType SkeletonTypeValue;
-        public SkeletonType SkeletonType
+        SkeletonType SelectedSkeletonValue;
+        public SkeletonType SelectedSkeleton
         {
-            get { return SkeletonTypeValue; }
-            set { SkeletonTypeValue = value; OnPropertyChanged("SkeletonType"); }
+            get { return SelectedSkeletonValue; }
+            set { SelectedSkeletonValue = value; OnPropertyChanged("SelectedSkeleton"); }
         }
 
         QuickCompare CompareWithValue;
@@ -52,10 +101,10 @@ namespace SourceAFIS.FingerprintAnalysis
         }
 
         DiffType DiffTypeValue;
-        public DiffType DiffType
+        public DiffType DiffMode
         {
             get { return DiffTypeValue; }
-            set { DiffTypeValue = value; OnPropertyChanged("DiffType"); }
+            set { DiffTypeValue = value; OnPropertyChanged("DiffMode"); }
         }
 
         MaskType MaskValue;
