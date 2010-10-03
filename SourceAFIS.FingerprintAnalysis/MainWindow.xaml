@@ -5,36 +5,36 @@
         xmlns:local="clr-namespace:SourceAFIS.FingerprintAnalysis" Closed="Window_Closed">
     <Window.Resources>
         <local:Options x:Key="OptionsData" />
-        <ObjectDataProvider MethodName="GetEnumDescriptions"
-                        ObjectType="{x:Type local:EnumDescriptionAttribute}"
+        <ObjectDataProvider MethodName="GetEnumValues"
+                        ObjectType="{x:Type local:Options}"
                         x:Key="LayerTypeValues">
             <ObjectDataProvider.MethodParameters>
                 <sys:String>SourceAFIS.FingerprintAnalysis.Options+Layer</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        <ObjectDataProvider MethodName="GetEnumDescriptions"
-                        ObjectType="{x:Type local:EnumDescriptionAttribute}"
+        <ObjectDataProvider MethodName="GetEnumValues"
+                        ObjectType="{x:Type local:Options}"
                         x:Key="SkeletonTypeValues">
             <ObjectDataProvider.MethodParameters>
                 <sys:String>SourceAFIS.FingerprintAnalysis.Options+SkeletonType</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        <ObjectDataProvider MethodName="GetEnumDescriptions"
-                        ObjectType="{x:Type local:EnumDescriptionAttribute}"
+        <ObjectDataProvider MethodName="GetEnumValues"
+                        ObjectType="{x:Type local:Options}"
                         x:Key="QuickCompareValues">
             <ObjectDataProvider.MethodParameters>
                 <sys:String>SourceAFIS.FingerprintAnalysis.Options+QuickCompareType</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        <ObjectDataProvider MethodName="GetEnumDescriptions"
-                        ObjectType="{x:Type local:EnumDescriptionAttribute}"
+        <ObjectDataProvider MethodName="GetEnumValues"
+                        ObjectType="{x:Type local:Options}"
                         x:Key="DiffTypeValues">
             <ObjectDataProvider.MethodParameters>
                 <sys:String>SourceAFIS.FingerprintAnalysis.Options+DiffType</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        <ObjectDataProvider MethodName="GetEnumDescriptions"
-                        ObjectType="{x:Type local:EnumDescriptionAttribute}"
+        <ObjectDataProvider MethodName="GetEnumValues"
+                        ObjectType="{x:Type local:Options}"
                         x:Key="MaskTypeValues">
             <ObjectDataProvider.MethodParameters>
                 <sys:String>SourceAFIS.FingerprintAnalysis.Options+MaskType</sys:String>
