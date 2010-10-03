@@ -9,35 +9,35 @@
                         ObjectType="{x:Type sys:Enum}"
                         x:Key="LayerTypeValues">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:LayerType" />
+                <x:Type TypeName="local:Options+LayerType" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider MethodName="GetValues"
                         ObjectType="{x:Type sys:Enum}"
                         x:Key="SkeletonTypeValues">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:SkeletonType" />
+                <x:Type TypeName="local:Options+SkeletonType" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider MethodName="GetValues"
                         ObjectType="{x:Type sys:Enum}"
                         x:Key="QuickCompareValues">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:QuickCompare" />
+                <x:Type TypeName="local:Options+QuickCompare" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider MethodName="GetValues"
                         ObjectType="{x:Type sys:Enum}"
                         x:Key="DiffTypeValues">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:DiffType" />
+                <x:Type TypeName="local:Options+DiffType" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider MethodName="GetValues"
                         ObjectType="{x:Type sys:Enum}"
                         x:Key="MaskTypeValues">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:MaskType" />
+                <x:Type TypeName="local:Options+MaskType" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>
@@ -45,10 +45,10 @@
         <ScrollViewer Name="OptionScrollView" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Right">
             <StackPanel Name="OptionsPanel">
                 <ComboBox Height="23" Name="DisplayLayer" Margin="2" SelectedItem="{Binding Path=DisplayLayer}" ItemsSource="{Binding Source={StaticResource LayerTypeValues}}" />
-                <ComboBox Height="23" Name="SkeletonType" Margin="2" SelectedItem="{Binding Path=SkeletonType}" ItemsSource="{Binding Source={StaticResource SkeletonTypeValues}}" />
+                <ComboBox Height="23" Name="SelectedSkeleton" Margin="2" SelectedItem="{Binding Path=SelectedSkeleton}" ItemsSource="{Binding Source={StaticResource SkeletonTypeValues}}" />
                 <ComboBox Height="23" Name="CompareWith" Margin="2" SelectedItem="{Binding Path=CompareWith}" ItemsSource="{Binding Source={StaticResource QuickCompareValues}}" />
                 <ComboBox Height="23" Name="CompareWithLayer" Margin="2" SelectedItem="{Binding Path=CompareWithLayer}" ItemsSource="{Binding Source={StaticResource LayerTypeValues}}" />
-                <ComboBox Height="23" Name="DiffType" Margin="2" SelectedItem="{Binding Path=DiffType}" ItemsSource="{Binding Source={StaticResource DiffTypeValues}}" />
+                <ComboBox Height="23" Name="DiffType" Margin="2" SelectedItem="{Binding Path=DiffMode}" ItemsSource="{Binding Source={StaticResource DiffTypeValues}}" />
                 <ComboBox Height="23" Name="Mask" Margin="2" SelectedItem="{Binding Path=Mask}" ItemsSource="{Binding Source={StaticResource MaskTypeValues}}" />
                 <CheckBox Content="Contrast" Height="16" Name="Contrast" Margin="2" IsChecked="{Binding Path=Contrast}" />
                 <CheckBox Content="Absolute contrast" Height="16" Name="AbsoluteContrast" Margin="2" IsChecked="{Binding Path=AbsoluteContrast}" />
