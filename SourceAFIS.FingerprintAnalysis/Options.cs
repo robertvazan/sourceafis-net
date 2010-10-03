@@ -170,5 +170,10 @@ namespace SourceAFIS.FingerprintAnalysis
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
+
+        public static Array GetEnumValues(string name)
+        {
+            return Enum.GetValues(Type.GetType(name));
+        }
     }
 }
