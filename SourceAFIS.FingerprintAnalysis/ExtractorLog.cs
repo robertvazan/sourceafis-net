@@ -104,28 +104,28 @@ namespace SourceAFIS.FingerprintAnalysis
 
         void Refresh(params string[] what)
         {
-            if (what.Contains("Path"))
+            try
             {
-                try
-                {
-                    InputImage = ImageIO.Load(FingerprintOptions.Path);
-                }
-                catch
-                {
-                    InputImage = null;
-                }
-            }
+                InputImage = ImageIO.Load(FingerprintOptions.Path);
 
-            if (InputImage != null)
-            {
                 Logger.Clear();
                 Extractor.Extract(InputImage, 500);
 
                 foreach (var pair in LogByProperty)
                     this.GetType().GetProperty(pair.Key).SetValue(this, Logger.Retrieve<object>(pair.Value), null);
-                Template = new SerializedFormat().Export(MinutiaCollector);
                 
+                Template = new SerializedFormat().Export(MinutiaCollector);
+
                 Logger.Clear();
+            }
+            catch
+            {
+                InputImage = null;
+
+                foreach (var pair in LogByProperty)
+                    this.GetType().GetProperty(pair.Key).SetValue(this, null, null);
+
+                Template = null;
             }
         }
     }
