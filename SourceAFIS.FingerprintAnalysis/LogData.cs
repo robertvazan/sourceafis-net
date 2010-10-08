@@ -12,7 +12,7 @@ namespace SourceAFIS.FingerprintAnalysis
 
         protected void RegisterProperties()
         {
-            var fields = from field in this.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+            var fields = from field in this.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance)
                          where field.FieldType == typeof(LogProperty)
                          select field;
             foreach (var field in fields)
