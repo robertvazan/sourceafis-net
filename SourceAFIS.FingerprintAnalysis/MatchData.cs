@@ -13,16 +13,16 @@ namespace SourceAFIS.FingerprintAnalysis
             RegisterProperties();
         }
 
-        LogProperty ScoreProperty = new LogProperty();
+        public LogProperty ScoreProperty = new LogProperty();
         public float Score { get { return (float)ScoreProperty.Value; } }
 
-        ComputedProperty AnyMatchProperty = new ComputedProperty("Score");
+        public ComputedProperty AnyMatchProperty = new ComputedProperty("Score");
         public bool AnyMatch { get { return Score > 0; } }
 
-        LogProperty RootProperty = new LogProperty();
+        public LogProperty RootProperty = new LogProperty();
         public MinutiaPair Root { get { return (MinutiaPair)RootProperty.Value; } }
 
-        LogProperty PairingProperty = new LogProperty();
+        public LogProperty PairingProperty = new LogProperty();
         public MinutiaPairing Pairing { get { return (MinutiaPairing)PairingProperty.Value; } }
     }
 }
