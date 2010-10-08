@@ -73,16 +73,21 @@ namespace SourceAFIS.General
                 History.Clear();
         }
 
-        public T Retrieve<T>(string path)
+        public object Retrieve(string path)
         {
             lock (this)
-                return Retrieve<T>(path, 0);
+                return Retrieve(path, 0);
         }
 
-        public T Retrieve<T>(string path, int index)
+        public object Retrieve(string path, int index)
         {
             lock (this)
-                return (T)History[path][index];
+            {
+                if (History.ContainsKey(path) && index < History[path].Count)
+                    return History[path][index];
+                else
+                    return null;
+            }
         }
 
         public void Log(string path, object data)
