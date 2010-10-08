@@ -40,27 +40,25 @@ namespace SourceAFIS.FingerprintAnalysis
         public void CollectExtraction(ExtractionData data)
         {
             if (data.InputImage != null)
-            {
                 Extractor.Extract(data.InputImage, 500);
-                data.SetProperty("Blocks", Logger.Retrieve("Extractor.BlockMap"));
-                data.SetProperty("BlockContrast", Logger.Retrieve("Extractor.Mask.Contrast"));
-                data.SetProperty("AbsoluteContrast", Logger.Retrieve("Extractor.Mask.AbsoluteContrast"));
-                data.SetProperty("RelativeContrast", Logger.Retrieve("Extractor.Mask.RelativeContrast"));
-                data.SetProperty("LowContrastMajority", Logger.Retrieve("Extractor.Mask.LowContrastMajority"));
-                data.SetProperty("SegmentationMask", Logger.Retrieve("Extractor.Mask"));
-                data.SetProperty("Equalized", Logger.Retrieve("Extractor.Equalizer"));
-                data.SetProperty("Orientation", Logger.Retrieve("Extractor.Orientation"));
-                data.SetProperty("SmoothedRidges", Logger.Retrieve("Extractor.RidgeSmoother"));
-                data.SetProperty("OrthogonalSmoothing", Logger.Retrieve("Extractor.OrthogonalSmoother"));
-                data.SetProperty("Binarized", Logger.Retrieve("Extractor.Binarizer"));
-                data.SetProperty("BinarySmoothing", Logger.Retrieve("Extractor.BinarySmoothingResult"));
-                data.SetProperty("RemovedCrosses", Logger.Retrieve("Extractor.CrossRemover"));
-                data.SetProperty("InnerMask", Logger.Retrieve("Extractor.InnerMask"));
-                CollectSkeleton("[Ridges]", data.Ridges);
-                CollectSkeleton("[Valleys]", data.Valleys);
-                data.SetProperty("MinutiaCollector", Logger.Retrieve("Extractor.MinutiaCollector"));
-                Logger.Clear();
-            }
+            data.SetProperty("Blocks", Logger.Retrieve("Extractor.BlockMap"));
+            data.SetProperty("BlockContrast", Logger.Retrieve("Extractor.Mask.Contrast"));
+            data.SetProperty("AbsoluteContrast", Logger.Retrieve("Extractor.Mask.AbsoluteContrast"));
+            data.SetProperty("RelativeContrast", Logger.Retrieve("Extractor.Mask.RelativeContrast"));
+            data.SetProperty("LowContrastMajority", Logger.Retrieve("Extractor.Mask.LowContrastMajority"));
+            data.SetProperty("SegmentationMask", Logger.Retrieve("Extractor.Mask"));
+            data.SetProperty("Equalized", Logger.Retrieve("Extractor.Equalizer"));
+            data.SetProperty("Orientation", Logger.Retrieve("Extractor.Orientation"));
+            data.SetProperty("SmoothedRidges", Logger.Retrieve("Extractor.RidgeSmoother"));
+            data.SetProperty("OrthogonalSmoothing", Logger.Retrieve("Extractor.OrthogonalSmoother"));
+            data.SetProperty("Binarized", Logger.Retrieve("Extractor.Binarizer"));
+            data.SetProperty("BinarySmoothing", Logger.Retrieve("Extractor.BinarySmoothingResult"));
+            data.SetProperty("RemovedCrosses", Logger.Retrieve("Extractor.CrossRemover"));
+            data.SetProperty("InnerMask", Logger.Retrieve("Extractor.InnerMask"));
+            CollectSkeleton("[Ridges]", data.Ridges);
+            CollectSkeleton("[Valleys]", data.Valleys);
+            data.SetProperty("MinutiaCollector", Logger.Retrieve("Extractor.MinutiaCollector"));
+            Logger.Clear();
         }
 
         void CollectSkeleton(string context, SkeletonData data)
@@ -83,14 +81,11 @@ namespace SourceAFIS.FingerprintAnalysis
             {
                 ParallelMatcher.PreparedProbe prepared = Matcher.Prepare(Probe.Template);
                 Matcher.Match(prepared, new Template[] { Candidate.Template });
-                Match.SetProperty("Score", Logger.Retrieve("Matcher.MinutiaMatcher.Score"));
-                if (Match.AnyMatch)
-                {
-                    Match.SetProperty("Root", Logger.Retrieve("Matcher.MinutiaMatcher.Root"));
-                    Match.SetProperty("Pairing", Logger.Retrieve("Matcher.MinutiaMatcher.Pairing"));
-                }
-                Logger.Clear();
             }
+            Match.SetProperty("Score", Logger.Retrieve("Matcher.MinutiaMatcher.Score"));
+            Match.SetProperty("Root", Logger.Retrieve("Matcher.MinutiaMatcher.Root"));
+            Match.SetProperty("Pairing", Logger.Retrieve("Matcher.MinutiaMatcher.Pairing"));
+            Logger.Clear();
         }
     }
 }
