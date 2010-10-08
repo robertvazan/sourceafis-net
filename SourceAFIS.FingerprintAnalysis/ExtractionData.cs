@@ -17,8 +17,7 @@ namespace SourceAFIS.FingerprintAnalysis
         public SkeletonData Ridges = new SkeletonData();
         public SkeletonData Valleys = new SkeletonData();
 
-        public LogProperty InputImageProperty = new LogProperty();
-        public byte[,] InputImage { get { return (byte[,])InputImageProperty.Value; } }
+        public byte[,] InputImage { get; set; }
 
         public LogProperty BlocksProperty = new LogProperty();
         public BlockMap Blocks { get { return (BlockMap)BlocksProperty.Value; } }
