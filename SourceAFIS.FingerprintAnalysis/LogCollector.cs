@@ -12,53 +12,8 @@ using SourceAFIS.Matching.Minutia;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    sealed class LogCollector
+    public class LogCollector
     {
-        public sealed class SkeletonData
-        {
-            public BinaryMap Binarized;
-            public BinaryMap Thinned;
-            public SkeletonBuilder RidgeTracer;
-            public SkeletonBuilder DotRemover;
-            public SkeletonBuilder PoreRemover;
-            public SkeletonBuilder GapRemover;
-            public SkeletonBuilder TailRemover;
-            public SkeletonBuilder FragmentRemover;
-            public SkeletonBuilder MinutiaMask;
-            public SkeletonBuilder BranchMinutiaRemover;
-        }
-
-        public sealed class ExtractionData
-        {
-            public byte[,] InputImage;
-            public BlockMap Blocks;
-            public byte[,] BlockContrast;
-            public BinaryMap AbsoluteContrast;
-            public BinaryMap RelativeContrast;
-            public BinaryMap LowContrastMajority;
-            public BinaryMap SegmentationMask;
-            public float[,] Equalized;
-            public byte[,] Orientation;
-            public float[,] SmoothedRidges;
-            public float[,] OrthogonalSmoothing;
-            public BinaryMap Binarized;
-            public BinaryMap BinarySmoothing;
-            public BinaryMap RemovedCrosses;
-            public BinaryMap InnerMask;
-            public SkeletonData Ridges = new SkeletonData();
-            public SkeletonData Valleys = new SkeletonData();
-            public TemplateBuilder MinutiaCollector;
-            public Template Template;
-        }
-
-        public sealed class MatchData
-        {
-            public float Score;
-            public bool AnyMatch;
-            public MinutiaPair Root;
-            public MinutiaPairing Pairing;
-        }
-
         public ExtractionData Probe = new ExtractionData();
         public ExtractionData Candidate = new ExtractionData();
         public MatchData Match = new MatchData();
