@@ -16,8 +16,8 @@ namespace SourceAFIS.FingerprintAnalysis
         LogProperty ScoreProperty = new LogProperty();
         public float Score { get { return (float)ScoreProperty.Value; } }
 
-        LogProperty AnyMatchProperty = new LogProperty();
-        public bool AnyMatch { get { return (bool)AnyMatchProperty.Value; } }
+        ComputedProperty AnyMatchProperty = new ComputedProperty("Score");
+        public bool AnyMatch { get { return Score > 0; } }
 
         LogProperty RootProperty = new LogProperty();
         public MinutiaPair Root { get { return (MinutiaPair)RootProperty.Value; } }

@@ -65,7 +65,7 @@ namespace SourceAFIS.FingerprintAnalysis
         LogProperty MinutiaCollectorProperty = new LogProperty();
         public TemplateBuilder MinutiaCollector { get { return (TemplateBuilder)MinutiaCollectorProperty.Value; } }
 
-        LogProperty TemplateProperty = new LogProperty();
-        public Template Template { get { return (Template)TemplateProperty.Value; } }
+        ComputedProperty TemplateProperty = new ComputedProperty("MinutiaCollector");
+        public Template Template { get { return new SerializedFormat().Export(MinutiaCollector); } }
     }
 }
