@@ -59,7 +59,6 @@ namespace SourceAFIS.FingerprintAnalysis
                 CollectSkeleton("[Ridges]", data.Ridges);
                 CollectSkeleton("[Valleys]", data.Valleys);
                 data.SetProperty("MinutiaCollector", Logger.Retrieve<TemplateBuilder>("Extractor.MinutiaCollector"));
-                data.SetProperty("Template", new SerializedFormat().Export(data.MinutiaCollector));
                 Logger.Clear();
             }
         }
@@ -85,7 +84,6 @@ namespace SourceAFIS.FingerprintAnalysis
                 ParallelMatcher.PreparedProbe prepared = Matcher.Prepare(Probe.Template);
                 Matcher.Match(prepared, new Template[] { Candidate.Template });
                 Match.SetProperty("Score", Logger.Retrieve<float>("Matcher.MinutiaMatcher.Score"));
-                Match.SetProperty("AnyMatch", Match.Score > 0);
                 if (Match.AnyMatch)
                 {
                     Match.SetProperty("Root", Logger.Retrieve<MinutiaPair>("Matcher.MinutiaMatcher.Root"));
