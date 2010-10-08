@@ -54,7 +54,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Blender.cs" />
-    <Compile Include="ExtractorLog.cs" />
     <Compile Include="FingerprintOptions.cs" />
     <Compile Include="LogCollector.cs" />
     <Page Include="MainWindow.xaml">
