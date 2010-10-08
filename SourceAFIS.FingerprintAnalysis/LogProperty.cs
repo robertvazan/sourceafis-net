@@ -9,9 +9,7 @@ namespace SourceAFIS.FingerprintAnalysis
     {
         public string Name { get; set; }
         public object Value { get; set; }
-
-        public LogProperty()
-        {
-        }
+        public Func<bool, Options> Filter;
+        public Func<bool, FingerprintOptions> FingerprintFilter;
     }
 }
