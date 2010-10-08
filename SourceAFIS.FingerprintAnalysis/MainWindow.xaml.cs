@@ -61,13 +61,13 @@ namespace SourceAFIS.FingerprintAnalysis
         void OnOptionsChange()
         {
             if (Options.Probe.Path != "")
-                Collector.Probe.InputImage = ImageIO.Load(Options.Probe.Path);
+                Collector.Probe.SetProperty("InputImage", ImageIO.Load(Options.Probe.Path));
             else
-                Collector.Probe.InputImage = null;
+                Collector.Probe.SetProperty("InputImage", null);
             if (Options.Candidate.Path != "")
-                Collector.Candidate.InputImage = ImageIO.Load(Options.Candidate.Path);
+                Collector.Candidate.SetProperty("InputImage", ImageIO.Load(Options.Candidate.Path));
             else
-                Collector.Candidate.InputImage = null;
+                Collector.Candidate.SetProperty("InputImage", null);
 
             if (Collector.Probe.InputImage != null)
             {
