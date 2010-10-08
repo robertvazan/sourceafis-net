@@ -22,7 +22,7 @@ namespace SourceAFIS.FingerprintAnalysis
 
         GlobalTransformation GlobalTransformation = new GlobalTransformation();
 
-        delegate ColorF[,] BlendLayer(LogCollector.ExtractionData data, Palette palette);
+        delegate ColorF[,] BlendLayer(ExtractionData data, Palette palette);
 
         class Palette
         {
@@ -89,9 +89,9 @@ namespace SourceAFIS.FingerprintAnalysis
             }
         }
 
-        ColorF[,] BlendImage(LogCollector.ExtractionData data, Palette palette)
+        ColorF[,] BlendImage(ExtractionData data, Palette palette)
         {
-            LogCollector.SkeletonData skeletonData = GetSkeletonData(data);
+            SkeletonData skeletonData = GetSkeletonData(data);
             if (Options.EnableImageDisplay)
             {
                 Options.Layer displayLayerType = Options.DisplayLayer;
@@ -102,11 +102,11 @@ namespace SourceAFIS.FingerprintAnalysis
                 return GetEmptyLayer(data);
         }
 
-        ColorF[,] BlendDiff(LogCollector.ExtractionData data, Palette palette)
+        ColorF[,] BlendDiff(ExtractionData data, Palette palette)
         {
             if (Options.EnableImageDisplay)
             {
-                LogCollector.SkeletonData skeletonData = GetSkeletonData(data);
+                SkeletonData skeletonData = GetSkeletonData(data);
                 Options.Layer displayLayerType = Options.DisplayLayer;
                 Options.Layer compareLayerType = displayLayerType;
                 if (Options.CompareWith != Options.QuickCompareType.None)
@@ -149,7 +149,7 @@ namespace SourceAFIS.FingerprintAnalysis
                 return GetEmptyLayer(data);
         }
 
-        ColorF[,] BlendMarkers(LogCollector.ExtractionData data, Palette palette)
+        ColorF[,] BlendMarkers(ExtractionData data, Palette palette)
         {
             ColorF[,] output = GetEmptyLayer(data);
             LayerBlocks(Options.Contrast, output, PixelFormat.ToFloat(data.BlockContrast));
@@ -168,7 +168,7 @@ namespace SourceAFIS.FingerprintAnalysis
             return output;
         }
 
-        ColorF[,] BlendMask(LogCollector.ExtractionData data, Palette palette)
+        ColorF[,] BlendMask(ExtractionData data, Palette palette)
         {
             BinaryMap mask = null;
             if (Options.Mask == Options.MaskType.Segmentation)
@@ -181,12 +181,12 @@ namespace SourceAFIS.FingerprintAnalysis
                 return GetEmptyLayer(data);
         }
 
-        ColorF[,] GetEmptyLayer(LogCollector.ExtractionData data)
+        ColorF[,] GetEmptyLayer(ExtractionData data)
         {
             return new ColorF[data.InputImage.GetLength(0), data.InputImage.GetLength(1)];
         }
 
-        LogCollector.SkeletonData GetSkeletonData(LogCollector.ExtractionData data)
+        SkeletonData GetSkeletonData(ExtractionData data)
         {
             if (Options.Skeleton == Options.SkeletonType.Ridges)
                 return data.Ridges;
@@ -194,7 +194,7 @@ namespace SourceAFIS.FingerprintAnalysis
                 return data.Valleys;
         }
 
-        float[,] GetLayer(Options.Layer type, LogCollector.ExtractionData data, LogCollector.SkeletonData skeleton)
+        float[,] GetLayer(Options.Layer type, ExtractionData data, SkeletonData skeleton)
         {
             switch (type)
             {
