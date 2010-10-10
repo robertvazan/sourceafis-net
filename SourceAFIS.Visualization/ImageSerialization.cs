@@ -6,37 +6,34 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using SystemPixelFormat = System.Drawing.Imaging.PixelFormat;
 using System.Runtime.InteropServices;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
+using System.Windows;
 
 namespace SourceAFIS.Visualization
 {
     public static class ImageSerialization
     {
-        public static Bitmap CreateBitmap(ColorB[,] pixels)
+        public static BitmapSource GetBitmapSource(ColorB[,] pixels)
         {
             int width = pixels.GetLength(1);
             int height = pixels.GetLength(0);
-            Bitmap bmp = new Bitmap(width, height, SystemPixelFormat.Format24bppRgb);
-            BitmapData data = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, SystemPixelFormat.Format24bppRgb);
 
-            byte[] bytes = new byte[height * data.Stride];
+            byte[] converted = new byte[width * height * 4];
             for (int y = 0; y < height; ++y)
                 for (int x = 0; x < width; ++x)
                 {
-                    int offset = (height - 1 - y) * data.Stride + x * 3;
-                    bytes[offset + 0] = pixels[y, x].B;
-                    bytes[offset + 1] = pixels[y, x].G;
-                    bytes[offset + 2] = pixels[y, x].R;
+                    int at = ((height - y - 1) * width + x) * 4;
+                    converted[at] = pixels[y, x].B;
+                    converted[at + 1] = pixels[y, x].G;
+                    converted[at + 2] = pixels[y, x].R;
                 }
 
-            try
-            {
-                Marshal.Copy(bytes, 0, data.Scan0, bytes.Length);
-            }
-            finally
-            {
-                bmp.UnlockBits(data);
-            }
-            return bmp;
+            WriteableBitmap bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr32, null);
+
+            bitmap.WritePixels(new Int32Rect(0, 0, width, height), converted, width * 4, 0, 0);
+
+            return bitmap;
         }
     }
 }

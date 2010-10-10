@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Media.Imaging;
 using SourceAFIS.General;
 using SourceAFIS.Visualization;
 using SourceAFIS.Matching;
@@ -13,7 +14,7 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public Options Options;
 
-        public System.Drawing.Bitmap OutputImage;
+        public BitmapSource OutputImage;
 
         readonly ColorF TransparentRed = new ColorF(1, 0, 0, 0.25f);
         readonly ColorF TransparentGreen = new ColorF(0, 1, 0, 0.25f);
@@ -80,7 +81,7 @@ namespace SourceAFIS.FingerprintAnalysis
                 }
             }
 
-            OutputImage = ImageSerialization.CreateBitmap(PixelFormat.ToColorB(output));
+            OutputImage = ImageSerialization.GetBitmapSource(PixelFormat.ToColorB(output));
         }
 
         void BlendMatch(ColorF[,] output, Transformation2D transformation)

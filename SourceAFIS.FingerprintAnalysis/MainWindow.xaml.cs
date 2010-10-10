@@ -67,15 +67,7 @@ namespace SourceAFIS.FingerprintAnalysis
             Collector.Collect();
             Blender.Blend();
 
-            MemoryStream streamed = new MemoryStream();
-            Blender.OutputImage.Save(streamed, System.Drawing.Imaging.ImageFormat.Jpeg);
-
-            System.Windows.Media.Imaging.BitmapImage converted = new System.Windows.Media.Imaging.BitmapImage();
-            converted.BeginInit();
-            converted.StreamSource = new MemoryStream(streamed.ToArray());
-            converted.EndInit();
-
-            LeftImage.Source = converted;
+            LeftImage.Source = Blender.OutputImage;
         }
 
         void LoadSettings()
