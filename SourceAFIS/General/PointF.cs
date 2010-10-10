@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SourceAFIS.Dummy
+namespace SourceAFIS.General
 {
     public struct PointF
     {

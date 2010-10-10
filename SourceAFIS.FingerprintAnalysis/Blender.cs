@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
 using SourceAFIS.General;
 using SourceAFIS.Visualization;
 using SourceAFIS.Matching;
@@ -14,7 +13,7 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public Options Options;
 
-        public Bitmap OutputImage;
+        public System.Drawing.Bitmap OutputImage;
 
         readonly ColorF TransparentRed = new ColorF(1, 0, 0, 0.25f);
         readonly ColorF TransparentGreen = new ColorF(0, 1, 0, 0.25f);

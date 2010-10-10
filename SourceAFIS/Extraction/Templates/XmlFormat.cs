@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.IO;
-#if !COMPACT_FRAMEWORK
-using System.Drawing;
-#endif
+using SourceAFIS.General;
 using SourceAFIS.Dummy;
 
 namespace SourceAFIS.Extraction.Templates
