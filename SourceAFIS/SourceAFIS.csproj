@@ -96,10 +96,14 @@
     <Compile Include="General\CircularArray.cs" />
     <Compile Include="General\DetailLogger.cs" />
     <Compile Include="General\Neighborhood.cs" />
+    <Compile Include="General\Point.cs" />
+    <Compile Include="General\PointF.cs" />
     <Compile Include="General\PointS.cs" />
     <Compile Include="General\PolarPoint.cs" />
     <Compile Include="General\PriorityQueueF.cs" />
     <Compile Include="General\ReversedList.cs" />
+    <Compile Include="General\Size.cs" />
+    <Compile Include="General\SizeF.cs" />
     <Compile Include="General\Transformation2D.cs" />
     <Compile Include="Matching\ParallelMatcher.cs" />
     <Compile Include="Matching\Minutia\EdgeConstructor.cs" />
