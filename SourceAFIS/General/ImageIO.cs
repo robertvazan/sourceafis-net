@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Windows;
+using System.IO;
 using SourceAFIS.Dummy;
 
 namespace SourceAFIS.General
@@ -44,7 +45,7 @@ namespace SourceAFIS.General
             return result;
         }
 
-        public static Bitmap CreateBitmap(byte[,] pixels)
+        public static Bitmap GetBitmap(byte[,] pixels)
         {
             int width = pixels.GetLength(1);
             int height = pixels.GetLength(0);
@@ -70,17 +71,6 @@ namespace SourceAFIS.General
                 bmp.UnlockBits(data);
             }
             return bmp;
-        }
-
-        public static byte[,] Load(string filename)
-        {
-            using (Image fromFile = Bitmap.FromFile(filename))
-            {
-                using (Bitmap bmp = new Bitmap(fromFile))
-                {
-                    return GetPixels(bmp);
-                }
-            }
         }
 
         public static BitmapSource GetBitmapSource(byte[,] pixels)
@@ -125,6 +115,23 @@ namespace SourceAFIS.General
                 }
 
             return pixels;
+        }
+
+        public static BitmapSource Load(string filename)
+        {
+            using (FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                PngBitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.None, BitmapCacheOption.Default);
+                return decoder.Frames[0];
+            }
+        }
+
+        public static void Save(BitmapSource image, string filename)
+        {
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
+            using (FileStream stream = new FileStream(filename, FileMode.Create, FileAccess.Write))
+                encoder.Save(stream);
         }
 #endif
 

@@ -61,8 +61,8 @@ namespace SourceAFIS.FingerprintAnalysis
 
         void OnOptionsChange()
         {
-            Collector.Probe.InputImage = Options.Probe.Path != "" ? ImageIO.Load(Options.Probe.Path) : null;
-            Collector.Candidate.InputImage = Options.Candidate.Path != "" ? ImageIO.Load(Options.Candidate.Path) : null;
+            Collector.Probe.InputImage = Options.Probe.Path != "" ? ImageIO.GetPixels(ImageIO.Load(Options.Probe.Path)) : null;
+            Collector.Candidate.InputImage = Options.Candidate.Path != "" ? ImageIO.GetPixels(ImageIO.Load(Options.Candidate.Path)) : null;
 
             Collector.Collect();
             Blender.Blend();
