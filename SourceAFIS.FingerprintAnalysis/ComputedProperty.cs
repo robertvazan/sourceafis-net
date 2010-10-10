@@ -7,11 +7,11 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     public class ComputedProperty
     {
-        List<string> Dependencies = new List<string>();
+        public string Name { get; set; }
 
-        public ComputedProperty(params string[] dependencies)
+        public void AddDependency(LogProperty dependency)
         {
-            Dependencies.AddRange(dependencies);
+            dependency.DependentProperties.Add(this);
         }
     }
 }

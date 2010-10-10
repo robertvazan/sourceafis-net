@@ -11,6 +11,7 @@ namespace SourceAFIS.FingerprintAnalysis
     {
         public ExtractionData()
         {
+            TemplateProperty.AddDependency(MinutiaCollectorProperty);
             RegisterProperties();
             FpFilter = options => options.Path != "";
         }
@@ -83,7 +84,7 @@ namespace SourceAFIS.FingerprintAnalysis
         public LogProperty MinutiaCollectorProperty = new LogProperty("Extractor.MinutiaCollector");
         public TemplateBuilder MinutiaCollector { get { return (TemplateBuilder)MinutiaCollectorProperty.Value; } }
 
-        public ComputedProperty TemplateProperty = new ComputedProperty("MinutiaCollector");
+        public ComputedProperty TemplateProperty = new ComputedProperty();
         public Template Template { get { return new SerializedFormat().Export(MinutiaCollector); } }
     }
 }
