@@ -164,7 +164,7 @@ namespace SourceAFIS.Simple
         [XmlIgnore]
         public Bitmap AsBitmap
         {
-            get { return Image != null ? ImageIO.CreateBitmap(Image) : null; }
+            get { return Image != null ? ImageIO.GetBitmap(Image) : null; }
             set { Image = value != null ? ImageIO.GetPixels(value) : null; }
         }
 #endif
