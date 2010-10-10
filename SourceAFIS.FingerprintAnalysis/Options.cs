@@ -163,6 +163,14 @@ namespace SourceAFIS.FingerprintAnalysis
             set { PairedMinutiaeValue = value; OnPropertyChanged("PairedMinutiae"); }
         }
 
+        public bool UsesLayer(Layer layer)
+        {
+            return DisplayLayer == layer
+                || CompareWith == QuickCompareType.OtherLayer && CompareWithLayer == layer
+                || CompareWith == QuickCompareType.Next && DisplayLayer + 1 == layer
+                || CompareWith == QuickCompareType.Previous && DisplayLayer - 1 == layer;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         void OnPropertyChanged(string name)

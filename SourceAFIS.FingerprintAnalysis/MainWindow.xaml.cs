@@ -38,6 +38,7 @@ namespace SourceAFIS.FingerprintAnalysis
             LoadSettings();
             Blender.Options = Options;
             Blender.Logs = Collector;
+            Collector.Options = Options;
             Options.PropertyChanged += (source, args) => { OnOptionsChange(); };
             Options.Probe.PropertyChanged += (source, args) => { OnOptionsChange(); };
             Options.Candidate.PropertyChanged += (source, args) => { OnOptionsChange(); };
@@ -63,21 +64,18 @@ namespace SourceAFIS.FingerprintAnalysis
             Collector.Probe.InputImage = Options.Probe.Path != "" ? ImageIO.Load(Options.Probe.Path) : null;
             Collector.Candidate.InputImage = Options.Candidate.Path != "" ? ImageIO.Load(Options.Candidate.Path) : null;
 
-            if (Collector.Probe.InputImage != null)
-            {
-                Collector.Collect();
-                Blender.Blend();
+            Collector.Collect();
+            Blender.Blend();
 
-                MemoryStream streamed = new MemoryStream();
-                Blender.OutputImage.Save(streamed, System.Drawing.Imaging.ImageFormat.Jpeg);
+            MemoryStream streamed = new MemoryStream();
+            Blender.OutputImage.Save(streamed, System.Drawing.Imaging.ImageFormat.Jpeg);
 
-                System.Windows.Media.Imaging.BitmapImage converted = new System.Windows.Media.Imaging.BitmapImage();
-                converted.BeginInit();
-                converted.StreamSource = new MemoryStream(streamed.ToArray());
-                converted.EndInit();
+            System.Windows.Media.Imaging.BitmapImage converted = new System.Windows.Media.Imaging.BitmapImage();
+            converted.BeginInit();
+            converted.StreamSource = new MemoryStream(streamed.ToArray());
+            converted.EndInit();
 
-                LeftImage.Source = converted;
-            }
+            LeftImage.Source = converted;
         }
 
         void LoadSettings()

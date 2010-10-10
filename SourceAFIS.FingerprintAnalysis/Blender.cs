@@ -54,7 +54,11 @@ namespace SourceAFIS.FingerprintAnalysis
                 BlendMask
             };
 
-            ColorF[,] output = new ColorF[Logs.Probe.InputImage.GetLength(0), Logs.Probe.InputImage.GetLength(1)];
+            Size size = Logs.Probe.InputImage != null
+                ? new Size(Logs.Probe.InputImage.GetLength(1), Logs.Probe.InputImage.GetLength(0))
+                : new Size(480, 640);
+
+            ColorF[,] output = new ColorF[size.Height, size.Width];
             for (int y = 0; y < output.GetLength(0); ++y)
                 for (int x = 0; x < output.GetLength(1); ++x)
                     output[y, x] = ColorF.White;
