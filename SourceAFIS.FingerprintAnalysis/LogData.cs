@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using SourceAFIS.General;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
     public class LogData
     {
         List<LogProperty> LogProperties = new List<LogProperty>();
+
+        public Func<string, string> LogStringDecoration = log => log;
 
         protected void RegisterProperties()
         {
@@ -23,10 +26,10 @@ namespace SourceAFIS.FingerprintAnalysis
             }
         }
 
-        public void SetProperty(string name, object value)
+        public void CollectLogs(DetailLogger logger)
         {
-            foreach (LogProperty property in LogProperties.Where(property => property.Name == name))
-                property.Value = value;
+            foreach (LogProperty property in LogProperties)
+                property.Value = logger.Retrieve(LogStringDecoration(property.Log));
         }
     }
 }
