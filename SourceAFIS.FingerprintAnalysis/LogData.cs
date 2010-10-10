@@ -11,6 +11,7 @@ namespace SourceAFIS.FingerprintAnalysis
     public class LogData : INotifyPropertyChanged
     {
         List<LogProperty> LogProperties = new List<LogProperty>();
+        List<ComputedProperty> ComputedProperties = new List<ComputedProperty>();
 
         public Func<string, string> LogStringDecoration = log => log;
 
@@ -21,14 +22,20 @@ namespace SourceAFIS.FingerprintAnalysis
 
         protected void RegisterProperties()
         {
-            var fields = from field in this.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance)
-                         where field.FieldType == typeof(LogProperty)
-                         select field;
-            foreach (var field in fields)
+            foreach (var field in this.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
-                LogProperty property = field.GetValue(this) as LogProperty;
-                property.Name = field.Name.Substring(0, field.Name.Length - 8);
-                LogProperties.Add(property);
+                if (field.FieldType == typeof(LogProperty))
+                {
+                    LogProperty property = field.GetValue(this) as LogProperty;
+                    property.Name = field.Name.Substring(0, field.Name.Length - 8);
+                    LogProperties.Add(property);
+                }
+                if (field.FieldType == typeof(ComputedProperty))
+                {
+                    ComputedProperty property = field.GetValue(this) as ComputedProperty;
+                    property.Name = field.Name.Substring(0, field.Name.Length - 8);
+                    ComputedProperties.Add(property);
+                }
             }
         }
 
@@ -39,7 +46,11 @@ namespace SourceAFIS.FingerprintAnalysis
                 object oldValue = property.Value;
                 property.Value = logger.Retrieve(LogStringDecoration(property.Log));
                 if (PropertyChanged != null && (oldValue != null || property.Value != null))
+                {
                     PropertyChanged(this, new PropertyChangedEventArgs(property.Name));
+                    foreach (ComputedProperty dependent in property.DependentProperties)
+                        PropertyChanged(this, new PropertyChangedEventArgs(dependent.Name));
+                }
             }
         }
 
