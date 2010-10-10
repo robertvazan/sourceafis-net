@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using SourceAFIS.General;
+using System.ComponentModel;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    public class LogData
+    public class LogData : INotifyPropertyChanged
     {
         List<LogProperty> LogProperties = new List<LogProperty>();
 
@@ -15,6 +16,8 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public Func<Options, bool> Filter = options => true;
         public Func<FingerprintOptions, bool> FpFilter = options => true;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected void RegisterProperties()
         {
@@ -32,7 +35,12 @@ namespace SourceAFIS.FingerprintAnalysis
         public void CollectLogs(DetailLogger logger)
         {
             foreach (LogProperty property in LogProperties)
+            {
+                object oldValue = property.Value;
                 property.Value = logger.Retrieve(LogStringDecoration(property.Log));
+                if (PropertyChanged != null && (oldValue != null || property.Value != null))
+                    PropertyChanged(this, new PropertyChangedEventArgs(property.Name));
+            }
         }
 
         public HashSet<string> CreateFilter(Options options, FingerprintOptions fpOptions = null)
