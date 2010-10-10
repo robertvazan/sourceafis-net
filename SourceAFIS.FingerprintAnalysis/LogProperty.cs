@@ -11,7 +11,7 @@ namespace SourceAFIS.FingerprintAnalysis
         public string Log { get; set; }
         public object Value { get; set; }
         public Func<Options, bool> Filter = options => true;
-        public Func<FingerprintOptions, bool> FingerprintFilter = options => true;
+        public Func<FingerprintOptions, bool> FpFilter = options => true;
 
         public LogProperty(string log)
         {
