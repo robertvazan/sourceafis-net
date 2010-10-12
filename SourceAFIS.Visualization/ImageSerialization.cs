@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Drawing;
-using System.Drawing.Imaging;
-using SystemPixelFormat = System.Drawing.Imaging.PixelFormat;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
