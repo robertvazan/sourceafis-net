@@ -111,11 +111,12 @@ namespace SourceAFIS.FingerprintAnalysis
         public LogCollector(Options options)
         {
             ProbeLog = new ExtractionCollector(options.Probe);
-            CandidateLog = new ExtractionCollector(options.Candidate);
-            MatchLog = new MatchCollector(Probe, Candidate);
-
             Probe.SetSource(ProbeLog, "Logs");
+
+            CandidateLog = new ExtractionCollector(options.Candidate);
             Candidate.SetSource(CandidateLog, "Logs");
+            
+            MatchLog = new MatchCollector(Probe, Candidate);
             Match.SetSource(MatchLog, "Logs");
         }
     }
