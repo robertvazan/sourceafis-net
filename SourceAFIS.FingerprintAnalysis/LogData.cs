@@ -15,9 +15,6 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public Func<string, string> LogStringDecoration = log => log;
 
-        public Func<Options, bool> Filter = options => true;
-        public Func<FingerprintOptions, bool> FpFilter = options => true;
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void RegisterProperties()
@@ -52,18 +49,6 @@ namespace SourceAFIS.FingerprintAnalysis
                         PropertyChanged(this, new PropertyChangedEventArgs(dependent.Name));
                 }
             }
-        }
-
-        public HashSet<string> CreateFilter(Options options, FingerprintOptions fpOptions = null)
-        {
-            HashSet<string> filtered = new HashSet<string>();
-            if (Filter(options) && (fpOptions == null || FpFilter(fpOptions)))
-            {
-                foreach (LogProperty property in LogProperties)
-                    if (property.Filter(options) && (fpOptions == null || property.FpFilter(fpOptions)))
-                        filtered.Add(property.Log);
-            }
-            return filtered;
         }
     }
 }

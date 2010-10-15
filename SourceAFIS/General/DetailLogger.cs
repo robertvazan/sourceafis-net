@@ -57,8 +57,6 @@ namespace SourceAFIS.General
 
         Dictionary<string, List<object>> History = new Dictionary<string, List<object>>();
 
-        public Func<string, bool> Filter = log => true;
-
         public void Attach(ObjectTree tree)
         {
             foreach (object reference in tree.GetAllObjects())
@@ -94,20 +92,17 @@ namespace SourceAFIS.General
 
         public void Log(string path, object data)
         {
-            if (Filter(path))
+            lock (this)
             {
-                lock (this)
-                {
-                    object logged;
-                    if (data is ICloneable)
-                        logged = (data as ICloneable).Clone();
-                    else
-                        logged = data;
-                    string qualifiedPath = path + GetThreadName();
-                    if (!History.ContainsKey(qualifiedPath))
-                        History[qualifiedPath] = new List<object>();
-                    History[qualifiedPath].Add(logged);
-                }
+                object logged;
+                if (data is ICloneable)
+                    logged = (data as ICloneable).Clone();
+                else
+                    logged = data;
+                string qualifiedPath = path + GetThreadName();
+                if (!History.ContainsKey(qualifiedPath))
+                    History[qualifiedPath] = new List<object>();
+                History[qualifiedPath].Add(logged);
             }
         }
 
