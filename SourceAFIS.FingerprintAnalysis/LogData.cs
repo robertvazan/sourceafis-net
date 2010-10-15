@@ -25,33 +25,50 @@ namespace SourceAFIS.FingerprintAnalysis
 
         class NotificationChaining
         {
-            string Property;
-            Action Target;
+            INotifyPropertyChanged Source;
+            string SourceProperty;
+            LogData Target;
+            string TargetProperty;
 
-            public NotificationChaining(INotifyPropertyChanged source, string property, Action target)
+            static List<NotificationChaining> Registry = new List<NotificationChaining>();
+
+            public NotificationChaining(INotifyPropertyChanged source, string sourceProperty, LogData target, string targetProperty)
             {
-                Property = property;
+                Source = source;
+                SourceProperty = sourceProperty;
                 Target = target;
+                TargetProperty = targetProperty;
+
+                foreach (NotificationChaining other in Registry)
+                {
+                    if (other.Source == Source && other.SourceProperty == SourceProperty
+                        && other.Target == Target && other.TargetProperty == TargetProperty)
+                    {
+                        return;
+                    }
+                }
+
+                Registry.Add(this);
+
                 source.PropertyChanged += Notify;
             }
 
             public void Notify(object source, PropertyChangedEventArgs args)
             {
-                if (args.PropertyName == Property)
+                if (args.PropertyName == SourceProperty)
                 {
-                    (source as INotifyPropertyChanged).PropertyChanged -= Notify;
-                    Target();
+                    Source.PropertyChanged -= Notify;
+
+                    Registry.Remove(this);
+                    
+                    Target.PropertyChanged(Target, new PropertyChangedEventArgs(TargetProperty));
                 }
             }
         }
 
         public void Watch(INotifyPropertyChanged source, string sourceProperty, string targetProperty)
         {
-            new NotificationChaining(source, sourceProperty, () =>
-            {
-                if (PropertyChanged != null)
-                    PropertyChanged(this, new PropertyChangedEventArgs(targetProperty));
-            });
+            new NotificationChaining(source, sourceProperty, this, targetProperty);
         }
 
         public void Watch(string sourceProperty, string targetProperty)
