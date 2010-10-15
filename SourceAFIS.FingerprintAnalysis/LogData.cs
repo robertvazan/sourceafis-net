@@ -36,12 +36,12 @@ namespace SourceAFIS.FingerprintAnalysis
             }
         }
 
-        public void CollectLogs(DetailLogger logger)
+        public void CollectLogs(DetailLogger.LogData log)
         {
             foreach (LogProperty property in LogProperties)
             {
                 object oldValue = property.Value;
-                property.Value = logger.Retrieve(LogStringDecoration(property.Log));
+                property.Value = log.Retrieve(LogStringDecoration(property.Log));
                 if (PropertyChanged != null && (oldValue != null || property.Value != null))
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs(property.Name));

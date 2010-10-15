@@ -50,12 +50,48 @@ namespace SourceAFIS.General
             object ICloneable.Clone() { return Clone(); }
         }
 
+        public class LogData
+        {
+            Dictionary<string, List<object>> History = new Dictionary<string, List<object>>();
+
+            public void Append(string path, object data)
+            {
+                if (!History.ContainsKey(path))
+                    History[path] = new List<object>();
+                History[path].Add(data);
+            }
+
+            public object Retrieve(string path)
+            {
+                lock (this)
+                    return Retrieve(path, 0);
+            }
+
+            public object Retrieve(string path, int index)
+            {
+                lock (this)
+                {
+                    if (History.ContainsKey(path) && index < History[path].Count)
+                        return History[path][index];
+                    else
+                        return null;
+                }
+            }
+        }
+
         public static readonly Hook Null = new NullHook();
 
         [ThreadStatic]
         static string ThreadName;
 
-        Dictionary<string, List<object>> History = new Dictionary<string, List<object>>();
+        LogData CurrentLog = new LogData();
+
+        public LogData PopLog()
+        {
+            LogData result = CurrentLog;
+            CurrentLog = new LogData();
+            return result;
+        }
 
         public void Attach(ObjectTree tree)
         {
@@ -64,29 +100,6 @@ namespace SourceAFIS.General
                 FieldInfo field = reference.GetType().GetField("Logger");
                 if (field != null)
                     field.SetValue(reference, new ActiveHook(this, tree.GetPath(reference)));
-            }
-        }
-
-        public void Clear()
-        {
-            lock (this)
-                History.Clear();
-        }
-
-        public object Retrieve(string path)
-        {
-            lock (this)
-                return Retrieve(path, 0);
-        }
-
-        public object Retrieve(string path, int index)
-        {
-            lock (this)
-            {
-                if (History.ContainsKey(path) && index < History[path].Count)
-                    return History[path][index];
-                else
-                    return null;
             }
         }
 
@@ -100,9 +113,7 @@ namespace SourceAFIS.General
                 else
                     logged = data;
                 string qualifiedPath = path + GetThreadName();
-                if (!History.ContainsKey(qualifiedPath))
-                    History[qualifiedPath] = new List<object>();
-                History[qualifiedPath].Add(logged);
+                CurrentLog.Append(qualifiedPath, logged);
             }
         }
 
