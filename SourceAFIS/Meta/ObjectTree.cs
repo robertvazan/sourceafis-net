@@ -22,7 +22,7 @@ namespace SourceAFIS.Meta
 
         public ObjectTree(object root)
         {
-            Scan(root, "Root");
+            Scan(root);
         }
 
         public ObjectTree(object root, string path)
@@ -30,7 +30,7 @@ namespace SourceAFIS.Meta
             Scan(root, path);
         }
 
-        public void Scan(object root, string path)
+        public void Scan(object root, string path = "")
         {
             if (!ByReference.ContainsKey(root) && !ByPath.ContainsKey(path))
             {
@@ -44,7 +44,7 @@ namespace SourceAFIS.Meta
                 {
                     if (fieldInfo.GetCustomAttributes(typeof(NestedAttribute), true).Length > 0)
                     {
-                        Scan(fieldInfo.GetValue(root), path + "." + fieldInfo.Name);
+                        Scan(fieldInfo.GetValue(root), path + (path != "" ? "." : "") + fieldInfo.Name);
                     }
                 }
             }

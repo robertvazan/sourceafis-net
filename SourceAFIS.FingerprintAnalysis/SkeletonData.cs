@@ -14,24 +14,24 @@ namespace SourceAFIS.FingerprintAnalysis
             LogStringDecoration = log => log + context;
         }
 
-        public BinaryMap Binarized { get { return (BinaryMap)GetLog("Binarized", "Extractor.Binarized"); } }
+        public BinaryMap Binarized { get { return (BinaryMap)GetLog("Binarized", "Binarized"); } }
 
-        public BinaryMap Thinned { get { return (BinaryMap)GetLog("Thinned", "Extractor.Thinner"); } }
+        public BinaryMap Thinned { get { return (BinaryMap)GetLog("Thinned", "Thinner"); } }
 
-        public SkeletonBuilder RidgeTracer { get { return (SkeletonBuilder)GetLog("RidgeTracer", "Extractor.RidgeTracer"); } }
+        public SkeletonBuilder RidgeTracer { get { return (SkeletonBuilder)GetLog("RidgeTracer", "RidgeTracer"); } }
 
-        public SkeletonBuilder DotRemover { get { return (SkeletonBuilder)GetLog("DotRemover", "Extractor.DotRemover"); } }
+        public SkeletonBuilder DotRemover { get { return (SkeletonBuilder)GetLog("DotRemover", "DotRemover"); } }
 
-        public SkeletonBuilder PoreRemover { get { return (SkeletonBuilder)GetLog("PoreRemover", "Extractor.PoreRemover"); } }
+        public SkeletonBuilder PoreRemover { get { return (SkeletonBuilder)GetLog("PoreRemover", "PoreRemover"); } }
 
-        public SkeletonBuilder GapRemover { get { return (SkeletonBuilder)GetLog("GapRemover", "Extractor.GapRemover"); } }
+        public SkeletonBuilder GapRemover { get { return (SkeletonBuilder)GetLog("GapRemover", "GapRemover"); } }
 
-        public SkeletonBuilder TailRemover { get { return (SkeletonBuilder)GetLog("TailRemover", "Extractor.TailRemover"); } }
+        public SkeletonBuilder TailRemover { get { return (SkeletonBuilder)GetLog("TailRemover", "TailRemover"); } }
 
-        public SkeletonBuilder FragmentRemover { get { return (SkeletonBuilder)GetLog("FragmentRemover", "Extractor.FragmentRemover"); } }
+        public SkeletonBuilder FragmentRemover { get { return (SkeletonBuilder)GetLog("FragmentRemover", "FragmentRemover"); } }
 
-        public SkeletonBuilder MinutiaMask { get { return (SkeletonBuilder)GetLog("MinutiaMask", "Extractor.MinutiaMask"); } }
+        public SkeletonBuilder MinutiaMask { get { return (SkeletonBuilder)GetLog("MinutiaMask", "MinutiaMask"); } }
 
-        public SkeletonBuilder BranchMinutiaRemover { get { return (SkeletonBuilder)GetLog("BranchMinutiaRemover", "Extractor.BranchMinutiaRemover"); } }
+        public SkeletonBuilder BranchMinutiaRemover { get { return (SkeletonBuilder)GetLog("BranchMinutiaRemover", "BranchMinutiaRemover"); } }
     }
 }

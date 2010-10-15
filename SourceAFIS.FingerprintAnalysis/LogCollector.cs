@@ -13,80 +13,86 @@ using SourceAFIS.Matching.Minutia;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    public class LogCollector : INotifyPropertyChanged
+    public class LogCollector
     {
         public Options Options;
+
         public ExtractionData Probe = new ExtractionData();
         public ExtractionData Candidate = new ExtractionData();
         public MatchData Match = new MatchData();
 
-        DetailLogger.LogData ProbeLogValue;
-        public DetailLogger.LogData ProbeLog
+        public class CollectorBase : INotifyPropertyChanged
         {
-            get { return ProbeLogValue; }
-            set { ProbeLogValue = value; OnPropertyChanged("ProbeLog"); }
-        }
-        
-        DetailLogger.LogData CandidateLogValue;
-        public DetailLogger.LogData CandidateLog
-        {
-            get { return CandidateLogValue; }
-            set { CandidateLogValue = value; OnPropertyChanged("CandidateLog"); }
-        }
+            public event PropertyChangedEventHandler PropertyChanged;
 
-        DetailLogger.LogData MatchLogValue;
-        public DetailLogger.LogData MatchLog
-        {
-            get { return MatchLogValue; }
-            set { MatchLogValue = value; OnPropertyChanged("MatchLog"); }
+            protected DetailLogger Logger = new DetailLogger();
+
+            DetailLogger.LogData LogsValue;
+            public DetailLogger.LogData Logs
+            {
+                get { return LogsValue; }
+                set
+                {
+                    LogsValue = value;
+                    if (PropertyChanged != null)
+                        PropertyChanged(this, new PropertyChangedEventArgs("Logs"));
+                }
+            }
         }
 
-        DetailLogger Logger = new DetailLogger();
-        Extractor Extractor = new Extractor();
-        ParallelMatcher Matcher = new ParallelMatcher();
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        void OnPropertyChanged(string name)
+        public class ExtractionCollector : CollectorBase
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
+            Extractor Extractor = new Extractor();
+
+            public ExtractionCollector()
+            {
+                Logger.Attach(new ObjectTree(Extractor));
+            }
+
+            public void Collect(byte[,] image)
+            {
+                if (image != null)
+                    Extractor.Extract(image, 500);
+                Logs = Logger.PopLog();
+            }
         }
+
+        public class MatchCollector : CollectorBase
+        {
+            ParallelMatcher Matcher = new ParallelMatcher();
+
+            public MatchCollector()
+            {
+                Logger.Attach(new ObjectTree(Matcher));
+            }
+
+            public void Collect(Template probe, Template candidate)
+            {
+                if (probe != null && candidate != null)
+                {
+                    ParallelMatcher.PreparedProbe prepared = Matcher.Prepare(probe);
+                    Matcher.Match(prepared, new Template[] { candidate });
+                }
+                Logs = Logger.PopLog();
+            }
+        }
+
+        public ExtractionCollector ProbeLog { get; set; }
+        public ExtractionCollector CandidateLog { get; set; }
+        public MatchCollector MatchLog { get; set; }
 
         public LogCollector()
         {
-            ObjectTree tree = new ObjectTree();
-            tree.Scan(Extractor, "Extractor");
-            tree.Scan(Matcher, "Matcher");
-            Logger.Attach(tree);
-
-            Probe.SetSource(this, "ProbeLog");
-            Candidate.SetSource(this, "CandidateLog");
-            Match.SetSource(this, "MatchLog");
+            Probe.SetSource(ProbeLog, "Logs");
+            Candidate.SetSource(CandidateLog, "Logs");
+            Match.SetSource(MatchLog, "Logs");
         }
 
         public void Collect()
         {
-            ProbeLog = CollectExtraction(Probe, Options.Probe);
-            CandidateLog = CollectExtraction(Candidate, Options.Candidate);
-            CollectMatching();
-        }
-
-        public DetailLogger.LogData CollectExtraction(ExtractionData data, FingerprintOptions fpOptions)
-        {
-            if (data.InputImage != null)
-                Extractor.Extract(data.InputImage, 500);
-            return Logger.PopLog();
-        }
-
-        void CollectMatching()
-        {
-            if (Probe.InputImage != null && Candidate.InputImage != null)
-            {
-                ParallelMatcher.PreparedProbe prepared = Matcher.Prepare(Probe.Template);
-                Matcher.Match(prepared, new Template[] { Candidate.Template });
-            }
-            MatchLog = Logger.PopLog();
+            ProbeLog.Collect(Probe.InputImage);
+            CandidateLog.Collect(Candidate.InputImage);
+            MatchLog.Collect(Probe.Template, Candidate.Template);
         }
     }
 }
