@@ -34,16 +34,20 @@ namespace SourceAFIS.FingerprintAnalysis
         public MainWindow()
         {
             InitializeComponent();
+
             Options = FindResource("OptionsData") as Options;
             LoadSettings();
+            
             Collector = new LogCollector(Options);
+            
             Blender.Options = Options;
             Blender.Logs = Collector;
+            UpdateBlender();
+            
             Options.PropertyChanged += (source, args) => { OnOptionsChange(args.PropertyName); };
             Options.Probe.PropertyChanged += (source, args) => { OnOptionsChange(args.PropertyName); };
             Options.Candidate.PropertyChanged += (source, args) => { OnOptionsChange(args.PropertyName); };
             Collector.MatchLog.PropertyChanged += (source, args) => { UpdateBlender(); };
-            OnOptionsChange("Path");
         }
 
         private void LeftOpen_Click(object sender, RoutedEventArgs e)
@@ -62,9 +66,6 @@ namespace SourceAFIS.FingerprintAnalysis
 
         void OnOptionsChange(string property)
         {
-            if (property == "Path")
-                Collector.Collect();
-
             if (property != "Path")
                 UpdateBlender();
         }
