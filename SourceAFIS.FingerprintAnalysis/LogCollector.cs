@@ -15,8 +15,6 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     public class LogCollector
     {
-        Options Options;
-
         public ExtractionData Probe = new ExtractionData();
         public ExtractionData Candidate = new ExtractionData();
         public MatchData Match = new MatchData();
@@ -45,8 +43,6 @@ namespace SourceAFIS.FingerprintAnalysis
         {
             Extractor Extractor = new Extractor();
 
-            FingerprintOptions Options;
-
             byte[,] InputImageValue;
             public byte[,] InputImage
             {
@@ -57,12 +53,19 @@ namespace SourceAFIS.FingerprintAnalysis
             public ExtractionCollector(FingerprintOptions options)
             {
                 Logger.Attach(new ObjectTree(Extractor));
-                Options = options;
+                Collect(options);
+                options.PropertyChanged += OnOptionsChange;
             }
 
-            public void Collect()
+            void OnOptionsChange(object source, PropertyChangedEventArgs args)
             {
-                InputImage = Options.Path != "" ? ImageIO.GetPixels(ImageIO.Load(Options.Path)) : null;
+                if (args.PropertyName == "Path")
+                    Collect(source as FingerprintOptions);
+            }
+
+            void Collect(FingerprintOptions options)
+            {
+                InputImage = options.Path != "" ? ImageIO.GetPixels(ImageIO.Load(options.Path)) : null;
 
                 if (InputImage != null)
                     Extractor.Extract(InputImage, 500);
@@ -74,12 +77,23 @@ namespace SourceAFIS.FingerprintAnalysis
         {
             ParallelMatcher Matcher = new ParallelMatcher();
 
-            public MatchCollector()
+            public MatchCollector(ExtractionData probe, ExtractionData candidate)
             {
                 Logger.Attach(new ObjectTree(Matcher));
+                Collect(probe.Template, candidate.Template);
+                probe.PropertyChanged += (source, args) =>
+                {
+                    if (args.PropertyName == "Template")
+                        Collect(probe.Template, candidate.Template);
+                };
+                candidate.PropertyChanged += (source, args) =>
+                {
+                    if (args.PropertyName == "Template")
+                        Collect(probe.Template, candidate.Template);
+                };
             }
 
-            public void Collect(Template probe, Template candidate)
+            void Collect(Template probe, Template candidate)
             {
                 if (probe != null && candidate != null)
                 {
@@ -96,22 +110,13 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public LogCollector(Options options)
         {
-            Options = options;
-
-            ProbeLog = new ExtractionCollector(Options.Probe);
-            CandidateLog = new ExtractionCollector(Options.Candidate);
-            MatchLog = new MatchCollector();
+            ProbeLog = new ExtractionCollector(options.Probe);
+            CandidateLog = new ExtractionCollector(options.Candidate);
+            MatchLog = new MatchCollector(Probe, Candidate);
 
             Probe.SetSource(ProbeLog, "Logs");
             Candidate.SetSource(CandidateLog, "Logs");
             Match.SetSource(MatchLog, "Logs");
-        }
-
-        public void Collect()
-        {
-            ProbeLog.Collect();
-            CandidateLog.Collect();
-            MatchLog.Collect(Probe.Template, Candidate.Template);
         }
     }
 }
