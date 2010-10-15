@@ -19,6 +19,10 @@ namespace SourceAFIS.FingerprintAnalysis
         public ExtractionData Candidate = new ExtractionData();
         public MatchData Match = new MatchData();
 
+        public DetailLogger.LogData ProbeLog;
+        public DetailLogger.LogData CandidateLog;
+        public DetailLogger.LogData MatchLog;
+
         DetailLogger Logger = new DetailLogger();
         Extractor Extractor = new Extractor();
         ParallelMatcher Matcher = new ParallelMatcher();
@@ -33,19 +37,20 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public void Collect()
         {
-            CollectExtraction(Probe, Options.Probe);
-            CollectExtraction(Candidate, Options.Candidate);
+            ProbeLog = CollectExtraction(Probe, Options.Probe);
+            CandidateLog = CollectExtraction(Candidate, Options.Candidate);
             CollectMatching();
         }
 
-        public void CollectExtraction(ExtractionData data, FingerprintOptions fpOptions)
+        public DetailLogger.LogData CollectExtraction(ExtractionData data, FingerprintOptions fpOptions)
         {
             if (data.InputImage != null)
                 Extractor.Extract(data.InputImage, 500);
-            data.CollectLogs(Logger);
-            data.Ridges.CollectLogs(Logger);
-            data.Valleys.CollectLogs(Logger);
-            Logger.Clear();
+            DetailLogger.LogData log = Logger.PopLog();
+            data.CollectLogs(log);
+            data.Ridges.CollectLogs(log);
+            data.Valleys.CollectLogs(log);
+            return log;
         }
 
         void CollectMatching()
@@ -55,8 +60,8 @@ namespace SourceAFIS.FingerprintAnalysis
                 ParallelMatcher.PreparedProbe prepared = Matcher.Prepare(Probe.Template);
                 Matcher.Match(prepared, new Template[] { Candidate.Template });
             }
-            Match.CollectLogs(Logger);
-            Logger.Clear();
+            MatchLog = Logger.PopLog();
+            Match.CollectLogs(MatchLog);
         }
     }
 }
