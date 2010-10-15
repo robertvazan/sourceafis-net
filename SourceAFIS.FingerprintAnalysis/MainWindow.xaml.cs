@@ -28,7 +28,7 @@ namespace SourceAFIS.FingerprintAnalysis
         static readonly string ProgramVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         Options Options;
-        LogCollector Collector = new LogCollector();
+        LogCollector Collector;
         Blender Blender = new Blender();
 
         public MainWindow()
@@ -36,13 +36,14 @@ namespace SourceAFIS.FingerprintAnalysis
             InitializeComponent();
             Options = FindResource("OptionsData") as Options;
             LoadSettings();
+            Collector = new LogCollector(Options);
             Blender.Options = Options;
             Blender.Logs = Collector;
-            Collector.Options = Options;
-            Options.PropertyChanged += (source, args) => { OnOptionsChange(); };
-            Options.Probe.PropertyChanged += (source, args) => { OnOptionsChange(); };
-            Options.Candidate.PropertyChanged += (source, args) => { OnOptionsChange(); };
-            OnOptionsChange();
+            Options.PropertyChanged += (source, args) => { OnOptionsChange(args.PropertyName); };
+            Options.Probe.PropertyChanged += (source, args) => { OnOptionsChange(args.PropertyName); };
+            Options.Candidate.PropertyChanged += (source, args) => { OnOptionsChange(args.PropertyName); };
+            Collector.MatchLog.PropertyChanged += (source, args) => { UpdateBlender(); };
+            OnOptionsChange("Path");
         }
 
         private void LeftOpen_Click(object sender, RoutedEventArgs e)
@@ -59,14 +60,18 @@ namespace SourceAFIS.FingerprintAnalysis
                 Options.Candidate.Path = dialog.FileName;
         }
 
-        void OnOptionsChange()
+        void OnOptionsChange(string property)
         {
-            Collector.Probe.InputImage = Options.Probe.Path != "" ? ImageIO.GetPixels(ImageIO.Load(Options.Probe.Path)) : null;
-            Collector.Candidate.InputImage = Options.Candidate.Path != "" ? ImageIO.GetPixels(ImageIO.Load(Options.Candidate.Path)) : null;
+            if (property == "Path")
+                Collector.Collect();
 
-            Collector.Collect();
+            if (property != "Path")
+                UpdateBlender();
+        }
+
+        void UpdateBlender()
+        {
             Blender.Blend();
-
             LeftImage.Source = Blender.OutputImage;
         }
 

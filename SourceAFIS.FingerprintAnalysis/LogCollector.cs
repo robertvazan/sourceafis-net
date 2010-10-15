@@ -15,7 +15,7 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     public class LogCollector
     {
-        public Options Options;
+        Options Options;
 
         public ExtractionData Probe = new ExtractionData();
         public ExtractionData Candidate = new ExtractionData();
@@ -31,12 +31,13 @@ namespace SourceAFIS.FingerprintAnalysis
             public DetailLogger.LogData Logs
             {
                 get { return LogsValue; }
-                set
-                {
-                    LogsValue = value;
-                    if (PropertyChanged != null)
-                        PropertyChanged(this, new PropertyChangedEventArgs("Logs"));
-                }
+                set { LogsValue = value; OnPropertyChanged("Logs"); }
+            }
+
+            protected void OnPropertyChanged(string name)
+            {
+                if (PropertyChanged != null)
+                    PropertyChanged(this, new PropertyChangedEventArgs(name));
             }
         }
 
@@ -44,15 +45,27 @@ namespace SourceAFIS.FingerprintAnalysis
         {
             Extractor Extractor = new Extractor();
 
-            public ExtractionCollector()
+            FingerprintOptions Options;
+
+            byte[,] InputImageValue;
+            public byte[,] InputImage
             {
-                Logger.Attach(new ObjectTree(Extractor));
+                get { return InputImageValue; }
+                set { InputImageValue = value; OnPropertyChanged("InputImage"); }
             }
 
-            public void Collect(byte[,] image)
+            public ExtractionCollector(FingerprintOptions options)
             {
-                if (image != null)
-                    Extractor.Extract(image, 500);
+                Logger.Attach(new ObjectTree(Extractor));
+                Options = options;
+            }
+
+            public void Collect()
+            {
+                InputImage = Options.Path != "" ? ImageIO.GetPixels(ImageIO.Load(Options.Path)) : null;
+
+                if (InputImage != null)
+                    Extractor.Extract(InputImage, 500);
                 Logs = Logger.PopLog();
             }
         }
@@ -81,8 +94,14 @@ namespace SourceAFIS.FingerprintAnalysis
         public ExtractionCollector CandidateLog { get; set; }
         public MatchCollector MatchLog { get; set; }
 
-        public LogCollector()
+        public LogCollector(Options options)
         {
+            Options = options;
+
+            ProbeLog = new ExtractionCollector(Options.Probe);
+            CandidateLog = new ExtractionCollector(Options.Candidate);
+            MatchLog = new MatchCollector();
+
             Probe.SetSource(ProbeLog, "Logs");
             Candidate.SetSource(CandidateLog, "Logs");
             Match.SetSource(MatchLog, "Logs");
@@ -90,8 +109,8 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public void Collect()
         {
-            ProbeLog.Collect(Probe.InputImage);
-            CandidateLog.Collect(Candidate.InputImage);
+            ProbeLog.Collect();
+            CandidateLog.Collect();
             MatchLog.Collect(Probe.Template, Candidate.Template);
         }
     }
