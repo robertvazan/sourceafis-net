@@ -11,38 +11,27 @@ namespace SourceAFIS.FingerprintAnalysis
     {
         public SkeletonData(string context)
         {
-            RegisterProperties();
             LogStringDecoration = log => log + context;
         }
 
-        public LogProperty BinarizedProperty = new LogProperty("Extractor.Binarized");
-        public BinaryMap Binarized { get { return (BinaryMap)BinarizedProperty.Value; } }
+        public BinaryMap Binarized { get { return (BinaryMap)GetLog("Binarized", "Extractor.Binarized"); } }
 
-        public LogProperty ThinnedProperty = new LogProperty("Extractor.Thinner");
-        public BinaryMap Thinned { get { return (BinaryMap)ThinnedProperty.Value; } }
+        public BinaryMap Thinned { get { return (BinaryMap)GetLog("Thinned", "Extractor.Thinner"); } }
 
-        public LogProperty RidgeTracerProperty = new LogProperty("Extractor.RidgeTracer");
-        public SkeletonBuilder RidgeTracer { get { return (SkeletonBuilder)RidgeTracerProperty.Value; } }
+        public SkeletonBuilder RidgeTracer { get { return (SkeletonBuilder)GetLog("RidgeTracer", "Extractor.RidgeTracer"); } }
 
-        public LogProperty DotRemoverProperty = new LogProperty("Extractor.DotRemover");
-        public SkeletonBuilder DotRemover { get { return (SkeletonBuilder)DotRemoverProperty.Value; } }
+        public SkeletonBuilder DotRemover { get { return (SkeletonBuilder)GetLog("DotRemover", "Extractor.DotRemover"); } }
 
-        public LogProperty PoreRemoverProperty = new LogProperty("Extractor.PoreRemover");
-        public SkeletonBuilder PoreRemover { get { return (SkeletonBuilder)PoreRemoverProperty.Value; } }
+        public SkeletonBuilder PoreRemover { get { return (SkeletonBuilder)GetLog("PoreRemover", "Extractor.PoreRemover"); } }
 
-        public LogProperty GapRemoverProperty = new LogProperty("Extractor.GapRemover");
-        public SkeletonBuilder GapRemover { get { return (SkeletonBuilder)GapRemoverProperty.Value; } }
+        public SkeletonBuilder GapRemover { get { return (SkeletonBuilder)GetLog("GapRemover", "Extractor.GapRemover"); } }
 
-        public LogProperty TailRemoverProperty = new LogProperty("Extractor.TailRemover");
-        public SkeletonBuilder TailRemover { get { return (SkeletonBuilder)TailRemoverProperty.Value; } }
+        public SkeletonBuilder TailRemover { get { return (SkeletonBuilder)GetLog("TailRemover", "Extractor.TailRemover"); } }
 
-        public LogProperty FragmentRemoverProperty = new LogProperty("Extractor.FragmentRemover");
-        public SkeletonBuilder FragmentRemover { get { return (SkeletonBuilder)FragmentRemoverProperty.Value; } }
+        public SkeletonBuilder FragmentRemover { get { return (SkeletonBuilder)GetLog("FragmentRemover", "Extractor.FragmentRemover"); } }
 
-        public LogProperty MinutiaMaskProperty = new LogProperty("Extractor.MinutiaMask");
-        public SkeletonBuilder MinutiaMask { get { return (SkeletonBuilder)MinutiaMaskProperty.Value; } }
+        public SkeletonBuilder MinutiaMask { get { return (SkeletonBuilder)GetLog("MinutiaMask", "Extractor.MinutiaMask"); } }
 
-        public LogProperty BranchMinutiaRemoverProperty = new LogProperty("Extractor.BranchMinutiaRemover");
-        public SkeletonBuilder BranchMinutiaRemover { get { return (SkeletonBuilder)BranchMinutiaRemoverProperty.Value; } }
+        public SkeletonBuilder BranchMinutiaRemover { get { return (SkeletonBuilder)GetLog("BranchMinutiaRemover", "Extractor.BranchMinutiaRemover"); } }
     }
 }

@@ -3,52 +3,67 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using SourceAFIS.General;
 using System.ComponentModel;
+using SourceAFIS.General;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
     public class LogData : INotifyPropertyChanged
     {
-        List<LogProperty> LogProperties = new List<LogProperty>();
-        List<ComputedProperty> ComputedProperties = new List<ComputedProperty>();
-
         public Func<string, string> LogStringDecoration = log => log;
+
+        INotifyPropertyChanged Collector;
+        PropertyInfo CollectorProperty;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RegisterProperties()
+        public void SetSource(INotifyPropertyChanged collector, string propertyName)
         {
-            foreach (var field in this.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+            Collector = collector;
+            CollectorProperty = Collector.GetType().GetProperty(propertyName);
+        }
+
+        class NotificationChaining
+        {
+            string Property;
+            Action Target;
+
+            public NotificationChaining(INotifyPropertyChanged source, string property, Action target)
             {
-                if (field.FieldType == typeof(LogProperty))
+                Property = property;
+                Target = target;
+                source.PropertyChanged += Notify;
+            }
+
+            public void Notify(object source, PropertyChangedEventArgs args)
+            {
+                if (args.PropertyName == Property)
                 {
-                    LogProperty property = field.GetValue(this) as LogProperty;
-                    property.Name = field.Name.Substring(0, field.Name.Length - 8);
-                    LogProperties.Add(property);
-                }
-                if (field.FieldType == typeof(ComputedProperty))
-                {
-                    ComputedProperty property = field.GetValue(this) as ComputedProperty;
-                    property.Name = field.Name.Substring(0, field.Name.Length - 8);
-                    ComputedProperties.Add(property);
+                    (source as INotifyPropertyChanged).PropertyChanged -= Notify;
+                    Target();
                 }
             }
         }
 
-        public void CollectLogs(DetailLogger.LogData log)
+        public void Watch(INotifyPropertyChanged source, string sourceProperty, string targetProperty)
         {
-            foreach (LogProperty property in LogProperties)
+            new NotificationChaining(source, sourceProperty, () =>
             {
-                object oldValue = property.Value;
-                property.Value = log.Retrieve(LogStringDecoration(property.Log));
-                if (PropertyChanged != null && (oldValue != null || property.Value != null))
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs(property.Name));
-                    foreach (ComputedProperty dependent in property.DependentProperties)
-                        PropertyChanged(this, new PropertyChangedEventArgs(dependent.Name));
-                }
-            }
+                if (PropertyChanged != null)
+                    PropertyChanged(this, new PropertyChangedEventArgs(targetProperty));
+            });
+        }
+
+        public void Watch(string sourceProperty, string targetProperty)
+        {
+            Watch(this, sourceProperty, targetProperty);
+        }
+
+        public object GetLog(string propertyName, string logName)
+        {
+            Watch(Collector, CollectorProperty.Name, propertyName);
+            DetailLogger.LogData logs = CollectorProperty.GetValue(Collector, null) as DetailLogger.LogData;
+            return logs.Retrieve(LogStringDecoration(logName));
         }
     }
 }
