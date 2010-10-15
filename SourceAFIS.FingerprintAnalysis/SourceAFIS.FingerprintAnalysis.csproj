@@ -56,9 +56,11 @@
     <Compile Include="Blender.cs" />
     <Compile Include="ExtractionData.cs" />
     <Compile Include="FingerprintOptions.cs" />
+    <Compile Include="IPushNotification.cs" />
     <Compile Include="LogCollector.cs" />
     <Compile Include="LogData.cs" />
     <Compile Include="MatchData.cs" />
+    <Compile Include="NotificationLink.cs" />
     <Compile Include="SkeletonData.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

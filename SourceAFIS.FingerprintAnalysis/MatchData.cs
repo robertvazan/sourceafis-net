@@ -10,7 +10,7 @@ namespace SourceAFIS.FingerprintAnalysis
     {
         public float Score { get { return (float)GetLog("Score", "MinutiaScore"); } }
 
-        public bool AnyMatch { get { Watch("Score", "AnyMatch"); return Score > 0; } }
+        public bool AnyMatch { get { Link("Score", "AnyMatch"); return Score > 0; } }
 
         public MinutiaPair? Root { get { return (MinutiaPair?)GetLog("Root", "MinutiaRoot"); } }
 
