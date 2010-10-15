@@ -119,11 +119,11 @@ namespace SourceAFIS.General
 
         public static BitmapSource Load(string filename)
         {
-            using (FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                PngBitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.None, BitmapCacheOption.Default);
-                return decoder.Frames[0];
-            }
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = new Uri(filename);
+            image.EndInit();
+            return image;
         }
 
         public static void Save(BitmapSource image, string filename)
