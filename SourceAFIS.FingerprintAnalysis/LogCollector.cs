@@ -40,10 +40,6 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public void CollectExtraction(ExtractionData data, FingerprintOptions fpOptions)
         {
-            var filter = data.CreateFilter(Options, fpOptions);
-            var ridgeFilter = data.Ridges.CreateFilter(Options, fpOptions);
-            var valleyFilter = data.Valleys.CreateFilter(Options, fpOptions);
-            Logger.Filter = log => filter.Contains(log) || ridgeFilter.Contains(log) || valleyFilter.Contains(log);
             if (data.InputImage != null)
                 Extractor.Extract(data.InputImage, 500);
             data.CollectLogs(Logger);
@@ -54,8 +50,6 @@ namespace SourceAFIS.FingerprintAnalysis
 
         void CollectMatching()
         {
-            var filter = Match.CreateFilter(Options);
-            Logger.Filter = log => filter.Contains(log);
             if (Probe.InputImage != null && Candidate.InputImage != null)
             {
                 ParallelMatcher.PreparedProbe prepared = Matcher.Prepare(Probe.Template);

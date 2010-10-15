@@ -13,11 +13,10 @@ namespace SourceAFIS.FingerprintAnalysis
         {
             TemplateProperty.AddDependency(MinutiaCollectorProperty);
             RegisterProperties();
-            FpFilter = options => options.Path != "";
         }
 
-        public SkeletonData Ridges = new SkeletonData("[Ridges]", Options.SkeletonType.Ridges);
-        public SkeletonData Valleys = new SkeletonData("[Valleys]", Options.SkeletonType.Valleys);
+        public SkeletonData Ridges = new SkeletonData("[Ridges]");
+        public SkeletonData Valleys = new SkeletonData("[Valleys]");
 
         public byte[,] InputImage { get; set; }
 
@@ -39,46 +38,28 @@ namespace SourceAFIS.FingerprintAnalysis
         public LogProperty SegmentationMaskProperty = new LogProperty("Extractor.Mask");
         public BinaryMap SegmentationMask { get { return (BinaryMap)SegmentationMaskProperty.Value; } }
 
-        public LogProperty EqualizedProperty = new LogProperty("Extractor.Equalizer")
-        {
-            Filter = options => options.UsesLayer(Options.Layer.Equalized)
-        };
+        public LogProperty EqualizedProperty = new LogProperty("Extractor.Equalizer");
         public float[,] Equalized { get { return (float[,])EqualizedProperty.Value; } }
 
         public LogProperty OrientationProperty = new LogProperty("Extractor.Orientation");
         public byte[,] Orientation { get { return (byte[,])OrientationProperty.Value; } }
 
-        public LogProperty SmoothedRidgesProperty = new LogProperty("Extractor.RidgeSmoother")
-        {
-            Filter = options => options.UsesLayer(Options.Layer.SmoothedRidges)
-        };
+        public LogProperty SmoothedRidgesProperty = new LogProperty("Extractor.RidgeSmoother");
         public float[,] SmoothedRidges { get { return (float[,])SmoothedRidgesProperty.Value; } }
 
-        public LogProperty OrthogonalSmoothingProperty = new LogProperty("Extractor.OrthogonalSmoother")
-        {
-            Filter = options => options.UsesLayer(Options.Layer.OrthogonalSmoothing)
-        };
+        public LogProperty OrthogonalSmoothingProperty = new LogProperty("Extractor.OrthogonalSmoother");
         public float[,] OrthogonalSmoothing { get { return (float[,])OrthogonalSmoothingProperty.Value; } }
 
         public LogProperty BinarizedProperty = new LogProperty("Extractor.Binarizer");
         public BinaryMap Binarized { get { return (BinaryMap)BinarizedProperty.Value; } }
 
-        public LogProperty BinarySmoothingProperty = new LogProperty("Extractor.BinarySmoothingResult")
-        {
-            Filter = options => options.UsesLayer(Options.Layer.BinarySmoothing)
-        };
+        public LogProperty BinarySmoothingProperty = new LogProperty("Extractor.BinarySmoothingResult");
         public BinaryMap BinarySmoothing { get { return (BinaryMap)BinarySmoothingProperty.Value; } }
 
-        public LogProperty RemovedCrossesProperty = new LogProperty("Extractor.CrossRemover")
-        {
-            Filter = options => options.UsesLayer(Options.Layer.RemovedCrosses)
-        };
+        public LogProperty RemovedCrossesProperty = new LogProperty("Extractor.CrossRemover");
         public BinaryMap RemovedCrosses { get { return (BinaryMap)RemovedCrossesProperty.Value; } }
 
-        public LogProperty InnerMaskProperty = new LogProperty("Extractor.InnerMask")
-        {
-            Filter = options => options.Mask == Options.MaskType.Inner
-        };
+        public LogProperty InnerMaskProperty = new LogProperty("Extractor.InnerMask");
         public BinaryMap InnerMask { get { return (BinaryMap)InnerMaskProperty.Value; } }
 
         public LogProperty MinutiaCollectorProperty = new LogProperty("Extractor.MinutiaCollector");
