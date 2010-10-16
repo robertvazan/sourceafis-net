@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
 
@@ -9,6 +10,13 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     public class ExtractionData : LogData
     {
+        public override void SetSource(INotifyPropertyChanged collector, string propertyName)
+        {
+            base.SetSource(collector, propertyName);
+            Ridges.SetSource(collector, propertyName);
+            Valleys.SetSource(collector, propertyName);
+        }
+
         public SkeletonData Ridges = new SkeletonData("[Ridges]");
         public SkeletonData Valleys = new SkeletonData("[Valleys]");
 
