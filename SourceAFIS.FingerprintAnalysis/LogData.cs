@@ -12,7 +12,7 @@ namespace SourceAFIS.FingerprintAnalysis
     {
         public Func<string, string> LogStringDecoration = log => log;
 
-        INotifyPropertyChanged Collector;
+        protected INotifyPropertyChanged Collector;
         PropertyInfo CollectorProperty;
 
         public event PropertyChangedEventHandler PropertyChanged;
