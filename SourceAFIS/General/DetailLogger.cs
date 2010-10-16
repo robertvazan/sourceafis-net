@@ -43,7 +43,7 @@ namespace SourceAFIS.General
 
             public override void Log(string part, object data)
             {
-                Logger.Log(Path + "." + part, data);
+                Logger.Log(Path + (Path != "" ? "." : "") + part, data);
             }
 
             public ActiveHook Clone() { return new ActiveHook(Logger, Path); }
