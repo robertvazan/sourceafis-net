@@ -23,7 +23,7 @@ namespace SourceAFIS.FingerprintAnalysis
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
 
-        public void SetSource(INotifyPropertyChanged collector, string propertyName)
+        public virtual void SetSource(INotifyPropertyChanged collector, string propertyName)
         {
             Collector = collector;
             CollectorProperty = Collector.GetType().GetProperty(propertyName);
