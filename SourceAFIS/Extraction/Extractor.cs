@@ -77,7 +77,7 @@ namespace SourceAFIS.Extraction
             TemplateBuilder template = null;
             DpiAdjuster.Adjust(this, dpi, delegate()
             {
-                byte[,] image = GdiIO.GetInverted(invertedImage);
+                byte[,] image = ImageInverter.GetInverted(invertedImage);
 
                 BlockMap blocks = new BlockMap(new Size(image.GetLength(1), image.GetLength(0)), BlockSize);
                 Logger.Log("BlockMap", blocks);

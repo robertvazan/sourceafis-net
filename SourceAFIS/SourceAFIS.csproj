@@ -60,6 +60,7 @@
     <Compile Include="Extraction\Filters\CrossRemover.cs" />
     <Compile Include="Extraction\Extractor.cs" />
     <Compile Include="Extraction\Filters\HillOrientation.cs" />
+    <Compile Include="Extraction\Filters\ImageInverter.cs" />
     <Compile Include="Extraction\Filters\InnerMask.cs" />
     <Compile Include="Extraction\Filters\LinesByOrientation.cs" />
     <Compile Include="Extraction\Filters\LocalHistogram.cs" />
