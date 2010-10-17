@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Drawing.Imaging;
 using SystemPixelFormat = System.Drawing.Imaging.PixelFormat;
-using System.Threading.Tasks;
 #endif
 
 namespace SourceAFIS.General
@@ -69,16 +68,5 @@ namespace SourceAFIS.General
             return bmp;
         }
 #endif
-
-        public static byte[,] GetInverted(byte[,] image)
-        {
-            byte[,] result = (byte[,])image.Clone();
-            Parallel.For(0, image.GetLength(0), delegate(int y)
-            {
-                for (int x = 0; x < image.GetLength(1); ++x)
-                    result[y, x] = (byte)(255 - image[y, x]);
-            });
-            return result;
-        }
     }
 }
