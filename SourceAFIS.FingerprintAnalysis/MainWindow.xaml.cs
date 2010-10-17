@@ -28,7 +28,7 @@ namespace SourceAFIS.FingerprintAnalysis
         static readonly string ProgramVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         Options Options;
-        LogCollector Collector;
+        LogDecoder Collector;
         Blender Blender = new Blender();
 
         public MainWindow()
@@ -38,7 +38,7 @@ namespace SourceAFIS.FingerprintAnalysis
             Options = FindResource("OptionsData") as Options;
             LoadSettings();
             
-            Collector = new LogCollector(Options);
+            Collector = new LogDecoder(Options);
             
             Blender.Options = Options;
             Blender.Logs = Collector;

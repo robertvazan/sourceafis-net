@@ -10,7 +10,7 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     sealed class Blender
     {
-        public LogCollector Logs;
+        public LogDecoder Logs;
 
         public Options Options;
 

@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    public class LogCollector
+    public class LogDecoder
     {
         public ExtractionData Probe = new ExtractionData();
         public ExtractionData Candidate = new ExtractionData();
@@ -15,7 +15,7 @@ namespace SourceAFIS.FingerprintAnalysis
         public ExtractionCollector CandidateLog { get; set; }
         public MatchCollector MatchLog { get; set; }
 
-        public LogCollector(Options options)
+        public LogDecoder(Options options)
         {
             ProbeLog = new ExtractionCollector(options.Probe);
             Probe.SetSource(ProbeLog, "Logs");
