@@ -7,7 +7,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    public class CollectorBase : INotifyPropertyChanged
+    public class LogCollector : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
