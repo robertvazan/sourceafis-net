@@ -61,6 +61,7 @@
     <Compile Include="Extraction\Filters\CrossRemover.cs" />
     <Compile Include="Extraction\Extractor.cs" />
     <Compile Include="Extraction\Filters\HillOrientation.cs" />
+    <Compile Include="Extraction\Filters\ImageInverter.cs" />
     <Compile Include="Extraction\Filters\InnerMask.cs" />
     <Compile Include="Extraction\Filters\LinesByOrientation.cs" />
     <Compile Include="Extraction\Filters\LocalHistogram.cs" />
@@ -140,7 +141,6 @@
     <Compile Include="Simple\Finger.cs" />
     <Compile Include="Simple\Fingerprint.cs" />
     <Compile Include="Simple\Person.cs" />
-    <Compile Include="General\ImageIO.cs" />
     <Compile Include="General\RectangleC.cs" />
     <Compile Include="Properties\AssemblyInfoMobile.cs" />
   </ItemGroup>
