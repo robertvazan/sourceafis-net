@@ -10,11 +10,15 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     public class ExtractionData : LogData
     {
-        public override void SetSource(INotifyPropertyChanged collector, string propertyName)
+        public override LogCollector Collector
         {
-            base.SetSource(collector, propertyName);
-            Ridges.SetSource(collector, propertyName);
-            Valleys.SetSource(collector, propertyName);
+            get { return base.Collector; }
+            set
+            {
+                base.Collector = value;
+                Ridges.Collector = value;
+                Valleys.Collector = value;
+            }
         }
 
         public SkeletonData Ridges = new SkeletonData("[Ridges]");
