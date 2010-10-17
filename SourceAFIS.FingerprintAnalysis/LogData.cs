@@ -12,8 +12,7 @@ namespace SourceAFIS.FingerprintAnalysis
     {
         public Func<string, string> LogStringDecoration = log => log;
 
-        protected INotifyPropertyChanged Collector;
-        PropertyInfo CollectorProperty;
+        public virtual LogCollector Collector { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -21,12 +20,6 @@ namespace SourceAFIS.FingerprintAnalysis
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
-        }
-
-        public virtual void SetSource(INotifyPropertyChanged collector, string propertyName)
-        {
-            Collector = collector;
-            CollectorProperty = Collector.GetType().GetProperty(propertyName);
         }
 
         public void Link(INotifyPropertyChanged source, string sourceProperty, string targetProperty)
@@ -41,9 +34,8 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public object GetLog(string propertyName, string logName)
         {
-            Link(Collector, CollectorProperty.Name, propertyName);
-            DetailLogger.LogData logs = CollectorProperty.GetValue(Collector, null) as DetailLogger.LogData;
-            return logs.Retrieve(LogStringDecoration(logName));
+            Link(Collector, "Logs", propertyName);
+            return Collector.Logs.Retrieve(LogStringDecoration(logName));
         }
     }
 }
