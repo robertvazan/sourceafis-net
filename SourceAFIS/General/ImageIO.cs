@@ -110,7 +110,7 @@ namespace SourceAFIS.General
             for (int y = 0; y < height; ++y)
                 for (int x = 0; x < width; ++x)
                 {
-                    int at = (height - y - 1) * width + x;
+                    int at = ((height - y - 1) * width + x) * 4;
                     pixels[y, x] = (byte)((flat[at] + flat[at + 1] + flat[at + 2]) / 3);
                 }
 
