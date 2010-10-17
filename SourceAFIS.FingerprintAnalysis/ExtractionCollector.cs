@@ -9,7 +9,7 @@ using SourceAFIS.Extraction;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    public class ExtractionCollector : CollectorBase
+    public class ExtractionCollector : LogCollector
     {
         Extractor Extractor = new Extractor();
 

@@ -8,7 +8,7 @@ using SourceAFIS.Extraction.Templates;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    public class MatchCollector : CollectorBase
+    public class MatchCollector : LogCollector
     {
         ParallelMatcher Matcher = new ParallelMatcher();
 
