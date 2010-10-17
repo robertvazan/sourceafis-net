@@ -50,7 +50,7 @@ namespace SourceAFIS.Tuning.Errors
                     serializer.Serialize(stream, ROC);
                 }
 
-                ImageIO.Save(ImageIO.GetBitmapSource(PixelFormat.ToByte(new ROCGraph().Draw(ROC))), Path.Combine(folder, "ROC.png"));
+                WpfIO.Save(WpfIO.GetBitmapSource(PixelFormat.ToByte(new ROCGraph().Draw(ROC))), Path.Combine(folder, "ROC.png"));
             }
         }
 

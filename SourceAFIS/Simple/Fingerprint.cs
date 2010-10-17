@@ -172,8 +172,8 @@ namespace SourceAFIS.Simple
         [XmlIgnore]
         public BitmapSource AsBitmapSource
         {
-            get { return Image != null ? ImageIO.GetBitmapSource(Image) : null; }
-            set { Image = value != null ? ImageIO.GetPixels(value) : null; }
+            get { return Image != null ? WpfIO.GetBitmapSource(Image) : null; }
+            set { Image = value != null ? WpfIO.GetPixels(value) : null; }
         }
 
         /// <summary>
@@ -194,8 +194,8 @@ namespace SourceAFIS.Simple
         [XmlIgnore]
         public Bitmap AsBitmap
         {
-            get { return Image != null ? ImageIO.GetBitmap(Image) : null; }
-            set { Image = value != null ? ImageIO.GetPixels(value) : null; }
+            get { return Image != null ? GdiIO.GetBitmap(Image) : null; }
+            set { Image = value != null ? GdiIO.GetPixels(value) : null; }
         }
 #endif
 
