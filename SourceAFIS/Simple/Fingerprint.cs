@@ -6,6 +6,7 @@ using System.Drawing;
 #endif
 using System.Xml.Serialization;
 using System.IO;
+using System.Windows.Media.Imaging;
 using SourceAFIS.General;
 using SourceAFIS.Dummy;
 using SourceAFIS.Extraction.Templates;
@@ -59,7 +60,8 @@ namespace SourceAFIS.Simple
         /// The format of this image is a simple raw 2D array of <see langword="byte"/>s. Every byte
         /// represents shade of gray from black (0) to white (255). When indexing the 2D array, Y axis
         /// goes first, X axis goes second, e.g. <c>Image[y, x]</c>. To convert to/from <see cref="Bitmap"/>
-        /// object, use <see cref="AsBitmap"/> property.
+        /// object, use <see cref="AsBitmap"/> property. To convert to/from <see cref="BitmapSource"/>
+        /// object, use <see cref="AsBitmapSource"/> property.
         /// </para>
         /// <para>
         /// Accessors of this property do not clone the image. To avoid unwanted sharing of the <see langword="byte"/>
@@ -68,6 +70,7 @@ namespace SourceAFIS.Simple
         /// </remarks>
         /// <seealso cref="Template"/>
         /// <seealso cref="AsBitmap"/>
+        /// <seealso cref="AsBitmapSource"/>
         /// <seealso cref="AsImageData"/>
         /// <seealso cref="AfisEngine.Extract"/>
         [XmlIgnore]
@@ -97,6 +100,7 @@ namespace SourceAFIS.Simple
         /// </value>
         /// <seealso cref="Image"/>
         /// <seealso cref="AsBitmap"/>
+        /// <seealso cref="AsBitmapSource"/>
         /// <seealso cref="Template"/>
         /// <seealso cref="AfisEngine.Extract"/>
         public byte[] AsImageData
@@ -151,14 +155,40 @@ namespace SourceAFIS.Simple
 
 #if !COMPACT_FRAMEWORK
         /// <summary>
+        /// Fingerprint image as <see cref="BitmapSource"/> object.
+        /// </summary>
+        /// <value>
+        /// Fingerprint image from <see cref="Image"/> property converted to <see cref="BitmapSource"/>
+        /// object or <see langword="null"/> if <see cref="Image"/> is <see langword="null"/>.
+        /// </value>
+        /// <remarks>
+        /// Use this property in WPF applications.
+        /// </remarks>
+        /// <seealso cref="Image"/>
+        /// <seealso cref="AsImageData"/>
+        /// <seealso cref="AsBitmap"/>
+        /// <seealso cref="Template"/>
+        /// <seealso cref="AfisEngine.Extract"/>
+        [XmlIgnore]
+        public BitmapSource AsBitmapSource
+        {
+            get { return Image != null ? ImageIO.GetBitmapSource(Image) : null; }
+            set { Image = value != null ? ImageIO.GetPixels(value) : null; }
+        }
+
+        /// <summary>
         /// Fingerprint image as <see cref="Bitmap"/> object.
         /// </summary>
         /// <value>
         /// Fingerprint image from <see cref="Image"/> property converted to <see cref="Bitmap"/>
         /// object or <see langword="null"/> if <see cref="Image"/> is <see langword="null"/>.
         /// </value>
+        /// <remarks>
+        /// Use this property in WinForms applications.
+        /// </remarks>
         /// <seealso cref="Image"/>
         /// <seealso cref="AsImageData"/>
+        /// <seealso cref="AsBitmapSource"/>
         /// <seealso cref="Template"/>
         /// <seealso cref="AfisEngine.Extract"/>
         [XmlIgnore]
