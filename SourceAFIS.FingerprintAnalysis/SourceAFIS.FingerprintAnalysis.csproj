@@ -54,11 +54,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Blender.cs" />
+    <Compile Include="CollectorBase.cs" />
+    <Compile Include="ExtractionCollector.cs" />
     <Compile Include="ExtractionData.cs" />
     <Compile Include="FingerprintOptions.cs" />
     <Compile Include="IPushNotification.cs" />
     <Compile Include="LogCollector.cs" />
     <Compile Include="LogData.cs" />
+    <Compile Include="MatchCollector.cs" />
     <Compile Include="MatchData.cs" />
     <Compile Include="NotificationLink.cs" />
     <Compile Include="SkeletonData.cs" />

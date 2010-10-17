@@ -20,7 +20,7 @@ namespace SourceAFIS.FingerprintAnalysis
         public SkeletonData Ridges = new SkeletonData("[Ridges]");
         public SkeletonData Valleys = new SkeletonData("[Valleys]");
 
-        public LogCollector.ExtractionCollector ExtractionCollector { get { return Collector as LogCollector.ExtractionCollector; } }
+        public ExtractionCollector ExtractionCollector { get { return Collector as ExtractionCollector; } }
 
         public byte[,] InputImage { get { Link(ExtractionCollector, "InputImage", "InputImage"); return ExtractionCollector.InputImage; } }
 
