@@ -98,6 +98,7 @@
     <Compile Include="General\Calc.cs" />
     <Compile Include="General\CircularArray.cs" />
     <Compile Include="General\DetailLogger.cs" />
+    <Compile Include="General\GdiIO.cs" />
     <Compile Include="General\Neighborhood.cs" />
     <Compile Include="General\Point.cs" />
     <Compile Include="General\PointF.cs" />
@@ -138,7 +139,7 @@
     <Compile Include="Simple\Finger.cs" />
     <Compile Include="Simple\Fingerprint.cs" />
     <Compile Include="Simple\Person.cs" />
-    <Compile Include="General\ImageIO.cs" />
+    <Compile Include="General\WpfIO.cs" />
     <Compile Include="General\RectangleC.cs" />
     <Compile Include="Dummy\Dummy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

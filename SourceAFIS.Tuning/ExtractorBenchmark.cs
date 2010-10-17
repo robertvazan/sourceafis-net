@@ -33,7 +33,7 @@ namespace SourceAFIS.Tuning
             {
                 foreach (DatabaseIndex index in database.AllIndexes)
                 {
-                    byte[,] grayscale = ImageIO.GetPixels(ImageIO.Load(database[index].FilePath));
+                    byte[,] grayscale = WpfIO.GetPixels(WpfIO.Load(database[index].FilePath));
                     TemplateBuilder builder = Extractor.Extract(grayscale, 500);
                     Template template = serializedFormat.Export(builder);
                     database[index].Template = template;

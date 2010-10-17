@@ -35,7 +35,7 @@ namespace SourceAFIS.FingerprintAnalysis
 
         void Collect(FingerprintOptions options)
         {
-            InputImage = options.Path != "" ? ImageIO.GetPixels(ImageIO.Load(options.Path)) : null;
+            InputImage = options.Path != "" ? WpfIO.GetPixels(WpfIO.Load(options.Path)) : null;
 
             if (InputImage != null)
                 Extractor.Extract(InputImage, 500);
