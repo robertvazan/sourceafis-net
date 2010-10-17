@@ -59,7 +59,7 @@
     <Compile Include="ExtractionData.cs" />
     <Compile Include="FingerprintOptions.cs" />
     <Compile Include="IPushNotification.cs" />
-    <Compile Include="LogCollector.cs" />
+    <Compile Include="LogDecoder.cs" />
     <Compile Include="LogData.cs" />
     <Compile Include="MatchCollector.cs" />
     <Compile Include="MatchData.cs" />
