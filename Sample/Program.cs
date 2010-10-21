@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
+using System.Windows.Media.Imaging;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -39,11 +39,10 @@ namespace Sample
             // Initialize empty fingerprint object and set properties
             MyFingerprint fp = new MyFingerprint();
             fp.Filename = filename;
-            // Load image from the file, fp.AsBitmap makes a copy of the image, so that we can dispose it afterwards
+            // Load image from the file
             Console.WriteLine(" Loading image from {0}...", filename);
-            using (Image fromFile = Bitmap.FromFile(filename))
-                using (Bitmap bitmap = new Bitmap(fromFile))
-                    fp.AsBitmap = bitmap;
+            BitmapImage image = new BitmapImage(new Uri(filename, UriKind.RelativeOrAbsolute));
+            fp.AsBitmapSource = image;
             // Above update of fp.AsBitmap initialized also raw image in fp.Image
             // Check raw image dimensions, Y axis is first, X axis is second
             Console.WriteLine(" Image size = {0} x {1} (width x height)", fp.Image.GetLength(1), fp.Image.GetLength(0));
