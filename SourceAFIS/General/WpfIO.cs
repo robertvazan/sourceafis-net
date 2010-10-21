@@ -27,7 +27,7 @@ namespace SourceAFIS.General
                     converted[at + 2] = pixels[y, x];
                 }
 
-            WriteableBitmap bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr32, null);
+            WriteableBitmap bitmap = new WriteableBitmap(width, height, 500, 500, PixelFormats.Bgr32, null);
 
             bitmap.WritePixels(new Int32Rect(0, 0, width, height), converted, width * 4, 0, 0);
 
@@ -38,8 +38,8 @@ namespace SourceAFIS.General
         {
             FormatConvertedBitmap converted = new FormatConvertedBitmap(bitmap, PixelFormats.Bgr32, null, 0.5);
 
-            int width = (int)converted.Width;
-            int height = (int)converted.Height;
+            int width = (int)converted.PixelWidth;
+            int height = (int)converted.PixelHeight;
 
             byte[] flat = new byte[width * height * 4];
 
