@@ -58,11 +58,7 @@ namespace SourceAFIS.General
 
         public static BitmapSource Load(string filename)
         {
-            BitmapImage image = new BitmapImage();
-            image.BeginInit();
-            image.UriSource = new Uri(filename);
-            image.EndInit();
-            return image;
+            return new BitmapImage(new Uri(filename, UriKind.RelativeOrAbsolute));
         }
 
         public static void Save(BitmapSource image, string filename)
