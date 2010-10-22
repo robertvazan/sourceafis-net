@@ -21,12 +21,12 @@ namespace SourceAFIS.Visualization
             }
         }
 
-        public static void DrawCandidate(ColorF[,] output, MinutiaPairing pairing, Template candidate, Transformation2D transformation)
+        public static void DrawCandidate(ColorF[,] output, MinutiaPairing pairing, Template candidate)
         {
             for (int i = 0; i < pairing.Count; ++i)
             {
                 MinutiaPair pair = pairing.GetPair(i);
-                Point point = transformation.Apply(candidate.Minutiae[pair.Candidate].Position);
+                Point point = candidate.Minutiae[pair.Candidate].Position;
                 CircleDrawer.Paint(Circle, point, output, ColorF.Red);
             }
         }

@@ -11,6 +11,7 @@ namespace SourceAFIS.FingerprintAnalysis
     sealed class Blender
     {
         public LogDecoder Logs;
+        public ExtractionData ExtractionData;
 
         public Options Options;
 
@@ -20,29 +21,7 @@ namespace SourceAFIS.FingerprintAnalysis
         readonly ColorF TransparentGreen = new ColorF(0, 1, 0, 0.25f);
         readonly ColorF LightFog = new ColorF(0.9f, 0.9f, 0.9f, 0.9f);
 
-        GlobalTransformation GlobalTransformation = new GlobalTransformation();
-
-        delegate ColorF[,] BlendLayer(ExtractionData data, Palette palette);
-
-        class Palette
-        {
-            public ColorF Image;
-            public ColorF Ending;
-            public ColorF Bifurcation;
-        }
-
-        Palette ProbePalette = new Palette();
-        Palette CandidatePalette = new Palette();
-
-        public Blender()
-        {
-            ProbePalette.Image = ColorF.Black;
-            ProbePalette.Ending = new ColorF(1, 0, 1);
-            ProbePalette.Bifurcation = new ColorF(0, 1, 1);
-            CandidatePalette.Image = new ColorF(0.2f, 0.1f, 0);
-            CandidatePalette.Ending = new ColorF(0.5f, 1, 0.5f);
-            CandidatePalette.Bifurcation = new ColorF(1, 1, 0);
-        }
+        delegate ColorF[,] BlendLayer(ExtractionData data);
 
         public void Blend()
         {
@@ -54,8 +33,8 @@ namespace SourceAFIS.FingerprintAnalysis
                 BlendMask
             };
 
-            Size size = Logs.Probe.InputImage != null
-                ? new Size(Logs.Probe.InputImage.GetLength(1), Logs.Probe.InputImage.GetLength(0))
+            Size size = ExtractionData.InputImage != null
+                ? new Size(ExtractionData.InputImage.GetLength(1), ExtractionData.InputImage.GetLength(0))
                 : new Size(480, 640);
 
             ColorF[,] output = new ColorF[size.Height, size.Width];
@@ -63,50 +42,41 @@ namespace SourceAFIS.FingerprintAnalysis
                 for (int x = 0; x < output.GetLength(1); ++x)
                     output[y, x] = ColorF.White;
 
-            if (Logs.Probe.InputImage != null)
+            if (ExtractionData.InputImage != null)
             {
-                Transformation2D transformation = null;
-                if (Logs.Candidate.InputImage != null && Logs.Match.AnyMatch)
-                    transformation = GlobalTransformation.Compute(Logs.Match.Pairing, Logs.Probe.Template, Logs.Candidate.Template);
                 foreach (BlendLayer layer in layers)
-                {
-                    if (transformation != null)
-                    {
-                        AlphaLayering.Layer(output, AffineTransformer.Transform(layer(Logs.Candidate, CandidatePalette),
-                            new Size(Logs.Probe.InputImage.GetLength(1), Logs.Probe.InputImage.GetLength(0)), transformation));
-                    }
-                    AlphaLayering.Layer(output, layer(Logs.Probe, ProbePalette));
-                    if (layer == BlendMarkers && transformation != null)
-                        BlendMatch(output, transformation);
-                }
+                    AlphaLayering.Layer(output, layer(ExtractionData));
             }
+            BlendMatch(ExtractionData, output);
 
             OutputImage = ImageSerialization.GetBitmapSource(PixelFormat.ToColorB(output));
         }
 
-        void BlendMatch(ColorF[,] output, Transformation2D transformation)
+        void BlendMatch(ExtractionData data, ColorF[,] output)
         {
             if (Options.PairedMinutiae)
             {
-                PairingMarkers.DrawProbe(output, Logs.Match.Pairing, Logs.Probe.Template);
-                PairingMarkers.DrawCandidate(output, Logs.Match.Pairing, Logs.Candidate.Template, transformation);
+                if (data == Logs.Probe)
+                    PairingMarkers.DrawProbe(output, Logs.Match.Pairing, Logs.Probe.Template);
+                else
+                    PairingMarkers.DrawCandidate(output, Logs.Match.Pairing, Logs.Candidate.Template);
             }
         }
 
-        ColorF[,] BlendImage(ExtractionData data, Palette palette)
+        ColorF[,] BlendImage(ExtractionData data)
         {
             SkeletonData skeletonData = GetSkeletonData(data);
             if (Options.EnableImageDisplay)
             {
                 Options.Layer displayLayerType = Options.DisplayLayer;
                 float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, data, skeletonData));
-                return ScalarColoring.Interpolate(GlobalContrast.GetNormalized(displayLayer), ColorF.Transparent, palette.Image);
+                return ScalarColoring.Interpolate(GlobalContrast.GetNormalized(displayLayer), ColorF.Transparent, ColorF.Black);
             }
             else
                 return GetEmptyLayer(data);
         }
 
-        ColorF[,] BlendDiff(ExtractionData data, Palette palette)
+        ColorF[,] BlendDiff(ExtractionData data)
         {
             if (Options.EnableImageDisplay)
             {
@@ -153,7 +123,7 @@ namespace SourceAFIS.FingerprintAnalysis
                 return GetEmptyLayer(data);
         }
 
-        ColorF[,] BlendMarkers(ExtractionData data, Palette palette)
+        ColorF[,] BlendMarkers(ExtractionData data)
         {
             ColorF[,] output = GetEmptyLayer(data);
             LayerBlocks(Options.Contrast, output, PixelFormat.ToFloat(data.BlockContrast));
@@ -168,11 +138,11 @@ namespace SourceAFIS.FingerprintAnalysis
             }
 
             if (Options.Minutiae)
-                TemplateDrawer.Draw(output, data.MinutiaCollector, palette.Ending, palette.Bifurcation);
+                TemplateDrawer.Draw(output, data.MinutiaCollector, new ColorF(1, 0, 1), new ColorF(0, 1, 1));
             return output;
         }
 
-        ColorF[,] BlendMask(ExtractionData data, Palette palette)
+        ColorF[,] BlendMask(ExtractionData data)
         {
             BinaryMap mask = null;
             if (Options.Mask == Options.MaskType.Segmentation)

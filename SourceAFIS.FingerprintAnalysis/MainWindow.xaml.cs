@@ -29,7 +29,8 @@ namespace SourceAFIS.FingerprintAnalysis
 
         Options Options;
         LogDecoder Collector;
-        Blender Blender = new Blender();
+        Blender LeftBlender = new Blender();
+        Blender RightBlender = new Blender();
 
         public MainWindow()
         {
@@ -39,9 +40,15 @@ namespace SourceAFIS.FingerprintAnalysis
             LoadSettings();
             
             Collector = new LogDecoder(Options);
-            
-            Blender.Options = Options;
-            Blender.Logs = Collector;
+
+            LeftBlender.Options = Options;
+            LeftBlender.Logs = Collector;
+            LeftBlender.ExtractionData = Collector.Probe;
+
+            RightBlender.Options = Options;
+            RightBlender.Logs = Collector;
+            RightBlender.ExtractionData = Collector.Candidate;
+
             UpdateBlender();
             
             Options.PropertyChanged += (source, args) => { OnOptionsChange(args.PropertyName); };
@@ -72,8 +79,10 @@ namespace SourceAFIS.FingerprintAnalysis
 
         void UpdateBlender()
         {
-            Blender.Blend();
-            LeftView.BlenderOutput = Blender.OutputImage;
+            LeftBlender.Blend();
+            LeftView.BlenderOutput = LeftBlender.OutputImage;
+            RightBlender.Blend();
+            RightView.BlenderOutput = RightBlender.OutputImage;
         }
 
         void LoadSettings()
