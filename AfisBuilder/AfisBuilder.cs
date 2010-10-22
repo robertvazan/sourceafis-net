@@ -188,9 +188,11 @@ namespace AfisBuilder
                             orderby nunitRoot
                             select Path.Combine(nunitRoot, "bin", "net-2.0", "nunit-console.exe")).Last();
 
-            Command.Execute(nunit, "/labels", "/nodots", "/exclude=Executable", "SourceAFIS.Tests.dll");
+            Command.Execute(nunit, "/labels", "/nodots", "/exclude=Special,Installer", "SourceAFIS.Tests.dll");
 
+            Command.Execute(nunit, "/labels", "/nodots", "/run=SourceAFIS.Tests.Executable.InstallerRun.Install", "SourceAFIS.Tests.dll");
             Command.Execute(nunit, "/labels", "/nodots", "/run=SourceAFIS.Tests.Executable.Installer", "SourceAFIS.Tests.dll");
+            Command.Execute(nunit, "/labels", "/nodots", "/run=SourceAFIS.Tests.Executable.InstallerRun.Uninstall", "SourceAFIS.Tests.dll");
 
             Directory.SetCurrentDirectory(SolutionFolder);
         }

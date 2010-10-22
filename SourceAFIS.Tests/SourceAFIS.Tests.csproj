@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Executable\Installer.cs" />
+    <Compile Include="Executable\InstallerRun.cs" />
     <Compile Include="Simple\AfisEngineTest.cs" />
     <Compile Include="Simple\FingerprintTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
