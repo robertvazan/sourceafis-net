@@ -78,6 +78,8 @@ namespace SourceAFIS.Tests.Executable
             Assert.That(output.Contains("300 x 300"));
             Assert.That(output.Contains("Similarity score"));
             Assert.That(output.Contains("matches registered person Wilma"));
+
+            File.Delete(Path.Combine(path, "database.dat"));
         }
     }
 }
