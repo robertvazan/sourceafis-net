@@ -23,7 +23,7 @@ namespace SourceAFIS.Tests.Simple
         public void Extract()
         {
             AfisEngine afis = new AfisEngine();
-            Fingerprint fp = new Fingerprint() { AsBitmap = Settings.SomeFingerprint };
+            Fingerprint fp = new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint };
             Assert.IsNull(fp.Template);
             afis.Extract(fp);
             Assert.IsNotNull(fp.Template);
@@ -36,11 +36,11 @@ namespace SourceAFIS.Tests.Simple
         public void Verify()
         {
             AfisEngine afis = new AfisEngine();
-            Person person1 = new Person(new Fingerprint() { AsBitmap = Settings.SomeFingerprint });
+            Person person1 = new Person(new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint });
             afis.Extract(person1.Fingerprints[0]);
-            Person person2 = new Person(new Fingerprint() { AsBitmap = Settings.MatchingFingerprint });
+            Person person2 = new Person(new Fingerprint() { AsBitmapSource = Settings.MatchingFingerprint });
             afis.Extract(person2.Fingerprints[0]);
-            Person person3 = new Person(new Fingerprint() { AsBitmap = Settings.NonMatchingFingerprint });
+            Person person3 = new Person(new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint });
             afis.Extract(person3.Fingerprints[0]);
 
             Assert.That(afis.Verify(person1, person2) > 0);
@@ -61,11 +61,11 @@ namespace SourceAFIS.Tests.Simple
         public void Identify()
         {
             AfisEngine afis = new AfisEngine();
-            Person person1 = new Person(new Fingerprint() { AsBitmap = Settings.SomeFingerprint });
+            Person person1 = new Person(new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint });
             afis.Extract(person1.Fingerprints[0]);
-            Person person2 = new Person(new Fingerprint() { AsBitmap = Settings.MatchingFingerprint });
+            Person person2 = new Person(new Fingerprint() { AsBitmapSource = Settings.MatchingFingerprint });
             afis.Extract(person2.Fingerprints[0]);
-            Person person3 = new Person(new Fingerprint() { AsBitmap = Settings.NonMatchingFingerprint });
+            Person person3 = new Person(new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint });
             afis.Extract(person3.Fingerprints[0]);
 
             Assert.That(afis.Identify(person1, new[] { person2, person3 }) == person2);
@@ -94,7 +94,7 @@ namespace SourceAFIS.Tests.Simple
         public void Dpi()
         {
             AfisEngine afis = new AfisEngine();
-            Person person1 = new Person(new Fingerprint() { AsBitmap = Settings.SomeFingerprint });
+            Person person1 = new Person(new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint });
             Person person2 = person1.Clone();
 
             afis.Extract(person1.Fingerprints[0]);
@@ -113,9 +113,9 @@ namespace SourceAFIS.Tests.Simple
         public void Threshold()
         {
             AfisEngine afis = new AfisEngine();
-            Person person1 = new Person(new Fingerprint() { AsBitmap = Settings.SomeFingerprint });
+            Person person1 = new Person(new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint });
             afis.Extract(person1.Fingerprints[0]);
-            Person person2 = new Person(new Fingerprint() { AsBitmap = Settings.MatchingFingerprint });
+            Person person2 = new Person(new Fingerprint() { AsBitmapSource = Settings.MatchingFingerprint });
             afis.Extract(person2.Fingerprints[0]);
 
             float score = afis.Verify(person1, person2);
@@ -145,9 +145,9 @@ namespace SourceAFIS.Tests.Simple
         {
             AfisEngine afis = new AfisEngine();
             Fingerprint[] fps = new[] {
-                new Fingerprint() { AsBitmap = Settings.SomeFingerprint },
-                new Fingerprint() { AsBitmap = Settings.MatchingFingerprint },
-                new Fingerprint() { AsBitmap = Settings.NonMatchingFingerprint }
+                new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint },
+                new Fingerprint() { AsBitmapSource = Settings.MatchingFingerprint },
+                new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint }
             };
             foreach (Fingerprint fp in fps)
                 afis.Extract(fp);
