@@ -43,7 +43,7 @@ namespace Sample
             Console.WriteLine(" Loading image from {0}...", filename);
             BitmapImage image = new BitmapImage(new Uri(filename, UriKind.RelativeOrAbsolute));
             fp.AsBitmapSource = image;
-            // Above update of fp.AsBitmap initialized also raw image in fp.Image
+            // Above update of fp.AsBitmapSource initialized also raw image in fp.Image
             // Check raw image dimensions, Y axis is first, X axis is second
             Console.WriteLine(" Image size = {0} x {1} (width x height)", fp.Image.GetLength(1), fp.Image.GetLength(0));
 
