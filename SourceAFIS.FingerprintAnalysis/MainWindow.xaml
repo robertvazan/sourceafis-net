@@ -68,14 +68,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <DockPanel Name="LeftControls">
-                <Button Content="Open" Height="23" Name="LeftOpen" Margin="2" DockPanel.Dock="Right" Click="LeftOpen_Click" />
-                <TextBox Height="23" Name="LeftPath" Margin="2" TextAlignment="Right" Text="{Binding Path=Probe.Path}" IsReadOnly="True" />
-            </DockPanel>
-            <DockPanel Grid.Column="1" Name="RightControls">
-                <Button Content="Open" Height="23" Name="RightOpen" DockPanel.Dock="Right" Margin="2" Click="RightOpen_Click" />
-                <TextBox Height="23" Name="RightPath" Margin="2" TextAlignment="Right" Text="{Binding Path=Candidate.Path}" IsReadOnly="True" />
-            </DockPanel>
+            <local:FilePicker FpOptions="{Binding Path=Probe}" />
+            <local:FilePicker Grid.Column="1" FpOptions="{Binding Path=Candidate}" />
             <Image Grid.ColumnSpan="2" Grid.Row="1" Name="LeftImage" Stretch="Uniform" />
         </Grid>
     </DockPanel>
