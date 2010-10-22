@@ -70,7 +70,8 @@
             </Grid.RowDefinitions>
             <local:FilePicker FpOptions="{Binding Path=Probe}" />
             <local:FilePicker Grid.Column="1" FpOptions="{Binding Path=Candidate}" />
-            <Image Grid.ColumnSpan="2" Grid.Row="1" Name="LeftImage" Stretch="Uniform" />
+            <local:FingerView Grid.Row="1" x:Name="LeftView" />
+            <local:FingerView Grid.Row="1" Grid.Column="1" x:Name="RightView" />
         </Grid>
     </DockPanel>
 </Window>
