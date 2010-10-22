@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.Drawing;
+using System.Windows.Media.Imaging;
 
 namespace SourceAFIS.Tests
 {
@@ -18,8 +18,8 @@ namespace SourceAFIS.Tests
         public static string MatchingFingerprintPath = Path.Combine(SomeDatabase, "101_2.tif");
         public static string NonMatchingFingerprintPath = Path.Combine(SomeDatabase, "102_1.tif");
 
-        public static Bitmap SomeFingerprint = new Bitmap(Bitmap.FromFile(Settings.SomeFingerprintPath));
-        public static Bitmap MatchingFingerprint = new Bitmap(Bitmap.FromFile(Settings.MatchingFingerprintPath));
-        public static Bitmap NonMatchingFingerprint = new Bitmap(Bitmap.FromFile(Settings.NonMatchingFingerprintPath));
+        public static BitmapImage SomeFingerprint = new BitmapImage(new Uri(Settings.SomeFingerprintPath, UriKind.RelativeOrAbsolute));
+        public static BitmapImage MatchingFingerprint = new BitmapImage(new Uri(Settings.MatchingFingerprintPath, UriKind.RelativeOrAbsolute));
+        public static BitmapImage NonMatchingFingerprint = new BitmapImage(new Uri(Settings.NonMatchingFingerprintPath, UriKind.RelativeOrAbsolute));
     }
 }
