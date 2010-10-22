@@ -25,7 +25,8 @@ namespace FvcEnroll
                 AfisEngine afis = new AfisEngine();
                 Fingerprint fp = new Fingerprint();
                 fp.AsBitmapSource = new BitmapImage(new Uri(args[0], UriKind.RelativeOrAbsolute));
-                afis.Extract(fp);
+                Person person = new Person(fp);
+                afis.Extract(person);
                 File.WriteAllBytes(args[1], fp.Template);
                 WriteLog(args, "OK");
             }
