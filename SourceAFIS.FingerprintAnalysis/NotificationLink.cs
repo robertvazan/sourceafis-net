@@ -15,7 +15,7 @@ namespace SourceAFIS.FingerprintAnalysis
 
         static List<NotificationLink> Registry = new List<NotificationLink>();
 
-        public NotificationLink(INotifyPropertyChanged source, string sourceProperty, LogData target, string targetProperty)
+        public NotificationLink(INotifyPropertyChanged source, string sourceProperty, IPushNotification target, string targetProperty)
         {
             Source = source;
             SourceProperty = sourceProperty;
