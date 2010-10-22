@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using System.IO;
 using NUnit.Framework;
 
@@ -59,6 +60,24 @@ namespace SourceAFIS.Tests.Executable
             Assert.That(File.Exists(Path.Combine(start, "Program Files.lnk")));
             Assert.That(File.Exists(Path.Combine(start, "Project Homepage.lnk")));
             Assert.That(File.Exists(Path.Combine(start, "Fingerprint Analysis.lnk")));
+        }
+
+        [Test]
+        public void SampleRun()
+        {
+            string path = Path.Combine(ProgramFiles, "Sample", "bin", "Debug");
+            Process process = new Process();
+            process.StartInfo.FileName = Path.Combine(path, "Sample.exe");
+            process.StartInfo.WorkingDirectory = path;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.Start();
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+
+            Assert.That(output.Contains("300 x 300"));
+            Assert.That(output.Contains("Similarity score"));
+            Assert.That(output.Contains("matches registered person Wilma"));
         }
     }
 }
