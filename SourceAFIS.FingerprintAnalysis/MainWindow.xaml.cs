@@ -73,7 +73,7 @@ namespace SourceAFIS.FingerprintAnalysis
         void UpdateBlender()
         {
             Blender.Blend();
-            LeftImage.Source = Blender.OutputImage;
+            LeftView.BlenderOutput = Blender.OutputImage;
         }
 
         void LoadSettings()
