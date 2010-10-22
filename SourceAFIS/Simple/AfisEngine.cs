@@ -168,14 +168,15 @@ namespace SourceAFIS.Simple
         }
 
         /// <summary>
-        /// Extract fingerprint template to be used during matching.
+        /// Extract fingerprint template(s) to be used during matching.
         /// </summary>
-        /// <param name="fp">Fingerprint object to use for template extraction.</param>
+        /// <param name="person">Person object to use for template extraction.</param>
         /// <remarks>
         /// <para>
-        /// <see cref="Extract"/> method takes <see cref="Fingerprint.Image"/> from <paramref name="fp"/> and constructs
-        /// fingerprint template that it stores in <paramref name="fp"/>'s <see cref="Fingerprint.Template"/>. This step must
-        /// be performed before the <see cref="Fingerprint"/> is used in <see cref="Verify"/> or <see cref="Identify"/> method,
+        /// <see cref="Extract"/> method takes <see cref="Fingerprint.Image"/> from every <see cref="Fingerprint"/>
+        /// in <paramref name="person"/> and constructs fingerprint template that it stores in
+        /// <see cref="Fingerprint.Template"/> property of the respective <see cref="Fingerprint"/>. This step must
+        /// be performed before the <see cref="Person"/> is used in <see cref="Verify"/> or <see cref="Identify"/> method,
         /// because matching is done on fingerprint templates, not on fingerprint images.
         /// </para>
         /// <para>
@@ -185,12 +186,15 @@ namespace SourceAFIS.Simple
         /// </para>
         /// </remarks>
         /// <seealso cref="Dpi"/>
-        public void Extract(Fingerprint fp)
+        public void Extract(Person person)
         {
             lock (this)
             {
-                TemplateBuilder builder = Extractor.Extract(fp.Image, Dpi);
-                fp.Decoded = new SerializedFormat().Export(builder);
+                foreach (Fingerprint fp in person.Fingerprints)
+                {
+                    TemplateBuilder builder = Extractor.Extract(fp.Image, Dpi);
+                    fp.Decoded = new SerializedFormat().Export(builder);
+                }
             }
         }
 
@@ -207,8 +211,8 @@ namespace SourceAFIS.Simple
         /// the two <see cref="Person"/>s. If this score falls below <see cref="Threshold"/>, <see cref="Verify"/> method returns zero.
         /// </para>
         /// <para>
-        /// <see cref="Fingerprint"/>s passed to this method must have valid <see cref="Fingerprint.Template"/>, i.e. they must
-        /// have passed through <see cref="Extract"/> method.
+        /// <see cref="Person"/>s passed to this method must have valid <see cref="Fingerprint.Template"/>
+        /// for every <see cref="Fingerprint"/>, i.e. they must have passed through <see cref="Extract"/> method.
         /// </para>
         /// </remarks>
         /// <seealso cref="Threshold"/>
@@ -253,8 +257,8 @@ namespace SourceAFIS.Simple
         /// If there is no candidate with score at or above <see cref="Threshold"/>, <see cref="Identify"/> returns <see langword="null"/>.
         /// </para>
         /// <para>
-        /// <see cref="Fingerprint"/>s passed to this method must have valid <see cref="Fingerprint.Template"/>, i.e. they must
-        /// have passed through <see cref="Extract"/> method.
+        /// <see cref="Person"/>s passed to this method must have valid <see cref="Fingerprint.Template"/>
+        /// for every <see cref="Fingerprint"/>, i.e. they must have passed through <see cref="Extract"/> method.
         /// </para>
         /// </remarks>
         /// <seealso cref="Threshold"/>

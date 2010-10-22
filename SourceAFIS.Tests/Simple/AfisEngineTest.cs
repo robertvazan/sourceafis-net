@@ -25,10 +25,11 @@ namespace SourceAFIS.Tests.Simple
             AfisEngine afis = new AfisEngine();
             Fingerprint fp = new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint };
             Assert.IsNull(fp.Template);
-            afis.Extract(fp);
+            afis.Extract(new Person(fp));
             Assert.IsNotNull(fp.Template);
 
-            Assert.Catch(() => { afis.Extract(new Fingerprint()); });
+            Assert.Catch(() => { afis.Extract(new Person(new Fingerprint())); });
+            afis.Extract(new Person());
             Assert.Catch(() => { afis.Extract(null); });
         }
 
@@ -37,11 +38,11 @@ namespace SourceAFIS.Tests.Simple
         {
             AfisEngine afis = new AfisEngine();
             Person person1 = new Person(new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint });
-            afis.Extract(person1.Fingerprints[0]);
+            afis.Extract(person1);
             Person person2 = new Person(new Fingerprint() { AsBitmapSource = Settings.MatchingFingerprint });
-            afis.Extract(person2.Fingerprints[0]);
+            afis.Extract(person2);
             Person person3 = new Person(new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint });
-            afis.Extract(person3.Fingerprints[0]);
+            afis.Extract(person3);
 
             Assert.That(afis.Verify(person1, person2) > 0);
             Assert.That(afis.Verify(person1, person3) == 0);
@@ -62,11 +63,11 @@ namespace SourceAFIS.Tests.Simple
         {
             AfisEngine afis = new AfisEngine();
             Person person1 = new Person(new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint });
-            afis.Extract(person1.Fingerprints[0]);
+            afis.Extract(person1);
             Person person2 = new Person(new Fingerprint() { AsBitmapSource = Settings.MatchingFingerprint });
-            afis.Extract(person2.Fingerprints[0]);
+            afis.Extract(person2);
             Person person3 = new Person(new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint });
-            afis.Extract(person3.Fingerprints[0]);
+            afis.Extract(person3);
 
             Assert.That(afis.Identify(person1, new[] { person2, person3 }) == person2);
             Assert.That(afis.Identify(person1, new[] { person3, person2 }) == person2);
@@ -97,9 +98,9 @@ namespace SourceAFIS.Tests.Simple
             Person person1 = new Person(new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint });
             Person person2 = person1.Clone();
 
-            afis.Extract(person1.Fingerprints[0]);
+            afis.Extract(person1);
             afis.Dpi = 750;
-            afis.Extract(person2.Fingerprints[0]);
+            afis.Extract(person2);
             Assert.AreNotEqual(person1.Fingerprints[0].Template, person2.Fingerprints[0].Template);
             Assert.That(afis.Verify(person1, person2) == 0);
 
@@ -114,9 +115,9 @@ namespace SourceAFIS.Tests.Simple
         {
             AfisEngine afis = new AfisEngine();
             Person person1 = new Person(new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint });
-            afis.Extract(person1.Fingerprints[0]);
+            afis.Extract(person1);
             Person person2 = new Person(new Fingerprint() { AsBitmapSource = Settings.MatchingFingerprint });
-            afis.Extract(person2.Fingerprints[0]);
+            afis.Extract(person2);
 
             float score = afis.Verify(person1, person2);
             Assert.That(score > 0);
@@ -150,7 +151,7 @@ namespace SourceAFIS.Tests.Simple
                 new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint }
             };
             foreach (Fingerprint fp in fps)
-                afis.Extract(fp);
+                afis.Extract(new Person(fp));
 
             Person person1 = new Person(fps[0]);
             Person person2 = new Person(fps[1], fps[2]);

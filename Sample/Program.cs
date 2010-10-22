@@ -47,17 +47,17 @@ namespace Sample
             // Check raw image dimensions, Y axis is first, X axis is second
             Console.WriteLine(" Image size = {0} x {1} (width x height)", fp.Image.GetLength(1), fp.Image.GetLength(0));
 
-            // Execute extraction in order to initialize fp.Template
-            Console.WriteLine(" Extracting template...");
-            Afis.Extract(fp);
-            // Check template size
-            Console.WriteLine(" Template size = {0} bytes", fp.Template.Length);
-
             // Initialize empty person object and set its properties
             MyPerson person = new MyPerson();
             person.Name = name;
             // Add fingerprint to the person
             person.Fingerprints.Add(fp);
+
+            // Execute extraction in order to initialize fp.Template
+            Console.WriteLine(" Extracting template...");
+            Afis.Extract(person);
+            // Check template size
+            Console.WriteLine(" Template size = {0} bytes", fp.Template.Length);
 
             return person;
         }
