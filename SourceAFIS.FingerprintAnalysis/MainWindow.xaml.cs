@@ -44,10 +44,12 @@ namespace SourceAFIS.FingerprintAnalysis
             LeftBlender.Options = Options;
             LeftBlender.Logs = Collector;
             LeftBlender.ExtractionData = Collector.Probe;
+            LeftBlender.MatchSide = Collector.Match.Probe;
 
             RightBlender.Options = Options;
             RightBlender.Logs = Collector;
             RightBlender.ExtractionData = Collector.Candidate;
+            RightBlender.MatchSide = Collector.Match.Candidate;
 
             UpdateBlender();
             

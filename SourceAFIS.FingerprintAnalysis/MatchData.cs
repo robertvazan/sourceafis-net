@@ -8,6 +8,15 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     public class MatchData : LogData
     {
+        public MatchData(LogDecoder logs)
+        {
+            Probe = new ProbeMatchData(logs.Probe, this);
+            Candidate = new CandidateMatchData(logs.Candidate, this);
+        }
+
+        public ProbeMatchData Probe;
+        public CandidateMatchData Candidate;
+
         public float Score { get { return (float)GetLog("Score", "MinutiaMatcher.Score"); } }
 
         public bool AnyMatch { get { Link("Score", "AnyMatch"); return Score > 0; } }

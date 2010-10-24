@@ -9,7 +9,7 @@ namespace SourceAFIS.FingerprintAnalysis
     {
         public ExtractionData Probe = new ExtractionData();
         public ExtractionData Candidate = new ExtractionData();
-        public MatchData Match = new MatchData();
+        public MatchData Match;
 
         public ExtractionCollector ProbeLog { get; set; }
         public ExtractionCollector CandidateLog { get; set; }
@@ -17,6 +17,8 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public LogDecoder(Options options)
         {
+            Match = new MatchData(this);
+
             ProbeLog = new ExtractionCollector(options.Probe);
             Probe.Collector = ProbeLog;
 
