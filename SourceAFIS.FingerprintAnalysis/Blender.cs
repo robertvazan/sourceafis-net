@@ -12,6 +12,7 @@ namespace SourceAFIS.FingerprintAnalysis
     {
         public LogDecoder Logs;
         public ExtractionData ExtractionData;
+        public MatchSideData MatchSide;
 
         public Options Options;
 
@@ -47,20 +48,15 @@ namespace SourceAFIS.FingerprintAnalysis
                 foreach (BlendLayer layer in layers)
                     AlphaLayering.Layer(output, layer(ExtractionData));
             }
-            BlendMatch(ExtractionData, output);
+            BlendMatch(output);
 
             OutputImage = ImageSerialization.GetBitmapSource(PixelFormat.ToColorB(output));
         }
 
-        void BlendMatch(ExtractionData data, ColorF[,] output)
+        void BlendMatch(ColorF[,] output)
         {
             if (Options.PairedMinutiae)
-            {
-                if (data == Logs.Probe)
-                    PairingMarkers.DrawProbe(output, Logs.Match.Pairing, Logs.Probe.Template);
-                else
-                    PairingMarkers.DrawCandidate(output, Logs.Match.Pairing, Logs.Candidate.Template);
-            }
+                PairingMarkers.Draw(output, MatchSide.PairedPoints);
         }
 
         ColorF[,] BlendImage(ExtractionData data)
