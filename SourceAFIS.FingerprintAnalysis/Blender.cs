@@ -55,7 +55,7 @@ namespace SourceAFIS.FingerprintAnalysis
 
         void BlendMatch(ColorF[,] output)
         {
-            if (Options.PairedMinutiae)
+            if (Options.PairedMinutiae && Logs.Match.PerformedMatch)
                 PairingMarkers.Draw(output, MatchSide.PairedPoints);
         }
 
