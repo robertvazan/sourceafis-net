@@ -15,14 +15,14 @@ namespace SourceAFIS.FingerprintAnalysis
             Match = match;
         }
 
-        public override IEnumerable<int> PairedMinutiae
+        public override List<int> PairedMinutiae
         {
             get
             {
                 Link(Match, "Pairing", "PairedMinutiae");
                 MinutiaPairing pairing = Match.Pairing;
-                return from index in Enumerable.Range(0, pairing.Count)
-                       select pairing.GetPair(index).Probe;
+                return (from index in Enumerable.Range(0, pairing.Count)
+                        select pairing.GetPair(index).Probe).ToList();
             }
         }
     }
