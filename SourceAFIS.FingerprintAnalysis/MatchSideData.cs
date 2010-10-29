@@ -12,9 +12,9 @@ namespace SourceAFIS.FingerprintAnalysis
         protected MatchData Match;
         protected ExtractionData ExtractionData;
 
-        public abstract IEnumerable<int> PairedMinutiae { get; }
+        public abstract List<int> PairedMinutiae { get; }
 
-        public IEnumerable<Point> PairedPoints
+        public List<Point> PairedPoints
         {
             get
             {
@@ -22,8 +22,8 @@ namespace SourceAFIS.FingerprintAnalysis
                 Template template = ExtractionData.Template;
                 Link("PairedMinutiae", "PairedPoints");
                 var minutiae = PairedMinutiae;
-                return from index in minutiae
-                       select template.Minutiae[index].Position.ToPoint();
+                return (from index in minutiae
+                        select template.Minutiae[index].Position.ToPoint()).ToList();
             }
         }
     }
