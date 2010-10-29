@@ -17,6 +17,8 @@ namespace SourceAFIS.FingerprintAnalysis
         public ProbeMatchData Probe;
         public CandidateMatchData Candidate;
 
+        public bool PerformedMatch { get { return GetLog("PerformedMatch", "MinutiaMatcher.Score") != null; } }
+
         public float Score { get { return (float)GetLog("Score", "MinutiaMatcher.Score"); } }
 
         public bool AnyMatch { get { Link("Score", "AnyMatch"); return Score > 0; } }
