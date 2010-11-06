@@ -13,8 +13,10 @@ namespace SourceAFIS.Extraction.Templates
     {
         // Template format (all numbers are big-endian):
         // 4B magic
-        // 1B version (current = 1)
+        // 1B version (current = 2)
         // 2B total length (including magic)
+        // 2B width (since version 2)
+        // 2B height (since version 2)
         // 2B minutia count
         // N*6B minutia records
         //      2B position X
@@ -34,11 +36,17 @@ namespace SourceAFIS.Extraction.Templates
                 // 4B magic
                 writer.Write(Magic);
 
-                // 1B version (current = 1)
-                writer.Write((byte)1);
+                // 1B version (current = 2)
+                writer.Write((byte)2);
 
                 // 2B total length (including magic), will be filled later
                 writer.Write((short)0);
+
+                // 2B width (since version 2)
+                writer.Write(IPAddress.HostToNetworkOrder((short)builder.Width));
+
+                // 2B height (since version 2)
+                writer.Write(IPAddress.HostToNetworkOrder((short)builder.Height));
 
                 // 2B minutia count
                 writer.Write(IPAddress.HostToNetworkOrder((short)builder.Minutiae.Count));
@@ -80,11 +88,21 @@ namespace SourceAFIS.Extraction.Templates
             for (int i = 0; i < Magic.Length; ++i)
                 AssertException.Check(reader.ReadByte() == Magic[i]);
 
-            // 1B version (current = 1)
-            AssertException.Check(reader.ReadByte() == 1);
+            // 1B version (current = 2)
+            byte version = reader.ReadByte();
+            AssertException.Check(version >= 1 && version <= 2);
 
             // 2B total length (including magic)
             reader.ReadInt16();
+
+            if (version >= 2)
+            {
+                // 2B width (since version 2)
+                builder.Width = IPAddress.NetworkToHostOrder(reader.ReadInt16());
+
+                // 2B height (since version 2)
+                builder.Height = IPAddress.NetworkToHostOrder(reader.ReadInt16());
+            }
 
             // 2B minutia count
             int minutiaCount = IPAddress.NetworkToHostOrder(reader.ReadInt16());

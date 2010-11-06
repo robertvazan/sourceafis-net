@@ -20,6 +20,8 @@ namespace SourceAFIS.Extraction.Templates
             public MinutiaType Type;
         }
 
+        public int Width;
+        public int Height;
         public List<Minutia> Minutiae = new List<Minutia>();
     }
 }

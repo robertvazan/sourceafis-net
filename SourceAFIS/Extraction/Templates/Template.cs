@@ -45,10 +45,14 @@ namespace SourceAFIS.Extraction.Templates
             }
         }
 
+        public readonly int Width;
+        public readonly int Height;
         public readonly Minutia[] Minutiae;
 
         public Template(TemplateBuilder builder)
         {
+            Width = builder.Width;
+            Height = builder.Height;
             Minutiae = new Minutia[builder.Minutiae.Count];
             for (int i = 0; i < builder.Minutiae.Count; ++i)
                 Minutiae[i] = new Minutia(builder.Minutiae[i]);
@@ -57,6 +61,8 @@ namespace SourceAFIS.Extraction.Templates
         public TemplateBuilder ToTemplateBuilder()
         {
             TemplateBuilder builder = new TemplateBuilder();
+            builder.Width = Width;
+            builder.Height = Height;
             foreach (Minutia minutia in Minutiae)
                 builder.Minutiae.Add(minutia.ToBuilderMinutia());
             return builder;
