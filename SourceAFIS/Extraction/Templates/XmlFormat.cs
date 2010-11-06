@@ -14,7 +14,9 @@ namespace SourceAFIS.Extraction.Templates
         public override XElement Export(TemplateBuilder builder)
         {
             return new XElement("FingerprintTemplate",
-                new XAttribute("Version", "1"),
+                new XAttribute("Version", "2"),
+                new XAttribute("Width", builder.Width),
+                new XAttribute("Height", builder.Height),
                 from minutia in builder.Minutiae
                 select new XElement("Minutia",
                     new XAttribute("X", minutia.Position.X),
@@ -25,10 +27,13 @@ namespace SourceAFIS.Extraction.Templates
 
         public override TemplateBuilder Import(XElement template)
         {
-            if ((int)template.Attribute("Version") != 1)
+            int version = (int)template.Attribute("Version");
+            if (version < 1 || version > 2)
                 throw new ApplicationException("Unknown template version.");
             return new TemplateBuilder()
             {
+                Width = version >= 2 ? (int)template.Attribute("Width") : 0,
+                Height = version >= 2 ? (int)template.Attribute("Height") : 0,
                 Minutiae = (from minutia in template.Elements("Minutia")
                             select new TemplateBuilder.Minutia()
                             {

@@ -110,6 +110,8 @@ namespace SourceAFIS.Extraction
                     () => { valleys = ProcessSkeleton("Valleys", inverted, innerMask); });
 
                 template = new TemplateBuilder();
+                template.Width = invertedImage.GetLength(1);
+                template.Height = invertedImage.GetLength(0);
                 MinutiaCollector.Collect(ridges, TemplateBuilder.MinutiaType.Ending, template);
                 MinutiaCollector.Collect(valleys, TemplateBuilder.MinutiaType.Bifurcation, template);
             });
