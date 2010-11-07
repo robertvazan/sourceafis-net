@@ -28,6 +28,10 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public byte[,] InputImage { get { Link(ExtractionCollector, "InputImage", "InputImage"); return ExtractionCollector.InputImage; } }
 
+        public double Width { get { Link("InputImage", "Width"); byte[,] image = InputImage; return image != null ? image.GetLength(1) : 480; } }
+
+        public double Height { get { Link("InputImage", "Height"); byte[,] image = InputImage; return image != null ? image.GetLength(0) : 640; } }
+
         public BlockMap Blocks { get { return (BlockMap)GetLog("Blocks", "BlockMap"); } }
 
         public byte[,] BlockContrast { get { return (byte[,])GetLog("BlockContrast", "Mask.Contrast"); } }

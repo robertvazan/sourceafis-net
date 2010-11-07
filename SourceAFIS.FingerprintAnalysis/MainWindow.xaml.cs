@@ -38,8 +38,9 @@ namespace SourceAFIS.FingerprintAnalysis
 
             Options = FindResource("OptionsData") as Options;
             LoadSettings();
-            
-            Collector = new LogDecoder(Options);
+
+            Collector = FindResource("Logs") as LogDecoder;
+            Collector.Initialize(Options);
 
             LeftBlender.Options = Options;
             LeftBlender.Logs = Collector;

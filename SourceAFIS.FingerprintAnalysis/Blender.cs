@@ -48,15 +48,8 @@ namespace SourceAFIS.FingerprintAnalysis
                 foreach (BlendLayer layer in layers)
                     AlphaLayering.Layer(output, layer(ExtractionData));
             }
-            BlendMatch(output);
 
             OutputImage = ImageSerialization.GetBitmapSource(PixelFormat.ToColorB(output));
-        }
-
-        void BlendMatch(ColorF[,] output)
-        {
-            if (Options.PairedMinutiae && Logs.Match.PerformedMatch)
-                PairingMarkers.Draw(output, MatchSide.PairedPoints);
         }
 
         ColorF[,] BlendImage(ExtractionData data)

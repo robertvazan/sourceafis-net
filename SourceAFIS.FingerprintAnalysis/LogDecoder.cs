@@ -5,18 +5,29 @@ using System.ComponentModel;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    public class LogDecoder
+    public class LogDecoder : INotifyPropertyChanged
     {
-        public ExtractionData Probe = new ExtractionData();
-        public ExtractionData Candidate = new ExtractionData();
-        public MatchData Match;
+        public ExtractionData Probe { get; private set; }
+        public ExtractionData Candidate { get; private set; }
+        public MatchData Match { get; private set; }
 
-        public ExtractionCollector ProbeLog { get; set; }
-        public ExtractionCollector CandidateLog { get; set; }
-        public MatchCollector MatchLog { get; set; }
+        ExtractionCollector ProbeLog;
+        ExtractionCollector CandidateLog;
+        public MatchCollector MatchLog;
 
-        public LogDecoder(Options options)
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        void NotifyPropertyChanged(string name)
         {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
+        }
+
+        public void Initialize(Options options)
+        {
+            Probe = new ExtractionData();
+            Candidate = new ExtractionData();
+
             Match = new MatchData(this);
 
             ProbeLog = new ExtractionCollector(options.Probe);
@@ -27,6 +38,10 @@ namespace SourceAFIS.FingerprintAnalysis
             
             MatchLog = new MatchCollector(Probe, Candidate);
             Match.Collector = MatchLog;
+
+            NotifyPropertyChanged("Probe");
+            NotifyPropertyChanged("Candidate");
+            NotifyPropertyChanged("Match");
         }
     }
 }

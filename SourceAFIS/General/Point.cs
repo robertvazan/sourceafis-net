@@ -36,5 +36,10 @@ namespace SourceAFIS.General
         {
             return new Point(left.X - right.Width, left.Y - right.Height);
         }
+
+        public static implicit operator System.Windows.Point(Point point)
+        {
+            return new System.Windows.Point(point.X, point.Y);
+        }
     }
 }
