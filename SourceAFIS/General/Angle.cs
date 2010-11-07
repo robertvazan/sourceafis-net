@@ -70,6 +70,11 @@ namespace SourceAFIS.General
             return (byte)((degrees * 256 + 180) / 360);
         }
 
+        public static int ToDegrees(byte angle)
+        {
+            return (angle * 360 + 128) / 256;
+        }
+
         public static float Atan(double x, double y)
         {
             double result = Math.Atan2(y, x);
