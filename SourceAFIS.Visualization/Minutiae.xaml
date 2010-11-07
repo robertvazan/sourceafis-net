@@ -7,10 +7,14 @@
              d:DesignHeight="300" d:DesignWidth="300" Name="MinutiaeControl">
     <UserControl.Resources>
         <Style x:Key="LineStyle" TargetType="Line">
-            <Setter Property="Stroke" Value="Red"/>
+            <Setter Property="Stroke" Value="Cyan"/>
             <Setter Property="StrokeStartLineCap" Value="Round"/>
             <Setter Property="StrokeEndLineCap" Value="Round"/>
             <Setter Property="StrokeThickness" Value="1.5"/>
+        </Style>
+        <Style x:Key="EllipseStyle" TargetType="Ellipse">
+            <Setter Property="Stroke" Value="Cyan"/>
+            <Setter Property="Fill" Value="Cyan"/>
         </Style>
     </UserControl.Resources>
     <Canvas DataContext="{Binding ElementName=MinutiaeControl}">
@@ -23,7 +27,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Canvas>
-                        <Ellipse Canvas.Left="-2.5" Canvas.Top="-2.5" Width="5" Height="5" Fill="Red" Stroke="Red" />
+                        <Ellipse Canvas.Left="-2.5" Canvas.Top="-2.5" Width="5" Height="5" Style="{StaticResource EllipseStyle}" />
                         <Line X1="0" Y1="0" X2="15" Y2="0" Style="{StaticResource LineStyle}" />
                         <Line X1="15" Y1="0" X2="11" Y2="4" Style="{StaticResource LineStyle}" />
                         <Line X1="15" Y1="0" X2="11" Y2="-4" Style="{StaticResource LineStyle}" />
@@ -49,7 +53,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Canvas>
-                        <Ellipse Canvas.Left="-2.5" Canvas.Top="-2.5" Width="5" Height="5" Fill="Red" Stroke="Red" />
+                        <Ellipse Canvas.Left="-2.5" Canvas.Top="-2.5" Width="5" Height="5" Style="{StaticResource EllipseStyle}" />
                         <Line X1="0" Y1="0" X2="15" Y2="0" Style="{StaticResource LineStyle}" />
                         <Line X1="15" Y1="0" X2="19" Y2="4" Style="{StaticResource LineStyle}" />
                         <Line X1="15" Y1="0" X2="19" Y2="-4" Style="{StaticResource LineStyle}" />
