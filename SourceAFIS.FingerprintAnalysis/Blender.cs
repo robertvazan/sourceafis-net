@@ -126,8 +126,6 @@ namespace SourceAFIS.FingerprintAnalysis
                 AlphaLayering.Layer(output, ScalarColoring.Mask(markers, ColorF.Transparent, ColorF.Red));
             }
 
-            if (Options.Minutiae)
-                TemplateDrawer.Draw(output, data.MinutiaCollector, new ColorF(1, 0, 1), new ColorF(0, 1, 1));
             return output;
         }
 

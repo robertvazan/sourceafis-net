@@ -71,12 +71,14 @@
       <DependentUpon>MatchedMinutiae.xaml</DependentUpon>
     </Compile>
     <Compile Include="MatchSide.cs" />
+    <Compile Include="Minutiae.xaml.cs">
+      <DependentUpon>Minutiae.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OrientationMarkers.cs" />
     <Compile Include="PixelFormat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScalarColoring.cs" />
     <Compile Include="SkeletonDrawer.cs" />
-    <Compile Include="TemplateDrawer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="KeyPair.snk" />
@@ -89,6 +91,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="MatchedMinutiae.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Minutiae.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
