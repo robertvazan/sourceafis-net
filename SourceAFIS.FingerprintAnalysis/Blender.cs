@@ -120,12 +120,6 @@ namespace SourceAFIS.FingerprintAnalysis
             LayerMask(Options.RelativeContrast, output, data.RelativeContrast, TransparentRed);
             LayerMask(Options.LowContrastMajority, output, data.LowContrastMajority, TransparentRed);
 
-            if (Options.Orientation)
-            {
-                BinaryMap markers = OrientationMarkers.Draw(data.Orientation, data.Blocks, data.SegmentationMask);
-                AlphaLayering.Layer(output, ScalarColoring.Mask(markers, ColorF.Transparent, ColorF.Red));
-            }
-
             return output;
         }
 

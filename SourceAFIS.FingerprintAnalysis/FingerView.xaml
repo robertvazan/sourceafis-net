@@ -12,6 +12,9 @@
     <Viewbox DataContext="{Binding ElementName=FingerViewControl}">
         <Canvas Width="{Binding ExtractionData.Width}" Height="{Binding ExtractionData.Height}" ClipToBounds="True">
             <Image Source="{Binding BlenderOutput}" />
+            <v:RidgeOrientation Blocks="{Binding ExtractionData.Blocks}" Mask="{Binding ExtractionData.SegmentationMask}"
+                                OrientationMap="{Binding ExtractionData.Orientation}"
+                                Visibility="{Binding Options.Orientation, Converter={StaticResource BooleanToVisibility}}"/>
             <v:Minutiae FpTemplate="{Binding ExtractionData.MinutiaCollector}"
                         Visibility="{Binding Options.Minutiae, Converter={StaticResource BooleanToVisibility}}"/>
             <v:MatchedMinutiae Pairing="{Binding MatchData.Pairing}" FpTemplate="{Binding ExtractionData.MinutiaCollector}" MatchSide="{Binding MatchSide}"
