@@ -28,11 +28,11 @@ namespace SourceAFIS.Visualization
         }
 
         public static readonly DependencyProperty FpTemplateProperty
-            = DependencyProperty.Register("FpTemplate", typeof(Template), typeof(MatchedMinutiae),
+            = DependencyProperty.Register("FpTemplate", typeof(TemplateBuilder), typeof(MatchedMinutiae),
             new PropertyMetadata((self, args) => { (self as MatchedMinutiae).UpdatePositions(); }));
-        public Template FpTemplate
+        public TemplateBuilder FpTemplate
         {
-            get { return (Template)GetValue(FpTemplateProperty); }
+            get { return (TemplateBuilder)GetValue(FpTemplateProperty); }
             set { SetValue(FpTemplateProperty, value); }
         }
 
@@ -58,7 +58,7 @@ namespace SourceAFIS.Visualization
                            let pair = Pairing.GetPair(index)
                            select MatchSide == MatchSide.Probe ? pair.Probe : pair.Candidate;
             var points = from minutia in minutiae
-                         where FpTemplate != null && minutia < FpTemplate.Minutiae.Length
+                         where FpTemplate != null && minutia < FpTemplate.Minutiae.Count
                          let position = FpTemplate.Minutiae[minutia].Position
                          select new Point(position.X - 5, FpTemplate.Height - 1 - position.Y - 5);
             SetValue(PositionsProperty, points.ToList());

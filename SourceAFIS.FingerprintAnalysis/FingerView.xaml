@@ -12,7 +12,7 @@
     <Viewbox DataContext="{Binding ElementName=FingerViewControl}">
         <Canvas Width="{Binding ExtractionData.Width}" Height="{Binding ExtractionData.Height}" ClipToBounds="True">
             <Image Source="{Binding BlenderOutput}" />
-            <v:MatchedMinutiae Pairing="{Binding MatchData.Pairing}" FpTemplate="{Binding ExtractionData.Template}" MatchSide="{Binding MatchSide}"
+            <v:MatchedMinutiae Pairing="{Binding MatchData.Pairing}" FpTemplate="{Binding ExtractionData.MinutiaCollector}" MatchSide="{Binding MatchSide}"
                                Visibility="{Binding Options.PairedMinutiae, Converter={StaticResource BooleanToVisibility}}" />
         </Canvas>
     </Viewbox>
