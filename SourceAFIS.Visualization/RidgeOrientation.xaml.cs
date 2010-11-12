@@ -63,18 +63,23 @@ namespace SourceAFIS.Visualization
 
         void UpdateLines()
         {
-            var lines = from block in Blocks != null ? Blocks.AllBlocks : new RectangleC()
-                        where Mask != null && Mask.GetBit(block)
-                        where OrientationMap != null
-                        let direction = Angle.ToVector(Angle.ToDirection(OrientationMap[block.Y, block.X]))
-                        select new LineInfo()
-                        {
-                            X = Blocks.BlockCenters[block].X,
-                            Y = Blocks.PixelCount.Height - 1 - Blocks.BlockCenters[block].Y,
-                            X1 = direction.X * Blocks.BlockAreas[block].Width * 0.5,
-                            Y1 = -direction.Y * Blocks.BlockAreas[block].Height * 0.5
-                        };
-            SetValue(LinesProperty, lines.ToList());
+            if (Blocks != null && Mask != null && OrientationMap != null && Mask.Size == Blocks.BlockCount
+                && OrientationMap.GetLength(0) == Mask.Height && OrientationMap.GetLength(1) == Mask.Width)
+            {
+                var lines = from block in Blocks != null ? Blocks.AllBlocks : new RectangleC()
+                            where Mask.GetBit(block)
+                            let direction = Angle.ToVector(Angle.ToDirection(OrientationMap[block.Y, block.X]))
+                            select new LineInfo()
+                            {
+                                X = Blocks.BlockCenters[block].X,
+                                Y = Blocks.PixelCount.Height - 1 - Blocks.BlockCenters[block].Y,
+                                X1 = direction.X * Blocks.BlockAreas[block].Width * 0.5,
+                                Y1 = -direction.Y * Blocks.BlockAreas[block].Height * 0.5
+                            };
+                SetValue(LinesProperty, lines.ToList());
+            }
+            else
+                SetValue(LinesProperty, null);
         }
 
         public RidgeOrientation()

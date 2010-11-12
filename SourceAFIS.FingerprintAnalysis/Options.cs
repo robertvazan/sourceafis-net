@@ -72,27 +72,6 @@ namespace SourceAFIS.FingerprintAnalysis
             set { ContrastValue = value; OnPropertyChanged("Contrast"); }
         }
 
-        bool AbsoluteContrastValue;
-        public bool AbsoluteContrast
-        {
-            get { return AbsoluteContrastValue; }
-            set { AbsoluteContrastValue = value; OnPropertyChanged("AbsoluteContrast"); }
-        }
-
-        bool RelativeContrastValue;
-        public bool RelativeContrast
-        {
-            get { return RelativeContrastValue; }
-            set { RelativeContrastValue = value; OnPropertyChanged("RelativeContrast"); }
-        }
-
-        bool LowContrastMajorityValue;
-        public bool LowContrastMajority
-        {
-            get { return LowContrastMajorityValue; }
-            set { LowContrastMajorityValue = value; OnPropertyChanged("LowContrastMajority"); }
-        }
-
         bool OrientationValue;
         public bool Orientation
         {

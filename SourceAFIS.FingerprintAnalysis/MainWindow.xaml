@@ -54,9 +54,6 @@
                 <ComboBox Height="23" Name="DiffType" Margin="2" SelectedItem="{Binding Path=DiffMode}" ItemsSource="{Binding Source={StaticResource DiffTypeValues}}" />
                 <ComboBox Height="23" Name="Mask" Margin="2" SelectedItem="{Binding Path=Mask}" ItemsSource="{Binding Source={StaticResource MaskTypeValues}}" />
                 <CheckBox Content="Contrast" Height="16" Name="Contrast" Margin="2" IsChecked="{Binding Path=Contrast}" />
-                <CheckBox Content="Absolute contrast" Height="16" Name="AbsoluteContrast" Margin="2" IsChecked="{Binding Path=AbsoluteContrast}" />
-                <CheckBox Content="Relative contrast" Height="16" Name="RelativeContrast" Margin="2" IsChecked="{Binding Path=RelativeContrast}" />
-                <CheckBox Content="Low contrast majority" Height="16" Name="LowContrastMajority" Margin="2" IsChecked="{Binding Path=LowContrastMajority}" />
                 <CheckBox Content="Orientation field" Height="16" Name="Orientation" Margin="2" IsChecked="{Binding Path=Orientation}" />
                 <CheckBox Content="Minutiae" Height="16" Name="MinutiaCollector" Margin="2" IsChecked="{Binding Path=Minutiae}" />
                 <CheckBox Content="Paired minutiae" Height="16" Name="PairedMinutiae" Margin="2" IsChecked="{Binding Path=PairedMinutiae}" />

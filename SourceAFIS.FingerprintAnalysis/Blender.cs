@@ -30,8 +30,7 @@ namespace SourceAFIS.FingerprintAnalysis
             {
                 BlendImage,
                 BlendDiff,
-                BlendMarkers,
-                BlendMask
+                BlendMarkers
             };
 
             Size size = ExtractionData.InputImage != null
@@ -116,24 +115,8 @@ namespace SourceAFIS.FingerprintAnalysis
         {
             ColorF[,] output = GetEmptyLayer(data);
             LayerBlocks(Options.Contrast, output, PixelFormat.ToFloat(data.BlockContrast));
-            LayerMask(Options.AbsoluteContrast, output, data.AbsoluteContrast, TransparentRed);
-            LayerMask(Options.RelativeContrast, output, data.RelativeContrast, TransparentRed);
-            LayerMask(Options.LowContrastMajority, output, data.LowContrastMajority, TransparentRed);
 
             return output;
-        }
-
-        ColorF[,] BlendMask(ExtractionData data)
-        {
-            BinaryMap mask = null;
-            if (Options.Mask == MaskType.Segmentation)
-                mask = BlockFiller.FillBlocks(data.SegmentationMask.GetInverted(), data.Blocks);
-            if (Options.Mask == MaskType.Inner)
-                mask = data.InnerMask.GetInverted();
-            if (mask != null)
-                return ScalarColoring.Mask(mask, ColorF.Transparent, LightFog);
-            else
-                return GetEmptyLayer(data);
         }
 
         ColorF[,] GetEmptyLayer(ExtractionData data)
@@ -170,15 +153,6 @@ namespace SourceAFIS.FingerprintAnalysis
                 case Layer.MinutiaMask: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.MinutiaMask, data.Binarized.Size));
                 case Layer.BranchMinutiaRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.BranchMinutiaRemover, data.Binarized.Size));
                 default: throw new AssertException();
-            }
-        }
-
-        void LayerMask(bool condition, ColorF[,] output, BinaryMap mask, ColorF color)
-        {
-            if (condition)
-            {
-                BinaryMap scaled = BlockFiller.FillBlocks(mask, Logs.Probe.Blocks);
-                AlphaLayering.Layer(output, ScalarColoring.Mask(scaled, ColorF.Transparent, color));
             }
         }
 

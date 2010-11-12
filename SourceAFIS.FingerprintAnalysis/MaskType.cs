@@ -8,6 +8,9 @@ namespace SourceAFIS.FingerprintAnalysis
     public enum MaskType
     {
         None,
+        AbsoluteContrast,
+        RelativeContrast,
+        LowContrastMajority,
         Segmentation,
         Inner
     }

@@ -52,7 +52,10 @@ namespace SourceAFIS.Visualization
 
         void UpdateScaled()
         {
-            SetValue(ScaledProperty, Mask != null && Blocks != null ? Mask.FillBlocks(Blocks) : null);
+            if (Mask != null && Blocks != null && Mask.Size == Blocks.BlockCount)
+                SetValue(ScaledProperty, Mask.FillBlocks(Blocks));
+            else
+                SetValue(ScaledProperty, null);
         }
 
         public BlockMaskBorder()
