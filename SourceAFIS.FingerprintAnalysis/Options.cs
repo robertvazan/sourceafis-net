@@ -7,55 +7,6 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     public class Options : INotifyPropertyChanged
     {
-        public enum Layer
-        {
-            OriginalImage,
-            Equalized,
-            SmoothedRidges,
-            OrthogonalSmoothing,
-            Binarized,
-            BinarySmoothing,
-            RemovedCrosses,
-            Thinned,
-            RidgeTracer,
-            DotRemover,
-            PoreRemover,
-            GapRemover,
-            TailRemover,
-            FragmentRemover,
-            MinutiaMask,
-            BranchMinutiaRemover
-        }
-
-        public enum SkeletonType
-        {
-            Ridges,
-            Valleys
-        }
-
-        public enum QuickCompareType
-        {
-            None,
-            Previous,
-            Next,
-            OtherLayer
-        }
-        
-        public enum DiffType
-        {
-            Proportional,
-            Normalized,
-            Fog,
-            Binary
-        }
-
-        public enum MaskType
-        {
-            None,
-            Segmentation,
-            Inner
-        }
-
         public bool EnableImageDisplay = true;
 
         FingerprintOptions ProbeValue = new FingerprintOptions();

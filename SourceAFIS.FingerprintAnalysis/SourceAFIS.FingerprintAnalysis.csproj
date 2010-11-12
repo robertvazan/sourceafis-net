@@ -55,12 +55,14 @@
     </ApplicationDefinition>
     <Compile Include="Blender.cs" />
     <Compile Include="CandidateMatchData.cs" />
+    <Compile Include="DiffType.cs" />
     <Compile Include="FilePicker.xaml.cs">
       <DependentUpon>FilePicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="FingerView.xaml.cs">
       <DependentUpon>FingerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Layer.cs" />
     <Compile Include="LogCollector.cs" />
     <Compile Include="ExtractionCollector.cs" />
     <Compile Include="ExtractionData.cs" />
@@ -68,12 +70,15 @@
     <Compile Include="IPushNotification.cs" />
     <Compile Include="LogDecoder.cs" />
     <Compile Include="LogData.cs" />
+    <Compile Include="MaskType.cs" />
     <Compile Include="MatchCollector.cs" />
     <Compile Include="MatchData.cs" />
     <Compile Include="MatchSideData.cs" />
     <Compile Include="NotificationLink.cs" />
     <Compile Include="ProbeMatchData.cs" />
+    <Compile Include="QuickCompareType.cs" />
     <Compile Include="SkeletonData.cs" />
+    <Compile Include="SkeletonType.cs" />
     <Page Include="FilePicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
