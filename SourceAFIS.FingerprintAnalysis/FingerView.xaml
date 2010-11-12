@@ -14,8 +14,16 @@
     <Viewbox DataContext="{Binding ElementName=FingerViewControl}">
         <Canvas Width="{Binding ExtractionData.Width}" Height="{Binding ExtractionData.Height}" ClipToBounds="True">
             <Image Source="{Binding BlenderOutput}" />
+            <v:BlockMaskBorder Mask="{Binding ExtractionData.AbsoluteContrast}" Blocks="{Binding ExtractionData.Blocks}"
+                               Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.AbsoluteContrast}}"/>
+            <v:BlockMaskBorder Mask="{Binding ExtractionData.RelativeContrast}" Blocks="{Binding ExtractionData.Blocks}"
+                               Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.RelativeContrast}}"/>
+            <v:BlockMaskBorder Mask="{Binding ExtractionData.LowContrastMajority}" Blocks="{Binding ExtractionData.Blocks}"
+                               Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.LowContrastMajority}}"/>
             <v:BlockMaskBorder Mask="{Binding ExtractionData.SegmentationMask}" Blocks="{Binding ExtractionData.Blocks}"
                                Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.Segmentation}}"/>
+            <v:MaskBorder Mask="{Binding ExtractionData.InnerMask}"
+                          Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.Inner}}"/>
             <v:RidgeOrientation Blocks="{Binding ExtractionData.Blocks}" Mask="{Binding ExtractionData.SegmentationMask}"
                                 OrientationMap="{Binding ExtractionData.Orientation}"
                                 Visibility="{Binding Options.Orientation, Converter={StaticResource BooleanToVisibility}}"/>
