@@ -60,13 +60,23 @@
     <Compile Include="AffineTransformer.cs" />
     <Compile Include="AlphaLayering.cs" />
     <Compile Include="BlockFiller.cs" />
+    <Compile Include="BlockMaskBorder.xaml.cs">
+      <DependentUpon>BlockMaskBorder.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CircleDrawer.cs" />
     <Compile Include="ColorB.cs" />
     <Compile Include="ColorF.cs" />
+    <Compile Include="EqualsToVisibilityConverter.cs" />
     <Compile Include="GlobalContrast.cs" />
     <Compile Include="GrayscaleInverter.cs" />
     <Compile Include="ImageDiff.cs" />
     <Compile Include="ImageSerialization.cs" />
+    <Compile Include="MaskBorder.xaml.cs">
+      <DependentUpon>MaskBorder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MaskView.xaml.cs">
+      <DependentUpon>MaskView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MatchedMinutiae.xaml.cs">
       <DependentUpon>MatchedMinutiae.xaml</DependentUpon>
     </Compile>
@@ -92,6 +102,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="BlockMaskBorder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MaskBorder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MaskView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MatchedMinutiae.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
