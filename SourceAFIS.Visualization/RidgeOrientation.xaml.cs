@@ -69,12 +69,13 @@ namespace SourceAFIS.Visualization
                 var lines = from block in Blocks != null ? Blocks.AllBlocks : new RectangleC()
                             where Mask.GetBit(block)
                             let direction = Angle.ToVector(Angle.ToDirection(OrientationMap[block.Y, block.X]))
+                            let radius = 0.5 * Math.Min(Blocks.BlockAreas[block].Width, Blocks.BlockAreas[block].Height)
                             select new LineInfo()
                             {
                                 X = Blocks.BlockCenters[block].X,
                                 Y = Blocks.PixelCount.Height - 1 - Blocks.BlockCenters[block].Y,
-                                X1 = direction.X * Blocks.BlockAreas[block].Width * 0.5,
-                                Y1 = -direction.Y * Blocks.BlockAreas[block].Height * 0.5
+                                X1 = direction.X * radius,
+                                Y1 = -direction.Y * radius
                             };
                 SetValue(LinesProperty, lines.ToList());
             }
