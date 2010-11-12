@@ -12,35 +12,35 @@
                         ObjectType="{x:Type local:Options}"
                         x:Key="LayerTypeValues">
             <ObjectDataProvider.MethodParameters>
-                <sys:String>SourceAFIS.FingerprintAnalysis.Options+Layer</sys:String>
+                <sys:String>SourceAFIS.FingerprintAnalysis.Layer</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider MethodName="GetEnumValues"
                         ObjectType="{x:Type local:Options}"
                         x:Key="SkeletonTypeValues">
             <ObjectDataProvider.MethodParameters>
-                <sys:String>SourceAFIS.FingerprintAnalysis.Options+SkeletonType</sys:String>
+                <sys:String>SourceAFIS.FingerprintAnalysis.SkeletonType</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider MethodName="GetEnumValues"
                         ObjectType="{x:Type local:Options}"
                         x:Key="QuickCompareValues">
             <ObjectDataProvider.MethodParameters>
-                <sys:String>SourceAFIS.FingerprintAnalysis.Options+QuickCompareType</sys:String>
+                <sys:String>SourceAFIS.FingerprintAnalysis.QuickCompareType</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider MethodName="GetEnumValues"
                         ObjectType="{x:Type local:Options}"
                         x:Key="DiffTypeValues">
             <ObjectDataProvider.MethodParameters>
-                <sys:String>SourceAFIS.FingerprintAnalysis.Options+DiffType</sys:String>
+                <sys:String>SourceAFIS.FingerprintAnalysis.DiffType</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider MethodName="GetEnumValues"
                         ObjectType="{x:Type local:Options}"
                         x:Key="MaskTypeValues">
             <ObjectDataProvider.MethodParameters>
-                <sys:String>SourceAFIS.FingerprintAnalysis.Options+MaskType</sys:String>
+                <sys:String>SourceAFIS.FingerprintAnalysis.MaskType</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>
