@@ -16,22 +16,11 @@ namespace SourceAFIS.General
         {
             int width = pixels.GetLength(1);
             int height = pixels.GetLength(0);
-            
-            byte[] converted = new byte[width * height * 4];
+            byte[] flat = new byte[width * height];
             for (int y = 0; y < height; ++y)
                 for (int x = 0; x < width; ++x)
-                {
-                    int at = ((height - y - 1) * width + x) * 4;
-                    converted[at] = pixels[y, x];
-                    converted[at + 1] = pixels[y, x];
-                    converted[at + 2] = pixels[y, x];
-                }
-
-            WriteableBitmap bitmap = new WriteableBitmap(width, height, 500, 500, PixelFormats.Bgr32, null);
-
-            bitmap.WritePixels(new Int32Rect(0, 0, width, height), converted, width * 4, 0, 0);
-
-            return bitmap;
+                    flat[(height - 1 - y) * width + x] = pixels[y, x];
+            return BitmapSource.Create(width, height, 96, 96, PixelFormats.Gray8, null, flat, width);
         }
 
         public static byte[,] GetPixels(BitmapSource bitmap)
