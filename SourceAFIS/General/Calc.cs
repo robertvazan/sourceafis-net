@@ -284,5 +284,12 @@ namespace SourceAFIS.General
             if (start < list.Count)
                 list.RemoveRange(start, list.Count - start);
         }
+
+        static public uint ReverseBitsInBytes(uint word)
+        {
+            uint phase1 = (word >> 4) & 0x0f0f0f0f | (word << 4) & 0xf0f0f0f0;
+            uint phase2 = (phase1 >> 2) & 0x33333333 | (phase1 << 2) & 0xcccccccc;
+            return (phase2 >> 1) & 0x55555555 | (phase2 << 1) & 0xaaaaaaaa;
+        }
     }
 }
