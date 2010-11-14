@@ -59,10 +59,10 @@ namespace SourceAFIS.Extraction.Templates
                 writer.Write((short)0);
 
                 // 2B image size in pixels X
-                writer.Write(IPAddress.HostToNetworkOrder((short)builder.Width));
+                writer.Write(IPAddress.HostToNetworkOrder((short)builder.StandardDpiWidth));
             
                 // 2B image size in pixels Y
-                writer.Write(IPAddress.HostToNetworkOrder((short)builder.Height));
+                writer.Write(IPAddress.HostToNetworkOrder((short)builder.StandardDpiHeight));
             
                 // 2B rubbish (pixels per cm X, set to 196 = 500dpi)
                 writer.Write(IPAddress.HostToNetworkOrder((short)196));
@@ -99,7 +99,7 @@ namespace SourceAFIS.Extraction.Templates
                     writer.Write(IPAddress.HostToNetworkOrder(unchecked((short)(x | type))));
 
                     //      2B minutia position Y in pixels (upper 2b ignored, zeroed)
-                    int y = builder.Height - minutia.Position.Y - 1;
+                    int y = builder.StandardDpiHeight - minutia.Position.Y - 1;
                     AssertException.Check(y <= 0x3fff, "Y position is out of range");
                     writer.Write(IPAddress.HostToNetworkOrder((short)y));
 
@@ -144,10 +144,10 @@ namespace SourceAFIS.Extraction.Templates
             reader.ReadInt16();
 
             // 2B image size in pixels X
-            builder.Width = IPAddress.NetworkToHostOrder(reader.ReadInt16());
+            builder.StandardDpiWidth = IPAddress.NetworkToHostOrder(reader.ReadInt16());
 
             // 2B image size in pixels Y
-            builder.Height = IPAddress.NetworkToHostOrder(reader.ReadInt16());
+            builder.StandardDpiHeight = IPAddress.NetworkToHostOrder(reader.ReadInt16());
 
             // 2B rubbish (pixels per cm X, set to 196 = 500dpi)
             reader.ReadInt16();
@@ -185,7 +185,7 @@ namespace SourceAFIS.Extraction.Templates
                 minutia.Type = (xPacked & (ushort)0xc000) == 0x8000 ? TemplateBuilder.MinutiaType.Bifurcation : TemplateBuilder.MinutiaType.Ending;
 
                 //      2B minutia position Y in pixels (upper 2b ignored, zeroed)
-                minutia.Position.Y = builder.Height - 1 - ((ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16()) & (ushort)0x3fff);
+                minutia.Position.Y = builder.StandardDpiHeight - 1 - ((ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16()) & (ushort)0x3fff);
 
                 //      1B direction, compatible with SourceAFIS angles
                 minutia.Direction = reader.ReadByte();

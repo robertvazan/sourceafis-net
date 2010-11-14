@@ -59,8 +59,13 @@ namespace SourceAFIS.Visualization
                            select MatchSide == MatchSide.Probe ? pair.Probe : pair.Candidate;
             var points = from minutia in minutiae
                          where FpTemplate != null && minutia < FpTemplate.Minutiae.Count
+                         let dpiScaling = FpTemplate.OriginalDpi / 500.0
                          let position = FpTemplate.Minutiae[minutia].Position
-                         select new Point(position.X - 5, FpTemplate.Height - 1 - position.Y - 5);
+                         select new Point()
+                         {
+                             X = dpiScaling * position.X - 5,
+                             Y = FpTemplate.OriginalHeight - 1 - dpiScaling * position.Y - 5
+                         };
             SetValue(PositionsProperty, points.ToList());
         }
 
