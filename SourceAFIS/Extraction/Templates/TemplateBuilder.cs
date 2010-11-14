@@ -20,8 +20,21 @@ namespace SourceAFIS.Extraction.Templates
             public MinutiaType Type;
         }
 
-        public int Width;
-        public int Height;
+        public int OriginalDpi;
+        public int OriginalWidth;
+        public int OriginalHeight;
+
+        public int StandardDpiWidth
+        {
+            get { return Calc.DivRoundUp(OriginalWidth * 500, OriginalDpi); }
+            set { OriginalWidth = value * OriginalDpi / 500; }
+        }
+        public int StandardDpiHeight
+        {
+            get { return Calc.DivRoundUp(OriginalHeight * 500, OriginalDpi); }
+            set { OriginalHeight = value * OriginalDpi / 500; }
+        }
+
         public List<Minutia> Minutiae = new List<Minutia>();
     }
 }

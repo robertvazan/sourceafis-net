@@ -15,8 +15,9 @@ namespace SourceAFIS.Extraction.Templates
         // 4B magic
         // 1B version (current = 2)
         // 2B total length (including magic)
-        // 2B width (since version 2)
-        // 2B height (since version 2)
+        // 2B original DPI (since version 2)
+        // 2B original width (since version 2)
+        // 2B original height (since version 2)
         // 2B minutia count
         // N*6B minutia records
         //      2B position X
@@ -42,11 +43,14 @@ namespace SourceAFIS.Extraction.Templates
                 // 2B total length (including magic), will be filled later
                 writer.Write((short)0);
 
-                // 2B width (since version 2)
-                writer.Write(IPAddress.HostToNetworkOrder((short)builder.Width));
+                // 2B original DPI (since version 2)
+                writer.Write(IPAddress.HostToNetworkOrder((short)builder.OriginalDpi));
 
-                // 2B height (since version 2)
-                writer.Write(IPAddress.HostToNetworkOrder((short)builder.Height));
+                // 2B original width (since version 2)
+                writer.Write(IPAddress.HostToNetworkOrder((short)builder.OriginalWidth));
+
+                // 2B original height (since version 2)
+                writer.Write(IPAddress.HostToNetworkOrder((short)builder.OriginalHeight));
 
                 // 2B minutia count
                 writer.Write(IPAddress.HostToNetworkOrder((short)builder.Minutiae.Count));
@@ -97,11 +101,14 @@ namespace SourceAFIS.Extraction.Templates
 
             if (version >= 2)
             {
-                // 2B width (since version 2)
-                builder.Width = IPAddress.NetworkToHostOrder(reader.ReadInt16());
+                // 2B original DPI (since version 2)
+                builder.OriginalDpi = IPAddress.NetworkToHostOrder(reader.ReadInt16());
 
-                // 2B height (since version 2)
-                builder.Height = IPAddress.NetworkToHostOrder(reader.ReadInt16());
+                // 2B original width (since version 2)
+                builder.OriginalWidth = IPAddress.NetworkToHostOrder(reader.ReadInt16());
+
+                // 2B original height (since version 2)
+                builder.OriginalHeight = IPAddress.NetworkToHostOrder(reader.ReadInt16());
             }
 
             // 2B minutia count

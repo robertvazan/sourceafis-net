@@ -52,10 +52,11 @@ namespace SourceAFIS.Visualization
         void UpdateLists()
         {
             var list = from minutia in FpTemplate.Minutiae
+                       let dpiScaling = FpTemplate.OriginalDpi / 500.0
                        select new MinutiaInfo()
                        {
-                           X = minutia.Position.X + 0.5,
-                           Y = FpTemplate.Height - 1 - minutia.Position.Y + 0.5,
+                           X = dpiScaling * (minutia.Position.X + 0.5),
+                           Y = FpTemplate.OriginalHeight - 1 - dpiScaling * (minutia.Position.Y + 0.5),
                            Angle = Angle.ToDegrees(Angle.Complementary(minutia.Direction)),
                            Type = minutia.Type
                        };

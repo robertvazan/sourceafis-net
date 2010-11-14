@@ -45,14 +45,22 @@ namespace SourceAFIS.Extraction.Templates
             }
         }
 
-        public readonly int Width;
-        public readonly int Height;
+        public readonly int OriginalDpi;
+        public readonly int OriginalWidth;
+        public readonly int OriginalHeight;
+        public readonly int StandardDpiWidth;
+        public readonly int StandardDpiHeight;
+
         public readonly Minutia[] Minutiae;
 
         public Template(TemplateBuilder builder)
         {
-            Width = builder.Width;
-            Height = builder.Height;
+            OriginalDpi = builder.OriginalDpi;
+            OriginalWidth = builder.OriginalWidth;
+            OriginalHeight = builder.OriginalHeight;
+            StandardDpiWidth = builder.StandardDpiWidth;
+            StandardDpiHeight = builder.StandardDpiHeight;
+
             Minutiae = new Minutia[builder.Minutiae.Count];
             for (int i = 0; i < builder.Minutiae.Count; ++i)
                 Minutiae[i] = new Minutia(builder.Minutiae[i]);
@@ -61,8 +69,11 @@ namespace SourceAFIS.Extraction.Templates
         public TemplateBuilder ToTemplateBuilder()
         {
             TemplateBuilder builder = new TemplateBuilder();
-            builder.Width = Width;
-            builder.Height = Height;
+
+            builder.OriginalDpi = OriginalDpi;
+            builder.OriginalWidth = OriginalWidth;
+            builder.OriginalHeight = OriginalHeight;
+
             foreach (Minutia minutia in Minutiae)
                 builder.Minutiae.Add(minutia.ToBuilderMinutia());
             return builder;
