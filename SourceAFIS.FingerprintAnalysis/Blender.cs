@@ -29,8 +29,7 @@ namespace SourceAFIS.FingerprintAnalysis
             BlendLayer[] layers = new BlendLayer[]
             {
                 BlendImage,
-                BlendDiff,
-                BlendMarkers
+                BlendDiff
             };
 
             Size size = ExtractionData.InputImage != null
@@ -111,14 +110,6 @@ namespace SourceAFIS.FingerprintAnalysis
                 return GetEmptyLayer(data);
         }
 
-        ColorF[,] BlendMarkers(ExtractionData data)
-        {
-            ColorF[,] output = GetEmptyLayer(data);
-            LayerBlocks(Options.Contrast, output, PixelFormat.ToFloat(data.BlockContrast));
-
-            return output;
-        }
-
         ColorF[,] GetEmptyLayer(ExtractionData data)
         {
             return new ColorF[data.InputImage.GetLength(0), data.InputImage.GetLength(1)];
@@ -153,16 +144,6 @@ namespace SourceAFIS.FingerprintAnalysis
                 case Layer.MinutiaMask: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.MinutiaMask, data.Binarized.Size));
                 case Layer.BranchMinutiaRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.BranchMinutiaRemover, data.Binarized.Size));
                 default: throw new AssertException();
-            }
-        }
-
-        void LayerBlocks(bool condition, ColorF[,] output, float[,] data)
-        {
-            if (condition)
-            {
-                GlobalContrast.Normalize(data);
-                float[,] scaled = BlockFiller.FillBlocks(data, Logs.Probe.Blocks);
-                AlphaLayering.Layer(output, ScalarColoring.Interpolate(scaled, TransparentRed, TransparentGreen));
             }
         }
     }

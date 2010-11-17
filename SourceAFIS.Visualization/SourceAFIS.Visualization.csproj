@@ -66,6 +66,9 @@
     <Compile Include="CircleDrawer.cs" />
     <Compile Include="ColorB.cs" />
     <Compile Include="ColorF.cs" />
+    <Compile Include="ContrastView.xaml.cs">
+      <DependentUpon>ContrastView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EqualsToVisibilityConverter.cs" />
     <Compile Include="GlobalContrast.cs" />
     <Compile Include="GrayscaleInverter.cs" />
@@ -103,6 +106,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="BlockMaskBorder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ContrastView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

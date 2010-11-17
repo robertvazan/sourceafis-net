@@ -24,6 +24,8 @@
                                Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.Segmentation}}"/>
             <v:MaskBorder Mask="{Binding ExtractionData.InnerMask}"
                           Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.Inner}}"/>
+            <v:ContrastView Blocks="{Binding ExtractionData.Blocks}" ContrastMap="{Binding ExtractionData.BlockContrast}"
+                            Visibility="{Binding Options.Contrast, Converter={StaticResource BooleanToVisibility}}"/>
             <v:RidgeOrientation Blocks="{Binding ExtractionData.Blocks}" Mask="{Binding ExtractionData.SegmentationMask}"
                                 OrientationMap="{Binding ExtractionData.Orientation}"
                                 Visibility="{Binding Options.Orientation, Converter={StaticResource BooleanToVisibility}}"/>
