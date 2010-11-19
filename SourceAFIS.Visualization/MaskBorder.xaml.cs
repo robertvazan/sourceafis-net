@@ -66,11 +66,9 @@ namespace SourceAFIS.Visualization
 
         void UpdateBorder()
         {
-            BinaryMap mask = Mask;
-            if (mask != null)
+            if (IsVisible && Mask != null)
             {
-                if (Inverted)
-                    mask = mask.GetInverted();
+                BinaryMap mask = Inverted ? Mask.GetInverted() : Mask;
                 SetValue(BorderProperty, Subtract(Expand(Expand(mask)), mask));
             }
             else
@@ -80,6 +78,7 @@ namespace SourceAFIS.Visualization
         public MaskBorder()
         {
             InitializeComponent();
+            IsVisibleChanged += (sender, args) => { UpdateBorder(); };
         }
     }
 }

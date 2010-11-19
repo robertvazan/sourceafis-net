@@ -63,7 +63,7 @@ namespace SourceAFIS.Visualization
 
         void UpdateLines()
         {
-            if (Blocks != null && Mask != null && OrientationMap != null && Mask.Size == Blocks.BlockCount
+            if (IsVisible && Blocks != null && Mask != null && OrientationMap != null && Mask.Size == Blocks.BlockCount
                 && OrientationMap.GetLength(0) == Mask.Height && OrientationMap.GetLength(1) == Mask.Width)
             {
                 var lines = from block in Blocks != null ? Blocks.AllBlocks : new RectangleC()
@@ -86,6 +86,7 @@ namespace SourceAFIS.Visualization
         public RidgeOrientation()
         {
             InitializeComponent();
+            IsVisibleChanged += (sender, args) => { UpdateLines(); };
         }
     }
 }
