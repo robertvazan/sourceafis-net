@@ -62,7 +62,7 @@ namespace SourceAFIS.Visualization
 
         void UpdatePies()
         {
-            if (Blocks != null && ContrastMap != null
+            if (IsVisible && Blocks != null && ContrastMap != null
                 && Blocks.BlockCount.Width == ContrastMap.GetLength(1)
                 && Blocks.BlockCount.Height == ContrastMap.GetLength(0))
             {
@@ -91,6 +91,7 @@ namespace SourceAFIS.Visualization
         public ContrastView()
         {
             InitializeComponent();
+            IsVisibleChanged += (sender, args) => { UpdatePies(); };
         }
     }
 }

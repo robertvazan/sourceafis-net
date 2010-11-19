@@ -51,22 +51,31 @@ namespace SourceAFIS.Visualization
 
         void UpdateLists()
         {
-            var list = from minutia in FpTemplate.Minutiae
-                       let dpiScaling = FpTemplate.OriginalDpi / 500.0
-                       select new MinutiaInfo()
-                       {
-                           X = dpiScaling * (minutia.Position.X + 0.5),
-                           Y = FpTemplate.OriginalHeight - 1 - dpiScaling * (minutia.Position.Y + 0.5),
-                           Angle = Angle.ToDegrees(Angle.Complementary(minutia.Direction)),
-                           Type = minutia.Type
-                       };
-            SetValue(EndingsProperty, list.Where(minutia => minutia.Type == TemplateBuilder.MinutiaType.Ending).ToList());
-            SetValue(BifurcationsProperty, list.Where(minutia => minutia.Type == TemplateBuilder.MinutiaType.Bifurcation).ToList());
+            if (IsVisible && FpTemplate != null)
+            {
+                var list = from minutia in FpTemplate.Minutiae
+                           let dpiScaling = FpTemplate.OriginalDpi / 500.0
+                           select new MinutiaInfo()
+                           {
+                               X = dpiScaling * (minutia.Position.X + 0.5),
+                               Y = FpTemplate.OriginalHeight - 1 - dpiScaling * (minutia.Position.Y + 0.5),
+                               Angle = Angle.ToDegrees(Angle.Complementary(minutia.Direction)),
+                               Type = minutia.Type
+                           };
+                SetValue(EndingsProperty, list.Where(minutia => minutia.Type == TemplateBuilder.MinutiaType.Ending).ToList());
+                SetValue(BifurcationsProperty, list.Where(minutia => minutia.Type == TemplateBuilder.MinutiaType.Bifurcation).ToList());
+            }
+            else
+            {
+                SetValue(EndingsProperty, null);
+                SetValue(BifurcationsProperty, null);
+            }
         }
 
         public Minutiae()
         {
             InitializeComponent();
+            IsVisibleChanged += (sender, args) => { UpdateLists(); };
         }
     }
 }

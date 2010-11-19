@@ -55,7 +55,7 @@ namespace SourceAFIS.Visualization
         {
             BinaryMap mask = Mask;
 
-            if (mask != null)
+            if (IsVisible && mask != null)
             {
                 int words = mask.WordWidth;
                 int stride = words * BinaryMap.WordBytes;
@@ -83,6 +83,7 @@ namespace SourceAFIS.Visualization
         public MaskView()
         {
             InitializeComponent();
+            IsVisibleChanged += (sender, args) => { UpdateImage(); };
         }
     }
 }

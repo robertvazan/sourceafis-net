@@ -52,7 +52,7 @@ namespace SourceAFIS.Visualization
 
         void UpdateScaled()
         {
-            if (Mask != null && Blocks != null && Mask.Size == Blocks.BlockCount)
+            if (IsVisible && Mask != null && Blocks != null && Mask.Size == Blocks.BlockCount)
                 SetValue(ScaledProperty, Mask.FillBlocks(Blocks));
             else
                 SetValue(ScaledProperty, null);
@@ -61,6 +61,7 @@ namespace SourceAFIS.Visualization
         public BlockMaskBorder()
         {
             InitializeComponent();
+            IsVisibleChanged += (sender, args) => { UpdateScaled(); };
         }
     }
 }

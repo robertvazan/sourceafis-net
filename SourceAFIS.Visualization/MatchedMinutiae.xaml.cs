@@ -38,7 +38,7 @@ namespace SourceAFIS.Visualization
 
         public static readonly DependencyProperty MatchSideProperty
             = DependencyProperty.Register("MatchSide", typeof(MatchSide), typeof(MatchedMinutiae),
-            new PropertyMetadata((self, args) => { (self as MatchedMinutiae).UpdatePositions(); }));
+            new PropertyMetadata(MatchSide.Probe, (self, args) => { (self as MatchedMinutiae).UpdatePositions(); }));
         public MatchSide MatchSide
         {
             get { return (MatchSide)GetValue(MatchSideProperty); }
@@ -54,24 +54,30 @@ namespace SourceAFIS.Visualization
 
         void UpdatePositions()
         {
-            var minutiae = from index in Enumerable.Range(0, Pairing != null ? Pairing.Count : 0)
-                           let pair = Pairing.GetPair(index)
-                           select MatchSide == MatchSide.Probe ? pair.Probe : pair.Candidate;
-            var points = from minutia in minutiae
-                         where FpTemplate != null && minutia < FpTemplate.Minutiae.Count
-                         let dpiScaling = FpTemplate.OriginalDpi / 500.0
-                         let position = FpTemplate.Minutiae[minutia].Position
-                         select new Point()
-                         {
-                             X = dpiScaling * position.X - 5,
-                             Y = FpTemplate.OriginalHeight - 1 - dpiScaling * position.Y - 5
-                         };
-            SetValue(PositionsProperty, points.ToList());
+            if (IsVisible && Pairing != null && FpTemplate != null)
+            {
+                var minutiae = from index in Enumerable.Range(0, Pairing.Count)
+                               let pair = Pairing.GetPair(index)
+                               select MatchSide == MatchSide.Probe ? pair.Probe : pair.Candidate;
+                var dpiScaling = FpTemplate.OriginalDpi / 500.0;
+                var points = from minutia in minutiae
+                             where minutia < FpTemplate.Minutiae.Count
+                             let position = FpTemplate.Minutiae[minutia].Position
+                             select new Point()
+                             {
+                                 X = dpiScaling * position.X - 5,
+                                 Y = FpTemplate.OriginalHeight - 1 - dpiScaling * position.Y - 5
+                             };
+                SetValue(PositionsProperty, points.ToList());
+            }
+            else
+                SetValue(PositionsProperty, null);
         }
 
         public MatchedMinutiae()
         {
             InitializeComponent();
+            IsVisibleChanged += (sender, args) => { UpdatePositions(); };
         }
     }
 }
