@@ -7,7 +7,6 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     public enum Layer
     {
-        None,
         OriginalImage,
         Equalized,
         SmoothedRidges,
