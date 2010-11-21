@@ -80,7 +80,6 @@ namespace SourceAFIS.FingerprintAnalysis
             switch (type)
             {
                 case Layer.OriginalImage: return GrayscaleInverter.GetInverted(PixelFormat.ToFloat(data.InputImage));
-                case Layer.OrthogonalSmoothing: return data.OrthogonalSmoothing;
                 case Layer.Binarized: return PixelFormat.ToFloat(data.Binarized);
                 case Layer.BinarySmoothing: return PixelFormat.ToFloat(data.BinarySmoothing);
                 case Layer.RemovedCrosses: return PixelFormat.ToFloat(data.RemovedCrosses);
