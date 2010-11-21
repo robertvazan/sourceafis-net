@@ -57,7 +57,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AffineTransformer.cs" />
     <Compile Include="AlphaLayering.cs" />
     <Compile Include="BlockFiller.cs" />
     <Compile Include="BlockMaskBorder.xaml.cs">
