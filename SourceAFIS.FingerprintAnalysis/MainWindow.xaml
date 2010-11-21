@@ -24,20 +24,6 @@
         </ObjectDataProvider>
         <ObjectDataProvider MethodName="GetEnumValues"
                         ObjectType="{x:Type local:Options}"
-                        x:Key="QuickCompareValues">
-            <ObjectDataProvider.MethodParameters>
-                <sys:String>SourceAFIS.FingerprintAnalysis.QuickCompareType</sys:String>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <ObjectDataProvider MethodName="GetEnumValues"
-                        ObjectType="{x:Type local:Options}"
-                        x:Key="DiffTypeValues">
-            <ObjectDataProvider.MethodParameters>
-                <sys:String>SourceAFIS.FingerprintAnalysis.DiffType</sys:String>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <ObjectDataProvider MethodName="GetEnumValues"
-                        ObjectType="{x:Type local:Options}"
                         x:Key="MaskTypeValues">
             <ObjectDataProvider.MethodParameters>
                 <sys:String>SourceAFIS.FingerprintAnalysis.MaskType</sys:String>
@@ -49,9 +35,6 @@
             <StackPanel Name="OptionsPanel">
                 <ComboBox Height="23" Name="DisplayLayer" Margin="2" SelectedItem="{Binding Path=DisplayLayer}" ItemsSource="{Binding Source={StaticResource LayerTypeValues}}" />
                 <ComboBox Height="23" Name="SelectedSkeleton" Margin="2" SelectedItem="{Binding Path=Skeleton}" ItemsSource="{Binding Source={StaticResource SkeletonTypeValues}}" />
-                <ComboBox Height="23" Name="CompareWith" Margin="2" SelectedItem="{Binding Path=CompareWith}" ItemsSource="{Binding Source={StaticResource QuickCompareValues}}" />
-                <ComboBox Height="23" Name="CompareWithLayer" Margin="2" SelectedItem="{Binding Path=CompareWithLayer}" ItemsSource="{Binding Source={StaticResource LayerTypeValues}}" />
-                <ComboBox Height="23" Name="DiffType" Margin="2" SelectedItem="{Binding Path=DiffMode}" ItemsSource="{Binding Source={StaticResource DiffTypeValues}}" />
                 <ComboBox Height="23" Name="Mask" Margin="2" SelectedItem="{Binding Path=Mask}" ItemsSource="{Binding Source={StaticResource MaskTypeValues}}" />
                 <CheckBox Content="Contrast" Height="16" Name="Contrast" Margin="2" IsChecked="{Binding Path=Contrast}" />
                 <CheckBox Content="Orientation field" Height="16" Name="Orientation" Margin="2" IsChecked="{Binding Path=Orientation}" />

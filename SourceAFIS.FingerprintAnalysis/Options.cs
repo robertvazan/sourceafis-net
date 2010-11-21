@@ -37,27 +37,6 @@ namespace SourceAFIS.FingerprintAnalysis
             set { SkeletonValue = value; OnPropertyChanged("Skeleton"); }
         }
 
-        QuickCompareType CompareWithValue;
-        public QuickCompareType CompareWith
-        {
-            get { return CompareWithValue; }
-            set { CompareWithValue = value; OnPropertyChanged("CompareWith"); }
-        }
-
-        Layer CompareWithLayerValue;
-        public Layer CompareWithLayer
-        {
-            get { return CompareWithLayerValue; }
-            set { CompareWithLayerValue = value; OnPropertyChanged("CompareWithLayer"); }
-        }
-
-        DiffType DiffTypeValue;
-        public DiffType DiffMode
-        {
-            get { return DiffTypeValue; }
-            set { DiffTypeValue = value; OnPropertyChanged("DiffMode"); }
-        }
-
         MaskType MaskValue;
         public MaskType Mask
         {
@@ -91,14 +70,6 @@ namespace SourceAFIS.FingerprintAnalysis
         {
             get { return PairedMinutiaeValue; }
             set { PairedMinutiaeValue = value; OnPropertyChanged("PairedMinutiae"); }
-        }
-
-        public bool UsesLayer(Layer layer)
-        {
-            return DisplayLayer == layer
-                || CompareWith == QuickCompareType.OtherLayer && CompareWithLayer == layer
-                || CompareWith == QuickCompareType.Next && DisplayLayer + 1 == layer
-                || CompareWith == QuickCompareType.Previous && DisplayLayer - 1 == layer;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

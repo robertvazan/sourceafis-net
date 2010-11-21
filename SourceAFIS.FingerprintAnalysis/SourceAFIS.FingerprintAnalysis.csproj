@@ -55,7 +55,6 @@
     </ApplicationDefinition>
     <Compile Include="Blender.cs" />
     <Compile Include="CandidateMatchData.cs" />
-    <Compile Include="DiffType.cs" />
     <Compile Include="FilePicker.xaml.cs">
       <DependentUpon>FilePicker.xaml</DependentUpon>
     </Compile>
@@ -79,7 +78,6 @@
     <Compile Include="MatchSideData.cs" />
     <Compile Include="NotificationLink.cs" />
     <Compile Include="ProbeMatchData.cs" />
-    <Compile Include="QuickCompareType.cs" />
     <Compile Include="SkeletonData.cs" />
     <Compile Include="SkeletonType.cs" />
     <Page Include="FilePicker.xaml">

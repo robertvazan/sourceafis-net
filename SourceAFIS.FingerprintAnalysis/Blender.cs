@@ -28,8 +28,7 @@ namespace SourceAFIS.FingerprintAnalysis
         {
             BlendLayer[] layers = new BlendLayer[]
             {
-                BlendImage,
-                BlendDiff
+                BlendImage
             };
 
             Size size = ExtractionData.InputImage != null
@@ -58,53 +57,6 @@ namespace SourceAFIS.FingerprintAnalysis
                 Layer displayLayerType = Options.DisplayLayer;
                 float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, data, skeletonData));
                 return ScalarColoring.Interpolate(GlobalContrast.GetNormalized(displayLayer), ColorF.Transparent, ColorF.Black);
-            }
-            else
-                return GetEmptyLayer(data);
-        }
-
-        ColorF[,] BlendDiff(ExtractionData data)
-        {
-            if (Options.EnableImageDisplay)
-            {
-                SkeletonData skeletonData = GetSkeletonData(data);
-                Layer displayLayerType = Options.DisplayLayer;
-                Layer compareLayerType = displayLayerType;
-                if (Options.CompareWith != QuickCompareType.None)
-                {
-                    if (Options.CompareWith == QuickCompareType.OtherLayer)
-                        compareLayerType = Options.CompareWithLayer;
-                    else
-                    {
-                        int compareLayerIndex;
-                        if (Options.CompareWith == QuickCompareType.Next)
-                            compareLayerIndex = (int)displayLayerType + 1;
-                        else
-                            compareLayerIndex = (int)displayLayerType - 1;
-                        if (Enum.IsDefined(typeof(Layer), compareLayerIndex))
-                            compareLayerType = (Layer)Enum.Parse(typeof(Layer), compareLayerIndex.ToString());
-                    }
-                }
-
-                if (compareLayerType != displayLayerType)
-                {
-                    float[,] displayLayer = GlobalContrast.GetNormalized(GetLayer(displayLayerType, data, skeletonData));
-                    float[,] compareLayer = GlobalContrast.GetNormalized(GetLayer(compareLayerType, data, skeletonData));
-                    float[,] diff;
-                    if ((int)compareLayerType < (int)displayLayerType)
-                        diff = ImageDiff.Diff(compareLayer, displayLayer);
-                    else
-                        diff = ImageDiff.Diff(displayLayer, compareLayer);
-                    if (Options.DiffMode == DiffType.Normalized)
-                        diff = ImageDiff.Normalize(diff, 10);
-                    if (Options.DiffMode == DiffType.Fog)
-                        diff = ImageDiff.Binarize(diff, 0.05f, 0.5f);
-                    if (Options.DiffMode == DiffType.Binary)
-                        diff = ImageDiff.Binarize(diff, 0.05f, 1);
-                    return ImageDiff.Render(diff);
-                }
-                else
-                    return GetEmptyLayer(data);
             }
             else
                 return GetEmptyLayer(data);
