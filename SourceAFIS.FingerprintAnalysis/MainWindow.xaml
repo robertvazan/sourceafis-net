@@ -55,10 +55,12 @@
             <local:FilePicker Grid.Column="1" FpOptions="{Binding Path=Candidate}" />
             <local:FingerView Grid.Row="1" x:Name="LeftView" DataContext="{Binding Source={StaticResource Logs}}"
                               ExtractionData="{Binding Probe}" MatchData="{Binding Match}" MatchSide="{x:Static v:MatchSide.Probe}"
-                              Options="{Binding Source={StaticResource OptionsData}}" />
+                              Options="{Binding Source={StaticResource OptionsData}}"
+                              SkeletonChoice="{Binding Skeleton, Source={StaticResource OptionsData}}" />
             <local:FingerView Grid.Row="1" Grid.Column="1" x:Name="RightView" DataContext="{Binding Source={StaticResource Logs}}"
                               ExtractionData="{Binding Candidate}" MatchData="{Binding Match}" MatchSide="{x:Static v:MatchSide.Candidate}"
-                              Options="{Binding Source={StaticResource OptionsData}}" />
+                              Options="{Binding Source={StaticResource OptionsData}}"
+                              SkeletonChoice="{Binding Skeleton, Source={StaticResource OptionsData}}" />
         </Grid>
     </DockPanel>
 </Window>
