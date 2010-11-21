@@ -75,7 +75,6 @@
     </Compile>
     <Compile Include="GlobalContrast.cs" />
     <Compile Include="GrayscaleInverter.cs" />
-    <Compile Include="ImageDiff.cs" />
     <Compile Include="ImageSerialization.cs" />
     <Compile Include="MaskBorder.xaml.cs">
       <DependentUpon>MaskBorder.xaml</DependentUpon>
