@@ -128,7 +128,6 @@ namespace SourceAFIS.FingerprintAnalysis
             switch (type)
             {
                 case Layer.OriginalImage: return GrayscaleInverter.GetInverted(PixelFormat.ToFloat(data.InputImage));
-                case Layer.Equalized: return data.Equalized;
                 case Layer.SmoothedRidges: return data.SmoothedRidges;
                 case Layer.OrthogonalSmoothing: return data.OrthogonalSmoothing;
                 case Layer.Binarized: return PixelFormat.ToFloat(data.Binarized);
@@ -143,7 +142,7 @@ namespace SourceAFIS.FingerprintAnalysis
                 case Layer.FragmentRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.FragmentRemover, data.Binarized.Size));
                 case Layer.MinutiaMask: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.MinutiaMask, data.Binarized.Size));
                 case Layer.BranchMinutiaRemover: return PixelFormat.ToFloat(SkeletonDrawer.Draw(skeleton.BranchMinutiaRemover, data.Binarized.Size));
-                default: throw new AssertException();
+                default: return new float[data.Binarized.Height, data.Binarized.Width];
             }
         }
     }

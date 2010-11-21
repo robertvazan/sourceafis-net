@@ -70,6 +70,9 @@
       <DependentUpon>ContrastView.xaml</DependentUpon>
     </Compile>
     <Compile Include="EqualsToVisibilityConverter.cs" />
+    <Compile Include="FloatArrayImage.xaml.cs">
+      <DependentUpon>FloatArrayImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GlobalContrast.cs" />
     <Compile Include="GrayscaleInverter.cs" />
     <Compile Include="ImageDiff.cs" />
@@ -110,6 +113,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ContrastView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FloatArrayImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
