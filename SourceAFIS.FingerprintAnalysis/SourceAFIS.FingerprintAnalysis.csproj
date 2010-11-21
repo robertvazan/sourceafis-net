@@ -62,9 +62,6 @@
       <DependentUpon>FingerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Layer.cs" />
-    <Compile Include="LayerSwitch.xaml.cs">
-      <DependentUpon>LayerSwitch.xaml</DependentUpon>
-    </Compile>
     <Compile Include="LogCollector.cs" />
     <Compile Include="ExtractionCollector.cs" />
     <Compile Include="ExtractionData.cs" />
@@ -85,10 +82,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FingerView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="LayerSwitch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
