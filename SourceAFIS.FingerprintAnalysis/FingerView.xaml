@@ -14,8 +14,7 @@
     <Viewbox DataContext="{Binding ElementName=FingerViewControl}">
         <Canvas Width="{Binding ExtractionData.Width}" Height="{Binding ExtractionData.Height}" ClipToBounds="True">
             <Image Source="{Binding BlenderOutput}" />
-            <v:FloatArrayImage InputArray="{Binding ExtractionData.Equalized}"
-                               Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.Equalized}}"/>
+            <local:LayerSwitch Layer="{Binding Options.DisplayLayer}" ExtractionData="{Binding ExtractionData}" />
             <v:BlockMaskBorder Mask="{Binding ExtractionData.AbsoluteContrast}" Blocks="{Binding ExtractionData.Blocks}"
                                Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.AbsoluteContrast}}"/>
             <v:BlockMaskBorder Mask="{Binding ExtractionData.RelativeContrast}" Blocks="{Binding ExtractionData.Blocks}"
