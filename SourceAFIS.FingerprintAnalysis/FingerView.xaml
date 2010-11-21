@@ -20,6 +20,14 @@
                                Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.SmoothedRidges}}"/>
             <v:FloatArrayImage InputArray="{Binding ExtractionData.OrthogonalSmoothing}"
                                Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.OrthogonalSmoothing}}"/>
+            <v:MaskView Mask="{Binding ExtractionData.Binarized}" ZeroColor="White" OneColor="Black"
+                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.Binarized}}"/>
+            <v:MaskView Mask="{Binding ExtractionData.BinarySmoothing}" ZeroColor="White" OneColor="Black"
+                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.BinarySmoothing}}"/>
+            <v:MaskView Mask="{Binding ExtractionData.RemovedCrosses}" ZeroColor="White" OneColor="Black"
+                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.RemovedCrosses}}"/>
+            <v:MaskView Mask="{Binding SkeletonData.Thinned}" ZeroColor="White" OneColor="Green"
+                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.Thinned}}"/>
             <v:BlockMaskBorder Mask="{Binding ExtractionData.AbsoluteContrast}" Blocks="{Binding ExtractionData.Blocks}"
                                Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.AbsoluteContrast}}"/>
             <v:BlockMaskBorder Mask="{Binding ExtractionData.RelativeContrast}" Blocks="{Binding ExtractionData.Blocks}"

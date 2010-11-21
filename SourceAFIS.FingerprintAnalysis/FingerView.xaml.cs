@@ -34,7 +34,8 @@ namespace SourceAFIS.FingerprintAnalysis
         }
 
         public static readonly DependencyProperty ExtractionDataProperty
-            = DependencyProperty.Register("ExtractionData", typeof(ExtractionData), typeof(FingerView));
+            = DependencyProperty.Register("ExtractionData", typeof(ExtractionData), typeof(FingerView),
+            new PropertyMetadata((self, args) => { (self as FingerView).UpdateSkeletonType(); }));
         public ExtractionData ExtractionData
         {
             get { return (ExtractionData)GetValue(ExtractionDataProperty); }
@@ -55,6 +56,35 @@ namespace SourceAFIS.FingerprintAnalysis
         {
             get { return (MatchSide)GetValue(MatchSideProperty); }
             set { SetValue(MatchSideProperty, value); }
+        }
+
+        public static readonly DependencyProperty SkeletonChoiceProperty
+            = DependencyProperty.Register("SkeletonChoice", typeof(SkeletonType), typeof(FingerView),
+            new PropertyMetadata(SkeletonType.Ridges, (self, args) => { (self as FingerView).UpdateSkeletonType(); }));
+        public SkeletonType SkeletonChoice
+        {
+            get { return (SkeletonType)GetValue(SkeletonChoiceProperty); }
+            set { SetValue(SkeletonChoiceProperty, value); }
+        }
+
+        static readonly DependencyPropertyKey SkeletonDataProperty
+            = DependencyProperty.RegisterReadOnly("SkeletonData", typeof(SkeletonData), typeof(FingerView), null);
+        public SkeletonData SkeletonData
+        {
+            get { return (SkeletonData)GetValue(SkeletonDataProperty.DependencyProperty); }
+        }
+
+        void UpdateSkeletonType()
+        {
+            if (ExtractionData != null)
+            {
+                if (SkeletonChoice == SkeletonType.Ridges)
+                    SetValue(SkeletonDataProperty, ExtractionData.Ridges);
+                else
+                    SetValue(SkeletonDataProperty, ExtractionData.Valleys);
+            }
+            else
+                SetValue(SkeletonDataProperty, null);
         }
 
         public FingerView()
