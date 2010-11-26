@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" Name="FilePickerControl">
     <DockPanel>
-        <Button Content="Open" Height="23" Name="Open" Margin="2" DockPanel.Dock="Right" Click="Open_Click" />
+        <Button Content="Close" Height="23" Name="Close" Margin="2" DockPanel.Dock="Right" Click="Close_Click" />
+        <Button Content="Open..." Height="23" Name="Open" Margin="2" DockPanel.Dock="Right" Click="Open_Click" />
         <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0">
             <TextBlock Text="{Binding Path=FpOptions.FileName, ElementName=FilePickerControl, Mode=OneWay}" Margin="2" />
         </Label>
