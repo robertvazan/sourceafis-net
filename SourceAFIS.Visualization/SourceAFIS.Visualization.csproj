@@ -57,15 +57,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlphaLayering.cs" />
-    <Compile Include="BlockFiller.cs" />
     <Compile Include="BlockMaskBorder.xaml.cs">
       <DependentUpon>BlockMaskBorder.xaml</DependentUpon>
     </Compile>
     <Compile Include="ByteArrayImage.xaml.cs">
       <DependentUpon>ByteArrayImage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CircleDrawer.cs" />
     <Compile Include="ColorB.cs" />
     <Compile Include="ColorF.cs" />
     <Compile Include="ContrastView.xaml.cs">
@@ -75,9 +72,6 @@
     <Compile Include="FloatArrayImage.xaml.cs">
       <DependentUpon>FloatArrayImage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GlobalContrast.cs" />
-    <Compile Include="GrayscaleInverter.cs" />
-    <Compile Include="ImageSerialization.cs" />
     <Compile Include="MaskBorder.xaml.cs">
       <DependentUpon>MaskBorder.xaml</DependentUpon>
     </Compile>
@@ -96,8 +90,6 @@
     <Compile Include="RidgeOrientation.xaml.cs">
       <DependentUpon>RidgeOrientation.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ScalarColoring.cs" />
-    <Compile Include="SkeletonDrawer.cs" />
     <Compile Include="SkeletonView.xaml.cs">
       <DependentUpon>SkeletonView.xaml</DependentUpon>
     </Compile>
