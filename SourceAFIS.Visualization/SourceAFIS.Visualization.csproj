@@ -95,6 +95,9 @@
     </Compile>
     <Compile Include="ScalarColoring.cs" />
     <Compile Include="SkeletonDrawer.cs" />
+    <Compile Include="SkeletonView.xaml.cs">
+      <DependentUpon>SkeletonView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="KeyPair.snk" />
@@ -135,6 +138,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RidgeOrientation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SkeletonView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
