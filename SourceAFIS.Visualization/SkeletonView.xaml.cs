@@ -72,6 +72,7 @@ namespace SourceAFIS.Visualization
                     SetValue(ShadowProperty, shadow);
 
                     var points = from minutia in Skeleton.Minutiae
+                                 where minutia.Valid
                                  select new WPoint(minutia.Position.X - 3, OriginalHeight - 1 - minutia.Position.Y - 3);
                     SetValue(PositionsProperty, points);
                 }
