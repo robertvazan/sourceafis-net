@@ -28,6 +28,9 @@
                         Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.RemovedCrosses}}"/>
             <v:MaskView Mask="{Binding SkeletonData.Thinned}" ZeroColor="White" OneColor="Green"
                         Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.Thinned}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.RidgeTracer}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.RidgeTracer}}"/>
             <v:BlockMaskBorder Mask="{Binding ExtractionData.AbsoluteContrast}" Blocks="{Binding ExtractionData.Blocks}"
                                Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.AbsoluteContrast}}"/>
             <v:BlockMaskBorder Mask="{Binding ExtractionData.RelativeContrast}" Blocks="{Binding ExtractionData.Blocks}"
