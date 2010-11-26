@@ -31,6 +31,27 @@
             <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
                             Skeleton="{Binding SkeletonData.RidgeTracer}"
                             Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.RidgeTracer}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.DotRemover}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.DotRemover}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.PoreRemover}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.PoreRemover}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.GapRemover}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.GapRemover}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.TailRemover}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.TailRemover}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.FragmentRemover}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.FragmentRemover}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.MinutiaMask}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.MinutiaMask}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.BranchMinutiaRemover}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.BranchMinutiaRemover}}"/>
             <v:BlockMaskBorder Mask="{Binding ExtractionData.AbsoluteContrast}" Blocks="{Binding ExtractionData.Blocks}"
                                Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.AbsoluteContrast}}"/>
             <v:BlockMaskBorder Mask="{Binding ExtractionData.RelativeContrast}" Blocks="{Binding ExtractionData.Blocks}"
