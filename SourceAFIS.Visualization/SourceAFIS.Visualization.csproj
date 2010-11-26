@@ -62,6 +62,9 @@
     <Compile Include="BlockMaskBorder.xaml.cs">
       <DependentUpon>BlockMaskBorder.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ByteArrayImage.xaml.cs">
+      <DependentUpon>ByteArrayImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CircleDrawer.cs" />
     <Compile Include="ColorB.cs" />
     <Compile Include="ColorF.cs" />
@@ -110,6 +113,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="BlockMaskBorder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ByteArrayImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

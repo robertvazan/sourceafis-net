@@ -79,7 +79,6 @@ namespace SourceAFIS.FingerprintAnalysis
         {
             switch (type)
             {
-                case Layer.OriginalImage: return GrayscaleInverter.GetInverted(PixelFormat.ToFloat(data.InputImage));
                 default: return new float[data.Binarized.Height, data.Binarized.Width];
             }
         }
