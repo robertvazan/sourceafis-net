@@ -17,14 +17,6 @@ namespace SourceAFIS.FingerprintAnalysis
 {
     public partial class FingerView : UserControl
     {
-        public static readonly DependencyProperty BlenderOutputProperty
-            = DependencyProperty.Register("BlenderOutput", typeof(BitmapSource), typeof(FingerView));
-        public BitmapSource BlenderOutput
-        {
-            get { return (BitmapSource)GetValue(BlenderOutputProperty); }
-            set { SetValue(BlenderOutputProperty, value); }
-        }
-
         public static readonly DependencyProperty OptionsProperty
             = DependencyProperty.Register("Options", typeof(Options), typeof(FingerView));
         public Options Options

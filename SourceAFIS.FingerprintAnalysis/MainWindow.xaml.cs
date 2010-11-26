@@ -29,8 +29,6 @@ namespace SourceAFIS.FingerprintAnalysis
 
         Options Options;
         LogDecoder Collector;
-        Blender LeftBlender = new Blender();
-        Blender RightBlender = new Blender();
 
         public MainWindow()
         {
@@ -41,23 +39,6 @@ namespace SourceAFIS.FingerprintAnalysis
 
             Collector = FindResource("Logs") as LogDecoder;
             Collector.Initialize(Options);
-
-            LeftBlender.Options = Options;
-            LeftBlender.Logs = Collector;
-            LeftBlender.ExtractionData = Collector.Probe;
-            LeftBlender.MatchSide = Collector.Match.Probe;
-
-            RightBlender.Options = Options;
-            RightBlender.Logs = Collector;
-            RightBlender.ExtractionData = Collector.Candidate;
-            RightBlender.MatchSide = Collector.Match.Candidate;
-
-            UpdateBlender();
-            
-            Options.PropertyChanged += (source, args) => { OnOptionsChange(args.PropertyName); };
-            Options.Probe.PropertyChanged += (source, args) => { OnOptionsChange(args.PropertyName); };
-            Options.Candidate.PropertyChanged += (source, args) => { OnOptionsChange(args.PropertyName); };
-            Collector.MatchLog.PropertyChanged += (source, args) => { UpdateBlender(); };
         }
 
         private void LeftOpen_Click(object sender, RoutedEventArgs e)
@@ -72,20 +53,6 @@ namespace SourceAFIS.FingerprintAnalysis
             OpenFileDialog dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == true)
                 Options.Candidate.Path = dialog.FileName;
-        }
-
-        void OnOptionsChange(string property)
-        {
-            if (property != "Path")
-                UpdateBlender();
-        }
-
-        void UpdateBlender()
-        {
-            LeftBlender.Blend();
-            LeftView.BlenderOutput = LeftBlender.OutputImage;
-            RightBlender.Blend();
-            RightView.BlenderOutput = RightBlender.OutputImage;
         }
 
         void LoadSettings()

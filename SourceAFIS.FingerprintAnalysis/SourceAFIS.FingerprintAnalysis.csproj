@@ -53,7 +53,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Blender.cs" />
     <Compile Include="CandidateMatchData.cs" />
     <Compile Include="FilePicker.xaml.cs">
       <DependentUpon>FilePicker.xaml</DependentUpon>
