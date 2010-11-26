@@ -36,5 +36,10 @@ namespace SourceAFIS.FingerprintAnalysis
             if (dialog.ShowDialog() == true)
                 FpOptions.Path = dialog.FileName;
         }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            FpOptions.Path = "";
+        }
     }
 }
