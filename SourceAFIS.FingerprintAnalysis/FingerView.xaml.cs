@@ -66,6 +66,13 @@ namespace SourceAFIS.FingerprintAnalysis
             get { return (SkeletonData)GetValue(SkeletonDataProperty.DependencyProperty); }
         }
 
+        static readonly DependencyPropertyKey RenderSourceProperty
+            = DependencyProperty.RegisterReadOnly("RenderSource", typeof(FrameworkElement), typeof(FingerView), null);
+        public FrameworkElement RenderSource
+        {
+            get { return (FrameworkElement)GetValue(RenderSourceProperty.DependencyProperty); }
+        }
+
         void UpdateSkeletonType()
         {
             if (ExtractionData != null)
@@ -82,6 +89,7 @@ namespace SourceAFIS.FingerprintAnalysis
         public FingerView()
         {
             InitializeComponent();
+            SetValue(RenderSourceProperty, MainCanvas);
         }
     }
 }
