@@ -31,7 +31,7 @@
         </ObjectDataProvider>
     </Window.Resources>
     <DockPanel Name="OptionsDockPanel" Margin="2" DataContext="{StaticResource OptionsData}">
-        <ScrollViewer Name="OptionScrollView" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Right">
+        <ScrollViewer Name="OptionScrollView" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Right" MinWidth="160">
             <StackPanel Name="OptionsPanel">
                 <ComboBox Height="23" Name="DisplayLayer" Margin="2" SelectedItem="{Binding Path=DisplayLayer}" ItemsSource="{Binding Source={StaticResource LayerTypeValues}}" />
                 <ComboBox Height="23" Name="SelectedSkeleton" Margin="2" SelectedItem="{Binding Path=Skeleton}" ItemsSource="{Binding Source={StaticResource SkeletonTypeValues}}" />
