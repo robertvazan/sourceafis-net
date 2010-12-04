@@ -63,8 +63,6 @@
     <Compile Include="ByteArrayImage.xaml.cs">
       <DependentUpon>ByteArrayImage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ColorB.cs" />
-    <Compile Include="ColorF.cs" />
     <Compile Include="ContrastView.xaml.cs">
       <DependentUpon>ContrastView.xaml</DependentUpon>
     </Compile>
@@ -85,7 +83,6 @@
     <Compile Include="Minutiae.xaml.cs">
       <DependentUpon>Minutiae.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PixelFormat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RidgeOrientation.xaml.cs">
       <DependentUpon>RidgeOrientation.xaml</DependentUpon>

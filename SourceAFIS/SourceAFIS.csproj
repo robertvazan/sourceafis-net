@@ -107,13 +107,11 @@
     <Compile Include="General\ReversedList.cs" />
     <Compile Include="General\Size.cs" />
     <Compile Include="General\SizeF.cs" />
-    <Compile Include="General\Transformation2D.cs" />
     <Compile Include="Matching\ParallelMatcher.cs" />
     <Compile Include="Matching\Minutia\EdgeConstructor.cs" />
     <Compile Include="Matching\Minutia\EdgeInfo.cs" />
     <Compile Include="Matching\Minutia\EdgeLookup.cs" />
     <Compile Include="Matching\Minutia\ExhaustiveRootSelector.cs" />
-    <Compile Include="Matching\GlobalTransformation.cs" />
     <Compile Include="Matching\Minutia\IRootSelector.cs" />
     <Compile Include="Matching\MatchAnalysis.cs" />
     <Compile Include="Matching\Minutia\MinutiaMatcher.cs" />
