@@ -61,7 +61,8 @@ namespace SourceAFIS.Tuning.Reports
         {
             Directory.CreateDirectory(folder);
 
-            Parallel.ForEach(Accuracy, accuracy => { accuracy.Save(Path.Combine(folder, accuracy.Name), true); });
+            foreach(var accuracy in Accuracy)
+                accuracy.Save(Path.Combine(folder, accuracy.Name), true);
         }
     }
 }
