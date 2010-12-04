@@ -9,7 +9,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
 using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
-using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Tuning.Database
 {

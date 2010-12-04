@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using SourceAFIS.General;
 using SourceAFIS.Tuning.Reports;
-using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Tuning.Errors
 {
@@ -50,7 +49,8 @@ namespace SourceAFIS.Tuning.Errors
                     serializer.Serialize(stream, ROC);
                 }
 
-                WpfIO.Save(WpfIO.GetBitmapSource(PixelFormat.ToByte(new ROCGraph().Draw(ROC))), Path.Combine(folder, "ROC.png"));
+                if (GraphDrawer != null)
+                    GraphDrawer(ROC, Path.Combine(folder, "ROC.png"));
             }
         }
 
@@ -60,6 +60,7 @@ namespace SourceAFIS.Tuning.Errors
         public float Separation;
         [XmlIgnore]
         public TopErrors TopErrors;
+        public static Action<ROCCurve, string> GraphDrawer;
 
         AccuracyStatistics() { }
 
@@ -90,8 +91,8 @@ namespace SourceAFIS.Tuning.Errors
             }
 
             if (perDatabase)
-                Parallel.For(0, PerDatabase.Length,
-                    (i) => { PerDatabase[i].Save(Path.Combine(folder, String.Format("Database{0}", i + 1))); });
+                for (int i = 0; i < PerDatabase.Length; ++i)
+                    PerDatabase[i].Save(Path.Combine(folder, String.Format("Database{0}", i + 1)));
         }
     }
 }

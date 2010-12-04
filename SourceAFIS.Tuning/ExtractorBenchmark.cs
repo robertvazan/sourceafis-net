@@ -5,7 +5,6 @@ using System.Diagnostics;
 using SourceAFIS.General;
 using SourceAFIS.Extraction;
 using SourceAFIS.Extraction.Templates;
-using SourceAFIS.Visualization;
 using SourceAFIS.Tuning.Reports;
 using SourceAFIS.Tuning.Database;
 

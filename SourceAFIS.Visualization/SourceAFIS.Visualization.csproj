@@ -90,6 +90,9 @@
     <Compile Include="RidgeOrientation.xaml.cs">
       <DependentUpon>RidgeOrientation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RocGraph.xaml.cs">
+      <DependentUpon>RocGraph.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SkeletonView.xaml.cs">
       <DependentUpon>SkeletonView.xaml</DependentUpon>
     </Compile>
@@ -98,6 +101,10 @@
     <None Include="KeyPair.snk" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SourceAFIS.Tuning\SourceAFIS.Tuning.csproj">
+      <Project>{7DD4AD3F-2836-4187-A6E7-D271F13F943E}</Project>
+      <Name>SourceAFIS.Tuning</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SourceAFIS\SourceAFIS.csproj">
       <Project>{35075900-98B2-4F73-A8FE-11E0D2182689}</Project>
       <Name>SourceAFIS</Name>
@@ -137,6 +144,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RidgeOrientation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RocGraph.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
