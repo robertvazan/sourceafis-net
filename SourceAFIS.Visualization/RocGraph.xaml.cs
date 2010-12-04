@@ -63,7 +63,6 @@ namespace SourceAFIS.Visualization
 
             graph.Arrange(new Rect(0, 0, 600, 600));
             graph.UpdateLayout();
-            graph.Dispatcher.Invoke(DispatcherPriority.Loaded, new Action(() => { }));
 
             RenderTargetBitmap render = new RenderTargetBitmap(
                 Convert.ToInt32(graph.ActualWidth), Convert.ToInt32(graph.ActualHeight),
