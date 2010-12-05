@@ -29,20 +29,31 @@
                 <sys:String>SourceAFIS.FingerprintAnalysis.MaskType</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="Height" Value="23" />
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="Margin" Value="2" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="Height" Value="23" />
+        </Style>
     </Window.Resources>
-    <DockPanel Name="OptionsDockPanel" Margin="2" DataContext="{StaticResource OptionsData}">
-        <ScrollViewer Name="OptionScrollView" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Right" MinWidth="160">
-            <StackPanel Name="OptionsPanel">
-                <ComboBox Height="23" Name="DisplayLayer" Margin="2" SelectedItem="{Binding Path=DisplayLayer}" ItemsSource="{Binding Source={StaticResource LayerTypeValues}}" />
-                <ComboBox Height="23" Name="SelectedSkeleton" Margin="2" SelectedItem="{Binding Path=Skeleton}" ItemsSource="{Binding Source={StaticResource SkeletonTypeValues}}" />
-                <ComboBox Height="23" Name="Mask" Margin="2" SelectedItem="{Binding Path=Mask}" ItemsSource="{Binding Source={StaticResource MaskTypeValues}}" />
-                <CheckBox Content="Contrast" Height="16" Name="Contrast" Margin="2" IsChecked="{Binding Path=Contrast}" />
-                <CheckBox Content="Orientation field" Height="16" Name="Orientation" Margin="2" IsChecked="{Binding Path=Orientation}" />
-                <CheckBox Content="Minutiae" Height="16" Name="MinutiaCollector" Margin="2" IsChecked="{Binding Path=Minutiae}" />
-                <CheckBox Content="Paired minutiae" Height="16" Name="PairedMinutiae" Margin="2" IsChecked="{Binding Path=PairedMinutiae}" />
+    <DockPanel Margin="2" DataContext="{StaticResource OptionsData}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" DockPanel.Dock="Right" MinWidth="160">
+            <StackPanel>
+                <ComboBox SelectedItem="{Binding DisplayLayer}" ItemsSource="{Binding Source={StaticResource LayerTypeValues}}" />
+                <ComboBox SelectedItem="{Binding Skeleton}" ItemsSource="{Binding Source={StaticResource SkeletonTypeValues}}" />
+                <ComboBox SelectedItem="{Binding Mask}" ItemsSource="{Binding Source={StaticResource MaskTypeValues}}" />
+                <CheckBox Content="Contrast" IsChecked="{Binding Contrast}" />
+                <CheckBox Content="Orientation field" IsChecked="{Binding Orientation}" />
+                <CheckBox Content="Minutiae" IsChecked="{Binding Minutiae}" />
+                <CheckBox Content="Paired minutiae" IsChecked="{Binding PairedMinutiae}" />
             </StackPanel>
         </ScrollViewer>
-        <Grid Name="MainGrid">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -51,8 +62,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <local:FilePicker FpOptions="{Binding Path=Probe}" RenderSource="{Binding ElementName=LeftView, Path=RenderSource}" />
-            <local:FilePicker Grid.Column="1" FpOptions="{Binding Path=Candidate}" RenderSource="{Binding ElementName=RightView, Path=RenderSource}" />
+            <local:FilePicker FpOptions="{Binding Probe}" RenderSource="{Binding RenderSource, ElementName=LeftView}" />
+            <local:FilePicker Grid.Column="1" FpOptions="{Binding Candidate}" RenderSource="{Binding RenderSource, ElementName=RightView}" />
             <local:FingerView Grid.Row="1" x:Name="LeftView" DataContext="{Binding Source={StaticResource Logs}}"
                               ExtractionData="{Binding Probe}" MatchData="{Binding Match}" MatchSide="{x:Static v:MatchSide.Probe}"
                               Options="{Binding Source={StaticResource OptionsData}}"
