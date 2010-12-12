@@ -53,13 +53,6 @@ namespace SourceAFIS.Visualization
             get { return (IEnumerable<PieInfo>)GetValue(PiesProperty.DependencyProperty); }
         }
 
-        static readonly DependencyPropertyKey PieGeometryProperty
-            = DependencyProperty.RegisterReadOnly("PieGeometry", typeof(Geometry), typeof(ContrastView), null);
-        public Geometry PieGeometry
-        {
-            get { return (Geometry)GetValue(PieGeometryProperty.DependencyProperty); }
-        }
-
         void UpdatePies()
         {
             if (IsVisible && Blocks != null && ContrastMap != null
