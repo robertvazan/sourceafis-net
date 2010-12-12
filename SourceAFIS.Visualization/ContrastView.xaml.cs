@@ -19,6 +19,15 @@ namespace SourceAFIS.Visualization
 {
     public partial class ContrastView : UserControl
     {
+        public struct PieInfo
+        {
+            public WPoint Center { get; set; }
+            public WPoint Top { get; set; }
+            public WPoint ArcStart { get; set; }
+            public WSize ArcSize { get; set; }
+            public bool IsLargeArc { get; set; }
+        }
+
         public static readonly DependencyProperty BlocksProperty
             = DependencyProperty.Register("Blocks", typeof(BlockMap), typeof(ContrastView),
             new PropertyMetadata((self, args) => { (self as ContrastView).UpdatePies(); }));
@@ -37,6 +46,13 @@ namespace SourceAFIS.Visualization
             set { SetValue(ContrastMapProperty, value); }
         }
 
+        static readonly DependencyPropertyKey PiesProperty
+            = DependencyProperty.RegisterReadOnly("Pies", typeof(IEnumerable<PieInfo>), typeof(ContrastView), null);
+        public IEnumerable<PieInfo> Pies
+        {
+            get { return (IEnumerable<PieInfo>)GetValue(PiesProperty.DependencyProperty); }
+        }
+
         static readonly DependencyPropertyKey PieGeometryProperty
             = DependencyProperty.RegisterReadOnly("PieGeometry", typeof(Geometry), typeof(ContrastView), null);
         public Geometry PieGeometry
@@ -50,30 +66,26 @@ namespace SourceAFIS.Visualization
                 && Blocks.BlockCount.Width == ContrastMap.GetLength(1)
                 && Blocks.BlockCount.Height == ContrastMap.GetLength(0))
             {
-                StreamGeometry geometry = new StreamGeometry();
-                geometry.FillRule = FillRule.EvenOdd;
                 var blocks = Blocks;
                 var contrasts = ContrastMap;
-                using (StreamGeometryContext context = geometry.Open())
-                {
-                    foreach (var block in Blocks.AllBlocks)
-                    {
-                        var centerX = blocks.BlockCenters[block].X;
-                        var centerY = blocks.PixelCount.Height - blocks.BlockCenters[block].Y;
-                        var radius = 0.37 * Math.Min(blocks.BlockAreas[block].Width, blocks.BlockAreas[block].Height);
-                        var contrast = contrasts[block.Y, block.X] / 255f;
-                        var angle = Angle.ToVector(Angle.FromFraction(contrast));
-
-                        context.BeginFigure(new WPoint(centerX, centerY), true, true);
-                        context.LineTo(new WPoint(centerX + angle.Y * radius, centerY - angle.X * radius), true, true);
-                        context.ArcTo(new WPoint(centerX, centerY - radius), new WSize(radius, radius), 0, contrast > 0.5, SweepDirection.Counterclockwise, true, true);
-                    }
-                }
-                geometry.Freeze();
-                SetValue(PieGeometryProperty, geometry);
+                var pies = from block in blocks.AllBlocks
+                           let centerX = blocks.BlockCenters[block].X
+                           let centerY = blocks.PixelCount.Height - blocks.BlockCenters[block].Y
+                           let radius = 0.37 * Math.Min(blocks.BlockAreas[block].Width, blocks.BlockAreas[block].Height)
+                           let contrast = contrasts[block.Y, block.X] / 255f
+                           let angle = Angle.ToVector(Angle.FromFraction(contrast))
+                           select new PieInfo()
+                           {
+                               Center = new WPoint(centerX, centerY),
+                               Top = new WPoint(0, -radius),
+                               ArcSize = new WSize(radius, radius),
+                               ArcStart = new WPoint(angle.Y * radius, -angle.X * radius),
+                               IsLargeArc = contrast > 0.5
+                           };
+                SetValue(PiesProperty, pies.ToList());
             }
             else
-                SetValue(PieGeometryProperty, null);
+                SetValue(PiesProperty, null);
         }
 
         public ContrastView()
