@@ -94,7 +94,7 @@ namespace SourceAFIS.Tests.Simple
             Assert.AreEqual(bitmap.PixelWidth, bitmap2.PixelWidth);
 
             MemoryStream saved = new MemoryStream();
-            BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(bitmap2));
             encoder.Save(saved);
             saved.Close();
