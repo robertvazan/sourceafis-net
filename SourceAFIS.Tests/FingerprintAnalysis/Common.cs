@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Threading;
+using System.Reflection;
 using NUnit.Framework;
 using White.Core;
 using White.Core.Factory;
@@ -16,13 +17,14 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
 {
     public class Common
     {
-        //protected string AppPath = Path.Combine("FingerprintAnalysis", "SourceAFIS.FingerprintAnalysis.exe");
-        protected string AppPath = Path.Combine("..", "..", "..", "SourceAFIS.FingerprintAnalysis", "bin", "Debug", "SourceAFIS.FingerprintAnalysis.exe");
+        protected string AppPath = Path.Combine("FingerprintAnalysis", "SourceAFIS.FingerprintAnalysis.exe");
         protected Application App;
         protected Window Win;
 
         public void StartApp()
         {
+            if (!File.Exists(AppPath))
+                AppPath = Path.Combine("..", "..", "..", "SourceAFIS.FingerprintAnalysis", "bin", "Debug", "SourceAFIS.FingerprintAnalysis.exe");
             App = Application.Launch(AppPath);
             Win = App.GetWindow("Fingerprint Analysis", InitializeOption.NoCache);
         }
