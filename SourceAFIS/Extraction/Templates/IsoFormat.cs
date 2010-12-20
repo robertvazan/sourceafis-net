@@ -127,6 +127,7 @@ namespace SourceAFIS.Extraction.Templates
         public override TemplateBuilder Import(byte[] template)
         {
             TemplateBuilder builder = new TemplateBuilder();
+            builder.OriginalDpi = 500;
 
             MemoryStream stream = new MemoryStream(template);
             BinaryReader reader = new BinaryReader(stream, Encoding.UTF8);
