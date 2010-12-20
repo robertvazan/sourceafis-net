@@ -25,22 +25,19 @@ namespace SourceAFIS.General
 
         public static byte[,] GetPixels(BitmapSource bitmap)
         {
-            FormatConvertedBitmap converted = new FormatConvertedBitmap(bitmap, PixelFormats.Bgr32, null, 0.5);
+            FormatConvertedBitmap converted = new FormatConvertedBitmap(bitmap, PixelFormats.Gray8, null, 0.5);
 
             int width = (int)converted.PixelWidth;
             int height = (int)converted.PixelHeight;
 
-            byte[] flat = new byte[width * height * 4];
+            byte[] flat = new byte[width * height];
 
-            converted.CopyPixels(flat, width * 4, 0);
+            converted.CopyPixels(flat, width, 0);
 
             byte[,] pixels = new byte[height, width];
             for (int y = 0; y < height; ++y)
                 for (int x = 0; x < width; ++x)
-                {
-                    int at = ((height - y - 1) * width + x) * 4;
-                    pixels[y, x] = (byte)((flat[at] + flat[at + 1] + flat[at + 2]) / 3);
-                }
+                    pixels[y, x] = flat[(height - y - 1) * width + x];
 
             return pixels;
         }
