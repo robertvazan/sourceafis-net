@@ -86,7 +86,7 @@ namespace AfisBuilder
                 Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.xml", prefix + "Bin");
                 Command.CopyTo(@"SourceAFIS\bin\Release Mobile\SourceAFIS.Mobile.dll", prefix + "Bin");
             }
-            Command.CopyTo(@"SourceAFIS.Tuning\bin\Release\SourceAFIS.Visualization.dll", prefix + "Bin");
+            Command.CopyTo(@"SourceAFIS.Visualization\bin\Release\SourceAFIS.Visualization.dll", prefix + "Bin");
             Command.CopyTo(@"SourceAFIS.Tuning\bin\Release\SourceAFIS.Tuning.dll", prefix + "Bin");
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe", prefix + "Bin");
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe.config", prefix + "Bin");
@@ -182,6 +182,14 @@ namespace AfisBuilder
         {
             string folder = @"SourceAFIS.Tests\bin\Release";
             Command.CopyTo(Path.Combine(MsiFolder, "SourceAFIS-" + Versions.Release + ".msi"), folder);
+
+            string analysisFolder = Path.Combine(folder, "FingerprintAnalysis");
+            Command.ForceDeleteDirectory(analysisFolder);
+            Directory.CreateDirectory(analysisFolder);
+            Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", analysisFolder);
+            Command.CopyTo(@"SourceAFIS.Visualization\bin\Release\SourceAFIS.Visualization.dll", analysisFolder);
+            Command.CopyTo(@"SourceAFIS.FingerprintAnalysis\bin\Release\SourceAFIS.FingerprintAnalysis.exe", analysisFolder);
+
             Directory.SetCurrentDirectory(folder);
 
             string nunit = (from nunitRoot in Directory.GetDirectories(@"C:\Program Files", "NUnit *.*.*")

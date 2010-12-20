@@ -41,11 +41,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="White.Core">
+      <HintPath>..\..\..\..\..\Program Files\NUnit 2.5.7\bin\net-2.0\addins\White.Core.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Executable\Installer.cs" />
     <Compile Include="Executable\InstallerRun.cs" />
+    <Compile Include="FingerprintAnalysis\Startup.cs" />
     <Compile Include="Simple\AfisEngineTest.cs" />
     <Compile Include="Simple\FingerprintTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
