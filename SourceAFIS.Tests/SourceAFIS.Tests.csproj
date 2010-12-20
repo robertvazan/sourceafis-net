@@ -49,6 +49,9 @@
   <ItemGroup>
     <Compile Include="Executable\Installer.cs" />
     <Compile Include="Executable\InstallerRun.cs" />
+    <Compile Include="FingerprintAnalysis\Common.cs" />
+    <Compile Include="FingerprintAnalysis\Extensions.cs" />
+    <Compile Include="FingerprintAnalysis\Options.cs" />
     <Compile Include="FingerprintAnalysis\Startup.cs" />
     <Compile Include="Simple\AfisEngineTest.cs" />
     <Compile Include="Simple\FingerprintTest.cs" />

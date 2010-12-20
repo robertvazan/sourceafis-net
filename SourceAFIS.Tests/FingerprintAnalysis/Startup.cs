@@ -11,19 +11,14 @@ using White.Core.UIItems.WindowItems;
 namespace SourceAFIS.Tests.FingerprintAnalysis
 {
     [TestFixture]
-    public class Startup
+    public class Startup : Common
     {
-        string AppPath = Path.Combine("FingerprintAnalysis", "SourceAFIS.FingerprintAnalysis.exe");
-        Application App;
-
         [Test]
         public void DefaultStartup()
         {
-            App = Application.Launch(AppPath);
-            Window window = App.GetWindow("Fingerprint Analysis", InitializeOption.NoCache);
-            Assert.IsNotNull(window);
-            Assert.IsTrue(window.DisplayState == DisplayState.Maximized);
-            App.Kill();
+            StartApp();
+            Assert.IsNotNull(Win);
+            Assert.IsTrue(Win.DisplayState == DisplayState.Maximized);
         }
 
         [TearDown]
