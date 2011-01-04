@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.IO;
 using NUnit.Framework;
 using White.Core;
 using White.Core.Factory;
@@ -25,7 +26,14 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
         [Test]
         public void ClickThrough()
         {
+            SelectFile(Left, null);
+            SelectFile(Right, null);
+
             ResetOptions();
+
+            SelectFile(Left, Settings.SomeFingerprintPath);
+            SelectFile(Right, Settings.MatchingFingerprintPath);
+
             LayerChoice.SelectSlowly("MinutiaMask");
             SkeletonChoice.SelectSlowly("Valleys");
             MaskChoice.SelectSlowly("Segmentation");
@@ -33,6 +41,11 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             Orientation.Checked = true;
             Minutiae.Checked = true;
             Paired.Checked = true;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
             Thread.Sleep(300);
             Assert.IsFalse(App.HasExited);
         }

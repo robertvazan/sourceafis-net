@@ -62,8 +62,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <local:FilePicker FpOptions="{Binding Probe}" RenderSource="{Binding RenderSource, ElementName=LeftView}" />
-            <local:FilePicker Grid.Column="1" FpOptions="{Binding Candidate}" RenderSource="{Binding RenderSource, ElementName=RightView}" />
+            <local:FilePicker FpOptions="{Binding Probe}" RenderSource="{Binding RenderSource, ElementName=LeftView}" x:Name="LeftFilePicker" />
+            <local:FilePicker Grid.Column="1" FpOptions="{Binding Candidate}" RenderSource="{Binding RenderSource, ElementName=RightView}" x:Name="RightFilePicker" />
             <local:FingerView Grid.Row="1" x:Name="LeftView" DataContext="{Binding Source={StaticResource Logs}}"
                               ExtractionData="{Binding Probe}" MatchData="{Binding Match}" MatchSide="{x:Static v:MatchSide.Probe}"
                               Options="{Binding Source={StaticResource OptionsData}}"
