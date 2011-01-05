@@ -21,11 +21,17 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             Assert.IsTrue(Win.DisplayState == DisplayState.Maximized);
         }
 
-        [TearDown]
-        public void TearDown()
+        public override void TestFixtureSetUp()
+        {
+        }
+
+        public override void TearDown()
         {
             if (App != null && !App.HasExited)
+            {
+                base.TearDown();
                 App.Kill();
+            }
         }
     }
 }
