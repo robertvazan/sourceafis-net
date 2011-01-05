@@ -16,9 +16,9 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
 {
     public static class Extensions
     {
-        public static void SelectSlowly(this WPFComboBox combo, string text)
+        public static void SelectSlowly(this ComboBox combo, string text)
         {
-            if (combo.SelectedItemText != text)
+            if (combo.GetSelectedItemText() != text)
             {
                 combo.Click();
                 Thread.Sleep(300);
@@ -26,6 +26,15 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
                 Thread.Sleep(100);
                 Assert.AreEqual(text, combo.SelectedItemText);
             }
+        }
+
+        public static string GetSelectedItemText(this ComboBox combo)
+        {
+            AutomationElement element = combo.AutomationElement;
+            AutomationPattern automationPattern = element.GetSupportedPatterns().Where(
+                p => p.ProgrammaticName == "SelectionPatternIdentifiers.Pattern").First();
+            SelectionPattern selectionPattern = element.GetCurrentPattern(automationPattern) as SelectionPattern;
+            return selectionPattern.Current.GetSelection()[0].Current.Name;
         }
 
         public static IUIItem GetChecked(this UIItemContainer container, SearchCriteria criteria)

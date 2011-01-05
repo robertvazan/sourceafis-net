@@ -29,9 +29,9 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             Win = App.GetWindow("Fingerprint Analysis", InitializeOption.NoCache);
         }
 
-        public WPFComboBox LayerChoice { get { return Win.GetChecked<WPFComboBox>(SearchCriteria.ByAutomationId("LayerChoice")); } }
-        public WPFComboBox SkeletonChoice { get { return Win.GetChecked<WPFComboBox>(SearchCriteria.ByAutomationId("SkeletonChoice")); } }
-        public WPFComboBox MaskChoice { get { return Win.GetChecked<WPFComboBox>(SearchCriteria.ByAutomationId("MaskChoice")); } }
+        public ComboBox LayerChoice { get { return Win.GetChecked<ComboBox>(SearchCriteria.ByAutomationId("LayerChoice")); } }
+        public ComboBox SkeletonChoice { get { return Win.GetChecked<ComboBox>(SearchCriteria.ByAutomationId("SkeletonChoice")); } }
+        public ComboBox MaskChoice { get { return Win.GetChecked<ComboBox>(SearchCriteria.ByAutomationId("MaskChoice")); } }
         public CheckBox Contrast { get { return Win.GetChecked<CheckBox>(SearchCriteria.ByText("Contrast")); } }
         public CheckBox Orientation { get { return Win.GetChecked<CheckBox>(SearchCriteria.ByText("Orientation field")); } }
         public CheckBox Minutiae { get { return Win.GetChecked<CheckBox>(SearchCriteria.ByText("Minutiae")); } }
@@ -74,6 +74,11 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             public FileOpenDialog(Window parent)
             {
                 List<Window> modals = parent.ModalWindows();
+                if (modals.Count == 0)
+                {
+                    Thread.Sleep(500);
+                    modals = parent.ModalWindows();
+                }
                 Assert.AreEqual(1, modals.Count);
                 Dialog = modals[0];
             }
@@ -84,6 +89,28 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
 
         public FileOpenDialog OpenDialog { get { return new FileOpenDialog(Win); } }
 
+        public class FileSaveDialog
+        {
+            public Window Dialog;
+
+            public FileSaveDialog(Window parent)
+            {
+                List<Window> modals = parent.ModalWindows();
+                if (modals.Count == 0)
+                {
+                    Thread.Sleep(500);
+                    modals = parent.ModalWindows();
+                }
+                Assert.AreEqual(1, modals.Count);
+                Dialog = modals[0];
+            }
+
+            public TextBox Path { get { return Dialog.GetChecked<TextBox>(SearchCriteria.ByAutomationId("1001")); } }
+            public Button Save { get { return Dialog.GetChecked<Button>(SearchCriteria.ByAutomationId("1")); } }
+        }
+
+        public FileSaveDialog SaveDialog { get { return new FileSaveDialog(Win); } }
+
         public void SelectFile(MatchSide side, string path)
         {
             if (path != null)
@@ -91,9 +118,25 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
                 side.Open.Click();
                 OpenDialog.Path.EditableText = Settings.SomeFingerprintPath;
                 OpenDialog.Open.Click();
+                Assert.AreEqual(0, Win.ModalWindows().Count);
             }
             else
                 side.Close.Click();
+        }
+
+        public void SelectFiles()
+        {
+            SelectFile(Left, Settings.SomeFingerprintPath);
+            SelectFile(Right, Settings.MatchingFingerprintPath);
+        }
+
+        public void SaveFile(MatchSide side)
+        {
+            File.Delete(Settings.SavedImagePath);
+            side.Save.Click();
+            SaveDialog.Path.Text = Settings.SavedImagePath;
+            SaveDialog.Save.Click();
+            Assert.AreEqual(0, Win.ModalWindows().Count);
         }
 
         [TestFixtureTearDown]
