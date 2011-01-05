@@ -11,12 +11,6 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
     [TestFixture]
     public class Files : Common
     {
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
-        {
-            StartApp();
-        }
-
         [Test]
         public void ClickThrough()
         {
@@ -33,14 +27,6 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
 
             SelectFile(Left, null);
             SelectFile(Right, null);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Thread.Sleep(300);
-            Assert.AreEqual(0, Win.ModalWindows().Count);
-            Assert.IsFalse(App.HasExited);
         }
     }
 }

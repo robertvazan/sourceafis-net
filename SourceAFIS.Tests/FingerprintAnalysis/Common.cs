@@ -139,8 +139,22 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             Assert.AreEqual(0, Win.ModalWindows().Count);
         }
 
+        [TestFixtureSetUp]
+        public virtual void TestFixtureSetUp()
+        {
+            StartApp();
+        }
+
+        [TearDown]
+        public virtual void TearDown()
+        {
+            Thread.Sleep(300);
+            Assert.AreEqual(0, Win.ModalWindows().Count);
+            Assert.IsFalse(App.HasExited);
+        }
+
         [TestFixtureTearDown]
-        public void TestFixtureTearDown()
+        public virtual void TestFixtureTearDown()
         {
             if (App != null && !App.HasExited)
                 App.Kill();

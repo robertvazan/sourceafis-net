@@ -17,12 +17,6 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
     [TestFixture]
     public class Options : Common
     {
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
-        {
-            StartApp();
-        }
-
         [Test]
         public void ClickThrough()
         {
@@ -35,14 +29,6 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             Orientation.Checked = true;
             Minutiae.Checked = true;
             Paired.Checked = true;
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Thread.Sleep(300);
-            Assert.AreEqual(0, Win.ModalWindows().Count);
-            Assert.IsFalse(App.HasExited);
         }
     }
 }
