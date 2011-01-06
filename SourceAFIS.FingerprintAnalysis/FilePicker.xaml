@@ -9,7 +9,7 @@
         <Button Content="Save..." DockPanel.Dock="Right" Click="Save_Click" />
         <Button Content="Open..." DockPanel.Dock="Right" Click="Open_Click" />
         <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0">
-            <TextBlock Text="{Binding Path=FpOptions.FileName, ElementName=FilePickerControl, Mode=OneWay}" Margin="2" />
+            <TextBlock Text="{Binding Path=FpOptions.FileName, ElementName=FilePickerControl, Mode=OneWay}" Margin="2" Name="ShortFileName" />
         </Label>
     </DockPanel>
 </UserControl>

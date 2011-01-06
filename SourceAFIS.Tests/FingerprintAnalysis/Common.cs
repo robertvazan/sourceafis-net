@@ -48,24 +48,43 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             Paired.Checked = false;
         }
 
+        public void FullOptions()
+        {
+            LayerChoice.SelectSlowly("MinutiaMask");
+            SkeletonChoice.SelectSlowly("Valleys");
+            MaskChoice.SelectSlowly("Segmentation");
+            Contrast.Checked = true;
+            Orientation.Checked = true;
+            Minutiae.Checked = true;
+            Paired.Checked = true;
+        }
+
         public class MatchSide
         {
             public Common TestSuite;
-            public readonly IUIItem FilePicker;
+            public string Side;
+
+            public bool LastFileValid;
+            public string LastFile;
 
             public MatchSide(Common test, string side)
             {
+                Side = side;
                 TestSuite = test;
-                FilePicker = TestSuite.Win.GetChecked(SearchCriteria.ByAutomationId(side + "FilePicker"));
             }
+
+            public IUIItem FilePicker { get { return TestSuite.Win.GetChecked(SearchCriteria.ByAutomationId(Side + "FilePicker")); } }
 
             public Button Open { get { return FilePicker.GetPanelButton(SearchCriteria.ByText("Open...")); } }
             public Button Save { get { return FilePicker.GetPanelButton(SearchCriteria.ByText("Save...")); } }
             public Button Close { get { return FilePicker.GetPanelButton(SearchCriteria.ByText("Close")); } }
+            public Label FileName { get { return FilePicker.GetPanelLabel(SearchCriteria.ByAutomationId("ShortFileName")); } }
         }
 
-        public MatchSide Left { get { return new MatchSide(this, "Left"); } }
-        public MatchSide Right { get { return new MatchSide(this, "Right"); } }
+        MatchSide LeftSide;
+        MatchSide RightSide;
+        public MatchSide Left { get { return LeftSide ?? (LeftSide = new MatchSide(this, "Left")); } }
+        public MatchSide Right { get { return RightSide ?? (RightSide = new MatchSide(this, "Right")); } }
 
         public class FileOpenDialog
         {
@@ -85,6 +104,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
 
             public ComboBox Path { get { return Dialog.GetChecked<ComboBox>(SearchCriteria.ByAutomationId("1148")); } }
             public Button Open { get { return Dialog.GetChecked<Button>(SearchCriteria.ByAutomationId("1")); } }
+            public Button Cancel { get { return Dialog.GetChecked<Button>(SearchCriteria.ByAutomationId("2")); } }
         }
 
         public FileOpenDialog OpenDialog { get { return new FileOpenDialog(Win); } }
@@ -107,27 +127,38 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
 
             public TextBox Path { get { return Dialog.GetChecked<TextBox>(SearchCriteria.ByAutomationId("1001")); } }
             public Button Save { get { return Dialog.GetChecked<Button>(SearchCriteria.ByAutomationId("1")); } }
+            public Button Cancel { get { return Dialog.GetChecked<Button>(SearchCriteria.ByAutomationId("2")); } }
         }
 
         public FileSaveDialog SaveDialog { get { return new FileSaveDialog(Win); } }
 
         public void SelectFile(MatchSide side, string path)
         {
+            if (side.LastFileValid && side.LastFile == path)
+                return;
             if (path != null)
             {
                 side.Open.Click();
-                OpenDialog.Path.EditableText = Settings.SomeFingerprintPath;
+                OpenDialog.Path.EditableText = path;
                 OpenDialog.Open.Click();
                 Assert.AreEqual(0, Win.ModalWindows().Count);
             }
             else
                 side.Close.Click();
+            side.LastFile = path;
+            side.LastFileValid = true;
         }
 
         public void SelectFiles()
         {
             SelectFile(Left, Settings.SomeFingerprintPath);
             SelectFile(Right, Settings.MatchingFingerprintPath);
+        }
+
+        public void CloseFiles()
+        {
+            SelectFile(Left, null);
+            SelectFile(Right, null);
         }
 
         public void SaveFile(MatchSide side)

@@ -58,5 +58,12 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             Assert.IsNotNull(element);
             return new Button(element, panel.ActionListener);
         }
+
+        public static Label GetPanelLabel(this IUIItem panel, SearchCriteria criteria)
+        {
+            AutomationElement element = panel.GetElement(criteria);
+            Assert.IsNotNull(element);
+            return new Label(element, panel.ActionListener);
+        }
     }
 }
