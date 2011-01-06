@@ -22,13 +22,20 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
         {
             SelectFiles();
             ResetOptions();
-            LayerChoice.SelectSlowly("MinutiaMask");
-            SkeletonChoice.SelectSlowly("Valleys");
-            MaskChoice.SelectSlowly("Segmentation");
-            Contrast.Checked = true;
-            Orientation.Checked = true;
-            Minutiae.Checked = true;
-            Paired.Checked = true;
+            FullOptions();
+        }
+
+        [Test]
+        public void NotFullyLoaded()
+        {
+            CloseFiles();
+            FullOptions();
+            SelectFile(Left, Settings.SomeFingerprintPath);
+            SelectFile(Left, null);
+            SelectFile(Right, Settings.MatchingFingerprintPath);
+            SelectFile(Left, Settings.SomeFingerprintPath);
+            SelectFile(Right, null);
+            SelectFile(Left, null);
         }
     }
 }
