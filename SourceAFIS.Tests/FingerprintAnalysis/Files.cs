@@ -104,5 +104,13 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             dialog.Cancel.Click();
             Assert.AreEqual(0, File.ReadAllBytes(Settings.SavedImagePath).Length);
         }
+
+        [Test]
+        public void FileNameLabel()
+        {
+            SelectFiles();
+            Assert.AreEqual(Path.GetFileNameWithoutExtension(Settings.SomeFingerprintPath), Left.FileName.Text);
+            Assert.AreEqual(Path.GetFileNameWithoutExtension(Settings.MatchingFingerprintPath), Right.FileName.Text);
+        }
     }
 }
