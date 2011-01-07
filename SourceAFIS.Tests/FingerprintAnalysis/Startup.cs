@@ -46,13 +46,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             StartApp();
             Assert.AreEqual("", Left.FileName.Text);
             Assert.AreEqual("", Right.FileName.Text);
-            Assert.AreEqual("OriginalImage", LayerChoice.GetSelectedItemText());
-            Assert.AreEqual("Ridges", SkeletonChoice.GetSelectedItemText());
-            Assert.AreEqual("None", MaskChoice.GetSelectedItemText());
-            Assert.AreEqual(false, Contrast.Checked);
-            Assert.AreEqual(false, Orientation.Checked);
-            Assert.AreEqual(false, Minutiae.Checked);
-            Assert.AreEqual(false, Paired.Checked);
+            Assert.AreEqual(GetResetOptions(), GetOptions());
 
             SelectFiles();
             FullOptions();
@@ -61,13 +55,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             StartApp();
             Assert.AreEqual(Path.GetFileNameWithoutExtension(Settings.SomeFingerprintPath), Left.FileName.Text);
             Assert.AreEqual(Path.GetFileNameWithoutExtension(Settings.MatchingFingerprintPath), Right.FileName.Text);
-            Assert.AreEqual("MinutiaMask", LayerChoice.GetSelectedItemText());
-            Assert.AreEqual("Valleys", SkeletonChoice.GetSelectedItemText());
-            Assert.AreEqual("Segmentation", MaskChoice.GetSelectedItemText());
-            Assert.AreEqual(true, Contrast.Checked);
-            Assert.AreEqual(true, Orientation.Checked);
-            Assert.AreEqual(true, Minutiae.Checked);
-            Assert.AreEqual(true, Paired.Checked);
+            Assert.AreEqual(GetFullOptions(), GetOptions());
         }
 
         [Test]
@@ -87,13 +75,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             StartApp();
             Assert.AreEqual("", Left.FileName.Text);
             Assert.AreEqual("", Right.FileName.Text);
-            Assert.AreEqual("OriginalImage", LayerChoice.GetSelectedItemText());
-            Assert.AreEqual("Ridges", SkeletonChoice.GetSelectedItemText());
-            Assert.AreEqual("None", MaskChoice.GetSelectedItemText());
-            Assert.AreEqual(false, Contrast.Checked);
-            Assert.AreEqual(false, Orientation.Checked);
-            Assert.AreEqual(false, Minutiae.Checked);
-            Assert.AreEqual(false, Paired.Checked);
+            Assert.AreEqual(GetResetOptions(), GetOptions());
 
             CloseApp();
             xml = XDocument.Load(path);

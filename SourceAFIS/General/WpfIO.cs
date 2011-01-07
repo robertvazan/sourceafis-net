@@ -44,7 +44,12 @@ namespace SourceAFIS.General
 
         public static BitmapSource Load(string filename)
         {
-            return new BitmapImage(new Uri(filename, UriKind.RelativeOrAbsolute));
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.UriSource = new Uri(filename, UriKind.RelativeOrAbsolute);
+            image.EndInit();
+            return image;
         }
 
         public static void Save(BitmapSource image, string filename)

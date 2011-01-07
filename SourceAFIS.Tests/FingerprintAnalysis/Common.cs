@@ -5,6 +5,8 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using System.Reflection;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using NUnit.Framework;
 using White.Core;
 using White.Core.Factory;
@@ -12,6 +14,7 @@ using White.Core.UIItems;
 using White.Core.UIItems.WindowItems;
 using White.Core.UIItems.ListBoxItems;
 using White.Core.UIItems.Finders;
+using SourceAFIS.General;
 
 namespace SourceAFIS.Tests.FingerprintAnalysis
 {
@@ -51,26 +54,90 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
         public CheckBox Minutiae { get { return Win.GetChecked<CheckBox>(SearchCriteria.ByText("Minutiae")); } }
         public CheckBox Paired { get { return Win.GetChecked<CheckBox>(SearchCriteria.ByText("Paired minutiae")); } }
 
+        public static string[] OptionNames = new string[]
+        {
+            "LayerChoice",
+            "SkeletonChoice",
+            "MaskChoice",
+            "Contrast",
+            "Orientation",
+            "Minutiae",
+            "Paired"
+        };
+
+        public UIItem GetOptionControl(string name)
+        {
+            PropertyInfo property = this.GetType().GetProperty(name);
+            return property.GetValue(this, null) as UIItem;
+        }
+
+        public void SetOptions(Dictionary<string, string> options)
+        {
+            foreach (string name in OptionNames)
+            {
+                object control = GetOptionControl(name);
+                if (control is ComboBox)
+                    (control as ComboBox).SelectSlowly(options[name]);
+                else if (control is CheckBox)
+                    (control as CheckBox).Checked = Convert.ToBoolean(options[name]);
+            }
+        }
+
+        public Dictionary<string, string> GetOptions()
+        {
+            Dictionary<string, string> options = new Dictionary<string,string>();
+            foreach (string name in OptionNames)
+            {
+                object control = GetOptionControl(name);
+                if (control is ComboBox)
+                    options.Add(name, (control as ComboBox).GetSelectedItemText());
+                else if (control is CheckBox)
+                    options.Add(name, (control as CheckBox).Checked.ToString());
+            }
+            return options;
+        }
+
+        public Dictionary<string, string> GetResetOptions()
+        {
+            Dictionary<string, string> options = new Dictionary<string, string>();
+            options["LayerChoice"] = "OriginalImage";
+            options["SkeletonChoice"] = "Ridges";
+            options["MaskChoice"] = "None";
+            options["Contrast"] = Boolean.FalseString;
+            options["Orientation"] = Boolean.FalseString;
+            options["Minutiae"] = Boolean.FalseString;
+            options["Paired"] = Boolean.FalseString;
+            return options;
+        }
+
         public void ResetOptions()
         {
-            LayerChoice.SelectSlowly("OriginalImage");
-            SkeletonChoice.SelectSlowly("Ridges");
-            MaskChoice.SelectSlowly("None");
-            Contrast.Checked = false;
-            Orientation.Checked = false;
-            Minutiae.Checked = false;
-            Paired.Checked = false;
+            SetOptions(GetResetOptions());
+        }
+
+        public Dictionary<string, string> GetFullOptions()
+        {
+            Dictionary<string, string> options = new Dictionary<string, string>();
+            options["LayerChoice"] = "MinutiaMask";
+            options["SkeletonChoice"] = "Valleys";
+            options["MaskChoice"] = "Segmentation";
+            options["Contrast"] = Boolean.TrueString;
+            options["Orientation"] = Boolean.TrueString;
+            options["Minutiae"] = Boolean.TrueString;
+            options["Paired"] = Boolean.TrueString;
+            return options;
         }
 
         public void FullOptions()
         {
-            LayerChoice.SelectSlowly("MinutiaMask");
-            SkeletonChoice.SelectSlowly("Valleys");
-            MaskChoice.SelectSlowly("Segmentation");
-            Contrast.Checked = true;
-            Orientation.Checked = true;
-            Minutiae.Checked = true;
-            Paired.Checked = true;
+            SetOptions(GetFullOptions());
+        }
+
+        public Dictionary<string, string> GetSingleOption(string name, string value)
+        {
+            Dictionary<string, string> options = GetResetOptions();
+            options[name] = value;
+            return options;
         }
 
         public class MatchSide
@@ -182,6 +249,31 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             SaveDialog.Path.Text = Settings.SavedImagePath;
             SaveDialog.Save.Click();
             Assert.AreEqual(0, Win.ModalWindows().Count);
+        }
+
+        public BitmapSource CaptureImage(MatchSide side)
+        {
+            SaveFile(side);
+            return WpfIO.Load(Settings.SavedImagePath);
+        }
+
+        public int ChecksumImage(MatchSide side)
+        {
+            BitmapSource image = CaptureImage(side);
+
+            FormatConvertedBitmap converted = new FormatConvertedBitmap(image, PixelFormats.Bgra32, null, 0.5);
+
+            int width = (int)converted.PixelWidth;
+            int height = (int)converted.PixelHeight;
+
+            byte[] flat = new byte[4 * width * height];
+
+            converted.CopyPixels(flat, 4 * width, 0);
+
+            int hash = unchecked((int)2166136261);
+            for (int i = 0; i < flat.Length; ++i)
+                hash = (hash ^ flat[i]) * 16777619;
+            return hash;
         }
 
         [TestFixtureSetUp]
