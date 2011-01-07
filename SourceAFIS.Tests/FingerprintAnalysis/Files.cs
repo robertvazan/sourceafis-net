@@ -10,7 +10,7 @@ using White.Core.UIItems.Finders;
 
 namespace SourceAFIS.Tests.FingerprintAnalysis
 {
-    [TestFixture]
+    [TestFixture, RequiresSTA]
     public class Files : Common
     {
         [Test]
@@ -34,7 +34,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             CloseFiles();
 
             Left.Open.Click();
-            OpenDialog.Path.EditableText = Settings.SomeFingerprintPath;
+            OpenDialog.Dialog.PasteText(Settings.SomeFingerprintPath);
             OpenDialog.Cancel.Click();
 
             Assert.AreEqual("", Left.FileName.Text);
@@ -52,7 +52,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             File.Delete(path);
 
             Left.Save.Click();
-            SaveDialog.Path.Text = path;
+            SaveDialog.Dialog.PasteText(path);
             SaveDialog.Cancel.Click();
 
             Assert.IsFalse(File.Exists(path));
@@ -66,12 +66,11 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             Left.Open.Click();
             FileOpenDialog dialog = OpenDialog;
 
-            dialog.Path.EditableText = Path.GetFullPath("nonexistent.tif");
+            dialog.Dialog.PasteText(Path.GetFullPath("nonexistent.tif"));
             Assert.AreEqual(0, dialog.Dialog.ModalWindows().Count);
 
             dialog.Open.Click();
-            Thread.Sleep(300);
-            Assert.AreEqual(2, Win.ModalWindows().Count);
+            Wait(() => Win.ModalWindows().Count == 2);
             Assert.AreEqual(1, dialog.Dialog.ModalWindows().Count);
 
             dialog.Dialog.ModalWindows()[0].Get<Button>(SearchCriteria.ByText("OK")).Click();
@@ -90,12 +89,11 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             Left.Save.Click();
             FileSaveDialog dialog = SaveDialog;
 
-            dialog.Path.Text = Settings.SavedImagePath;
+            dialog.Dialog.PasteText(Settings.SavedImagePath);
             Assert.AreEqual(0, dialog.Dialog.ModalWindows().Count);
 
             dialog.Save.Click();
-            Thread.Sleep(300);
-            Assert.AreEqual(2, Win.ModalWindows().Count);
+            Wait(() => Win.ModalWindows().Count == 2);
             Assert.AreEqual(1, dialog.Dialog.ModalWindows().Count);
 
             dialog.Dialog.ModalWindows()[0].Get<Button>(SearchCriteria.ByAutomationId("7")).Click();
