@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows;
 using System.Windows.Automation;
 using NUnit.Framework;
 using White.Core;
@@ -11,6 +12,7 @@ using White.Core.UIItems;
 using White.Core.UIItems.WindowItems;
 using White.Core.UIItems.ListBoxItems;
 using White.Core.UIItems.Finders;
+using White.Core.WindowsAPI;
 
 namespace SourceAFIS.Tests.FingerprintAnalysis
 {
@@ -23,8 +25,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
                 combo.Click();
                 Thread.Sleep(300);
                 combo.Items.Where(item => item.Text == text).First().Click();
-                Thread.Sleep(100);
-                Assert.AreEqual(text, combo.SelectedItemText);
+                Common.Wait(() => text == combo.GetSelectedItemText());
             }
         }
 
@@ -52,6 +53,13 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             return result;
         }
 
+        public static T GetPatient<T>(this UIItemContainer container, SearchCriteria criteria)
+            where T : UIItem
+        {
+            Common.Wait(() => container.Get<T>(criteria) != null);
+            return container.GetChecked<T>(criteria);
+        }
+
         public static Button GetPanelButton(this IUIItem panel, SearchCriteria criteria)
         {
             AutomationElement element = panel.GetElement(criteria);
@@ -64,6 +72,14 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             AutomationElement element = panel.GetElement(criteria);
             Assert.IsNotNull(element);
             return new Label(element, panel.ActionListener);
+        }
+
+        public static void PasteText(this Window window, string text)
+        {
+            Clipboard.SetText(text);
+            window.Keyboard.HoldKey(KeyboardInput.SpecialKeys.CONTROL);
+            window.Keyboard.Enter("v");
+            window.Keyboard.LeaveKey(KeyboardInput.SpecialKeys.CONTROL);
         }
     }
 }

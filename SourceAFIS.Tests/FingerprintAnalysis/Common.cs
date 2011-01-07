@@ -41,18 +41,17 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             Win.Close();
             Win = null;
 
-            Thread.Sleep(1000);
-            Assert.IsTrue(App.HasExited);
+            Wait(() => App.HasExited);
             App = null;
         }
 
-        public ComboBox LayerChoice { get { return Win.GetChecked<ComboBox>(SearchCriteria.ByAutomationId("LayerChoice")); } }
-        public ComboBox SkeletonChoice { get { return Win.GetChecked<ComboBox>(SearchCriteria.ByAutomationId("SkeletonChoice")); } }
-        public ComboBox MaskChoice { get { return Win.GetChecked<ComboBox>(SearchCriteria.ByAutomationId("MaskChoice")); } }
-        public CheckBox Contrast { get { return Win.GetChecked<CheckBox>(SearchCriteria.ByText("Contrast")); } }
-        public CheckBox Orientation { get { return Win.GetChecked<CheckBox>(SearchCriteria.ByText("Orientation field")); } }
-        public CheckBox Minutiae { get { return Win.GetChecked<CheckBox>(SearchCriteria.ByText("Minutiae")); } }
-        public CheckBox Paired { get { return Win.GetChecked<CheckBox>(SearchCriteria.ByText("Paired minutiae")); } }
+        public ComboBox LayerChoice { get { return Win.GetPatient<ComboBox>(SearchCriteria.ByAutomationId("LayerChoice")); } }
+        public ComboBox SkeletonChoice { get { return Win.GetPatient<ComboBox>(SearchCriteria.ByAutomationId("SkeletonChoice")); } }
+        public ComboBox MaskChoice { get { return Win.GetPatient<ComboBox>(SearchCriteria.ByAutomationId("MaskChoice")); } }
+        public CheckBox Contrast { get { return Win.GetPatient<CheckBox>(SearchCriteria.ByText("Contrast")); } }
+        public CheckBox Orientation { get { return Win.GetPatient<CheckBox>(SearchCriteria.ByText("Orientation field")); } }
+        public CheckBox Minutiae { get { return Win.GetPatient<CheckBox>(SearchCriteria.ByText("Minutiae")); } }
+        public CheckBox Paired { get { return Win.GetPatient<CheckBox>(SearchCriteria.ByText("Paired minutiae")); } }
 
         public static string[] OptionNames = new string[]
         {
@@ -173,19 +172,15 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
 
             public FileOpenDialog(Window parent)
             {
+                Wait(() => parent.ModalWindows().Count > 0);
                 List<Window> modals = parent.ModalWindows();
-                if (modals.Count == 0)
-                {
-                    Thread.Sleep(500);
-                    modals = parent.ModalWindows();
-                }
                 Assert.AreEqual(1, modals.Count);
                 Dialog = modals[0];
             }
 
-            public ComboBox Path { get { return Dialog.GetChecked<ComboBox>(SearchCriteria.ByAutomationId("1148")); } }
-            public Button Open { get { return Dialog.GetChecked<Button>(SearchCriteria.ByAutomationId("1")); } }
-            public Button Cancel { get { return Dialog.GetChecked<Button>(SearchCriteria.ByAutomationId("2")); } }
+            public ComboBox Path { get { return Dialog.GetPatient<ComboBox>(SearchCriteria.ByAutomationId("1148")); } }
+            public Button Open { get { return Dialog.GetPatient<Button>(SearchCriteria.ByAutomationId("1")); } }
+            public Button Cancel { get { return Dialog.GetPatient<Button>(SearchCriteria.ByAutomationId("2")); } }
         }
 
         public FileOpenDialog OpenDialog { get { return new FileOpenDialog(Win); } }
@@ -196,19 +191,15 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
 
             public FileSaveDialog(Window parent)
             {
+                Wait(() => parent.ModalWindows().Count > 0);
                 List<Window> modals = parent.ModalWindows();
-                if (modals.Count == 0)
-                {
-                    Thread.Sleep(500);
-                    modals = parent.ModalWindows();
-                }
                 Assert.AreEqual(1, modals.Count);
                 Dialog = modals[0];
             }
 
-            public TextBox Path { get { return Dialog.GetChecked<TextBox>(SearchCriteria.ByAutomationId("1001")); } }
-            public Button Save { get { return Dialog.GetChecked<Button>(SearchCriteria.ByAutomationId("1")); } }
-            public Button Cancel { get { return Dialog.GetChecked<Button>(SearchCriteria.ByAutomationId("2")); } }
+            public TextBox Path { get { return Dialog.GetPatient<TextBox>(SearchCriteria.ByAutomationId("1001")); } }
+            public Button Save { get { return Dialog.GetPatient<Button>(SearchCriteria.ByAutomationId("1")); } }
+            public Button Cancel { get { return Dialog.GetPatient<Button>(SearchCriteria.ByAutomationId("2")); } }
         }
 
         public FileSaveDialog SaveDialog { get { return new FileSaveDialog(Win); } }
@@ -220,7 +211,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             if (path != null)
             {
                 side.Open.Click();
-                OpenDialog.Path.EditableText = path;
+                OpenDialog.Dialog.PasteText(path);
                 OpenDialog.Open.Click();
                 Assert.AreEqual(0, Win.ModalWindows().Count);
             }
@@ -246,7 +237,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
         {
             File.Delete(Settings.SavedImagePath);
             side.Save.Click();
-            SaveDialog.Path.Text = Settings.SavedImagePath;
+            SaveDialog.Dialog.PasteText(Settings.SavedImagePath);
             SaveDialog.Save.Click();
             Assert.AreEqual(0, Win.ModalWindows().Count);
         }
@@ -276,6 +267,28 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             return hash;
         }
 
+        public static void Wait(Func<bool> condition) { Wait(5000, condition); }
+
+        public static void Wait(int millis, Func<bool> condition)
+        {
+            WeakWait(millis, condition);
+            Assert.IsTrue(condition());
+        }
+
+        public static void WeakWait(Func<bool> condition) { WeakWait(5000, condition); }
+
+        public static void WeakWait(int millis, Func<bool> condition)
+        {
+            int sofar = 0;
+            do
+            {
+                if (condition())
+                    return;
+                Thread.Sleep(50);
+                sofar += 50;
+            } while (sofar < millis);
+        }
+
         [TestFixtureSetUp]
         public virtual void TestFixtureSetUp()
         {
@@ -285,8 +298,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
         [TearDown]
         public virtual void TearDown()
         {
-            Thread.Sleep(300);
-            Assert.AreEqual(0, Win.ModalWindows().Count);
+            Wait(() => Win.ModalWindows().Count == 0);
             Assert.IsFalse(App.HasExited);
         }
 
@@ -298,9 +310,9 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
                 if (Win != null)
                 {
                     Win.Close();
-                    Thread.Sleep(500);
+                    WeakWait(() => App.HasExited);
                 }
-                if (App != null && !App.HasExited)
+                if (!App.HasExited)
                     App.Kill();
             }
         }

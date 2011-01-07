@@ -8,7 +8,7 @@ using White.Core.UIItems.ListBoxItems;
 
 namespace SourceAFIS.Tests.FingerprintAnalysis
 {
-    [TestFixture]
+    [TestFixture, RequiresSTA]
     public class Visualization : Common
     {
         Dictionary<string, int> Checksums;
@@ -72,7 +72,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
                 retries.Add(Checksums);
             }
 
-            Assert.AreEqual(retries[0], retries[1]);
+            CollectionAssert.AreEquivalent(retries[0], retries[1]);
         }
     }
 }
