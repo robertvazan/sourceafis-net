@@ -30,6 +30,19 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             Win = App.GetWindow("Fingerprint Analysis", InitializeOption.NoCache);
         }
 
+        public void CloseApp()
+        {
+            Assert.IsNotNull(App);
+            Assert.IsNotNull(Win);
+
+            Win.Close();
+            Win = null;
+
+            Thread.Sleep(1000);
+            Assert.IsTrue(App.HasExited);
+            App = null;
+        }
+
         public ComboBox LayerChoice { get { return Win.GetChecked<ComboBox>(SearchCriteria.ByAutomationId("LayerChoice")); } }
         public ComboBox SkeletonChoice { get { return Win.GetChecked<ComboBox>(SearchCriteria.ByAutomationId("SkeletonChoice")); } }
         public ComboBox MaskChoice { get { return Win.GetChecked<ComboBox>(SearchCriteria.ByAutomationId("MaskChoice")); } }
