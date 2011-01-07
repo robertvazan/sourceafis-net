@@ -30,7 +30,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             if (App != null && !App.HasExited)
             {
                 base.TearDown();
-                App.Kill();
+                base.TestFixtureTearDown();
             }
         }
     }
