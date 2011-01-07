@@ -26,6 +26,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             if (!File.Exists(AppPath))
                 AppPath = Path.Combine("..", "..", "..", "SourceAFIS.FingerprintAnalysis", "bin", "Debug", "SourceAFIS.FingerprintAnalysis.exe");
             App = Application.Launch(AppPath);
+            Thread.Sleep(1000);
             Win = App.GetWindow("Fingerprint Analysis", InitializeOption.NoCache);
         }
 
@@ -188,7 +189,15 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
         public virtual void TestFixtureTearDown()
         {
             if (App != null && !App.HasExited)
-                App.Kill();
+            {
+                if (Win != null)
+                {
+                    Win.Close();
+                    Thread.Sleep(500);
+                }
+                if (App != null && !App.HasExited)
+                    App.Kill();
+            }
         }
     }
 }
