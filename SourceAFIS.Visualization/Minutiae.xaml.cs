@@ -58,7 +58,7 @@ namespace SourceAFIS.Visualization
                            select new MinutiaInfo()
                            {
                                X = dpiScaling * (minutia.Position.X + 0.5),
-                               Y = FpTemplate.OriginalHeight - 1 - dpiScaling * (minutia.Position.Y + 0.5),
+                               Y = FpTemplate.OriginalHeight - dpiScaling * (minutia.Position.Y + 0.5),
                                Angle = Angle.ToDegrees(Angle.Complementary(minutia.Direction)),
                                Type = minutia.Type
                            };
