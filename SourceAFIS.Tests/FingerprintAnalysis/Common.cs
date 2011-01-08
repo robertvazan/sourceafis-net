@@ -233,11 +233,18 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             SelectFile(Right, null);
         }
 
+        public void GenerateSavedFileName()
+        {
+            Settings.LastSavedImage = String.Format(Settings.SavedImagePath, ++Settings.SavedImageCounter);
+            Directory.CreateDirectory(Path.GetDirectoryName(Settings.LastSavedImage));
+            File.Delete(Settings.LastSavedImage);
+        }
+
         public void SaveFile(MatchSide side)
         {
-            File.Delete(Settings.SavedImagePath);
+            GenerateSavedFileName();
             side.Save.Click();
-            SaveDialog.Dialog.PasteText(Settings.SavedImagePath);
+            SaveDialog.Dialog.PasteText(Settings.LastSavedImage);
             SaveDialog.Save.Click();
             Assert.AreEqual(0, Win.ModalWindows().Count);
         }
@@ -245,7 +252,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
         public BitmapSource CaptureImage(MatchSide side)
         {
             SaveFile(side);
-            return WpfIO.Load(Settings.SavedImagePath);
+            return WpfIO.Load(Settings.LastSavedImage);
         }
 
         public int ChecksumImage(MatchSide side)

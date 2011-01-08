@@ -22,6 +22,8 @@ namespace SourceAFIS.Tests
         public static BitmapImage MatchingFingerprint = new BitmapImage(new Uri(Settings.MatchingFingerprintPath, UriKind.RelativeOrAbsolute));
         public static BitmapImage NonMatchingFingerprint = new BitmapImage(new Uri(Settings.NonMatchingFingerprintPath, UriKind.RelativeOrAbsolute));
 
-        public static string SavedImagePath = Path.GetFullPath("saved.png");
+        public static string SavedImagePath = Path.GetFullPath(Path.Combine("saved", "saved{0}.png"));
+        public static int SavedImageCounter;
+        public static string LastSavedImage;
     }
 }
