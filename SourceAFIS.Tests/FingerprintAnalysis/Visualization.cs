@@ -9,6 +9,7 @@ using White.Core.UIItems.ListBoxItems;
 namespace SourceAFIS.Tests.FingerprintAnalysis
 {
     [TestFixture, RequiresSTA]
+    [Category("UI")]
     public class Visualization : Common
     {
         Dictionary<string, int> Checksums;

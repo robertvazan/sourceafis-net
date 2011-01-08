@@ -11,6 +11,7 @@ using White.Core.UIItems.Finders;
 namespace SourceAFIS.Tests.FingerprintAnalysis
 {
     [TestFixture, RequiresSTA]
+    [Category("UI")]
     public class Files : Common
     {
         [Test]
