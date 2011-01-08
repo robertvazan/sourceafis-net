@@ -15,6 +15,7 @@ using White.Core.UIItems.Finders;
 namespace SourceAFIS.Tests.FingerprintAnalysis
 {
     [TestFixture, RequiresSTA]
+    [Category("UI")]
     public class Options : Common
     {
         [Test]

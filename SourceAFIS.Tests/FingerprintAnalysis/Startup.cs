@@ -12,6 +12,7 @@ using White.Core.UIItems.WindowItems;
 namespace SourceAFIS.Tests.FingerprintAnalysis
 {
     [TestFixture, RequiresSTA]
+    [Category("UI")]
     public class Startup : Common
     {
         public override void TestFixtureSetUp()
