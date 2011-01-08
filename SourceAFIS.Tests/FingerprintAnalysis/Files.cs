@@ -84,12 +84,13 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
         public void SaveExisting()
         {
             SelectFiles();
-            File.WriteAllBytes(Settings.SavedImagePath, new byte[0]);
+            GenerateSavedFileName();
+            File.WriteAllBytes(Settings.LastSavedImage, new byte[0]);
 
             Left.Save.Click();
             FileSaveDialog dialog = SaveDialog;
 
-            dialog.Dialog.PasteText(Settings.SavedImagePath);
+            dialog.Dialog.PasteText(Settings.LastSavedImage);
             Assert.AreEqual(0, dialog.Dialog.ModalWindows().Count);
 
             dialog.Save.Click();
@@ -100,7 +101,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             Assert.AreEqual(0, dialog.Dialog.ModalWindows().Count);
 
             dialog.Cancel.Click();
-            Assert.AreEqual(0, File.ReadAllBytes(Settings.SavedImagePath).Length);
+            Assert.AreEqual(0, File.ReadAllBytes(Settings.LastSavedImage).Length);
         }
 
         [Test]
