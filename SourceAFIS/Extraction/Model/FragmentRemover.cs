@@ -10,7 +10,7 @@ namespace SourceAFIS.Extraction.Model
     {
         [DpiAdjusted]
         [Parameter(Lower = 3, Upper = 100)]
-        public int MinFragmentLength = 26;
+        public int MinFragmentLength = 24;
 
         [Nested]
         public DotRemover DotRemover = new DotRemover();

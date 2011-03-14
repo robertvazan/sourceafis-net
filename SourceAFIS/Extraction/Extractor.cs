@@ -17,7 +17,7 @@ namespace SourceAFIS.Extraction
     {
         [DpiAdjusted]
         [Parameter(Lower = 8, Upper = 32)]
-        public int BlockSize = 16;
+        public int BlockSize = 15;
 
         public DpiAdjuster DpiAdjuster = new DpiAdjuster();
         [Nested]
