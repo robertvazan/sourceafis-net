@@ -18,7 +18,7 @@ namespace SourceAFIS.Extraction.Model
         public byte GapAngle = Angle.FromDegreesB(30);
         [DpiAdjusted]
         [Parameter(Lower = 3, Upper = 40)]
-        public int AngleSampleOffset = 15;
+        public int AngleSampleOffset = 22;
         [DpiAdjusted]
         [Parameter(Upper = 100)]
         public int ToleratedOverlapLength = 2;
