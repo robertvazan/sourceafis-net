@@ -244,17 +244,26 @@ namespace SourceAFIS.Simple
         }
 
         /// <summary>
-        /// Compares one <see cref="Person"/> against a set of other <see cref="Person"/>s and returns the best match.
+        /// Compares one <see cref="Person"/> against a set of other <see cref="Person"/>s and returns best matches.
         /// </summary>
         /// <param name="probe">Person to look up in the collection.</param>
         /// <param name="candidates">Collection of persons that will be searched.</param>
-        /// <returns>Best matching <see cref="Person"/> in the collection or <see langword="null"/> if there is no match.</returns>
+        /// <returns>All matching <see cref="Person"/> objects in the collection or an empty collection if
+        /// there is no match. Results are sorted by score in descending order. If you need only one best match,
+        /// call <see cref="Enumerable.FirstOrDefault{T}(IEnumerable{T})"/> method on the returned collection.</returns>
         /// <remarks>
         /// <para>
         /// Compares probe <see cref="Person"/> to all candidate <see cref="Person"/>s and returns the most similar
-        /// candidate. Calling <see cref="Identify"/> is conceptually identical to calling <see cref="Verify"/> in a loop
+        /// candidates. Calling <see cref="Identify"/> is conceptually identical to calling <see cref="Verify"/> in a loop
         /// except that <see cref="Identify"/> is significantly faster than loop of <see cref="Verify"/> calls.
-        /// If there is no candidate with score at or above <see cref="Threshold"/>, <see cref="Identify"/> returns <see langword="null"/>.
+        /// If there is no candidate with score at or above <see cref="Threshold"/>, <see cref="Identify"/> returns
+        /// empty collection.
+        /// </para>
+        /// <para>
+        /// Most applications need only the best match which can be obtained by calling
+        /// <see cref="Enumerable.FirstOrDefault{T}(IEnumerable{T})"/> method on the returned collection.
+        /// Matching score for every returned <see cref="Person"/> can be obtained by calling
+        /// <see cref="Verify"/> on probe <see cref="Person"/> and the matching <see cref="Person"/>.
         /// </para>
         /// <para>
         /// <see cref="Person"/>s passed to this method must have valid <see cref="Fingerprint.Template"/>
@@ -264,12 +273,13 @@ namespace SourceAFIS.Simple
         /// <seealso cref="Threshold"/>
         /// <seealso cref="SkipBestMatches"/>
         /// <seealso cref="Verify"/>
-        public Person Identify(Person probe, IEnumerable<Person> candidates)
+        public IEnumerable<Person> Identify(Person probe, IEnumerable<Person> candidates)
         {
+            probe.CheckForNulls();
+            Person[] candidateArray = candidates.ToArray();
+            BestMatchSkipper.PersonsSkipScore[] results;
             lock (this)
             {
-                probe.CheckForNulls();
-                Person[] candidateArray = candidates.ToArray();
                 BestMatchSkipper collector = new BestMatchSkipper(candidateArray.Length, SkipBestMatches);
                 Parallel.ForEach(probe.Fingerprints, probeFp =>
                     {
@@ -283,14 +293,16 @@ namespace SourceAFIS.Simple
                             for (int i = 0; i < scores.Length; ++i)
                                 collector.AddScore(personsByFingerprint[i], scores[i]);
                     });
-
-                int bestPersonIndex;
-                float bestScore = collector.GetBestScore(out bestPersonIndex);
-                if (bestPersonIndex >= 0 && bestScore >= Threshold)
-                    return candidateArray[bestPersonIndex];
-                else
-                    return null;
+                results = collector.GetSortedScores();
             }
+            return GetMatchingCandidates(candidateArray, results);
+        }
+
+        IEnumerable<Person> GetMatchingCandidates(Person[] candidateArray, BestMatchSkipper.PersonsSkipScore[] results)
+        {
+            foreach (var match in results)
+                if (match.Score >= Threshold)
+                    yield return candidateArray[match.Person];
         }
 
         bool IsCompatibleFinger(Finger first, Finger second)

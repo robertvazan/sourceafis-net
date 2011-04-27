@@ -69,20 +69,20 @@ namespace SourceAFIS.Tests.Simple
             Person person3 = new Person(new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint });
             afis.Extract(person3);
 
-            Assert.That(afis.Identify(person1, new[] { person2, person3 }) == person2);
-            Assert.That(afis.Identify(person1, new[] { person3, person2 }) == person2);
-            Assert.That(afis.Identify(person1, new[] { person3 }) == null);
-            Assert.That(afis.Identify(person1, new[] { person2, person3, person1 }) == person1);
+            CollectionAssert.AreEqual(afis.Identify(person1, new[] { person2, person3 }), new[] { person2 });
+            CollectionAssert.AreEqual(afis.Identify(person1, new[] { person3, person2 }), new[] { person2 });
+            CollectionAssert.AreEqual(afis.Identify(person1, new[] { person3 }), new Person[0]);
+            CollectionAssert.AreEqual(afis.Identify(person1, new[] { person2, person3, person1 }), new[] { person1, person2 });
 
             Person person4 = new Person(person2.Fingerprints[0], person3.Fingerprints[0]);
-            Assert.That(afis.Identify(person1, new[] { person4 }) == person4);
+            CollectionAssert.AreEqual(afis.Identify(person1, new[] { person4 }), new[] { person4 });
 
             var bigArray = Enumerable.Repeat(person3, 100).Concat(new[] { person2 }).Concat(Enumerable.Repeat(person3, 100));
-            Assert.That(afis.Identify(person1, bigArray) == person2);
+            CollectionAssert.AreEqual(afis.Identify(person1, bigArray), new[] { person2 });
 
-            Assert.That(afis.Identify(person1, new Person[] { }) == null);
-            Assert.That(afis.Identify(person1, new[] { new Person() }) == null);
-            Assert.That(afis.Identify(new Person(), new[] { person2, person3 }) == null);
+            CollectionAssert.AreEqual(afis.Identify(person1, new Person[] { }), new Person[0]);
+            CollectionAssert.AreEqual(afis.Identify(person1, new[] { new Person() }), new Person[0]);
+            CollectionAssert.AreEqual(afis.Identify(new Person(), new[] { person2, person3 }), new Person[0]);
 
             Assert.Catch(() => { afis.Identify(null, new[] { person2, person3 }); });
             Assert.Catch(() => { afis.Identify(new Person(null), new[] { person2, person3 }); });
@@ -124,19 +124,19 @@ namespace SourceAFIS.Tests.Simple
 
             afis.Threshold = 1.001f * score;
             Assert.That(afis.Verify(person1, person2) == 0);
-            Assert.That(afis.Identify(person1, new[] { person2 }) == null);
+            Assert.That(afis.Identify(person1, new[] { person2 }).Count() == 0);
 
             afis.Threshold = 0.999f * score;
             Assert.That(afis.Verify(person1, person2) > 0);
-            Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
+            Assert.That(afis.Identify(person1, new[] { person2 }).Count() > 0);
 
             afis.Threshold = score;
             Assert.That(afis.Verify(person1, person2) > 0);
-            Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
+            Assert.That(afis.Identify(person1, new[] { person2 }).Count() > 0);
 
             afis.Threshold = 0;
             Assert.That(afis.Verify(person1, person2) > 0);
-            Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
+            Assert.That(afis.Identify(person1, new[] { person2 }).Count() > 0);
 
             Assert.Catch(() => { afis.Threshold = -0.001f; });
         }
@@ -166,35 +166,35 @@ namespace SourceAFIS.Tests.Simple
                 Assert.That(afis.Verify(person1, person) > 0);
             Assert.That(afis.Verify(person1, person8) == 0);
             foreach (Person person in new[] { person2, person3, person4, person5, person6, person7 })
-                Assert.That(afis.Identify(person1, new[] { person }) != null);
-            Assert.That(afis.Identify(person1, new[] { person8 }) == null);
+                Assert.That(afis.Identify(person1, new[] { person }).Count() > 0);
+            Assert.That(afis.Identify(person1, new[] { person8 }).Count() == 0);
 
             afis.SkipBestMatches = 1;
             foreach (Person person in new[] { person2, person3, person6, person8 })
                 Assert.That(afis.Verify(person1, person) == 0);
             foreach (Person person in new[] { person4, person5, person7 })
                 Assert.That(afis.Verify(person1, person) > 0);
-            Assert.That(afis.Identify(person1, new[] { person2, person3, person6, person8 }) == null);
+            Assert.That(afis.Identify(person1, new[] { person2, person3, person6, person8 }).Count() == 0);
             foreach (Person person in new[] { person4, person5, person7 })
-                Assert.That(afis.Identify(person1, new[] { person }) != null);
+                Assert.That(afis.Identify(person1, new[] { person }).Count() > 0);
 
             afis.SkipBestMatches = 2;
             foreach (Person person in new[] { person2, person3, person5, person6, person8 })
                 Assert.That(afis.Verify(person1, person) == 0);
             Assert.That(afis.Verify(person1, person4) > 0);
             Assert.That(afis.Verify(person1, person7) > 0);
-            Assert.That(afis.Identify(person1, new[] { person2, person3, person5, person6, person8 }) == null);
-            Assert.That(afis.Identify(person1, new[] { person4 }) != null);
-            Assert.That(afis.Identify(person1, new[] { person7 }) != null);
+            Assert.That(afis.Identify(person1, new[] { person2, person3, person5, person6, person8 }).Count() == 0);
+            Assert.That(afis.Identify(person1, new[] { person4 }).Count() > 0);
+            Assert.That(afis.Identify(person1, new[] { person7 }).Count() > 0);
 
             afis.SkipBestMatches = 3;
             foreach (Person person in new[] { person2, person3, person5, person6, person8 })
                 Assert.That(afis.Verify(person1, person) == 0);
             Assert.That(afis.Verify(person1, person4) > 0);
             Assert.That(afis.Verify(person1, person7) > 0);
-            Assert.That(afis.Identify(person1, new[] { person2, person3, person5, person6, person8 }) == null);
-            Assert.That(afis.Identify(person1, new[] { person4 }) != null);
-            Assert.That(afis.Identify(person1, new[] { person7 }) != null);
+            Assert.That(afis.Identify(person1, new[] { person2, person3, person5, person6, person8 }).Count() == 0);
+            Assert.That(afis.Identify(person1, new[] { person4 }).Count() > 0);
+            Assert.That(afis.Identify(person1, new[] { person7 }).Count() > 0);
 
             Person person9 = new Person(fps[0], fps[0]);
             Person person10 = new Person(fps[1], fps[1], fps[2]);

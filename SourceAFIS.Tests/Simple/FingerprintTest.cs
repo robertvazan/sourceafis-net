@@ -189,7 +189,7 @@ namespace SourceAFIS.Tests.Simple
         public void FingerTest()
         {
             AfisEngine afis = new AfisEngine();
-            afis.Threshold = 0;
+            afis.Threshold = 0.0001f;
             Person person1 = new Person(new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint });
             afis.Extract(person1);
             Person person2 = new Person(new Fingerprint() { AsBitmapSource = Settings.MatchingFingerprint });
@@ -199,30 +199,30 @@ namespace SourceAFIS.Tests.Simple
             Assert.AreEqual(Finger.RightThumb, person1.Fingerprints[0].Finger);
             person2.Fingerprints[0].Finger = Finger.RightThumb;
             Assert.That(afis.Verify(person1, person2) > 0);
-            Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
+            Assert.That(afis.Identify(person1, new[] { person2 }).Count() > 0);
 
             person2.Fingerprints[0].Finger = Finger.LeftIndex;
             Assert.That(afis.Verify(person1, person2) == 0);
-            Assert.That(afis.Identify(person1, new[] { person2 }) == null);
+            Assert.That(afis.Identify(person1, new[] { person2 }).Count() == 0);
 
             person1.Fingerprints[0].Finger = Finger.Any;
             Assert.That(afis.Verify(person1, person2) > 0);
             Assert.That(afis.Verify(person2, person1) > 0);
-            Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
-            Assert.That(afis.Identify(person2, new[] { person1 }) == person1);
+            Assert.That(afis.Identify(person1, new[] { person2 }).Count() > 0);
+            Assert.That(afis.Identify(person2, new[] { person1 }).Count() > 0);
 
             person2.Fingerprints[0].Finger = Finger.Any;
             Assert.That(afis.Verify(person1, person2) > 0);
-            Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
+            Assert.That(afis.Identify(person1, new[] { person2 }).Count() > 0);
 
             Person person3 = new Person(new Fingerprint() { AsBitmapSource = Settings.MatchingFingerprint });
             afis.Extract(person3);
             person1.Fingerprints[0].Finger = Finger.LeftIndex;
             person2.Fingerprints[0].Finger = Finger.LeftIndex;
             person3.Fingerprints[0].Finger = Finger.RightMiddle;
-            Assert.That(afis.Identify(person1, new[] { person2, person3 }) == person2);
+            CollectionAssert.AreEqual(afis.Identify(person1, new[] { person2, person3 }), new[] { person2 });
             person1.Fingerprints[0].Finger = Finger.RightMiddle;
-            Assert.That(afis.Identify(person1, new[] { person2, person3 }) == person3);
+            CollectionAssert.AreEqual(afis.Identify(person1, new[] { person2, person3 }), new[] { person3 });
 
             Assert.Catch(() => { person1.Fingerprints[0].Finger = (Finger)(-1); });
         }
