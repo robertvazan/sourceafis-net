@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Windows.Media.Imaging;
 using System.IO;
 using System.Runtime.Serialization;
@@ -88,7 +90,7 @@ namespace Sample
             // Look up the probe using Threshold = 10
             Afis.Threshold = 10;
             Console.WriteLine("Identifying {0} in database of {1} persons...", probe.Name, database.Count);
-            MyPerson match = Afis.Identify(probe, database) as MyPerson;
+            MyPerson match = Afis.Identify(probe, database).FirstOrDefault() as MyPerson;
             // Null result means that there is no candidate with similarity score above threshold
             if (match == null)
             {
