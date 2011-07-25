@@ -26,8 +26,8 @@ namespace SourceAFIS.Matching.Minutia
         [Nested]
         public EdgeLookup EdgeLookup = new EdgeLookup();
 
-        [Parameter(Upper = 1000)]
-        public int MaxTriedRoots = 1000;
+        [Parameter(Upper = 3000)]
+        public int MaxTriedRoots = 3000;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
