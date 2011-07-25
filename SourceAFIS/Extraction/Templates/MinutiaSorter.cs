@@ -10,7 +10,10 @@ namespace SourceAFIS.Extraction.Templates
     {
         public void Sort(TemplateBuilder template)
         {
-            template.Minutiae = Calc.Shuffle(template.Minutiae, new Random(0)).ToList();
+            int seed = 0;
+            foreach (var minutia in template.Minutiae)
+                seed += minutia.Direction + minutia.Position.X + minutia.Position.Y + (int)minutia.Type;
+            template.Minutiae = Calc.Shuffle(template.Minutiae, new Random(seed)).ToList();
         }
     }
 }
