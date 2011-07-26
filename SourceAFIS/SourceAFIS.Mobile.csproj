@@ -88,6 +88,7 @@
     <Compile Include="Extraction\Templates\IsoFormat.cs" />
     <Compile Include="Extraction\Templates\ITemplateFormat.cs" />
     <Compile Include="Extraction\Templates\MinutiaCollector.cs" />
+    <Compile Include="Extraction\Templates\MinutiaSorter.cs" />
     <Compile Include="Extraction\Templates\SerializedFormat.cs" />
     <Compile Include="Extraction\Templates\Template.cs" />
     <Compile Include="Extraction\Templates\TemplateBuilder.cs" />
