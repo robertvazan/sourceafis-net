@@ -60,6 +60,8 @@ namespace SourceAFIS.Extraction
         public BranchMinutiaRemover BranchMinutiaRemover = new BranchMinutiaRemover();
         [Nested]
         public MinutiaCollector MinutiaCollector = new MinutiaCollector();
+        [Nested]
+        public MinutiaSorter MinutiaSorter = new MinutiaSorter();
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
@@ -116,6 +118,7 @@ namespace SourceAFIS.Extraction
 
                 MinutiaCollector.Collect(ridges, TemplateBuilder.MinutiaType.Ending, template);
                 MinutiaCollector.Collect(valleys, TemplateBuilder.MinutiaType.Bifurcation, template);
+                MinutiaSorter.Sort(template);
             });
             return template;
         }
