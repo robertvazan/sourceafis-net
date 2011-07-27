@@ -67,11 +67,12 @@ namespace SourceAFIS.Extraction
 
         public Extractor()
         {
+            RidgeSmoother.Lines.StepFactor = 1.59f;
             OrthogonalSmoother.AngleOffset = Angle.PIB;
             OrthogonalSmoother.Lines.Radius = 4;
             BinarySmoother.Radius = 2;
             BinarySmoother.Majority = 0.66f;
-            BinarySmoother.BorderDistance = 7;
+            BinarySmoother.BorderDistance = 15;
         }
 
         public TemplateBuilder Extract(byte[,] invertedImage, int dpi)
