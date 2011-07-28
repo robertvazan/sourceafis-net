@@ -10,7 +10,7 @@ namespace SourceAFIS.Extraction.Filters
     {
         [DpiAdjusted]
         [Parameter(Lower = 10 * 10, Upper = 2000 * 2000)]
-        public int SampleSize = 795541;
+        public int SampleSize = 923459;
         [Parameter]
         public float SampleFraction = 0.49f;
         [Parameter]
