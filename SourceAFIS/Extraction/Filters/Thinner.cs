@@ -14,7 +14,7 @@ namespace SourceAFIS.Extraction.Filters
     {
         [DpiAdjusted]
         [Parameter(Lower = 5, Upper = 50)]
-        public int MaxIterations = 34;
+        public int MaxIterations = 26;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
