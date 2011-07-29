@@ -21,6 +21,7 @@ namespace SourceAFIS.Tuning
         public Optimizer()
         {
             NicheSlot.Measure.ErrorPolicyFunction = ErrorPolicy.ZeroFAR;
+            NicheSlot.Measure.ScalarMeasure = ScalarErrorMeasure.FRR;
         }
 
         public void Run()
