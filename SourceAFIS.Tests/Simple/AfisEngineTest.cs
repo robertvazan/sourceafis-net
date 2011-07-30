@@ -15,7 +15,7 @@ namespace SourceAFIS.Tests.Simple
         {
             AfisEngine afis = new AfisEngine();
             Assert.AreEqual(500, afis.Dpi);
-            Assert.AreEqual(0, afis.SkipBestMatches);
+            Assert.AreEqual(1, afis.MinMatches);
             Assert.That(afis.Threshold > 0);
         }
 
@@ -169,7 +169,7 @@ namespace SourceAFIS.Tests.Simple
                 Assert.That(afis.Identify(person1, new[] { person }).Count() > 0);
             Assert.That(afis.Identify(person1, new[] { person8 }).Count() == 0);
 
-            afis.SkipBestMatches = 1;
+            afis.MinMatches = 2;
             foreach (Person person in new[] { person2, person3, person6, person8 })
                 Assert.That(afis.Verify(person1, person) == 0);
             foreach (Person person in new[] { person4, person5, person7 })
@@ -178,7 +178,7 @@ namespace SourceAFIS.Tests.Simple
             foreach (Person person in new[] { person4, person5, person7 })
                 Assert.That(afis.Identify(person1, new[] { person }).Count() > 0);
 
-            afis.SkipBestMatches = 2;
+            afis.MinMatches = 3;
             foreach (Person person in new[] { person2, person3, person5, person6, person8 })
                 Assert.That(afis.Verify(person1, person) == 0);
             Assert.That(afis.Verify(person1, person4) > 0);
@@ -187,7 +187,7 @@ namespace SourceAFIS.Tests.Simple
             Assert.That(afis.Identify(person1, new[] { person4 }).Count() > 0);
             Assert.That(afis.Identify(person1, new[] { person7 }).Count() > 0);
 
-            afis.SkipBestMatches = 3;
+            afis.MinMatches = 4;
             foreach (Person person in new[] { person2, person3, person5, person6, person8 })
                 Assert.That(afis.Verify(person1, person) == 0);
             Assert.That(afis.Verify(person1, person4) > 0);
@@ -198,19 +198,19 @@ namespace SourceAFIS.Tests.Simple
 
             Person person9 = new Person(fps[0], fps[0]);
             Person person10 = new Person(fps[1], fps[1], fps[2]);
-            afis.SkipBestMatches = 0;
+            afis.MinMatches = 1;
             Assert.That(afis.Verify(person9, person10) > 0);
-            afis.SkipBestMatches = 1;
+            afis.MinMatches = 2;
             Assert.That(afis.Verify(person9, person10) > 0);
-            afis.SkipBestMatches = 2;
+            afis.MinMatches = 3;
             Assert.That(afis.Verify(person9, person10) > 0);
-            afis.SkipBestMatches = 3;
+            afis.MinMatches = 4;
             Assert.That(afis.Verify(person9, person10) > 0);
-            afis.SkipBestMatches = 4;
+            afis.MinMatches = 5;
             Assert.That(afis.Verify(person9, person10) == 0);
-            afis.SkipBestMatches = 5;
+            afis.MinMatches = 6;
             Assert.That(afis.Verify(person9, person10) == 0);
-            afis.SkipBestMatches = 6;
+            afis.MinMatches = 7;
             Assert.That(afis.Verify(person9, person10) == 0);
         }
     }
