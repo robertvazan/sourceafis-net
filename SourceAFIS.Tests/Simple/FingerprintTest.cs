@@ -8,6 +8,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Serialization;
+using System.Xml.Linq;
 using NUnit.Framework;
 using SourceAFIS.Simple;
 
@@ -181,8 +182,37 @@ namespace SourceAFIS.Tests.Simple
             fp1.AsIsoTemplate = null;
             Assert.IsNull(fp1.AsIsoTemplate);
 
-            Assert.Catch(() => { fp1.Template = new byte[100]; });
+            Assert.Catch(() => { fp1.AsIsoTemplate = new byte[100]; });
             Assert.Catch(() => { fp1.AsIsoTemplate = fp2.Template; });
+        }
+
+        [Test]
+        public void AsXmlTemplate()
+        {
+            Fingerprint fp1 = new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint };
+            Assert.IsNull(fp1.AsXmlTemplate);
+
+            AfisEngine afis = new AfisEngine();
+            afis.Extract(new Person(fp1));
+            Assert.IsNotNull(fp1.AsXmlTemplate);
+
+            Fingerprint fp2 = new Fingerprint() { AsXmlTemplate = fp1.AsXmlTemplate };
+            Assert.AreEqual(fp1.AsXmlTemplate.ToString(), fp2.AsXmlTemplate.ToString());
+            Assert.IsNotNull(fp2.Template);
+            Assert.IsNull(fp2.Image);
+
+            Person person1 = new Person(fp1);
+            Person person2 = new Person(fp2);
+            Person person3 = new Person(new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint });
+            afis.Extract(person3);
+            afis.Threshold = 0;
+            Assert.That(afis.Verify(person1, person2) > afis.Verify(person1, person3));
+
+            fp1.AsXmlTemplate = null;
+            Assert.IsNull(fp1.AsXmlTemplate);
+            Assert.IsNull(fp1.Template);
+
+            Assert.Catch(() => { fp1.AsXmlTemplate = new XElement("garbage"); });
         }
 
         [Test]
