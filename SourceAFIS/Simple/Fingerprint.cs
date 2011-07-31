@@ -4,6 +4,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Media.Imaging;
+using System.Xml.Linq;
 using SourceAFIS.General;
 using SourceAFIS.Dummy;
 using SourceAFIS.Extraction.Templates;
@@ -173,6 +174,7 @@ namespace SourceAFIS.Simple
         static readonly CompactFormat CompactFormat = new CompactFormat();
         static readonly SerializedFormat SerializedFormat = new SerializedFormat();
         static readonly IsoFormat IsoFormat = new IsoFormat();
+        static readonly XmlFormat XmlFormat = new XmlFormat();
 
         /// <summary>
         /// Fingerprint template.
@@ -240,6 +242,29 @@ namespace SourceAFIS.Simple
         {
             get { return Decoded != null ? IsoFormat.Export(SerializedFormat.Import(Decoded)) : null; }
             set { Decoded = value != null ? SerializedFormat.Export(IsoFormat.Import(value)) : null; }
+        }
+
+        /// <summary>
+        /// Fingerprint template in readable XML format.
+        /// </summary>
+        /// <value>
+        /// Value of <see cref="Template"/> converted to SourceAFIS XML template format.
+        /// This property is <see langword="null"/> if <see cref="Template"/> is <see langword="null"/>.
+        /// </value>
+        /// <remarks>
+        /// Use XML template format where clean data format is more important than compact and fast encoding.
+        /// XML templates are suitable for XML-based data exchange, encoding of multiple fingerprints along
+        /// with accompanying data into single XML file, and for debugging and logging purposes.
+        /// </remarks>
+        /// <seealso cref="Template"/>
+        /// <seealso cref="AfisEngine.Extract"/>
+        /// <seealso cref="SourceAFIS.Extraction.Templates.XmlFormat"/>
+        /// <seealso cref="SourceAFIS.Extraction.Templates.TemplateBuilder"/>
+        [XmlIgnore]
+        public XElement AsXmlTemplate
+        {
+            get { return Decoded != null ? XmlFormat.Export(SerializedFormat.Import(Decoded)) : null; }
+            set { Decoded = value != null ? SerializedFormat.Export(XmlFormat.Import(value)) : null; }
         }
 
         Finger FingerPosition;
