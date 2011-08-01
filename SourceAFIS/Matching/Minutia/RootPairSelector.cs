@@ -5,7 +5,7 @@ using SourceAFIS.Extraction.Templates;
 
 namespace SourceAFIS.Matching.Minutia
 {
-    public sealed class ExhaustiveRootSelector : IRootSelector
+    public sealed class RootPairSelector
     {
         public IEnumerable<MinutiaPair> GetRoots(Template probeTemplate, Template candidateTemplate)
         {
