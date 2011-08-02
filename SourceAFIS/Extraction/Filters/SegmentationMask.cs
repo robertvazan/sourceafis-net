@@ -26,7 +26,7 @@ namespace SourceAFIS.Extraction.Filters
         public SegmentationMask()
         {
             LowContrastMajority.BorderDistance = 0;
-            LowContrastMajority.Radius = 2;
+            LowContrastMajority.Radius = 1;
             LowContrastMajority.Majority = 0.69f;
             BlockErrorFilter.Majority = 0.51f;
             InnerMaskFilter.Radius = 6;
