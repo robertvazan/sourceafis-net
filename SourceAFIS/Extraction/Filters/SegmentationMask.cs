@@ -29,7 +29,7 @@ namespace SourceAFIS.Extraction.Filters
             LowContrastMajority.Radius = 1;
             LowContrastMajority.Majority = 0.69f;
             BlockErrorFilter.Majority = 0.51f;
-            InnerMaskFilter.Radius = 6;
+            InnerMaskFilter.Radius = 5;
             InnerMaskFilter.BorderDistance = 4;
         }
 
