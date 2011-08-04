@@ -10,7 +10,7 @@ namespace SourceAFIS.Extraction.Model
     {
         [DpiAdjusted]
         [Parameter(Lower = 3, Upper = 100)]
-        public int MaxArmLength = 45;
+        public int MaxArmLength = 83;
 
         [Nested]
         public KnotRemover KnotRemover = new KnotRemover();
