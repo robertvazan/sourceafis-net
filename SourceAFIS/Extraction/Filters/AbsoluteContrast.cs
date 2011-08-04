@@ -9,7 +9,7 @@ namespace SourceAFIS.Extraction.Filters
     public sealed class AbsoluteContrast
     {
         [Parameter(Upper = 255)]
-        public int Limit = 9;
+        public int Limit = 6;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
