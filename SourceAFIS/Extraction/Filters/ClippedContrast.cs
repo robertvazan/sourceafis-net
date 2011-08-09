@@ -13,7 +13,7 @@ namespace SourceAFIS.Extraction.Filters
     public sealed class ClippedContrast
     {
         [Parameter(Upper = 0.4)]
-        public float ClipFraction = 0.1f;
+        public float ClipFraction = 0.08f;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
