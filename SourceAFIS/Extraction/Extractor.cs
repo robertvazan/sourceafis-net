@@ -72,7 +72,7 @@ namespace SourceAFIS.Extraction
             OrthogonalSmoother.Lines.Radius = 4;
             BinarySmoother.Radius = 2;
             BinarySmoother.Majority = 0.66f;
-            BinarySmoother.BorderDistance = 15;
+            BinarySmoother.BorderDistance = 17;
         }
 
         public TemplateBuilder Extract(byte[,] invertedImage, int dpi)
