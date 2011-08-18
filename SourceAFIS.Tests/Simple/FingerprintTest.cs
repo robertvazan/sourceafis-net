@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.IO;
@@ -114,6 +116,36 @@ namespace SourceAFIS.Tests.Simple
             Assert.IsNull(fp.Image);
 
             Assert.Throws<ApplicationException>(() => { fp.AsBitmapSource = new WriteableBitmap(50, 50, 500, 500, PixelFormats.Bgr32, null); });
+        }
+
+        public void AsBitmap()
+        {
+            Fingerprint fp = new Fingerprint();
+            Bitmap bitmap = new Bitmap(Bitmap.FromFile(Settings.SomeFingerprintPath)); ;
+
+            fp.AsBitmap = bitmap;
+            Assert.IsNotNull(fp.Image);
+            Assert.AreEqual(bitmap.Height, fp.Image.GetLength(0));
+            Assert.AreEqual(bitmap.Width, fp.Image.GetLength(1));
+
+            Bitmap bitmap2 = fp.AsBitmap;
+            Assert.AreNotSame(bitmap, bitmap2);
+            Assert.AreEqual(bitmap.Height, bitmap2.Height);
+            Assert.AreEqual(bitmap.Width, bitmap2.Width);
+
+            MemoryStream saved = new MemoryStream();
+            bitmap2.Save(saved, ImageFormat.Bmp);
+            Bitmap bitmap3 = new Bitmap(Bitmap.FromStream(saved));
+
+            Fingerprint fp2 = new Fingerprint() { AsBitmap = bitmap3 };
+            Assert.AreEqual(bitmap.Height, fp.Image.GetLength(0));
+            Assert.AreEqual(bitmap.Width, fp.Image.GetLength(1));
+            Assert.AreEqual(fp.Image, fp2.Image);
+
+            fp.AsBitmap = null;
+            Assert.IsNull(fp.Image);
+
+            Assert.Throws<ApplicationException>(() => { fp.AsBitmap = new Bitmap(50, 50); });
         }
 
         [Test]
