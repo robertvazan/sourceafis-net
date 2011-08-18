@@ -48,6 +48,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -99,6 +100,7 @@
     <Compile Include="General\Calc.cs" />
     <Compile Include="General\CircularArray.cs" />
     <Compile Include="General\DetailLogger.cs" />
+    <Compile Include="General\GdiIO.cs" />
     <Compile Include="General\Neighborhood.cs" />
     <Compile Include="General\Point.cs" />
     <Compile Include="General\PointF.cs" />
