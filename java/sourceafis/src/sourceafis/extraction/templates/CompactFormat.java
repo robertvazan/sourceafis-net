@@ -1,0 +1,190 @@
+package sourceafis.extraction.templates;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import sourceafis.jport.AssertException;
+import sourceafis.jport.BinaryReader;
+import sourceafis.jport.BinaryWriter;
+import sourceafis.jport.BitConverter;
+
+public final class CompactFormat extends TemplateFormatBase<byte[]>
+{
+    // Template format (all numbers are big-endian):
+    // 4B magic
+    // 1B version (current = 2)
+    // 2B total length (including magic)
+    // 2B original DPI (since version 2)
+    // 2B original width (since version 2)
+    // 2B original height (since version 2)
+    // 2B minutia count
+    // N*6B minutia records
+    //      2B position X
+    //      2B position Y
+    //      1B direction
+    //      1B type
+
+    static byte[] Magic = new byte[] { (byte)0x50, (byte)0xBC, (byte)0xAF, 0x15 }; // read "SorcAFIS"
+    @Override
+    public  byte[] Export(TemplateBuilder builder)
+    {
+        //checked
+        //{
+    	   try{
+            //MemoryStream stream = new MemoryStream();
+    	    ByteArrayOutputStream stream=new ByteArrayOutputStream(); 
+            //BinaryWriter writer = new BinaryWriter(stream, Encoding.UTF8);
+    	    BinaryWriter writer = new BinaryWriter(stream);
+
+            // 4B magic
+            writer.Write(Magic);
+
+            // 1B version (current = 2)
+            writer.Write((byte)2);
+
+            // 2B total length (including magic), will be filled later
+            writer.Write((short)0);
+
+            // 2B original DPI (since version 2)
+            //writer.Write(IPAddress.HostToNetworkOrder((short)builder.OriginalDpi));
+            writer.Write((short)builder.OriginalDpi);
+
+            // 2B original width (since version 2)
+            writer.Write((short)builder.OriginalWidth);
+
+            // 2B original height (since version 2)
+            writer.Write((short)builder.OriginalHeight);
+
+            // 2B minutia count
+            writer.Write((short)builder.Minutiae.size());
+
+            // N*6B minutia records
+            for(Minutia minutia: builder.Minutiae)
+            {
+                //      2B position X
+                writer.Write((short)minutia.Position.X);
+
+                //      2B position Y
+                writer.Write((short)minutia.Position.Y);
+
+                //      1B direction
+                writer.Write(minutia.Direction);
+
+                //      1B type
+                writer.Write((byte)minutia.Type.convert());
+            }
+
+            writer.Close();
+
+            // update length
+            byte[] template = stream.toByteArray();
+           // BitConverter.GetBytes((short)template.Length)).CopyTo(template, 5);
+            BitConverter.Write(template,(short)template.length,5);
+            return template;
+    	   }catch(IOException e){
+    		   throw new RuntimeException(e);
+    	   }
+         
+    }
+
+   @Override
+    public  TemplateBuilder Import(byte[] template)
+    {
+      try{
+	    
+    	 TemplateBuilder builder = new TemplateBuilder();
+
+        //MemoryStream stream = new MemoryStream(template);
+        ByteArrayInputStream stream=new ByteArrayInputStream(template);
+        BinaryReader reader = new BinaryReader(stream);
+
+        // 4B magic
+        for (int i = 0; i < Magic.length; ++i)
+            AssertException.Check(reader.ReadByte() == Magic[i],"This is not an Compact template.");
+
+        // 1B version (current = 2)
+        byte version = reader.ReadByte();
+        AssertException.Check(version >= 1 && version <= 2,"Invalid Template Version");
+
+        // 2B total length (including magic)
+        reader.ReadInt16();
+
+        if (version >= 2)
+        {
+            // 2B original DPI (since version 2)
+            builder.OriginalDpi =  reader.ReadInt16();
+
+            // 2B original width (since version 2)
+            builder.OriginalWidth =  reader.ReadInt16();
+
+            // 2B original height (since version 2)
+            builder.OriginalHeight = reader.ReadInt16();
+        }
+
+        // 2B minutia count
+        int minutiaCount = reader.ReadInt16();
+
+        // N*6B minutia records
+        for (int i = 0; i < minutiaCount; ++i)
+        {
+            Minutia minutia = new  Minutia();
+
+            //      2B position X
+            minutia.Position.X = reader.ReadInt16();
+
+            //      2B position Y
+            minutia.Position.Y =  reader.ReadInt16();
+
+            //      1B direction
+            minutia.Direction = reader.ReadByte();
+
+            //      1B type
+            // Re-implement following logic
+            byte type=reader.ReadByte();
+            if(type==MinutiaType.Bifurcation.convert()){
+            	minutia.Type = MinutiaType.Bifurcation;
+            }else{
+            	minutia.Type = MinutiaType.Ending;
+            }
+            //AssertException.Check(Enum.IsDefined(typeof(TemplateBuilder.MinutiaType), minutia.Type));
+
+            builder.Minutiae.add(minutia);
+        }
+
+        return builder;
+      }catch(IOException e){
+    	  throw new RuntimeException(e);
+      }
+    }
+    @Override
+    public  void Serialize(OutputStream stream, byte[] template)
+    {
+        try {
+			stream.write(template, 0, template.length);
+		} catch (IOException e) {
+			new RuntimeException(e);
+		}
+    }
+
+    @Override
+    public  byte[] Deserialize(InputStream stream)
+    {
+    	 try {
+           byte[] header = new byte[7];
+           stream.read(header, 0, 7);
+           int length = BitConverter.ToInt16(header, 5);
+           byte[] template = new byte[length];
+           //header.CopyTo(template, 0);
+           System.arraycopy(header,0,template, 0,7);
+           stream.read(template, 7, length - 7);
+           return template;
+           } catch (IOException e) {
+    			new RuntimeException(e);
+           }
+          //Why is compiler complaining 
+		return null;
+    }
+}
