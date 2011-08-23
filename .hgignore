@@ -18,3 +18,4 @@ glob:*.HxF
 glob:*.user
 syntax: glob
 .metadata
+Data/JavaTestData
