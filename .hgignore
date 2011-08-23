@@ -16,3 +16,5 @@ glob:Sample/dll
 glob:*.hhp
 glob:*.HxF
 glob:*.user
+syntax: glob
+.metadata
