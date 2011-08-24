@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Xml.Linq;
 using System.Windows.Media.Imaging;
+using System.Globalization;
 using NUnit.Framework;
 using SourceAFIS.Simple;
 using SourceAFIS.Extraction.Templates;
@@ -72,7 +73,7 @@ namespace SourceAFIS.Tests.Executable
                     document.Root.Add(new XElement("pair",
                         new XAttribute("left", database[pair.Probe].FilePath),
                         new XAttribute("right", database[pair.Candidate].FilePath),
-                        new XAttribute("score", score.ToString("0.####"))));
+                        new XAttribute("score", score.ToString("0.####", CultureInfo.InvariantCulture))));
                 }
             }
             document.Save(Path.Combine(Settings.JavaDataPath, "score.xml"));
