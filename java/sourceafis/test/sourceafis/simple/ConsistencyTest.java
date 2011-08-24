@@ -29,11 +29,13 @@ public class ConsistencyTest {
 		for (int i = 0; i < templates.getLength(); ++i) {
 			if (templates.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element template = (Element)templates.item(i);
-				String base64 = template.getAttribute("compact");
-				byte[] data = new BASE64Decoder().decodeBuffer(base64);
-				Fingerprint fp = new Fingerprint();
-				fp.setTemplate(data);
-				return new Person(new Fingerprint[] { fp });
+				if (template.getAttribute("image-path").equals(path)) {
+					String base64 = template.getAttribute("compact");
+					byte[] data = new BASE64Decoder().decodeBuffer(base64);
+					Fingerprint fp = new Fingerprint();
+					fp.setTemplate(data);
+					return new Person(new Fingerprint[] { fp });
+				}
 			}
 		}
 		Assert.fail();
