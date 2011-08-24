@@ -71,8 +71,8 @@ namespace SourceAFIS.Tests.Executable
                 {
                     double score = afis.Verify(ToPerson(database[pair.Probe].Template), ToPerson(database[pair.Candidate].Template));
                     document.Root.Add(new XElement("pair",
-                        new XAttribute("left", database[pair.Probe].FilePath),
-                        new XAttribute("right", database[pair.Candidate].FilePath),
+                        new XAttribute("probe", database[pair.Probe].FilePath),
+                        new XAttribute("candidate", database[pair.Candidate].FilePath),
                         new XAttribute("score", score.ToString("0.####", CultureInfo.InvariantCulture))));
                 }
             }
