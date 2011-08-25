@@ -27,11 +27,9 @@ public class DetailLogger {
 	public synchronized void log(String path, Object data) {
 		Object logged = data;
 		try {
-			Method clone = data.getClass().getMethod("clone");
-			if (Modifier.isPublic(clone.getModifiers()))
-				logged = clone.invoke(data);
-		} catch (NoSuchMethodException e) {
-			throw new RuntimeException(e);
+			for (Method clone : data.getClass().getMethods())
+				if (clone.getName().equals("clone") && Modifier.isPublic(clone.getModifiers()))
+					logged = clone.invoke(data);
 		} catch (InvocationTargetException e) {
 			throw new RuntimeException(e);
 		} catch (IllegalAccessException e) {
@@ -46,6 +44,21 @@ public class DetailLogger {
 		return result;
 	}
 	
+	public static void copyHooks(Object original, Object copy) {
+		ObjectTree originalTree = new ObjectTree(original);
+		ObjectTree copyTree = new ObjectTree(copy);
+		for (Object originalRef : originalTree.getAllObjects())
+			for (Field field : originalRef.getClass().getFields())
+				if (field.getName().equals("logger")) {
+					Object copyRef = copyTree.getObject(originalTree.getPath(originalRef));
+					try {
+						field.set(copyRef, field.get(originalRef));
+					} catch (IllegalAccessException e) {
+						throw new RuntimeException(e);
+					}
+				}
+	}
+
 	public static abstract class Hook {
         public abstract boolean isActive();
         public abstract void log(Object data);
