@@ -9,7 +9,12 @@ using System.Globalization;
 using NUnit.Framework;
 using SourceAFIS.Simple;
 using SourceAFIS.Extraction.Templates;
+using SourceAFIS.General;
+using SourceAFIS.Meta;
 using SourceAFIS.Tuning.Database;
+using SourceAFIS.Matching;
+using SourceAFIS.Matching.Minutia;
+using SourceAFIS.Extraction;
 
 namespace SourceAFIS.Tests.Executable
 {
@@ -77,6 +82,32 @@ namespace SourceAFIS.Tests.Executable
                 }
             }
             document.Save(Path.Combine(Settings.JavaDataPath, "score.xml"));
+        }
+
+        [Test]
+        public void MatchLog()
+        {
+            Extractor extractor = new Extractor();
+            ParallelMatcher matcher = new ParallelMatcher();
+            DetailLogger logger = new DetailLogger();
+            logger.Attach(new ObjectTree(matcher));
+
+            Template probe = new Template(extractor.Extract(WpfIO.GetPixels(Settings.JavaFingerprintProbe), 500));
+            Template candidate = new Template(extractor.Extract(WpfIO.GetPixels(Settings.JavaFingerprintCandidate), 500));
+            ParallelMatcher.PreparedProbe prepared = matcher.Prepare(probe);
+            matcher.Match(prepared, new[] { candidate });
+            DetailLogger.LogData log = logger.PopLog();
+
+            XDocument document = new XDocument(new XElement("matcher"));
+            document.Root.SetAttributeValue("probe", Convert.ToBase64String(new CompactFormat().Export(probe.ToTemplateBuilder())));
+            document.Root.SetAttributeValue("candidate", Convert.ToBase64String(new CompactFormat().Export(candidate.ToTemplateBuilder())));
+            MinutiaPair? rootPair = (MinutiaPair?)log.Retrieve("MinutiaMatcher.Root");
+            if (rootPair != null)
+            {
+                document.Root.SetAttributeValue("root-pair-probe", rootPair.Value.Probe);
+                document.Root.SetAttributeValue("root-pair-candidate", rootPair.Value.Candidate);
+            }
+            document.Save(Path.Combine(Settings.JavaDataPath, "matcher.xml"));
         }
     }
 }
