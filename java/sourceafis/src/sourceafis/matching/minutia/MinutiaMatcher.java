@@ -2,7 +2,9 @@ package sourceafis.matching.minutia;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import sourceafis.extraction.templates.Template;
+import sourceafis.general.DetailLogger;
 import sourceafis.matching.MatchAnalysis;
 import sourceafis.matching.MatchScoring;
 import sourceafis.matching.ProbeIndex;
@@ -32,7 +34,7 @@ public class MinutiaMatcher
     //[Parameter(Upper = 10000)]
     public int MaxTriedRoots = 10000;
 
-   // public DetailLogger.Hook Logger = DetailLogger.Null;
+    public DetailLogger.Hook logger = DetailLogger.off;
 
     ProbeIndex Probe;
     EdgeTable CandidateEdges;
@@ -58,6 +60,7 @@ public class MinutiaMatcher
 
         int rootIndex = 0;
         float bestScore = 0;
+        MinutiaPair bestRoot = null;
         ArrayList<MinutiaPair> roots= RootSelector.GetRoots(Probe.Template, candidate);
      
         for(MinutiaPair root : roots)
@@ -67,12 +70,15 @@ public class MinutiaMatcher
             if (score > bestScore)
             {
                 bestScore = score;
-              //bestRoot = root;
+                bestRoot = root;
             }
             ++rootIndex;
             if (rootIndex >= MaxTriedRoots)
                 break;
         }
+        logger.log("score", bestScore);
+        if (bestScore > 0 && logger.isActive())
+            logger.log("root", bestRoot);
         
         return bestScore;
     }
