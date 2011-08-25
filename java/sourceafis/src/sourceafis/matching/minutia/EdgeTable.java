@@ -8,10 +8,11 @@ import java.util.List;
 import sourceafis.extraction.templates.Template;
 import sourceafis.general.Calc;
 import sourceafis.general.Point;
+import sourceafis.meta.Nested;
  
  public   class EdgeTable
     {
-        //[Nested]
+        @Nested
         public EdgeConstructor EdgeConstructor = new EdgeConstructor();
 
         //[Parameter(Lower = 30, Upper = 1500)]

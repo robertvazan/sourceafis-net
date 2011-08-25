@@ -3,9 +3,10 @@ import java.util.List;
 import sourceafis.extraction.templates.Template;
 import sourceafis.general.Queue;
 import sourceafis.matching.minutia.MinutiaMatcher;
+import sourceafis.meta.Nested;
 public class ParallelMatcher
 {
-    //[Nested]
+    @Nested
     public MinutiaMatcher MinutiaMatcher = new MinutiaMatcher();
 
     public class PreparedProbe
