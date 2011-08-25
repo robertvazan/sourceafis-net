@@ -99,8 +99,8 @@ namespace SourceAFIS.Tests.Executable
             DetailLogger.LogData log = logger.PopLog();
 
             XDocument document = new XDocument(new XElement("matcher"));
-            document.Root.SetAttributeValue("probe", Convert.ToBase64String(new CompactFormat().Export(probe.ToTemplateBuilder())));
-            document.Root.SetAttributeValue("candidate", Convert.ToBase64String(new CompactFormat().Export(candidate.ToTemplateBuilder())));
+            document.Root.SetAttributeValue("probe", Settings.JavaFingerprintProbePath);
+            document.Root.SetAttributeValue("candidate", Settings.JavaFingerprintCandidatePath);
             MinutiaPair? rootPair = (MinutiaPair?)log.Retrieve("MinutiaMatcher.Root");
             if (rootPair != null)
             {
