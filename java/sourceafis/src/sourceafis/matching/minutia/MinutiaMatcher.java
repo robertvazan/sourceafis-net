@@ -6,25 +6,27 @@ import sourceafis.extraction.templates.Template;
 import sourceafis.matching.MatchAnalysis;
 import sourceafis.matching.MatchScoring;
 import sourceafis.matching.ProbeIndex;
+import sourceafis.meta.Nested;
 
  
 
 public class MinutiaMatcher
 {
-    //[Nested]
+    @Nested
     public ExhaustiveRootSelector RootSelector = new ExhaustiveRootSelector();
-     
+    @Nested
     public MinutiaPairing Pairing = new MinutiaPairing();
+    @Nested
     public EdgeTable edgeTablePrototype = new EdgeTable();
-    
+    @Nested
     public EdgeConstructor EdgeConstructor = new EdgeConstructor();
-     
+    @Nested
     public PairSelector PairSelector = new PairSelector();
-     
+    @Nested
     public MatchAnalysis MatchAnalysis = new MatchAnalysis();
-     
+    @Nested
     public MatchScoring MatchScoring = new MatchScoring();
-     
+    @Nested
     public EdgeLookup EdgeLookup = new EdgeLookup();
 
     //[Parameter(Upper = 10000)]
