@@ -13,7 +13,7 @@ import sourceafis.meta.Parameter;
 	        public float CorrectTypeFactor = 0.1f;
 	        @Parameter
 	        public float SupportedCountFactor = 0.4f;
-	        @Parameter
+	        @Parameter(precision = 3)
 	        public float EdgeCountFactor = 0.208f;
 
 	        public float Compute(MatchAnalysis analysis)
