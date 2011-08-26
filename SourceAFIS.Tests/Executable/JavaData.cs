@@ -34,10 +34,16 @@ namespace SourceAFIS.Tests.Executable
             return new Person(new Fingerprint() { Template = new CompactFormat().SerializeBuilder(new SerializedFormat().Import(template)) });
         }
 
+        void SaveXml(XElement root, string name)
+        {
+            Directory.CreateDirectory(Settings.JavaDataPath);
+            new XDocument(root).Save(Path.Combine(Settings.JavaDataPath, name));
+        }
+
         [Test]
         public void Templates()
         {
-            XDocument document = new XDocument(new XElement("template-list"));
+            XElement root = new XElement("template-list");
             AfisEngine afis = new AfisEngine();
             DatabaseCollection db = new DatabaseCollection();
             db.Scan(Settings.DatabasePath);
@@ -48,19 +54,18 @@ namespace SourceAFIS.Tests.Executable
                     Fingerprint fp = new Fingerprint();
                     fp.AsBitmapSource = new BitmapImage(new Uri(database[index].FilePath, UriKind.RelativeOrAbsolute));
                     afis.Extract(new Person(fp));
-                    document.Root.Add(new XElement("template",
+                    root.Add(new XElement("template",
                         new XAttribute("image-path", database[index].FilePath),
                         new XAttribute("compact", Convert.ToBase64String(fp.Template))));
                 }
-            Directory.CreateDirectory(Settings.JavaDataPath);
-            document.Save(Path.Combine(Settings.JavaDataPath, "templates.xml"));
+            SaveXml(root, "templates.xml");
         }
 
         [Test]
         public void Scores()
         {
             var templates = XDocument.Load(Path.Combine(Settings.JavaDataPath, "templates.xml")).Root.Elements();
-            XDocument document = new XDocument(new XElement("score-list"));
+            XElement root = new XElement("score-list");
             AfisEngine afis = new AfisEngine();
             DatabaseCollection db = new DatabaseCollection();
             db.Scan(Settings.DatabasePath);
@@ -75,13 +80,13 @@ namespace SourceAFIS.Tests.Executable
                 foreach (var pair in database.AllPairs)
                 {
                     double score = afis.Verify(ToPerson(database[pair.Probe].Template), ToPerson(database[pair.Candidate].Template));
-                    document.Root.Add(new XElement("pair",
+                    root.Add(new XElement("pair",
                         new XAttribute("probe", database[pair.Probe].FilePath),
                         new XAttribute("candidate", database[pair.Candidate].FilePath),
                         new XAttribute("score", score.ToString("0.####", CultureInfo.InvariantCulture))));
                 }
             }
-            document.Save(Path.Combine(Settings.JavaDataPath, "score.xml"));
+            SaveXml(root, "score.xml");
         }
 
         [Test]
@@ -98,16 +103,29 @@ namespace SourceAFIS.Tests.Executable
             matcher.Match(prepared, new[] { candidate });
             DetailLogger.LogData log = logger.PopLog();
 
-            XDocument document = new XDocument(new XElement("matcher"));
-            document.Root.SetAttributeValue("probe", Settings.JavaFingerprintProbePath);
-            document.Root.SetAttributeValue("candidate", Settings.JavaFingerprintCandidatePath);
+            XElement root = new XElement("matcher");
+            root.SetAttributeValue("probe", Settings.JavaFingerprintProbePath);
+            root.SetAttributeValue("candidate", Settings.JavaFingerprintCandidatePath);
             MinutiaPair? rootPair = (MinutiaPair?)log.Retrieve("MinutiaMatcher.Root");
             if (rootPair != null)
             {
-                document.Root.SetAttributeValue("root-pair-probe", rootPair.Value.Probe);
-                document.Root.SetAttributeValue("root-pair-candidate", rootPair.Value.Candidate);
+                root.SetAttributeValue("root-pair-probe", rootPair.Value.Probe);
+                root.SetAttributeValue("root-pair-candidate", rootPair.Value.Candidate);
             }
-            document.Save(Path.Combine(Settings.JavaDataPath, "matcher.xml"));
+            SaveXml(root, "matcher.xml");
+        }
+
+        [Test]
+        public void Parameters()
+        {
+            ParallelMatcher matcher = new ParallelMatcher();
+            ParameterSet parameters = new ParameterSet(new ObjectTree(matcher));
+            XElement root = new XElement("parameters");
+            foreach (var param in parameters.AllParameters)
+                root.Add(new XElement("param",
+                    new XAttribute("path", param.FieldPath),
+                    new XAttribute("value", param.Value.Double.ToString(String.Format("F{0}", param.Value.Precision), CultureInfo.InvariantCulture))));
+            SaveXml(root, "parameters.xml");
         }
     }
 }
