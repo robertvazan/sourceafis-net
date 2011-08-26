@@ -9,6 +9,7 @@ import sourceafis.matching.MatchAnalysis;
 import sourceafis.matching.MatchScoring;
 import sourceafis.matching.ProbeIndex;
 import sourceafis.meta.Nested;
+import sourceafis.meta.Parameter;
 
  
 
@@ -31,7 +32,7 @@ public class MinutiaMatcher
     @Nested
     public EdgeLookup EdgeLookup = new EdgeLookup();
 
-    //[Parameter(Upper = 10000)]
+    @Parameter
     public int MaxTriedRoots = 10000;
 
     public DetailLogger.Hook logger = DetailLogger.off;

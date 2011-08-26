@@ -9,15 +9,16 @@ import sourceafis.extraction.templates.Template;
 import sourceafis.general.Calc;
 import sourceafis.general.Point;
 import sourceafis.meta.Nested;
+import sourceafis.meta.Parameter;
  
  public   class EdgeTable
     {
         @Nested
         public EdgeConstructor EdgeConstructor = new EdgeConstructor();
 
-        //[Parameter(Lower = 30, Upper = 1500)]
+        @Parameter
         public int MaxDistance = 191;
-        //[Parameter(Lower = 2, Upper = 100)]
+        @Parameter
         public int MaxNeighbors = 9;
 
         public NeighborEdge[][] Table;
