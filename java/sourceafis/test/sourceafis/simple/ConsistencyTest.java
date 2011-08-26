@@ -3,6 +3,7 @@ package sourceafis.simple;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,6 +24,8 @@ import sourceafis.general.DetailLogger;
 import sourceafis.matching.ParallelMatcher;
 import sourceafis.matching.minutia.MinutiaPair;
 import sourceafis.meta.ObjectTree;
+import sourceafis.meta.ParameterSet;
+import sourceafis.meta.ParameterValue;
 import sun.misc.BASE64Decoder;
 
 
@@ -105,5 +108,32 @@ public class ConsistencyTest {
 			Assert.assertEquals(Integer.parseInt(csLog.getAttribute("root-pair-candidate")), rootPair.Candidate);
 		} else
 			Assert.assertFalse(csLog.hasAttribute("root-pair-probe"));
+	}
+	
+	@Test
+	public void testParameters()
+	throws IOException, SAXException, ParserConfigurationException {
+		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document csParamsDoc = docBuilder.parse(new File(folderJavaTestData, "parameters.xml"));
+		NodeList csParams = csParamsDoc.getDocumentElement().getElementsByTagName("param");
+		
+		ParallelMatcher matcher = new ParallelMatcher();
+		ParameterSet jParams = new ParameterSet(new ObjectTree(matcher));
+		
+		HashSet<String> csPaths = new HashSet<String>();
+		for (int i = 0; i < csParams.getLength(); ++i)
+			csPaths.add(((Element)csParams.item(i)).getAttribute("path").toLowerCase());
+		HashSet<String> jPaths = new HashSet<String>();
+		for (ParameterValue parameter : jParams.getAllParameters())
+			jPaths.add(parameter.fieldPathNoCase);
+		Assert.assertEquals(csPaths, jPaths);
+		
+		for (ParameterValue jParam : jParams.getAllParameters()) {
+			double csValue = 0;
+			for (int i = 0; i < csParams.getLength(); ++i)
+				if(((Element)csParams.item(i)).getAttribute("path").toLowerCase().equals(jParam.fieldPathNoCase))
+					csValue = Double.parseDouble(((Element)csParams.item(i)).getAttribute("value"));
+			Assert.assertEquals("param: " + jParam.fieldPath, csValue, jParam.value);
+		}
 	}
 }
