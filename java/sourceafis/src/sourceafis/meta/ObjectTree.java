@@ -41,4 +41,6 @@ public class ObjectTree {
 	public String getPath(Object reference) { return byReference.get(reference).path; }
 	public ArrayList<Object> getAllObjects() { return new ArrayList<Object>(byReference.keySet()); }
 	public ArrayList<String> getAllPaths() { return new ArrayList<String>(byPath.keySet()); }
+	public boolean containsObject(Object reference) { return byReference.containsKey(reference); }
+	public boolean containsPath(String path) { return byPath.containsKey(path); }
 }

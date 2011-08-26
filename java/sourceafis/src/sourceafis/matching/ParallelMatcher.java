@@ -1,10 +1,11 @@
 package sourceafis.matching;
 import java.util.List;
+
 import sourceafis.extraction.templates.Template;
-import sourceafis.general.DetailLogger;
 import sourceafis.general.Queue;
 import sourceafis.matching.minutia.MinutiaMatcher;
 import sourceafis.meta.Nested;
+import sourceafis.meta.ParameterSet;
 public class ParallelMatcher
 {
     @Nested
@@ -30,8 +31,7 @@ public class ParallelMatcher
           // Can be implemented later when using real parallel
            if (matcher == null) {
          //     matcher = ParameterSet.ClonePrototype(MinutiaMatcher);
-        	   matcher = new MinutiaMatcher();
-        	   DetailLogger.copyHooks(MinutiaMatcher, matcher);
+        	   matcher = ParameterSet.clonePrototype(MinutiaMatcher);
            }
         }
         return matcher;
