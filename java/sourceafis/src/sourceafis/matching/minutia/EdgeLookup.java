@@ -5,13 +5,14 @@ import java.util.List;
 
 import sourceafis.general.Angle;
 import sourceafis.general.Range;
+import sourceafis.meta.Parameter;
  
 
    public class EdgeLookup
     {
-        //[Parameter(Lower = 0, Upper = 50)]
+        @Parameter
         public int MaxDistanceError = 6;
-        //[Parameter(Lower = 1)]
+        @Parameter
         public byte MaxAngleError = Angle.FromDegreesB(10);
 
         public class EdgePair

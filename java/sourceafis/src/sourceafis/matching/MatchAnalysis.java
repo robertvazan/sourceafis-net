@@ -3,10 +3,11 @@ package sourceafis.matching;
 import sourceafis.extraction.templates.Template;
 import sourceafis.matching.minutia.MinutiaPair;
 import sourceafis.matching.minutia.MinutiaPairing;
+import sourceafis.meta.Parameter;
  
 public  class MatchAnalysis
 {
-    //[Parameter(Lower = 0, Upper = 5)]
+    @Parameter
     public int MinSupportingEdges = 1;
 
     public int PairCount;

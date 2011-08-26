@@ -1,19 +1,21 @@
 package sourceafis.matching;
 
+import sourceafis.meta.Parameter;
+
  
 	 public  class MatchScoring
 	    {
-		     //[Parameter(Upper = 10)]
+		    @Parameter
 	        public float PairCountFactor = 0.48f;
-	        //[Parameter(Upper = 100)]
+	        @Parameter
 	        public float PairFractionFactor = 6.7f;
-	        //[Parameter(Upper = 10)]
+	        @Parameter
 	        public float CorrectTypeFactor = 0.1f;
-	        //[Parameter(Upper = 10)]
+	        @Parameter
 	        public float SupportedCountFactor = 0.4f;
-	        //[Parameter(Upper = 10, Precision = 3)]
+	        @Parameter
 	        public float EdgeCountFactor = 0.208f;
-            int x=0;
+
 	        public float Compute(MatchAnalysis analysis)
 	        {
 	            float score = 0;
