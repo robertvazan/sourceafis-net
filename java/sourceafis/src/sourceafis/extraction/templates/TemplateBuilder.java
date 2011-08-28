@@ -2,8 +2,8 @@ package sourceafis.extraction.templates;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import sourceafis.general.Calc;
-import sourceafis.general.Point;
  
 public class TemplateBuilder {
 	 

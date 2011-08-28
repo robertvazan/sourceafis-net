@@ -1,6 +1,5 @@
 package sourceafis.matching.minutia;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import sourceafis.extraction.templates.Template;

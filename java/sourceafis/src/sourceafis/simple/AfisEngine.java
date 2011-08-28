@@ -187,8 +187,8 @@ public class AfisEngine
     {
       //  lock (this)
        // {
-         //   probe.CheckForNulls(); //Check this later?? why they are null??
-         //   candidate.CheckForNulls();//Check this later?? why they are null??
+            probe.CheckForNulls(); //Check this later?? why they are null??
+            candidate.CheckForNulls();//Check this later?? why they are null??
             BestMatchSkipper collector = new BestMatchSkipper(1, getSkipBestMatches());
             /*Parallel.ForEach(probe.Fingerprints, probeFp =>
                 {

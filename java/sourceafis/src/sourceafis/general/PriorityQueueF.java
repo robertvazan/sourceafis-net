@@ -2,8 +2,6 @@ package sourceafis.general;
 
 import java.util.ArrayList;
 
-import sourceafis.matching.minutia.MinutiaPair;
-
 public class PriorityQueueF<E> {
 	static class Item<E> {
 		public float key;
