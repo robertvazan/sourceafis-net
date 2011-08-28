@@ -7,6 +7,7 @@ import java.util.List;
 
 import sourceafis.extraction.templates.Template;
 import sourceafis.general.Calc;
+import sourceafis.general.DetailLogger;
 import sourceafis.general.Point;
 import sourceafis.meta.Nested;
 import sourceafis.meta.Parameter;
@@ -20,6 +21,8 @@ import sourceafis.meta.Parameter;
         public int MaxDistance = 191;
         @Parameter
         public int MaxNeighbors = 9;
+
+        public DetailLogger.Hook logger = DetailLogger.off;
 
         public NeighborEdge[][] Table;
 
@@ -68,5 +71,7 @@ import sourceafis.meta.Parameter;
                 Table[reference] =  edges.toArray(ne);
                 edges.clear();
             }
+            
+            logger.log(this);
         }
     }

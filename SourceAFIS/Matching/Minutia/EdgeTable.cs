@@ -17,6 +17,8 @@ namespace SourceAFIS.Matching.Minutia
         [Parameter(Lower = 2, Upper = 100)]
         public int MaxNeighbors = 9;
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         public NeighborEdge[][] Table;
 
         public void Reset(Template template)
@@ -47,6 +49,8 @@ namespace SourceAFIS.Matching.Minutia
                 Table[reference] = edges.ToArray();
                 edges.Clear();
             }
+
+            Logger.Log(this);
         }
     }
 }
