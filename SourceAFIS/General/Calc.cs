@@ -222,19 +222,6 @@ namespace SourceAFIS.General
             return result;
         }
 
-        public static T DeepClone<T>(this T root) where T : class
-        {
-            T clone = root.GetType().GetConstructor(new Type[0]).Invoke(new object[0]) as T;
-            foreach (FieldInfo fieldInfo in root.GetType().GetFields())
-            {
-                if (!fieldInfo.FieldType.IsClass)
-                    fieldInfo.SetValue(clone, fieldInfo.GetValue(root));
-                else
-                    fieldInfo.SetValue(clone, fieldInfo.GetValue(root).DeepClone());
-            }
-            return clone;
-        }
-
         public static object ShallowClone(this object root)
         {
             object clone = root.GetType().GetConstructor(new Type[0]).Invoke(new object[0]);
@@ -255,17 +242,6 @@ namespace SourceAFIS.General
         {
             return (from item in sequence
                     select item.Clone() as T).ToList();
-        }
-
-        public static void DeepCopyTo(this object source, object target)
-        {
-            foreach (FieldInfo fieldInfo in source.GetType().GetFields())
-            {
-                if (!fieldInfo.FieldType.IsClass)
-                    fieldInfo.SetValue(target, fieldInfo.GetValue(source));
-                else
-                    fieldInfo.GetValue(source).DeepCopyTo(fieldInfo.GetValue(target));
-            }
         }
 
         public static bool BeginsWith(this string outer, string inner)
