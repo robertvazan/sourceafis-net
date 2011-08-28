@@ -46,12 +46,12 @@ public class Queue<E>
      * Return and remove the least recently inserted item
      * from the queue.
      * @return the least recently inserted item in the queue.
-     * @throws UnderflowException if the queue is empty.
+     * @throws IllegalStateException if the queue is empty.
      */
     public E dequeue( )
     {
         if( isEmpty( ) )
-            throw new UnderflowException( "ArrayQueue dequeue" );
+            throw new IllegalStateException( "ArrayQueue dequeue" );
         currentSize--;
 
         E returnValue = theArray[ front ];
@@ -63,12 +63,12 @@ public class Queue<E>
      * Get the least recently inserted item in the queue.
      * Does not alter the queue.
      * @return the least recently inserted item in the queue.
-     * @throws UnderflowException if the queue is empty.
+     * @throws IllegalStateException if the queue is empty.
      */
     public E getFront( )
     {
         if( isEmpty( ) )
-            throw new UnderflowException( "ArrayQueue getFront" );
+            throw new IllegalStateException( "ArrayQueue getFront" );
         return theArray[ front ];
     }
 
