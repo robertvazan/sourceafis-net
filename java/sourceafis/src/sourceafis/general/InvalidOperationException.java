@@ -1,4 +1,4 @@
-package sourceafis.jport;
+package sourceafis.general;
 
 public class InvalidOperationException extends RuntimeException {
 

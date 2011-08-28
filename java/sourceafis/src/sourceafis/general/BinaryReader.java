@@ -1,4 +1,4 @@
-package sourceafis.jport;
+package sourceafis.general;
 
 import java.io.EOFException;
 import java.io.IOException;

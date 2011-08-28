@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sourceafis.extraction.templates.Template;
+import sourceafis.matching.BestMatchSkipper;
 import sourceafis.matching.ParallelMatcher;
 
 public class AfisEngine

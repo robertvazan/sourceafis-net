@@ -1,6 +1,6 @@
-package sourceafis.simple;
+package sourceafis.matching;
 
-class BestMatchSkipper
+public class BestMatchSkipper
 {
     float[][] Collected;
 

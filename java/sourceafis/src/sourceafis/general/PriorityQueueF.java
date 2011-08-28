@@ -2,7 +2,6 @@ package sourceafis.general;
 
 import java.util.ArrayList;
 
-import sourceafis.jport.InvalidOperationException;
 import sourceafis.matching.minutia.MinutiaPair;
 
 public class PriorityQueueF<E> {

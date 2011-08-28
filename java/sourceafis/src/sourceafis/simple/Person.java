@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import sourceafis.jport.ApplicationException;
+import sourceafis.general.ApplicationException;
 
 /// <summary>
 /// Collection of <see cref="Fingerprint"/>s belonging to one person.

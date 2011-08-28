@@ -5,10 +5,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import sourceafis.jport.AssertException;
-import sourceafis.jport.BinaryReader;
-import sourceafis.jport.BinaryWriter;
-import sourceafis.jport.BitConverter;
+
+import sourceafis.general.AssertException;
+import sourceafis.general.BinaryReader;
+import sourceafis.general.BinaryWriter;
+import sourceafis.general.BitConverter;
 public final class IsoFormat extends TemplateFormatBase<byte[]>
 {
     // References:
