@@ -27,8 +27,11 @@ import sourceafis.extraction.templates.CompactFormat;
 import sourceafis.extraction.templates.Template;
 import sourceafis.general.DetailLogger;
 import sourceafis.matching.ParallelMatcher;
+import sourceafis.matching.minutia.EdgeInfo;
+import sourceafis.matching.minutia.EdgeTable;
 import sourceafis.matching.minutia.MinutiaPair;
 import sourceafis.matching.minutia.MinutiaPairing;
+import sourceafis.matching.minutia.NeighborEdge;
 import sourceafis.meta.ObjectTree;
 import sourceafis.meta.ParameterSet;
 import sourceafis.meta.ParameterValue;
@@ -108,6 +111,20 @@ public class ConsistencyTest {
 		matcher.Match(prepared, Arrays.asList(candidate));
 		DetailLogger.LogData log = logger.popLog();
 		
+		NodeList csEdgeTable = csLog.getElementsByTagName("edge-list");
+		EdgeTable edgeTable = (EdgeTable)log.retrieve("MinutiaMatcher.EdgeTablePrototype");
+		assertEquals(csEdgeTable.getLength(), edgeTable.Table.length);
+		for (int i = 0; i < edgeTable.Table.length; ++i) {
+			NodeList csEdgeList = ((Element)csEdgeTable.item(i)).getElementsByTagName("edge");
+			NeighborEdge[] edgeList = edgeTable.Table[i];
+			assertEquals("from: " + i, csEdgeList.getLength(), edgeList.length);
+			for (int j = 0; j < edgeList.length; ++j) {
+				Element csEdge = (Element)csEdgeList.item(j);
+				String atEdge = "from: " + i + ", edge: " + j;
+				assertEquals(atEdge, parseInt(csEdge.getAttribute("neighbor")), edgeList[j].Neighbor);
+			}
+		}
+
 		NodeList csRoots = csLog.getElementsByTagName("root");
 		assertEquals(csRoots.getLength(), log.count("MinutiaMatcher.RootSelector"));
 		for (int i = 0; i < csRoots.getLength(); ++i) {

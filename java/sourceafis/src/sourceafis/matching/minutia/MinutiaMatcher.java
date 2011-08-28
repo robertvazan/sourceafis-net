@@ -10,6 +10,7 @@ import sourceafis.matching.MatchScoring;
 import sourceafis.matching.ProbeIndex;
 import sourceafis.meta.Nested;
 import sourceafis.meta.Parameter;
+import sourceafis.meta.ParameterSet;
 
  
 
@@ -20,7 +21,7 @@ public class MinutiaMatcher
     @Nested
     public MinutiaPairing Pairing = new MinutiaPairing();
     @Nested
-    public EdgeTable edgeTablePrototype = new EdgeTable();
+    public EdgeTable EdgeTablePrototype = new EdgeTable();
     @Nested
     public EdgeConstructor EdgeConstructor = new EdgeConstructor();
     @Nested
@@ -43,7 +44,7 @@ public class MinutiaMatcher
     public void BuildIndex(Template probe, ProbeIndex index)
     {
         index.Template = probe;
-        index.Edges = new EdgeTable();//ParameterSet.ClonePrototype(EdgeTablePrototype);
+        index.Edges = ParameterSet.clonePrototype(EdgeTablePrototype);
         index.Edges.Reset(probe);
     }
 
@@ -51,7 +52,7 @@ public class MinutiaMatcher
     {
         Probe = probe;
         Pairing.SelectProbe(probe.Template);
-        CandidateEdges = new EdgeTable();;//ParameterSet.ClonePrototype(EdgeTablePrototype);
+        CandidateEdges = ParameterSet.clonePrototype(EdgeTablePrototype);
     }
 
    
