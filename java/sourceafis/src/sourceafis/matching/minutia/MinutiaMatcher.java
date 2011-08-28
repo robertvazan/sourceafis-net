@@ -16,7 +16,7 @@ import sourceafis.meta.Parameter;
 public class MinutiaMatcher
 {
     @Nested
-    public ExhaustiveRootSelector RootSelector = new ExhaustiveRootSelector();
+    public RootPairSelector RootSelector = new RootPairSelector();
     @Nested
     public MinutiaPairing Pairing = new MinutiaPairing();
     @Nested
