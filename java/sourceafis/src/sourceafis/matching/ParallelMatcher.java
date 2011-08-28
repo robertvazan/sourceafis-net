@@ -29,11 +29,11 @@ public class ParallelMatcher
            // if (Matchers.Count > 0)
              matcher = Matchers.poll();
           // Can be implemented later when using real parallel
-           if (matcher == null) {
-         //     matcher = ParameterSet.ClonePrototype(MinutiaMatcher);
-        	   matcher = ParameterSet.clonePrototype(MinutiaMatcher);
-           }
         }
+       if (matcher == null) {
+     //     matcher = ParameterSet.ClonePrototype(MinutiaMatcher);
+    	   matcher = ParameterSet.clonePrototype(MinutiaMatcher);
+       }
         return matcher;
     }
 

@@ -33,11 +33,11 @@ public class AfisEngine
     /// </para>
     /// </remarks>
     /// <seealso cref="Extract"/>
-    public int getDpi(){
+    public synchronized int getDpi(){
     
        return DpiValue; 
     }
-    public void setDpi(int value){
+    public synchronized void setDpi(int value){
                  if (value < 100 || value > 5000)
                     throw new RuntimeException("Value out of range");
                 DpiValue = value;
@@ -71,10 +71,10 @@ public class AfisEngine
     /// </remarks>
     /// <seealso cref="Verify"/>
     /// <seealso cref="Identify"/>
-    public float getThreshold(){
+    public synchronized float getThreshold(){
       return ThresholdValue; 
       }
-     public void  setThreshold(float value)
+     public synchronized void  setThreshold(float value)
         {
             //     if (value < 0)
               //      throw new ArgumentOutOfRangeException();
@@ -113,10 +113,10 @@ public class AfisEngine
     /// </remarks>
     /// <seealso cref="Verify"/>
     /// <seealso cref="Identify"/>
-    public int getSkipBestMatches(){
+    public synchronized int getSkipBestMatches(){
          return SkipBestMatchesValue; 
       }
-      public void setSkipBestMatches(int value){
+      public synchronized void setSkipBestMatches(int value){
     	  //if (value < 0)
             //        throw new ArgumentOutOfRangeException();
                 SkipBestMatchesValue = value;
@@ -151,7 +151,7 @@ public class AfisEngine
     /// </para>
     /// </remarks>
     /// <seealso cref="Dpi"/>
-    /*public void Extract(Person person)
+    /*public synchronized void Extract(Person person)
     {
         //lock (this)
         //{
@@ -183,7 +183,7 @@ public class AfisEngine
     /// <seealso cref="Threshold"/>
     /// <seealso cref="SkipBestMatches"/>
     /// <seealso cref="Identify"/>
-    public float Verify(Person probe, Person candidate)
+    public synchronized float Verify(Person probe, Person candidate)
     {
       //  lock (this)
        // {
@@ -249,7 +249,7 @@ public class AfisEngine
     /// <seealso cref="SkipBestMatches"/>
     /// <seealso cref="Verify"/>
     /*
-    public Person Identify(Person probe, IEnumerable<Person> candidates)
+    public synchronized Person Identify(Person probe, IEnumerable<Person> candidates)
     {
         lock (this)
         {
