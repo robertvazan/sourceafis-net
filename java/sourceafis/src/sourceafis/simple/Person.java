@@ -109,7 +109,7 @@ public class Person implements Cloneable,Serializable
     	}
     }
 
-    private void CheckForNulls()
+    void CheckForNulls()
     {
         for (Fingerprint fp : FingerprintList)
             if (fp == null)

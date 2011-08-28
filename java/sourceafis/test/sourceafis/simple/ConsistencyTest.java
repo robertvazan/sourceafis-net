@@ -3,7 +3,6 @@ package sourceafis.simple;
 import static java.lang.Double.parseDouble;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
-import static java.lang.Math.round;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 
@@ -27,7 +26,6 @@ import sourceafis.extraction.templates.CompactFormat;
 import sourceafis.extraction.templates.Template;
 import sourceafis.general.DetailLogger;
 import sourceafis.matching.ParallelMatcher;
-import sourceafis.matching.minutia.EdgeInfo;
 import sourceafis.matching.minutia.EdgeTable;
 import sourceafis.matching.minutia.MinutiaPair;
 import sourceafis.matching.minutia.MinutiaPairing;
