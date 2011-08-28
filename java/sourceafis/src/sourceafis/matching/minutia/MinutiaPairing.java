@@ -1,6 +1,7 @@
 package sourceafis.matching.minutia;
 
 import sourceafis.extraction.templates.Template;
+import sourceafis.general.DetailLogger;
 
 public class MinutiaPairing implements Cloneable 
 {
@@ -9,6 +10,8 @@ public class MinutiaPairing implements Cloneable
     int[] SupportingEdgesByProbe;
     MinutiaPair[] PairList;
     int PairCount;
+
+    public DetailLogger.Hook logger = DetailLogger.off;
 
     public int getCount() { 
     	return PairCount; 
@@ -88,6 +91,8 @@ public class MinutiaPairing implements Cloneable
         return SupportingEdgesByProbe[probe];
     }
 
+    public void log() { logger.log(this); }
+    
     public MinutiaPairing clone() {
     	MinutiaPairing clone = new MinutiaPairing();
     	clone.CandidateByProbe = (int[])CandidateByProbe.clone();

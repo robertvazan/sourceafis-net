@@ -78,10 +78,10 @@ public class MinutiaMatcher
             if (rootIndex >= MaxTriedRoots)
                 break;
         }
-        logger.log("Score", bestScore);
-        logger.log("BestRoot", bestRootIndex);
+        logger.log("score", bestScore);
+        logger.log("bestRootIndex", bestRootIndex);
         if (bestScore > 0 && logger.isActive())
-            logger.log("Root", bestRoot);
+            logger.log("bestRoot", bestRoot);
         
         return bestScore;
     }
@@ -114,7 +114,7 @@ public class MinutiaMatcher
             Pairing.Add(PairSelector.Dequeue());
             
         }
-        logger.log("Pairings", Pairing);
+        Pairing.log();
     }
     void CollectEdges(Template candidate)
     {

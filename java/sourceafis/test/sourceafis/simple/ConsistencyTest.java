@@ -136,7 +136,7 @@ public class ConsistencyTest {
 			assertEquals(offset, parseInt(csRoot.getAttribute("probe")), root.Probe);
 			assertEquals(offset, parseInt(csRoot.getAttribute("candidate")), root.Candidate);
 			NodeList csPairs = csRoot.getElementsByTagName("pair");
-			MinutiaPairing pairing = (MinutiaPairing)log.retrieve("MinutiaMatcher.Pairings", i);
+			MinutiaPairing pairing = (MinutiaPairing)log.retrieve("MinutiaMatcher.Pairing", i);
 			assertEquals(csPairs.getLength(), pairing.getCount());
 			for (int j = 0; j < pairing.getCount(); ++j) {
 				String atPair = offset + ", pair: " + j;
@@ -148,7 +148,7 @@ public class ConsistencyTest {
 			}
 			assertEquals(offset, parseFloat(csRoot.getAttribute("score")), score, 0.0001);
 		}
-		assertEquals(parseInt(csLog.getAttribute("best-root")), log.retrieve("MinutiaMatcher.BestRoot"));
+		assertEquals(parseInt(csLog.getAttribute("best-root")), log.retrieve("MinutiaMatcher.bestRootIndex"));
 	}
 	
 	@Test

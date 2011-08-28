@@ -23,8 +23,8 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public bool AnyMatch { get { Link("Score", "AnyMatch"); return Score > 0; } }
 
-        public MinutiaPair? Root { get { return (MinutiaPair?)GetLog("Root", "MinutiaMatcher.Root"); } }
+        public MinutiaPair? Root { get { return (MinutiaPair?)GetLog("Root", "MinutiaMatcher.BestRoot"); } }
 
-        public MinutiaPairing Pairing { get { return (MinutiaPairing)GetLog("Pairing", "MinutiaMatcher.Pairing"); } }
+        public MinutiaPairing Pairing { get { return (MinutiaPairing)GetLog("Pairing", "MinutiaMatcher.BestPairing"); } }
     }
 }
