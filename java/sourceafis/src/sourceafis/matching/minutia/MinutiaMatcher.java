@@ -113,7 +113,7 @@ public class MinutiaMatcher
             Pairing.Add(PairSelector.Dequeue());
             
         }
-        
+        logger.log("Pairings", Pairing);
     }
     void CollectEdges(Template candidate)
     {

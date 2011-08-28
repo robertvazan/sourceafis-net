@@ -28,6 +28,7 @@ import sourceafis.extraction.templates.Template;
 import sourceafis.general.DetailLogger;
 import sourceafis.matching.ParallelMatcher;
 import sourceafis.matching.minutia.MinutiaPair;
+import sourceafis.matching.minutia.MinutiaPairing;
 import sourceafis.meta.ObjectTree;
 import sourceafis.meta.ParameterSet;
 import sourceafis.meta.ParameterValue;
@@ -116,6 +117,17 @@ public class ConsistencyTest {
 			String offset = "offset: " + i; 
 			assertEquals(offset, parseInt(csRoot.getAttribute("probe")), root.Probe);
 			assertEquals(offset, parseInt(csRoot.getAttribute("candidate")), root.Candidate);
+			NodeList csPairs = csRoot.getElementsByTagName("pair");
+			MinutiaPairing pairing = (MinutiaPairing)log.retrieve("MinutiaMatcher.Pairings", i);
+			assertEquals(csPairs.getLength(), pairing.getCount());
+			for (int j = 0; j < pairing.getCount(); ++j) {
+				String atPair = offset + ", pair: " + j;
+				Element csPair = (Element)csPairs.item(j);
+				assertEquals(atPair, parseInt(csPair.getAttribute("probe")), pairing.GetPair(j).Probe);
+				assertEquals(atPair, parseInt(csPair.getAttribute("candidate")), pairing.GetPair(j).Candidate);
+				assertEquals(atPair, parseInt(csPair.getAttribute("support")),
+						pairing.GetSupportByProbe(pairing.GetPair(j).Probe));
+			}
 			assertEquals(offset, parseFloat(csRoot.getAttribute("score")), score, 0.0001);
 		}
 		assertEquals(parseInt(csLog.getAttribute("best-root")), log.retrieve("MinutiaMatcher.BestRoot"));

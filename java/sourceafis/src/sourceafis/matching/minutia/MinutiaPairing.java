@@ -88,17 +88,16 @@ public class MinutiaPairing implements Cloneable
         return SupportingEdgesByProbe[probe];
     }
 
-    /*
-     *  Review this later 
-     */
-    /*public Object Clone()
-    {
-        MinutiaPairing clone = new MinutiaPairing();
-        clone.CandidateByProbe = (int[])CandidateByProbe.clone();
+    public MinutiaPairing clone() {
+    	MinutiaPairing clone = new MinutiaPairing();
+    	clone.CandidateByProbe = (int[])CandidateByProbe.clone();
         clone.ProbeByCandidate = (int[])ProbeByCandidate.clone();
         clone.SupportingEdgesByProbe = (int[])SupportingEdgesByProbe.clone();
-        clone.PairList = (MinutiaPair[])PairList.clone();
+        clone.PairList = new MinutiaPair[PairList.length];
+        for (int i = 0; i < clone.PairList.length; ++i)
+        	if (PairList[i] != null)
+        		clone.PairList[i] = PairList[i].clone();
         clone.PairCount = PairCount;
         return clone;
-    }*/
+    }
 }
