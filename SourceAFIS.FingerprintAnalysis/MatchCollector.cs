@@ -14,7 +14,13 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public MatchCollector(ExtractionData probe, ExtractionData candidate)
         {
-            Logger.Attach(new ObjectTree(Matcher));
+            var tree = new ObjectTree(Matcher);
+            tree.Remove("MinutiaMatcher.EdgeTablePrototype");
+            tree.Remove("MinutiaMatcher.RootSelector");
+            tree.Remove("MinutiaMatcher.Pairing");
+            tree.Remove("MinutiaMatcher.MatchScoring");
+            Logger.Attach(tree);
+
             Collect(probe.Template, candidate.Template);
             probe.PropertyChanged += (source, args) =>
             {
