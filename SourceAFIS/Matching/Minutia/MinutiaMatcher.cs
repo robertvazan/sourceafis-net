@@ -70,14 +70,14 @@ namespace SourceAFIS.Matching.Minutia
                     break;
             }
             Logger.Log("Score", bestScore);
-            Logger.Log("BestRoot", bestRootIndex);
+            Logger.Log("BestRootIndex", bestRootIndex);
             if (bestScore > 0 && Logger.IsActive)
             {
                 Pairing.Reset();
                 Pairing.Add(bestRoot);
                 BuildPairing(candidate);
-                Logger.Log("Root", bestRoot);
-                Logger.Log("Pairing", Pairing);
+                Logger.Log("BestRoot", bestRoot);
+                Logger.Log("BestPairing", Pairing);
             }
             return bestScore;
         }
@@ -109,7 +109,7 @@ namespace SourceAFIS.Matching.Minutia
                     break;
                 Pairing.Add(PairSelector.Dequeue());
             }
-            Logger.Log("Pairings", Pairing);
+            Pairing.Log();
         }
 
         void CollectEdges(Template candidate)
