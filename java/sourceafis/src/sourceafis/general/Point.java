@@ -2,6 +2,7 @@ package sourceafis.general;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class Point implements Serializable {
 	public int X;
 	public int Y;

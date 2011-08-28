@@ -26,6 +26,7 @@ import java.util.List;
 /// </remarks>
 /// <seealso cref="Fingerprint"/>
  
+@SuppressWarnings("serial")
 public class Person implements Cloneable,Serializable
 {
     /// <summary>
