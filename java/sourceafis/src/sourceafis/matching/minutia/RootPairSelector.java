@@ -8,9 +8,10 @@ public class RootPairSelector {
     {
 	 	ArrayList<MinutiaPair> list=new ArrayList<MinutiaPair>();
         for (int probe = 0; probe < probeTemplate.Minutiae.length; ++probe)
-           for (int candidate = 0; candidate < candidateTemplate.Minutiae.length; ++candidate)
-           //     yield return new MinutiaPair(probe, candidate);
-        	   list.add(new MinutiaPair(probe, candidate)); 	 
+           for (int candidate = 0; candidate < candidateTemplate.Minutiae.length; ++candidate) {
+               int mixedProbe = (probe + candidate) % probeTemplate.Minutiae.length;
+        	   list.add(new MinutiaPair(mixedProbe, candidate));
+           }
          return list;
     }
 }
