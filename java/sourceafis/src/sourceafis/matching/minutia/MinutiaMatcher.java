@@ -62,6 +62,7 @@ public class MinutiaMatcher
         int rootIndex = 0;
         float bestScore = 0;
         MinutiaPair bestRoot = null;
+        int bestRootIndex = -1;
      
         for(MinutiaPair root : RootSelector.getRoots(Probe.Template, candidate))
         {
@@ -70,14 +71,16 @@ public class MinutiaMatcher
             {
                 bestScore = score;
                 bestRoot = root;
+                bestRootIndex = rootIndex;
             }
             ++rootIndex;
             if (rootIndex >= MaxTriedRoots)
                 break;
         }
-        logger.log("score", bestScore);
+        logger.log("Score", bestScore);
+        logger.log("BestRoot", bestRootIndex);
         if (bestScore > 0 && logger.isActive())
-            logger.log("root", bestRoot);
+            logger.log("Root", bestRoot);
         
         return bestScore;
     }

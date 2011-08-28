@@ -4,12 +4,15 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import sourceafis.extraction.templates.Template;
+import sourceafis.general.DetailLogger;
 
 public class RootPairSelector implements Iterable<MinutiaPair>, Iterator<MinutiaPair> {
-	Template probeTemplate;
-	Template candidateTemplate;
-	int probe;
-	int candidate;
+	private Template probeTemplate;
+	private Template candidateTemplate;
+	private int probe;
+	private int candidate;
+
+    public DetailLogger.Hook logger = DetailLogger.off;
 
 	public Iterable<MinutiaPair> getRoots(Template p, Template c) {
 		probeTemplate = p;
@@ -39,6 +42,7 @@ public class RootPairSelector implements Iterable<MinutiaPair>, Iterator<Minutia
 			candidate = 0;
 		}
 		
+		logger.log(result);
 		return result;
 	}
 }

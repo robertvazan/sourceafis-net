@@ -106,11 +106,14 @@ namespace SourceAFIS.Tests.Executable
             XElement root = new XElement("matcher");
             root.SetAttributeValue("probe", Settings.JavaFingerprintProbePath);
             root.SetAttributeValue("candidate", Settings.JavaFingerprintCandidatePath);
-            MinutiaPair? rootPair = (MinutiaPair?)log.Retrieve("MinutiaMatcher.Root");
-            if (rootPair != null)
+            root.SetAttributeValue("best-root", (int)log.Retrieve("MinutiaMatcher.BestRoot"));
+            for (int i = 0; i < log.Count("MinutiaMatcher.RootSelector"); ++i)
             {
-                root.SetAttributeValue("root-pair-probe", rootPair.Value.Probe);
-                root.SetAttributeValue("root-pair-candidate", rootPair.Value.Candidate);
+                MinutiaPair rootPair = (MinutiaPair)log.Retrieve("MinutiaMatcher.RootSelector", i);
+                root.Add(new XElement("root",
+                    new XAttribute("offset", i),
+                    new XAttribute("probe", rootPair.Probe),
+                    new XAttribute("candidate", rootPair.Candidate)));
             }
             SaveXml(root, "matcher.xml");
         }
