@@ -237,12 +237,12 @@ public class Fingerprint implements Cloneable, Serializable
     /// <seealso cref="SourceAFIS.Extraction.Templates.IsoFormat"/>
     /// <seealso cref="SourceAFIS.Extraction.Templates.TemplateBuilder"/>
     //[XmlIgnore]
-    public void setAsIsoTemplate(byte[] value){
+    public void setIsoTemplate(byte[] value){
         
          Decoded = value != null ? serializedFormat.Export(isoFormat.Import(value)) : null;
     }
     
-    public byte[] getAsIsoTemplate(){
+    public byte[] getIsoTemplate(){
     	return Decoded != null ? isoFormat.Export(serializedFormat.Import(Decoded)) : null; 
     }
     
