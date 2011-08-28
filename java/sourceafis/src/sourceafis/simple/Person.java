@@ -79,7 +79,7 @@ public class Person implements Cloneable,Serializable
     /// a list of <see cref="Fingerprint"/>s.
     /// </summary>
     /// <param name="fingerprints"><see cref="Fingerprint"/> objects to add to the new <see cref="Person"/>.</param>
-    public Person(Fingerprint[] fingerprints)
+    public Person(Fingerprint... fingerprints)
     {
     	for(Fingerprint fp:fingerprints){
     		FingerprintList.add(fp);
