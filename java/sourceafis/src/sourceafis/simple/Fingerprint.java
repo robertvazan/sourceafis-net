@@ -1,4 +1,6 @@
 package sourceafis.simple;
+import java.io.Serializable;
+
 import sourceafis.extraction.templates.IsoFormat;
 import sourceafis.extraction.templates.CompactFormat;
 import sourceafis.extraction.templates.SerializedFormat;
@@ -24,7 +26,7 @@ import sourceafis.extraction.templates.Template;
 /// </remarks>
 /// <seealso cref="Person"/>
 //[Serializable]
-public class Fingerprint implements Cloneable
+public class Fingerprint implements Cloneable, Serializable
 {
     /// <summary>
     /// Creates empty <see cref="Fingerprint"/> object.

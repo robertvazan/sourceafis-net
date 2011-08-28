@@ -1,8 +1,10 @@
 package sourceafis.extraction.templates;
 
+import java.io.Serializable;
+
   
 
-public class Template implements Cloneable {
+public class Template implements Cloneable, Serializable {
  
 	public int OriginalDpi;
 	public int OriginalWidth;
