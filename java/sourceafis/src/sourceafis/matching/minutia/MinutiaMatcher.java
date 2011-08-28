@@ -62,11 +62,9 @@ public class MinutiaMatcher
         int rootIndex = 0;
         float bestScore = 0;
         MinutiaPair bestRoot = null;
-        ArrayList<MinutiaPair> roots= RootSelector.GetRoots(Probe.Template, candidate);
      
-        for(MinutiaPair root : roots)
+        for(MinutiaPair root : RootSelector.getRoots(Probe.Template, candidate))
         {
-
             float score = TryRoot(root, candidate);
             if (score > bestScore)
             {
