@@ -1,7 +1,9 @@
 package sourceafis.simple;
 
 import static java.lang.Double.parseDouble;
+import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
+import static java.lang.Math.round;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 
@@ -79,11 +81,11 @@ public class ConsistencyTest {
 				Person probe = findPerson(templates, probePath);
 				String candidatePath = score.getAttribute("candidate");
 				Person candidate = findPerson(templates, candidatePath);
-				double javaScore = Math.round((double)afis.Verify(probe, candidate) * 10000) / 10000;
-				double csharpScore = parseDouble(score.getAttribute("score"));
+				float javaScore = afis.Verify(probe, candidate);
+				float csharpScore = parseFloat(score.getAttribute("score"));
 				assertEquals("probe: " + probePath + ", candidate: " + candidatePath
 						+ ", C# score: " + csharpScore + ", java score: " + javaScore,
-						csharpScore, javaScore);
+						csharpScore, javaScore, 0.0001);
 			}
 		}
 	}
@@ -110,8 +112,11 @@ public class ConsistencyTest {
 		for (int i = 0; i < csRoots.getLength(); ++i) {
 			Element csRoot = (Element)csRoots.item(i);
 			MinutiaPair root = (MinutiaPair)log.retrieve("MinutiaMatcher.RootSelector", i);
-			assertEquals("offset: " + i, parseInt(csRoot.getAttribute("probe")), root.Probe);
-			assertEquals("offset: " + i, parseInt(csRoot.getAttribute("candidate")), root.Candidate);
+			float score = (Float)log.retrieve("MinutiaMatcher.MatchScoring", i);
+			String offset = "offset: " + i; 
+			assertEquals(offset, parseInt(csRoot.getAttribute("probe")), root.Probe);
+			assertEquals(offset, parseInt(csRoot.getAttribute("candidate")), root.Candidate);
+			assertEquals(offset, parseFloat(csRoot.getAttribute("score")), score, 0.0001);
 		}
 		assertEquals(parseInt(csLog.getAttribute("best-root")), log.retrieve("MinutiaMatcher.BestRoot"));
 	}

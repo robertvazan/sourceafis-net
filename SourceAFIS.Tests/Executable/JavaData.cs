@@ -79,11 +79,11 @@ namespace SourceAFIS.Tests.Executable
                 }
                 foreach (var pair in database.AllPairs)
                 {
-                    double score = afis.Verify(ToPerson(database[pair.Probe].Template), ToPerson(database[pair.Candidate].Template));
+                    float score = afis.Verify(ToPerson(database[pair.Probe].Template), ToPerson(database[pair.Candidate].Template));
                     root.Add(new XElement("pair",
                         new XAttribute("probe", database[pair.Probe].FilePath),
                         new XAttribute("candidate", database[pair.Candidate].FilePath),
-                        new XAttribute("score", score.ToString("0.####", CultureInfo.InvariantCulture))));
+                        new XAttribute("score", score)));
                 }
             }
             SaveXml(root, "score.xml");
@@ -113,7 +113,8 @@ namespace SourceAFIS.Tests.Executable
                 root.Add(new XElement("root",
                     new XAttribute("offset", i),
                     new XAttribute("probe", rootPair.Probe),
-                    new XAttribute("candidate", rootPair.Candidate)));
+                    new XAttribute("candidate", rootPair.Candidate),
+                    new XAttribute("score", (float)log.Retrieve("MinutiaMatcher.MatchScoring", i))));
             }
             SaveXml(root, "matcher.xml");
         }
