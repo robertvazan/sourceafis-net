@@ -207,7 +207,7 @@ public class AfisEngine
             for(Fingerprint fp:probe.FingerprintList){
             	
             	List<Template> candidateTemplates=new ArrayList<Template>();
-            	List<Fingerprint> candidatefp =candidate.getFingerprints();
+            	List<Fingerprint> candidatefp =candidate.fingerprints();
             	
             	for(Fingerprint cfp:candidatefp){
             		if(IsCompatibleFinger(fp.getFinger(),cfp.getFinger())){
