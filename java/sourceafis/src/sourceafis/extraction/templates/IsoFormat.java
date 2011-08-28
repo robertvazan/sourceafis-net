@@ -5,11 +5,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 import sourceafis.general.AssertException;
 import sourceafis.general.BinaryReader;
 import sourceafis.general.BinaryWriter;
-import sourceafis.general.Calc;
 public final class IsoFormat extends TemplateFormatBase<byte[]>
 {
     // References:
@@ -119,7 +119,7 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
         // update length
         byte[] template = stream.toByteArray();
       //  BitConverter.GetBytes(IPAddress.HostToNetworkOrder(template.Length)).CopyTo(template, 8);
-         Calc.Write(template,template.length, 8);
+        ByteBuffer.wrap(template).putInt(8, template.length);
         return template;
     	}catch(IOException e){
     		throw new RuntimeException(e);
@@ -232,11 +232,9 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
     {
     	try {
     	byte[] header = new byte[12];
-        
-			stream.read(header, 0, 12);
+		stream.read(header, 0, 12);
 		
-
-        int length = Calc.ToInt32(header, 8);
+        int length = ByteBuffer.wrap(header).getInt(8);
 
         byte[] template = new byte[length];
         //header.CopyTo(template, 0);

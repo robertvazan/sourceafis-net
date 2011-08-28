@@ -5,11 +5,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 import sourceafis.general.AssertException;
 import sourceafis.general.BinaryReader;
 import sourceafis.general.BinaryWriter;
-import sourceafis.general.Calc;
 
 public final class CompactFormat extends TemplateFormatBase<byte[]>
 {
@@ -82,7 +82,7 @@ public final class CompactFormat extends TemplateFormatBase<byte[]>
             // update length
             byte[] template = stream.toByteArray();
            // BitConverter.GetBytes((short)template.Length)).CopyTo(template, 5);
-            Calc.Write(template,(short)template.length,5);
+            ByteBuffer.wrap(template).putShort(5, (short)template.length);
             return template;
     	   }catch(IOException e){
     		   throw new RuntimeException(e);
@@ -175,7 +175,7 @@ public final class CompactFormat extends TemplateFormatBase<byte[]>
     	 try {
            byte[] header = new byte[7];
            stream.read(header, 0, 7);
-           int length = Calc.ToInt16(header, 5);
+           int length = ByteBuffer.wrap(header).getShort(5);
            byte[] template = new byte[length];
            //header.CopyTo(template, 0);
            System.arraycopy(header,0,template, 0,7);
