@@ -274,6 +274,14 @@ public class Fingerprint implements Cloneable, Serializable
  
     public  Template Decoded;
 
+    public Fingerprint clone() {
+    	try {
+    		return (Fingerprint)super.clone();
+    	} catch (CloneNotSupportedException e) {
+    		throw new RuntimeException(e);
+    	}
+    }
+    
     /// <summary>
     /// Create deep copy of the <see cref="Fingerprint"/>.
     /// </summary>
