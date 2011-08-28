@@ -3,7 +3,7 @@ package sourceafis.matching.minutia;
 import java.util.ArrayList;
 import sourceafis.extraction.templates.Template;
 
-public class ExhaustiveRootSelector {
+public class RootPairSelector {
 	public ArrayList<MinutiaPair> GetRoots(Template probeTemplate, Template candidateTemplate)
     {
 	 	ArrayList<MinutiaPair> list=new ArrayList<MinutiaPair>();
