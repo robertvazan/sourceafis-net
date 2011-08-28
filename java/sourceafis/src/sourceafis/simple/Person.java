@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import sourceafis.general.ApplicationException;
-
 /// <summary>
 /// Collection of <see cref="Fingerprint"/>s belonging to one person.
 /// </summary>
@@ -115,6 +113,6 @@ public class Person implements Cloneable,Serializable
     {
         for (Fingerprint fp : FingerprintList)
             if (fp == null)
-                throw new ApplicationException("Person contains null Fingerprint references.");
+                throw new RuntimeException("Person contains null Fingerprint references.");
     }
 }
