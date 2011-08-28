@@ -121,6 +121,7 @@ public class ConsistencyTest {
 			for (int j = 0; j < edgeList.length; ++j) {
 				Element csEdge = (Element)csEdgeList.item(j);
 				String atEdge = "from: " + i + ", edge: " + j;
+				assertEquals(atEdge, parseInt(csEdge.getAttribute("length")), edgeList[j].Edge.Length);
 				assertEquals(atEdge, parseInt(csEdge.getAttribute("neighbor")), edgeList[j].Neighbor);
 			}
 		}
