@@ -1,4 +1,5 @@
-package sourceafis.jport;
+package sourceafis.general;
+
 
 public class AssertException extends ApplicationException {
 	
