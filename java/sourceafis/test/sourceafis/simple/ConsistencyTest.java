@@ -83,7 +83,7 @@ public class ConsistencyTest {
 				Person probe = findPerson(templates, probePath);
 				String candidatePath = score.getAttribute("candidate");
 				Person candidate = findPerson(templates, candidatePath);
-				float javaScore = afis.Verify(probe, candidate);
+				float javaScore = afis.verify(probe, candidate);
 				float csharpScore = parseFloat(score.getAttribute("score"));
 				assertEquals("probe: " + probePath + ", candidate: " + candidatePath
 						+ ", C# score: " + csharpScore + ", java score: " + javaScore,

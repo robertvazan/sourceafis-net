@@ -183,7 +183,7 @@ public class AfisEngine
     /// <seealso cref="Threshold"/>
     /// <seealso cref="SkipBestMatches"/>
     /// <seealso cref="Identify"/>
-    public synchronized float Verify(Person probe, Person candidate)
+    public synchronized float verify(Person probe, Person candidate)
     {
       //  lock (this)
        // {
