@@ -115,8 +115,10 @@ namespace SourceAFIS.Tests.Executable
                 root.Add(edgeList);
                 for (int j = 0; j < edgeTable.Table[i].Length; ++j)
                     edgeList.Add(new XElement("edge",
-                        new XAttribute("neighbor", edgeTable.Table[i][j].Neighbor)));
+                        new XAttribute("neighbor", edgeTable.Table[i][j].Neighbor),
+                        new XAttribute("length", edgeTable.Table[i][j].Edge.Length)));
             }
+
             for (int i = 0; i < log.Count("MinutiaMatcher.RootSelector"); ++i)
             {
                 MinutiaPair rootPair = (MinutiaPair)log.Retrieve("MinutiaMatcher.RootSelector", i);
