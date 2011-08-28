@@ -56,15 +56,9 @@ public class Person implements Cloneable,Serializable
     /// This collection is initially empty. Add <see cref="Fingerprint"/> objects
     /// here. You can also assign the whole collection.
     /// </remarks>
-    public List<Fingerprint> getFingerprints(){
+    public List<Fingerprint> fingerprints(){
           return FingerprintList; 
      }
-     public  void   setFingerPrints(List<Fingerprint> value)
-        {
-        //    if (value == null)
-          //      throw new ArgumentNullException();
-            FingerprintList = value;
-        }
     
 
     /// <summary>
