@@ -280,7 +280,7 @@ public class AfisEngine
     */
     boolean IsCompatibleFinger(Finger first, Finger second)
     {
-        return first == second || first == Finger.Any || second == Finger.Any;
+        return first == second || first == Finger.ANY || second == Finger.ANY;
     }
     /*
     List<Template> FlattenHierarchy(Person[] persons, Finger finger, out List<int> personIndexes)

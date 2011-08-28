@@ -28,45 +28,45 @@ public enum Finger
     /// <summary>
     /// Unspecified finger position.
     /// </summary>
-    Any,//  = 0,
+    ANY,//  = 0,
     /// <summary>
     /// Thumb finger on the right hand.
     /// </summary>
-    RightThumb, // = 1,
+    RIGHT_THUMB, // = 1,
     /// <summary>
     /// Thumb finger on the left hand.
     /// </summary>
-    LeftThumb, // = 2,
+    LEFT_THUMB, // = 2,
     /// <summary>
     /// Index finger on the right hand.
     /// </summary>
-    RightIndex, // = 3,
+    RIGHT_INDEX, // = 3,
     /// <summary>
     /// Index finger on the left hand.
     /// </summary>
-    LeftIndex, //= 4,
+    LEFT_INDEX, //= 4,
     /// <summary>
     /// Middle finger on the right hand.
     /// </summary>
-    RightMiddle, // = 5,
+    RIGHT_MIDDLE, // = 5,
     /// <summary>
     /// Middle finger on the left hand.
     /// </summary>
-    LeftMiddle, // = 6,
+    LEFT_MIDDLE, // = 6,
     /// <summary>
     /// Ring finger on the right hand.
     /// </summary>
-    RightRing,// = 7,
+    RIGHT_RING,// = 7,
     /// <summary>
     /// Ring finger on the left hand.
     /// </summary>
-    LeftRing,// = 8,
+    LEFT_RING,// = 8,
     /// <summary>
     /// Little finger on the right hand.
     /// </summary>
-    RightLittle,// = 9,
+    RIGHT_LITTLE,// = 9,
     /// <summary>
     /// Little finger on the left hand.
     /// </summary>
-    LeftLittle //= 10,
+    LEFT_LITTLE //= 10,
 }
