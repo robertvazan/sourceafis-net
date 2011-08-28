@@ -107,6 +107,16 @@ public class Person implements Cloneable,Serializable
  */
     // ICloneable.Clone() { return Clone(); }
 
+    public Person clone() {
+    	try {
+    		Person copy = (Person)super.clone();
+    		copy.FingerprintList = new ArrayList<Fingerprint>(FingerprintList);
+    		return copy;
+    	} catch (CloneNotSupportedException e) {
+    		throw new RuntimeException(e);
+    	}
+    }
+
     private void CheckForNulls()
     {
         for (Fingerprint fp : FingerprintList)
