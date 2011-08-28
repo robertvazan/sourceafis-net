@@ -91,6 +91,13 @@ public class DetailLogger {
 			history.get(path).add(data);
 		}
 		
+		public int count(String path) {
+			if (history.containsKey(path))
+				return history.get(path).size();
+			else
+				return 0;
+		}
+		
 		public Object retrieve(String path, int index) {
 			if (history.containsKey(path) && index < history.get(path).size())
 				return history.get(path).get(index);

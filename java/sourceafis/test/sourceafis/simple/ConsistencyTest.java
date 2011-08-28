@@ -1,5 +1,10 @@
 package sourceafis.simple;
 
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -8,8 +13,6 @@ import java.util.HashSet;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
-import junit.framework.Assert;
 
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -45,7 +48,7 @@ public class ConsistencyTest {
 				}
 			}
 		}
-		Assert.fail();
+		fail();
 		return null;
 	}
 	
@@ -77,8 +80,8 @@ public class ConsistencyTest {
 				String candidatePath = score.getAttribute("candidate");
 				Person candidate = findPerson(templates, candidatePath);
 				double javaScore = Math.round((double)afis.Verify(probe, candidate) * 10000) / 10000;
-				double csharpScore = Double.parseDouble(score.getAttribute("score"));
-				Assert.assertEquals("probe: " + probePath + ", candidate: " + candidatePath
+				double csharpScore = parseDouble(score.getAttribute("score"));
+				assertEquals("probe: " + probePath + ", candidate: " + candidatePath
 						+ ", C# score: " + csharpScore + ", java score: " + javaScore,
 						csharpScore, javaScore);
 			}
@@ -93,7 +96,7 @@ public class ConsistencyTest {
 		NodeList templates = templateDoc.getDocumentElement().getElementsByTagName("template");
 		Element csLog = docBuilder.parse(new File(folderJavaTestData, "matcher.xml")).getDocumentElement();
 		Template probe = findTemplate(templates, csLog.getAttribute("probe")); 
-		Template candidate = findTemplate(templates, csLog.getAttribute("probe"));
+		Template candidate = findTemplate(templates, csLog.getAttribute("candidate"));
 		
 		ParallelMatcher matcher = new ParallelMatcher();
 		DetailLogger logger = new DetailLogger();
@@ -102,12 +105,15 @@ public class ConsistencyTest {
 		matcher.Match(prepared, Arrays.asList(candidate));
 		DetailLogger.LogData log = logger.popLog();
 		
-		MinutiaPair rootPair = (MinutiaPair)log.retrieve("MinutiaMatcher.root");
-		if (rootPair != null) {
-			Assert.assertEquals(Integer.parseInt(csLog.getAttribute("root-pair-probe")), rootPair.Probe);
-			Assert.assertEquals(Integer.parseInt(csLog.getAttribute("root-pair-candidate")), rootPair.Candidate);
-		} else
-			Assert.assertFalse(csLog.hasAttribute("root-pair-probe"));
+		NodeList csRoots = csLog.getElementsByTagName("root");
+		assertEquals(csRoots.getLength(), log.count("MinutiaMatcher.RootSelector"));
+		for (int i = 0; i < csRoots.getLength(); ++i) {
+			Element csRoot = (Element)csRoots.item(i);
+			MinutiaPair root = (MinutiaPair)log.retrieve("MinutiaMatcher.RootSelector", i);
+			assertEquals("offset: " + i, parseInt(csRoot.getAttribute("probe")), root.Probe);
+			assertEquals("offset: " + i, parseInt(csRoot.getAttribute("candidate")), root.Candidate);
+		}
+		assertEquals(parseInt(csLog.getAttribute("best-root")), log.retrieve("MinutiaMatcher.BestRoot"));
 	}
 	
 	@Test
@@ -126,14 +132,14 @@ public class ConsistencyTest {
 		HashSet<String> jPaths = new HashSet<String>();
 		for (ParameterValue parameter : jParams.getAllParameters())
 			jPaths.add(parameter.fieldPathNoCase);
-		Assert.assertEquals(csPaths, jPaths);
+		assertEquals(csPaths, jPaths);
 		
 		for (ParameterValue jParam : jParams.getAllParameters()) {
 			double csValue = 0;
 			for (int i = 0; i < csParams.getLength(); ++i)
 				if(((Element)csParams.item(i)).getAttribute("path").toLowerCase().equals(jParam.fieldPathNoCase))
-					csValue = Double.parseDouble(((Element)csParams.item(i)).getAttribute("value"));
-			Assert.assertEquals("param: " + jParam.fieldPath, csValue, jParam.value);
+					csValue = parseDouble(((Element)csParams.item(i)).getAttribute("value"));
+			assertEquals("param: " + jParam.fieldPath, csValue, jParam.value);
 		}
 	}
 }
