@@ -1,8 +1,9 @@
 package sourceafis.matching;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import sourceafis.extraction.templates.Template;
-import sourceafis.general.Queue;
 import sourceafis.matching.minutia.MinutiaMatcher;
 import sourceafis.meta.Nested;
 import sourceafis.meta.ParameterSet;
@@ -16,7 +17,7 @@ public class ParallelMatcher
         public ProbeIndex ProbeIndex = new ProbeIndex();
     }
 
-    Queue<MinutiaMatcher> Matchers = new Queue<MinutiaMatcher>();
+    Queue<MinutiaMatcher> Matchers = new LinkedList<MinutiaMatcher>();
   /*
    * Review the code, it is creaating new matcher everytime
    */
@@ -26,8 +27,7 @@ public class ParallelMatcher
        // lock (Matchers)
         synchronized(Matchers){
            // if (Matchers.Count > 0)
-          if (!Matchers.isEmpty())
-                 matcher = Matchers.dequeue();
+             matcher = Matchers.poll();
           // Can be implemented later when using real parallel
            if (matcher == null) {
          //     matcher = ParameterSet.ClonePrototype(MinutiaMatcher);
@@ -48,7 +48,7 @@ public class ParallelMatcher
     {
         //lock (Matchers)
     	synchronized(Matchers){
-             Matchers.enqueue(matcher);
+             Matchers.offer(matcher);
     	}
     }
 
