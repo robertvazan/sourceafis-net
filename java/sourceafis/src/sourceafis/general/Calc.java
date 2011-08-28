@@ -138,7 +138,7 @@ public final class Calc {
 			return -1;
 		if (left > right)
 			return 1;
-		return 1;
+		return 0;
 	}
 
 	public static int Compare(float left, float right) {
