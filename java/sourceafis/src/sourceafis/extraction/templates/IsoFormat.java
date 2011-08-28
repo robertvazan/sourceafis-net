@@ -9,7 +9,7 @@ import java.io.OutputStream;
 import sourceafis.general.AssertException;
 import sourceafis.general.BinaryReader;
 import sourceafis.general.BinaryWriter;
-import sourceafis.general.BitConverter;
+import sourceafis.general.Calc;
 public final class IsoFormat extends TemplateFormatBase<byte[]>
 {
     // References:
@@ -119,7 +119,7 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
         // update length
         byte[] template = stream.toByteArray();
       //  BitConverter.GetBytes(IPAddress.HostToNetworkOrder(template.Length)).CopyTo(template, 8);
-         BitConverter.Write(template,template.length, 8);
+         Calc.Write(template,template.length, 8);
         return template;
     	}catch(IOException e){
     		throw new RuntimeException(e);
@@ -236,7 +236,7 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
 			stream.read(header, 0, 12);
 		
 
-        int length = BitConverter.ToInt32(header, 8);
+        int length = Calc.ToInt32(header, 8);
 
         byte[] template = new byte[length];
         //header.CopyTo(template, 0);
