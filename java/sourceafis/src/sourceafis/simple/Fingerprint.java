@@ -26,6 +26,7 @@ import sourceafis.extraction.templates.Template;
 /// </remarks>
 /// <seealso cref="Person"/>
 //[Serializable]
+@SuppressWarnings("serial")
 public class Fingerprint implements Cloneable, Serializable
 {
     /// <summary>

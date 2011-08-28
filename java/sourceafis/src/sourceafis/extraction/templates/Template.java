@@ -4,6 +4,7 @@ import java.io.Serializable;
 
   
 
+@SuppressWarnings("serial")
 public class Template implements Cloneable, Serializable {
  
 	public int OriginalDpi;
