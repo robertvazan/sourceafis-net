@@ -110,11 +110,18 @@ namespace SourceAFIS.Tests.Executable
             for (int i = 0; i < log.Count("MinutiaMatcher.RootSelector"); ++i)
             {
                 MinutiaPair rootPair = (MinutiaPair)log.Retrieve("MinutiaMatcher.RootSelector", i);
-                root.Add(new XElement("root",
+                var rootPairInXml = new XElement("root",
                     new XAttribute("offset", i),
                     new XAttribute("probe", rootPair.Probe),
                     new XAttribute("candidate", rootPair.Candidate),
-                    new XAttribute("score", (float)log.Retrieve("MinutiaMatcher.MatchScoring", i))));
+                    new XAttribute("score", (float)log.Retrieve("MinutiaMatcher.MatchScoring", i)));
+                root.Add(rootPairInXml);
+                MinutiaPairing pairing = (MinutiaPairing)log.Retrieve("MinutiaMatcher.Pairings", i);
+                for (int j = 0; j < pairing.Count; ++j)
+                    rootPairInXml.Add(new XElement("pair",
+                        new XAttribute("probe", pairing.GetPair(j).Probe),
+                        new XAttribute("candidate", pairing.GetPair(j).Candidate),
+                        new XAttribute("support", pairing.GetSupportByProbe(pairing.GetPair(j).Probe))));
             }
             SaveXml(root, "matcher.xml");
         }

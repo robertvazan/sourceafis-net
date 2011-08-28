@@ -109,6 +109,7 @@ namespace SourceAFIS.Matching.Minutia
                     break;
                 Pairing.Add(PairSelector.Dequeue());
             }
+            Logger.Log("Pairings", Pairing);
         }
 
         void CollectEdges(Template candidate)
