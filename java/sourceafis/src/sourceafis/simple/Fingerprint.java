@@ -272,7 +272,7 @@ public class Fingerprint implements Cloneable, Serializable
     }
 
  
-    public  Template Decoded;
+    Template Decoded;
 
     public Fingerprint clone() {
     	try {
