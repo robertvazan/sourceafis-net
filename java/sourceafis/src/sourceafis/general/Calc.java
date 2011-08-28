@@ -140,28 +140,6 @@ public final class Calc {
 			return 1;
 		return 1;
 	}
-	  public static int Compare(EdgeInfo left, EdgeInfo right)
-      {
-          if (left.Length < right.Length)
-              return -1;
-          else if (left.Length > right.Length)
-              return 1;
-          else// length are same
-          {
-              if (left.ReferenceAngle < right.ReferenceAngle)
-                  return -1;
-              else if (left.ReferenceAngle > right.ReferenceAngle)
-                  return 1;
-              else // Length and Ref angle are same
-              {
-                  if (left.NeighborAngle < right.NeighborAngle)
-                      return -1;
-                  if (left.NeighborAngle > right.NeighborAngle)
-                      return 1;
-                  return 0; // All 3 parameters are same
-              }
-          }
-      }
 
 	public static int Compare(float left, float right) {
 		if (left < right)

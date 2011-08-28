@@ -20,8 +20,8 @@ namespace SourceAFIS.Tests
         public static string NonMatchingFingerprintPath = Path.Combine(SomeDatabase, "102_1.tif");
 
         public static string JavaFingerprintDatabase = Path.Combine(DatabasePath, "FVC2000", "DB1_B");
-        public static string JavaFingerprintProbePath = Path.Combine(JavaFingerprintDatabase, "101_1.tif");
-        public static string JavaFingerprintCandidatePath = Path.Combine(JavaFingerprintDatabase, "101_2.tif");
+        public static string JavaFingerprintProbePath = Path.Combine(JavaFingerprintDatabase, "102_2.tif");
+        public static string JavaFingerprintCandidatePath = Path.Combine(JavaFingerprintDatabase, "102_3.tif");
         public static BitmapImage JavaFingerprintProbe = new BitmapImage(new Uri(JavaFingerprintProbePath, UriKind.RelativeOrAbsolute));
         public static BitmapImage JavaFingerprintCandidate = new BitmapImage(new Uri(JavaFingerprintCandidatePath, UriKind.RelativeOrAbsolute));
 

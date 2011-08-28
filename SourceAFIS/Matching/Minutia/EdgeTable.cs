@@ -40,7 +40,8 @@ namespace SourceAFIS.Matching.Minutia
                     }
                 }
 
-                edges.Sort((left, right) => Calc.Compare(left.Edge.Length, right.Edge.Length));
+                edges.Sort((left, right) => Calc.ChainCompare(
+                    Calc.Compare(left.Edge.Length, right.Edge.Length), Calc.Compare(left.Neighbor, right.Neighbor)));
                 if (edges.Count > MaxNeighbors)
                     edges.RemoveRange(MaxNeighbors, edges.Count - MaxNeighbors);
                 Table[reference] = edges.ToArray();

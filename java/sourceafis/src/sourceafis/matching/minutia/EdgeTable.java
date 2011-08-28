@@ -53,7 +53,9 @@ import sourceafis.meta.Parameter;
                Collections.sort(edges,new Comparator<NeighborEdge>() {
 				public int compare(NeighborEdge left, NeighborEdge right) {
 				  //return	Calc.Compare(left.Edge.Length, right.Edge.Length);
-					return	Calc.Compare(left.Edge, right.Edge);
+					return Calc.ChainCompare(
+							Calc.Compare(left.Edge.Length, right.Edge.Length),
+							Calc.Compare(left.Neighbor, right.Neighbor));
 				}
 			});
               
