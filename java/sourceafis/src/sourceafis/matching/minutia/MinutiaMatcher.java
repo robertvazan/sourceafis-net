@@ -33,7 +33,7 @@ public class MinutiaMatcher
     public EdgeLookup EdgeLookup = new EdgeLookup();
 
     @Parameter
-    public int MaxTriedRoots = 10000;
+    public int MaxTriedRoots = 1000;
 
     public DetailLogger.Hook logger = DetailLogger.off;
 
