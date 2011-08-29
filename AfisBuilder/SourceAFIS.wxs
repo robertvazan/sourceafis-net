@@ -45,6 +45,9 @@
             <Component Id="component_Bin_SourceAFIS.FingerprintAnalysis.exe" Guid="ad51f675-85f6-4bca-97e6-dbf18a60a742">
               <File Id="Bin_SourceAFIS.FingerprintAnalysis.exe" Name="SourceAFIS.FingerprintAnalysis.exe" DiskId="1" Source="Bin\SourceAFIS.FingerprintAnalysis.exe" KeyPath="yes" />
             </Component>
+            <Component Id="component_Bin_sourceafis.jar" Guid="421ca477-4096-4184-bc4c-ade7556831ef">
+              <File Id="Bin_sourceafis.jar" Name="sourceafis.jar" DiskId="1" Source="Bin\sourceafis.jar" KeyPath="yes" />
+            </Component>
           </Directory>
           <Directory Id="Documentation" Name="Documentation">
             <Directory Id="Documentation_SourceAFIS" Name="SourceAFIS">
@@ -776,6 +779,7 @@
       <ComponentRef Id="component_Bin_SourceAFIS.FingerprintAnalysis.exe" />
       <ComponentRef Id="component_Documentation_SourceAFIS__ple_Fingerprint_AsBitmapSource.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS___AfisEngine_Extract_1_d759b43b.htm" />
+      <ComponentRef Id="component_Bin_sourceafis.jar" />
     </Feature>
   </Product>
 </Wix>
