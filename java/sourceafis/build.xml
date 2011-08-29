@@ -6,8 +6,7 @@
     <path id="test.classpath">
         <pathelement location="bin/classes"/>
         <pathelement location="bin/test-classes"/>
-        <pathelement location="C:/Program Files/eclipse/plugins/org.junit_4.8.1.v4_8_1_v20100427-1100/junit.jar"/>
-        <pathelement location="C:/Program Files/eclipse/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+        <pathelement location="../lib/junit.jar"/>
     </path>
     <target name="clean">
         <delete dir="bin"/>
