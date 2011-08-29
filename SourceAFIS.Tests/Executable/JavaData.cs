@@ -21,11 +21,11 @@ namespace SourceAFIS.Tests.Executable
     [TestFixture]
     class JavaData
     {
-        void ClipDatabase(DatabaseCollection db)
+        DatabaseCollection LoadDatabase()
         {
-            db.ClipDatabaseCount(3);
-            db.ClipFingersPerDatabase(3);
-            db.ClipViewsPerFinger(3);
+            DatabaseCollection db = new DatabaseCollection();
+            db.Scan(Settings.DatabasePath);
+            return db;
         }
 
         Person ToPerson(Template template)
@@ -45,9 +45,7 @@ namespace SourceAFIS.Tests.Executable
         {
             XElement root = new XElement("template-list");
             AfisEngine afis = new AfisEngine();
-            DatabaseCollection db = new DatabaseCollection();
-            db.Scan(Settings.DatabasePath);
-            ClipDatabase(db);
+            DatabaseCollection db = LoadDatabase();
             foreach (var database in db.Databases)
                 foreach (var index in database.AllIndexes)
                 {
@@ -68,9 +66,7 @@ namespace SourceAFIS.Tests.Executable
             var templates = XDocument.Load(Path.Combine(Settings.JavaDataPath, "templates.xml")).Root.Elements();
             XElement root = new XElement("score-list");
             AfisEngine afis = new AfisEngine();
-            DatabaseCollection db = new DatabaseCollection();
-            db.Scan(Settings.DatabasePath);
-            ClipDatabase(db);
+            DatabaseCollection db = LoadDatabase();
             foreach (var database in db.Databases)
             {
                 foreach (var index in database.AllIndexes)
