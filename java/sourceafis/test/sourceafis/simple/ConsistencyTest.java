@@ -15,6 +15,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -33,7 +34,6 @@ import sourceafis.matching.minutia.NeighborEdge;
 import sourceafis.meta.ObjectTree;
 import sourceafis.meta.ParameterSet;
 import sourceafis.meta.ParameterValue;
-import sun.misc.BASE64Decoder;
 
 
 public class ConsistencyTest {
@@ -46,10 +46,8 @@ public class ConsistencyTest {
 		for (int i = 0; i < templates.getLength(); ++i) {
 			if (templates.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element template = (Element)templates.item(i);
-				if (template.getAttribute("image-path").equals(path)) {
-					String base64 = template.getAttribute("compact");
-					return new BASE64Decoder().decodeBuffer(base64);
-				}
+				if (template.getAttribute("image-path").equals(path))
+					return Base64.decodeBase64(template.getAttribute("compact"));
 			}
 		}
 		fail();
