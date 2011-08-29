@@ -20,4 +20,4 @@ syntax: glob
 .metadata
 Data/JavaTestData
 java/*/dist
-java/lib
+java/*/lib
