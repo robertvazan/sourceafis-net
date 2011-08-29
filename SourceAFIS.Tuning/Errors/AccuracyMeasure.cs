@@ -31,11 +31,13 @@ namespace SourceAFIS.Tuning.Errors
             measure = new AccuracyMeasure();
             measure.Name = "ZeroFAR";
             measure.ErrorPolicyFunction = ErrorPolicy.ZeroFAR;
+            measure.ScalarMeasure = ScalarErrorMeasure.FRR;
             all.Add(measure);
 
             measure = new AccuracyMeasure();
             measure.Name = "FAR100";
             measure.ErrorPolicyFunction = ErrorPolicy.FAR100;
+            measure.ScalarMeasure = ScalarErrorMeasure.FRR;
             all.Add(measure);
 
             measure = new AccuracyMeasure();
