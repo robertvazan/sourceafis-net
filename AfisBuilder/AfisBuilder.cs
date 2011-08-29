@@ -95,6 +95,7 @@ namespace AfisBuilder
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe.config", prefix + "Bin");
             Command.CopyTo(@"Data\DatabaseAnalyzerConfiguration.xml", prefix + "Bin");
             Command.CopyTo(@"SourceAFIS.FingerprintAnalysis\bin\Release\SourceAFIS.FingerprintAnalysis.exe", prefix + "Bin");
+            Command.CopyTo(@"java\sourceafis\dist\sourceafis.jar", prefix + "Bin");
 
             Directory.CreateDirectory(prefix + "Documentation");
             Command.CopyTo(@"Data\license.txt", prefix + "Documentation");
