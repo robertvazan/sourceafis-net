@@ -1,23 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build" name="sourceafis">
     <path id="sourceafis.classpath">
-        <pathelement location="bin"/>
+        <pathelement location="bin/classes"/>
     </path>
-    <target name="init">
-        <mkdir dir="bin"/>
-        <mkdir dir="dist"/>
-    </target>
+    <path id="test.classpath">
+        <pathelement location="bin/classes"/>
+        <pathelement location="bin/test-classes"/>
+        <pathelement location="C:/Program Files/eclipse/plugins/org.junit_4.8.1.v4_8_1_v20100427-1100/junit.jar"/>
+        <pathelement location="C:/Program Files/eclipse/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+    </path>
     <target name="clean">
         <delete dir="bin"/>
-        <delete dir="dist"/>
     </target>
-    <target depends="init" name="build">
-        <javac destdir="bin" source="1.6" target="1.6" includeantruntime="false">
+    <target name="build">
+        <mkdir dir="bin/classes"/>
+        <javac destdir="bin/classes" source="1.6" target="1.6" includeantruntime="false">
             <src path="src"/>
             <classpath refid="sourceafis.classpath"/>
         </javac>
     </target>
 	<target depends="build" name="jar">
-		<jar destfile="dist/sourceafis.jar" basedir="bin" />
+        <mkdir dir="bin/dist"/>
+		<jar destfile="bin/dist/sourceafis.jar" basedir="bin/classes" />
 	</target>
+    <target depends="build" name="build-tests">
+        <mkdir dir="bin/test-classes"/>
+        <javac destdir="bin/test-classes" source="1.6" target="1.6" includeantruntime="false">
+            <src path="test"/>
+            <classpath refid="test.classpath"/>
+        </javac>
+    </target>
+    <target depends="build-tests" name="test">
+        <mkdir dir="bin/junit"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="sourceafis.simple.ConsistencyTest" todir="bin/junit"/>
+            <classpath refid="test.classpath"/>
+        </junit>
+    </target>
 </project>

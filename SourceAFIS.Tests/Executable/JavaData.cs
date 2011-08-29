@@ -19,7 +19,6 @@ using SourceAFIS.Extraction;
 namespace SourceAFIS.Tests.Executable
 {
     [TestFixture]
-    [Category("Special")]
     class JavaData
     {
         void ClipDatabase(DatabaseCollection db)
@@ -41,6 +40,7 @@ namespace SourceAFIS.Tests.Executable
         }
 
         [Test]
+        [Category("Special")]
         public void Templates()
         {
             XElement root = new XElement("template-list");
@@ -62,6 +62,7 @@ namespace SourceAFIS.Tests.Executable
         }
 
         [Test]
+        [Category("JavaData")]
         public void Scores()
         {
             var templates = XDocument.Load(Path.Combine(Settings.JavaDataPath, "templates.xml")).Root.Elements();
@@ -90,6 +91,7 @@ namespace SourceAFIS.Tests.Executable
         }
 
         [Test]
+        [Category("JavaData")]
         public void MatchLog()
         {
             Extractor extractor = new Extractor();
@@ -128,7 +130,7 @@ namespace SourceAFIS.Tests.Executable
                     new XAttribute("candidate", rootPair.Candidate),
                     new XAttribute("score", (float)log.Retrieve("MinutiaMatcher.MatchScoring", i)));
                 root.Add(rootPairInXml);
-                MinutiaPairing pairing = (MinutiaPairing)log.Retrieve("MinutiaMatcher.Pairings", i);
+                MinutiaPairing pairing = (MinutiaPairing)log.Retrieve("MinutiaMatcher.Pairing", i);
                 for (int j = 0; j < pairing.Count; ++j)
                     rootPairInXml.Add(new XElement("pair",
                         new XAttribute("probe", pairing.GetPair(j).Probe),
@@ -139,6 +141,7 @@ namespace SourceAFIS.Tests.Executable
         }
 
         [Test]
+        [Category("JavaData")]
         public void Parameters()
         {
             ParallelMatcher matcher = new ParallelMatcher();

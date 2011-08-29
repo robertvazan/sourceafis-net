@@ -59,13 +59,16 @@ namespace AfisBuilder
             Execute("mdtool", "build", "--configuration:" + configuration, FixPath(solution));
         }
 
-        public static void BuildAnt(string project)
+        public static void BuildAnt(string project, params string[] targets)
         {
+            string oldDir = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(@"java\" + project);
             string[] versions = Directory.GetDirectories(@"C:\Program Files", "apache-ant-*");
             if (versions.Length == 0)
                 throw new ApplicationException("Cannot find ant.");
             string antPath = versions[versions.Length - 1] + @"\bin\ant.bat";
-            Execute(antPath, "-buildfile", @"java\" + project + @"\build.xml", "clean", "jar");
+            Execute(antPath, targets);
+            Directory.SetCurrentDirectory(oldDir);
         }
 
         public static void Zip(string contents)
