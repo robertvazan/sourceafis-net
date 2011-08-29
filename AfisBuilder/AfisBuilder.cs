@@ -244,6 +244,11 @@ namespace AfisBuilder
             Console.WriteLine("AfisBuilder finished successfully.");
         }
 
+        void Cleanup()
+        {
+            Command.BuildAnt("sourceafis", "clean");
+        }
+
         public void Run()
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -261,6 +266,7 @@ namespace AfisBuilder
                 RunTests();
             RunAnalyzer();
             Summary();
+            Cleanup();
         }
 
         static void Main(string[] args)
