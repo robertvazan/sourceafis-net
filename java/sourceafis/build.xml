@@ -32,9 +32,11 @@
     </target>
     <target depends="build-tests" name="test">
         <mkdir dir="bin/junit"/>
-        <junit fork="yes" printsummary="withOutAndErr">
+        <junit fork="yes" printsummary="withOutAndErr" haltonfailure="on">
             <formatter type="xml"/>
-            <test name="sourceafis.simple.ConsistencyTest" todir="bin/junit"/>
+			<batchtest todir="bin/junit">
+				<fileset dir="bin/test-classes"/>
+			</batchtest>
             <classpath refid="test.classpath"/>
         </junit>
     </target>
