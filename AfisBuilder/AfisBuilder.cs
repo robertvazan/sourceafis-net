@@ -68,7 +68,10 @@ namespace AfisBuilder
             else
                 Command.BuildSolution(@"Sample\Sample.sln", "Debug");
             if (!Mono)
+            {
                 Command.Build(@"DocProject\DocProject.csproj", "Release");
+                Command.BuildAnt("sourceafis");
+            }
         }
 
         void AssembleZip()
