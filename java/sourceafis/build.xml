@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="sourceafis">
+    <path id="sourceafis.classpath">
+        <pathelement location="bin"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <mkdir dir="dist"/>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+        <delete dir="dist"/>
+    </target>
+    <target depends="init" name="build">
+        <javac destdir="bin" source="1.6" target="1.6" includeantruntime="false">
+            <src path="src"/>
+            <classpath refid="sourceafis.classpath"/>
+        </javac>
+    </target>
+	<target depends="build" name="jar">
+		<jar destfile="dist/sourceafis.jar" basedir="bin" />
+	</target>
+</project>
