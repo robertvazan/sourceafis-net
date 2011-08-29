@@ -25,6 +25,8 @@ namespace SourceAFIS.Tests.Executable
         {
             DatabaseCollection db = new DatabaseCollection();
             db.Scan(Settings.DatabasePath);
+            db.ClipFingersPerDatabase(8);
+            db.ClipViewsPerFinger(8);
             return db;
         }
 
