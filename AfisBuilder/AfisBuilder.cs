@@ -27,7 +27,7 @@ namespace AfisBuilder
         void UpdateVersions()
         {
             Versions.Collect();
-            Versions.UpdateIn(@"SourceAFIS\Properties\AssemblyInfoMobile.cs");
+            Versions.UpdateIn(Path.Combine("SourceAFIS", "Properties", "AssemblyInfoMobile.cs"));
             Versions.Update("SourceAFIS.Visualization");
             Versions.Update("SourceAFIS.Tuning");
             Versions.Update("SourceAFIS.Tests");
