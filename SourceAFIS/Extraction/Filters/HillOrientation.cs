@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
+using System.Linq;
+#if !COMPACT_FRAMEWORK
+using System.Threading.Tasks;
+#endif
 using SourceAFIS.General;
+using SourceAFIS.Dummy;
 using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
@@ -47,7 +51,7 @@ namespace SourceAFIS.Extraction.Filters
                         neighbor.Position = Calc.Round(Calc.Multiply(distance, Angle.ToVector(angle)));
                     } while (neighbor.Position == new Point() || neighbor.Position.Y < 0);
                     neighbor.Orientation = Angle.ToVector(Angle.Add(Angle.ToOrientation(Angle.Atan(neighbor.Position)), Angle.PI));
-                    if (!neighbors.Exists(info => info.Position == neighbor.Position))
+                    if (!neighbors.Any(info => info.Position == neighbor.Position))
                         neighbors.Add(neighbor);
                 }
                 neighbors.Sort((left, right) => Calc.CompareYX(left.Position, right.Position));
@@ -78,7 +82,7 @@ namespace SourceAFIS.Extraction.Filters
             List<List<NeighborInfo>> neighbors = PrepareNeighbors();
 
             PointF[,] orientation = new PointF[input.GetLength(0), input.GetLength(1)];
-            Threader.Split(mask.Height, delegate(int blockY)
+            Parallel.For(0, mask.Height, delegate(int blockY)
             {
                 Range validMaskRange = GetMaskLineRange(mask, blockY);
                 if (validMaskRange.Length > 0)
@@ -115,7 +119,7 @@ namespace SourceAFIS.Extraction.Filters
         PointF[,] SumBlocks(PointF[,] orientation, BlockMap blocks, BinaryMap mask)
         {
             PointF[,] sums = new PointF[blocks.BlockCount.Height, blocks.BlockCount.Width];
-            Threader.Split<Point>(blocks.AllBlocks, delegate(Point block)
+            Parallel.ForEach(blocks.AllBlocks, delegate(Point block)
             {
                 if (mask.GetBit(block))
                 {
@@ -133,7 +137,8 @@ namespace SourceAFIS.Extraction.Filters
         PointF[,] Smooth(PointF[,] orientation, BinaryMap mask)
         {
             PointF[,] smoothed = new PointF[mask.Height, mask.Width];
-            for (int y = 0; y < mask.Height; ++y)
+            Parallel.For(0, mask.Height, delegate(int y)
+            {
                 for (int x = 0; x < mask.Width; ++x)
                     if (mask.GetBit(x, y))
                     {
@@ -147,16 +152,19 @@ namespace SourceAFIS.Extraction.Filters
                                     sum = Calc.Add(sum, orientation[ny, nx]);
                         smoothed[y, x] = sum;
                     }
+            });
             return smoothed;
         }
 
         byte[,] ToAngles(PointF[,] vectors, BinaryMap mask)
         {
             byte[,] angles = new byte[mask.Height, mask.Width];
-            for (int y = 0; y < mask.Height; ++y)
+            Parallel.For(0, mask.Height, delegate(int y)
+            {
                 for (int x = 0; x < mask.Width; ++x)
                     if (mask.GetBit(x, y))
                         angles[y, x] = Angle.ToByte(Angle.Atan(vectors[y, x]));
+            });
             return angles;
         }
 

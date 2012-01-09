@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="SourceAFIS.FingerprintAnalysis.FingerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SourceAFIS.FingerprintAnalysis" 
+             xmlns:v="clr-namespace:SourceAFIS.Visualization;assembly=SourceAFIS.Visualization"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Name="FingerViewControl">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+        <v:EqualsToVisibilityConverter x:Key="VisibleIfEquals" />
+    </UserControl.Resources>
+    <Viewbox DataContext="{Binding ElementName=FingerViewControl}">
+        <Canvas Width="{Binding ExtractionData.Width}" Height="{Binding ExtractionData.Height}" ClipToBounds="True" Name="MainCanvas">
+            <v:ByteArrayImage InputArray="{Binding ExtractionData.InputImage}"
+                              Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.OriginalImage}}"/>
+            <v:FloatArrayImage InputArray="{Binding ExtractionData.Equalized}"
+                               Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.Equalized}}"/>
+            <v:FloatArrayImage InputArray="{Binding ExtractionData.SmoothedRidges}"
+                               Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.SmoothedRidges}}"/>
+            <v:FloatArrayImage InputArray="{Binding ExtractionData.OrthogonalSmoothing}"
+                               Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.OrthogonalSmoothing}}"/>
+            <v:MaskView Mask="{Binding ExtractionData.Binarized}" ZeroColor="White" OneColor="Black"
+                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.Binarized}}"/>
+            <v:MaskView Mask="{Binding ExtractionData.BinarySmoothing}" ZeroColor="White" OneColor="Black"
+                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.BinarySmoothing}}"/>
+            <v:MaskView Mask="{Binding ExtractionData.RemovedCrosses}" ZeroColor="White" OneColor="Black"
+                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.RemovedCrosses}}"/>
+            <v:MaskView Mask="{Binding SkeletonData.Thinned}" ZeroColor="White" OneColor="Green"
+                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.Thinned}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.RidgeTracer}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.RidgeTracer}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.DotRemover}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.DotRemover}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.PoreRemover}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.PoreRemover}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.GapRemover}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.GapRemover}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.TailRemover}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.TailRemover}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.FragmentRemover}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.FragmentRemover}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.MinutiaMask}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.MinutiaMask}}"/>
+            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
+                            Skeleton="{Binding SkeletonData.BranchMinutiaRemover}"
+                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.BranchMinutiaRemover}}"/>
+            <v:BlockMaskBorder Mask="{Binding ExtractionData.AbsoluteContrast}" Blocks="{Binding ExtractionData.Blocks}"
+                               Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.AbsoluteContrast}}"/>
+            <v:BlockMaskBorder Mask="{Binding ExtractionData.RelativeContrast}" Blocks="{Binding ExtractionData.Blocks}"
+                               Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.RelativeContrast}}"/>
+            <v:BlockMaskBorder Mask="{Binding ExtractionData.LowContrastMajority}" Blocks="{Binding ExtractionData.Blocks}"
+                               Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.LowContrastMajority}}"/>
+            <v:BlockMaskBorder Mask="{Binding ExtractionData.SegmentationMask}" Blocks="{Binding ExtractionData.Blocks}"
+                               Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.Segmentation}}"/>
+            <v:MaskBorder Mask="{Binding ExtractionData.InnerMask}"
+                          Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.Inner}}"/>
+            <v:ContrastView Blocks="{Binding ExtractionData.Blocks}" ContrastMap="{Binding ExtractionData.BlockContrast}"
+                            Visibility="{Binding Options.Contrast, Converter={StaticResource BooleanToVisibility}}"/>
+            <v:RidgeOrientation Blocks="{Binding ExtractionData.Blocks}" Mask="{Binding ExtractionData.SegmentationMask}"
+                                OrientationMap="{Binding ExtractionData.Orientation}"
+                                Visibility="{Binding Options.Orientation, Converter={StaticResource BooleanToVisibility}}"/>
+            <v:Minutiae FpTemplate="{Binding ExtractionData.MinutiaCollector}"
+                        Visibility="{Binding Options.Minutiae, Converter={StaticResource BooleanToVisibility}}"/>
+            <v:MatchedMinutiae Pairing="{Binding MatchData.Pairing}" FpTemplate="{Binding ExtractionData.MinutiaCollector}" MatchSide="{Binding MatchSide}"
+                               Visibility="{Binding Options.PairedMinutiae, Converter={StaticResource BooleanToVisibility}}" />
+        </Canvas>
+    </Viewbox>
+</UserControl>

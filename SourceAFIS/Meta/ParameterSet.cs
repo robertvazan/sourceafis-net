@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using System.Xml.Serialization;
 using SourceAFIS.General;
+using SourceAFIS.Dummy;
 
 namespace SourceAFIS.Meta
 {
@@ -81,7 +82,7 @@ namespace SourceAFIS.Meta
 
         public static T ClonePrototype<T>(T prototype) where T : class
         {
-            T clone = (T)prototype.GetType().GetConstructor(Type.EmptyTypes).Invoke(null);
+            T clone = prototype.GetType().GetConstructor(Type.EmptyTypes).Invoke(null) as T;
             ParameterSet parameters = new ParameterSet(new ObjectTree(prototype));
             parameters.Rebind(new ObjectTree(clone));
             parameters.SaveValues();

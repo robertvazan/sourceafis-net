@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
+#if !COMPACT_FRAMEWORK
+using System.Threading.Tasks;
+#endif
 using SourceAFIS.General;
+using SourceAFIS.Dummy;
 using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
@@ -10,14 +13,14 @@ namespace SourceAFIS.Extraction.Filters
     public sealed class ClippedContrast
     {
         [Parameter(Upper = 0.4)]
-        public float ClipFraction = 0.1f;
+        public float ClipFraction = 0.08f;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
         public byte[,] Compute(BlockMap blocks, short[, ,] histogram)
         {
             byte[,] result = new byte[blocks.BlockCount.Height, blocks.BlockCount.Width];
-            Threader.Split<Point>(blocks.AllBlocks, delegate(Point block)
+            Parallel.ForEach(blocks.AllBlocks, delegate(Point block)
             {
                 int area = 0;
                 for (int i = 0; i < 256; ++i)

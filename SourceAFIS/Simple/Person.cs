@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
+using System.Linq;
+using SourceAFIS.Dummy;
 
 namespace SourceAFIS.Simple
 {
@@ -16,7 +18,7 @@ namespace SourceAFIS.Simple
     /// it is possible to match two <see cref="Person"/>s directly instead of iterating over their <see cref="Fingerprint"/>s.
     /// </para>
     /// <para>
-    /// <see cref="Id"/> field is provided as simple means to bind <see cref="Person"/> objects to application-specific
+    /// <see cref="Id"/> property is provided as simple means to bind <see cref="Person"/> objects to application-specific
     /// information. If you need more flexibility, inherit from <see cref="Person"/> class and add
     /// application-specific fields as necessary.
     /// </para>
@@ -28,7 +30,7 @@ namespace SourceAFIS.Simple
     /// </remarks>
     /// <seealso cref="Fingerprint"/>
     [Serializable]
-    public class Person : IList<Fingerprint>, ICloneable
+    public class Person : ICloneable
     {
         /// <summary>
         /// Application-assigned ID for the <see cref="Person"/>.
@@ -47,94 +49,67 @@ namespace SourceAFIS.Simple
         [XmlAttribute]
         public int Id { get; set; }
 
-        List<Fingerprint> InnerList = new List<Fingerprint>();
+        List<Fingerprint> FingerprintList = new List<Fingerprint>();
 
         /// <summary>
-        /// Get/set all <see cref="Fingerprint"/>s belonging to this person as a collection.
+        /// List of <see cref="Fingerprint"/>s belonging to the <see cref="Person"/>.
         /// </summary>
-        /// <value>
-        /// An array containing all <see cref="Fingerprint"/>s belonging to this <see cref="Person"/>.
-        /// </value>
-        /// <seealso cref="this"/>
-        public Fingerprint[] AllFingerprints
+        /// <remarks>
+        /// This collection is initially empty. Add <see cref="Fingerprint"/> objects
+        /// here. You can also assign the whole collection.
+        /// </remarks>
+        public List<Fingerprint> Fingerprints
         {
-            get { return InnerList.ToArray(); }
-            set { InnerList = new List<Fingerprint>(value); }
+            get { return FingerprintList; }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException();
+                FingerprintList = value;
+            }
         }
 
         /// <summary>
         /// Creates empty <see cref="Person"/> object.
         /// </summary>
-        public Person() { }
+        public Person()
+        {
+        }
 
         /// <summary>
-        /// Get the number of <see cref="Fingerprint"/>s belonging to the <see cref="Person"/>.
+        /// Creates new <see cref="Person"/> object and initializes it with
+        /// a list of <see cref="Fingerprint"/>s.
         /// </summary>
-        /// <value>
-        /// Number of <see cref="Fingerprint"/>s belonging to the <see cref="Person"/>.
-        /// </value>
-        public int Count { get { return InnerList.Count; } }
-        /// <summary>
-        /// Add <see cref="Fingerprint"/> to person's fingerprint collection.
-        /// </summary>
-        /// <param name="fp">Fingerprint to add.</param>
-        public void Add(Fingerprint fp) { CheckNull(fp); InnerList.Add(fp); }
-        /// <summary>
-        /// Remove all <see cref="Fingerprint"/>s from person's fingerprint collection.
-        /// </summary>
-        public void Clear() { InnerList.Clear(); }
-        /// <summary>
-        /// Remove <see cref="Fingerprint"/> from person's fingerprint collection.
-        /// </summary>
-        /// <param name="fp">Fingerprint to remove.</param>
-        /// <returns>Returns <see langword="true"/> if the <see cref="Fingerprint"/> was found and removed, <see langword="false"/> otherwise.</returns>
-        public bool Remove(Fingerprint fp) { return InnerList.Remove(fp); }
-        /// <summary>
-        /// Access <see cref="Person"/>'s fingerprint by index.
-        /// </summary>
-        /// <param name="index">Position of the <see cref="Fingerprint"/> within person's fingerprint collection.</param>
-        /// <value>Fingerprint at the specified index.</value>
-        /// <seealso cref="AllFingerprints"/>
-        public Fingerprint this[int index]
+        /// <param name="fingerprints"><see cref="Fingerprint"/> objects to add to the new <see cref="Person"/>.</param>
+        public Person(params Fingerprint[] fingerprints)
         {
-            get { return InnerList[index]; }
-            set { CheckNull(value); InnerList[index] = value; }
+            Fingerprints = fingerprints.ToList();
         }
-        /// <summary>
-        /// Add <see cref="Fingerprint"/> to person's fingerprint collection at specific index.
-        /// </summary>
-        /// <param name="index">Index at which the fingerprint should be inserted.</param>
-        /// <param name="fp">Fingerprint to insert.</param>
-        public void Insert(int index, Fingerprint fp) { CheckNull(fp); InnerList.Insert(index, fp); }
-        /// <summary>
-        /// Remove <see cref="Fingerprint"/> from person's fingerprint collection at specified index.
-        /// </summary>
-        /// <param name="index">Index of the removed <see cref="Fingerprint"/> in person's fingerprint collection.</param>
-        public void RemoveAt(int index) { InnerList.RemoveAt(index); }
+
         /// <summary>
         /// Create deep copy of the <see cref="Person"/>.
         /// </summary>
         /// <returns>Deep copy of the <see cref="Person"/>.</returns>
+        /// <remarks>
+        /// This method also clones all <see cref="Fingerprint"/> objects contained
+        /// in this <see cref="Person"/>.
+        /// </remarks>
         public Person Clone()
         {
             Person clone = new Person();
-            foreach (Fingerprint fp in InnerList)
-                clone.Add(fp.Clone());
+            clone.Id = Id;
+            foreach (Fingerprint fp in Fingerprints)
+                clone.Fingerprints.Add(fp.Clone());
             return clone;
         }
 
-        IEnumerator<Fingerprint> IEnumerable<Fingerprint>.GetEnumerator() { return InnerList.GetEnumerator(); }
-        IEnumerator IEnumerable.GetEnumerator() { return InnerList.GetEnumerator(); }
-        bool ICollection<Fingerprint>.IsReadOnly { get { return false; } }
-        bool ICollection<Fingerprint>.Contains(Fingerprint fp) { return InnerList.Contains(fp); }
-        void ICollection<Fingerprint>.CopyTo(Fingerprint[] array, int index) { InnerList.CopyTo(array, index); }
-        int IList<Fingerprint>.IndexOf(Fingerprint fp) { return InnerList.IndexOf(fp); }
         object ICloneable.Clone() { return Clone(); }
 
-        void CheckNull(Fingerprint fp)
+        internal void CheckForNulls()
         {
-            if (fp == null)
-                throw new ArgumentNullException();
+            foreach (Fingerprint fp in Fingerprints)
+                if (fp == null)
+                    throw new ApplicationException("Person contains null Fingerprint references.");
         }
     }
 }

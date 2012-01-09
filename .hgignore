@@ -1,0 +1,23 @@
+glob:bin
+glob:obj
+glob:*.suo
+glob:Data/TestDatabase
+glob:*.pidb
+glob:*.userprefs
+glob:DocProject/Help/Html2
+glob:*.HxC
+glob:*.HxT
+glob:*.hhc
+glob:*.hhk
+glob:DocProject/Help/html
+glob:*.HxK
+glob:DocProject/buildhelp
+glob:Sample/dll
+glob:*.hhp
+glob:*.HxF
+glob:*.user
+syntax: glob
+.metadata
+Data/JavaTestData
+java/*/dist
+java/*/lib

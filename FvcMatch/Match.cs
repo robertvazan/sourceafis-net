@@ -12,11 +12,7 @@ namespace FvcMatch
     {
         static Person LoadTemplate(string path)
         {
-            Fingerprint fp = new Fingerprint();
-            fp.Template = File.ReadAllBytes(path);
-            Person person = new Person();
-            person.Add(fp);
-            return person;
+            return new Person(new Fingerprint() { Template = File.ReadAllBytes(path) });
         }
 
         static void WriteLog(string[] args, string status, float similarity)
@@ -28,9 +24,9 @@ namespace FvcMatch
             }
         }
 
-        const double ScoreScaling = 100;
-        const double BendingThreshold = 0.5;
-        const double BendingFactor = 3;
+        const double ScoreScaling = 40;
+        const double BendingThreshold = 0.4;
+        const double BendingFactor = 3.5;
 
         static float FixScore(float score)
         {

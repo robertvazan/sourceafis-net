@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7DD4AD3F-2836-4187-A6E7-D271F13F943E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SourceAFIS.Tuning</RootNamespace>
+    <AssemblyName>SourceAFIS.Tuning</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>KeyPair.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Database\DatabaseCollection.cs" />
+    <Compile Include="Database\DatabaseIndex.cs" />
+    <Compile Include="Database\DatabaseLayout.cs" />
+    <Compile Include="Database\TestDatabase.cs" />
+    <Compile Include="Database\TestPair.cs" />
+    <Compile Include="Errors\AccuracyMeasure.cs" />
+    <Compile Include="Errors\AccuracyStatistics.cs" />
+    <Compile Include="Errors\ErrorPolicy.cs" />
+    <Compile Include="Errors\ErrorRange.cs" />
+    <Compile Include="Errors\MultiFingerPolicy.cs" />
+    <Compile Include="Errors\ROCCurve.cs" />
+    <Compile Include="Errors\ROCPoint.cs" />
+    <Compile Include="Errors\ScalarErrorMeasure.cs" />
+    <Compile Include="Errors\ScoreTable.cs" />
+    <Compile Include="Errors\SeparationMeasure.cs" />
+    <Compile Include="ExtractorBenchmark.cs" />
+    <Compile Include="MatcherBenchmark.cs" />
+    <Compile Include="Optimization\AxisFocusMutation.cs" />
+    <Compile Include="Optimization\ManualMutation.cs" />
+    <Compile Include="Optimization\MutationAdvice.cs" />
+    <Compile Include="Optimization\MutationAdvisor.cs" />
+    <Compile Include="Optimization\MutationMemory.cs" />
+    <Compile Include="Optimization\MutationSequencer.cs" />
+    <Compile Include="Optimization\NicheSlot.cs" />
+    <Compile Include="Optimization\RandomMutation.cs" />
+    <Compile Include="Optimization\TimeConstraints.cs" />
+    <Compile Include="Optimizer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\DatabaseStatistics.cs" />
+    <Compile Include="Reports\ExtractorReport.cs" />
+    <Compile Include="Reports\MatcherReport.cs" />
+    <Compile Include="Reports\MatcherTimings.cs" />
+    <Compile Include="Reports\TestConfiguration.cs" />
+    <Compile Include="Reports\TestReport.cs" />
+    <Compile Include="Reports\TopErrors.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SourceAFIS\SourceAFIS.csproj">
+      <Project>{35075900-98B2-4F73-A8FE-11E0D2182689}</Project>
+      <Name>SourceAFIS</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="KeyPair.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

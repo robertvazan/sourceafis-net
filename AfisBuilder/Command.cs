@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace AfisBuilder
 {
@@ -17,12 +18,12 @@ namespace AfisBuilder
         
         public static void CopyTo(string file, string folder)
         {
-            File.Copy(FixPath(file), FixPath(folder + @"\" + Path.GetFileName(FixPath(file))), true);
+            File.Copy(FixPath(file), Path.Combine(FixPath(folder), Path.GetFileName(FixPath(file))), true);
         }
 
         public static void CopyDirectory(string from, string to)
         {
-            Directory.CreateDirectory(to);
+            Directory.CreateDirectory(FixPath(to));
             foreach (string filename in Directory.GetFiles(from))
                 CopyTo(filename, to);
             foreach (string subfolder in Directory.GetDirectories(from))
@@ -46,16 +47,28 @@ namespace AfisBuilder
         
         public static void Build(string project, string configuration)
         {
-            string[] versions = Directory.GetDirectories(@"C:\WINDOWS\Microsoft.NET\Framework", "v3.5.*");
+            string[] versions = Directory.GetDirectories(@"C:\WINDOWS\Microsoft.NET\Framework", "v4.0.*");
             if (versions.Length == 0)
                 throw new ApplicationException("Cannot find msbuild tool.");
             string msbuildPath = versions[versions.Length - 1] + @"\msbuild.exe";
-            Execute(msbuildPath, "/t:Build", "/p:configuration=" + configuration, project);
+            Execute(msbuildPath, "/t:Build", "\"/p:configuration=" + configuration + "\"", project);
         }
 
         public static void BuildSolution(string solution, string configuration)
         {
             Execute("mdtool", "build", "--configuration:" + configuration, FixPath(solution));
+        }
+
+        public static void BuildAnt(string project, params string[] targets)
+        {
+            string oldDir = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(@"java\" + project);
+            string[] versions = Directory.GetDirectories(@"C:\Program Files", "apache-ant-*");
+            if (versions.Length == 0)
+                throw new ApplicationException("Cannot find ant.");
+            string antPath = versions[versions.Length - 1] + @"\bin\ant.bat";
+            Execute(antPath, targets);
+            Directory.SetCurrentDirectory(oldDir);
         }
 
         public static void Zip(string contents)
@@ -76,9 +89,22 @@ namespace AfisBuilder
             Directory.SetCurrentDirectory(oldFolder);
         }
 
+        public static void ZipFiles(string folder, string[] contents)
+        {
+            folder = FixPath(folder);
+            string archive = Path.GetFileName(folder) + ".zip";
+            string oldFolder = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(folder);
+            DeleteFileIfExists(archive);
+            Execute(@"C:\Program Files\7-Zip\7z.exe", new[] { "a", "-tzip", archive }.Concat(contents).ToArray());
+            if (!File.Exists(archive))
+                throw new ApplicationException("No ZIP file was created.");
+            Directory.SetCurrentDirectory(oldFolder);
+        }
+
         public static void CompileWiX(string project)
         {
-            string bin = @"C:\Program Files\Windows Installer XML v3\bin\";
+            string bin = @"C:\Program Files\Windows Installer XML v3.5\bin\";
             Execute(bin + "candle.exe", "-ext", "WiXUtilExtension", project);
             Execute(bin + "light.exe", "-ext", "WiXNetFxExtension", "-ext", "WixUIExtension",
                 "-ext", "WiXUtilExtension", Path.GetFileNameWithoutExtension(project) + ".wixobj");

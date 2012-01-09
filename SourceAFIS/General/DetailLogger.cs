@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using SourceAFIS.Meta;
+using SourceAFIS.Dummy;
 
 namespace SourceAFIS.General
 {
@@ -10,12 +11,14 @@ namespace SourceAFIS.General
     {
         public abstract class Hook
         {
+            public abstract bool IsActive { get; }
             public abstract void Log(object data);
             public abstract void Log(string part, object data);
         }
 
         class NullHook : Hook
         {
+            public override bool IsActive { get { return false; } }
             public override void Log(object data) { }
             public override void Log(string part, object data) { }
         }
@@ -31,6 +34,8 @@ namespace SourceAFIS.General
                 Path = path;
             }
 
+            public override bool IsActive { get { return true; } }
+
             public override void Log(object data)
             {
                 Logger.Log(Path, data);
@@ -38,11 +43,44 @@ namespace SourceAFIS.General
 
             public override void Log(string part, object data)
             {
-                Logger.Log(Path + "." + part, data);
+                Logger.Log(Path + (Path != "" ? "." : "") + part, data);
             }
 
             public ActiveHook Clone() { return new ActiveHook(Logger, Path); }
             object ICloneable.Clone() { return Clone(); }
+        }
+
+        public class LogData
+        {
+            Dictionary<string, List<object>> History = new Dictionary<string, List<object>>();
+
+            public void Append(string path, object data)
+            {
+                if (!History.ContainsKey(path))
+                    History[path] = new List<object>();
+                History[path].Add(data);
+            }
+
+            public int Count(string path)
+            {
+                if (History.ContainsKey(path))
+                    return History[path].Count;
+                else
+                    return 0;
+            }
+
+            public object Retrieve(string path)
+            {
+                return Retrieve(path, 0);
+            }
+
+            public object Retrieve(string path, int index)
+            {
+                if (History.ContainsKey(path) && index < History[path].Count)
+                    return History[path][index];
+                else
+                    return null;
+            }
         }
 
         public static readonly Hook Null = new NullHook();
@@ -50,7 +88,14 @@ namespace SourceAFIS.General
         [ThreadStatic]
         static string ThreadName;
 
-        Dictionary<string, List<object>> History = new Dictionary<string, List<object>>();
+        LogData CurrentLog = new LogData();
+
+        public LogData PopLog()
+        {
+            LogData result = CurrentLog;
+            CurrentLog = new LogData();
+            return result;
+        }
 
         public void Attach(ObjectTree tree)
         {
@@ -62,37 +107,17 @@ namespace SourceAFIS.General
             }
         }
 
-        public void Clear()
-        {
-            lock (this)
-                History.Clear();
-        }
-
-        public T Retrieve<T>(string path)
-        {
-            lock (this)
-                return Retrieve<T>(path, 0);
-        }
-
-        public T Retrieve<T>(string path, int index)
-        {
-            lock (this)
-                return (T)History[path][index];
-        }
-
         public void Log(string path, object data)
         {
             lock (this)
             {
                 object logged;
                 if (data is ICloneable)
-                    logged = ((ICloneable)data).Clone();
+                    logged = (data as ICloneable).Clone();
                 else
                     logged = data;
                 string qualifiedPath = path + GetThreadName();
-                if (!History.ContainsKey(qualifiedPath))
-                    History[qualifiedPath] = new List<object>();
-                History[qualifiedPath].Add(logged);
+                CurrentLog.Append(qualifiedPath, logged);
             }
         }
 
@@ -133,7 +158,7 @@ namespace SourceAFIS.General
                         if (copyTree.Contains(path))
                         {
                             object copyReference = copyTree.GetObject(path);
-                            field.SetValue(copyReference, ((ActiveHook)hook).Clone());
+                            field.SetValue(copyReference, (hook as ActiveHook).Clone());
                         }
                     }
                 }

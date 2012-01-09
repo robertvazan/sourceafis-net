@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
+using SourceAFIS.Dummy;
 
 namespace SourceAFIS.General
 {

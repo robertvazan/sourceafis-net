@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
+#if !COMPACT_FRAMEWORK
+using System.Threading.Tasks;
+#endif
 using SourceAFIS.General;
-using SourceAFIS.Visualization;
+using SourceAFIS.Dummy;
 using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
@@ -11,7 +13,7 @@ namespace SourceAFIS.Extraction.Filters
     public sealed class Equalizer
     {
         [Parameter(Lower = 1, Upper = 10)]
-        public float MaxScaling = 4f;
+        public float MaxScaling = 3.99f;
         [Parameter(Lower = 0.1)]
         public float MinScaling = 0.25f;
 
@@ -20,6 +22,15 @@ namespace SourceAFIS.Extraction.Filters
         const float RangeMin = -1;
         const float RangeMax = 1;
         const float RangeSize = RangeMax - RangeMin;
+
+        static readonly float[] ToFloatTable;
+
+        static Equalizer()
+        {
+            ToFloatTable = new float[256];
+            for (int i = 0; i < 256; ++i)
+                ToFloatTable[i] = i / 255f;
+        }
 
         float[, ,] ComputeEqualization(BlockMap blocks, short[, ,] histogram, BinaryMap blockMask)
         {
@@ -35,7 +46,7 @@ namespace SourceAFIS.Extraction.Filters
             }
 
             float[, ,] equalization = new float[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
-            Threader.Split<Point>(blocks.AllCorners, delegate(Point corner)
+            Parallel.ForEach(blocks.AllCorners, delegate(Point corner)
             {
                 if (blockMask.GetBitSafe(corner.X, corner.Y, false)
                     || blockMask.GetBitSafe(corner.X - 1, corner.Y, false)
@@ -51,7 +62,7 @@ namespace SourceAFIS.Extraction.Filters
                     for (int i = 0; i < 256; ++i)
                     {
                         float width = histogram[corner.Y, corner.X, i] * widthWeigth;
-                        float equalized = top + PixelFormat.ToFloat((byte)i) * width;
+                        float equalized = top + ToFloatTable[i] * width;
                         top += width;
 
                         float limited = equalized;
@@ -69,7 +80,7 @@ namespace SourceAFIS.Extraction.Filters
         float[,] PerformEqualization(BlockMap blocks, byte[,] image, float[, ,] equalization, BinaryMap blockMask)
         {
             float[,] result = new float[blocks.PixelCount.Height, blocks.PixelCount.Width];
-            Threader.Split<Point>(blocks.AllBlocks, delegate(Point block)
+            Parallel.ForEach(blocks.AllBlocks, delegate(Point block)
             {
                 if (blockMask.GetBit(block))
                 {
