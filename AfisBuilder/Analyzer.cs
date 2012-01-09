@@ -4,6 +4,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Globalization;
+using System.IO;
 
 namespace AfisBuilder
 {
@@ -26,30 +27,30 @@ namespace AfisBuilder
 
         public static void ReadAccuracy()
         {
-            XElement root = XDocument.Load(Command.FixPath(@"Matcher\Accuracy\Standard\Accuracy.xml")).Root;
-            Accuracy = Convert.ToSingle((string)root.Element("AverageError"), CultureInfo.InvariantCulture);
+            XElement root = XDocument.Load(Path.Combine("Matcher", "Accuracy", "ZeroFAR", "Accuracy.xml")).Root;
+            Accuracy = (float)root.Element("AverageError");
         }
 
         public static void ReadSpeed()
         {
-            XElement root = XDocument.Load(Command.FixPath(@"Matcher\MatcherTime.xml")).Root;
-            Speed = 1 / Convert.ToSingle((string)root.Element("NonMatching"), CultureInfo.InvariantCulture);
+            XElement root = XDocument.Load(Path.Combine("Matcher", "MatcherTime.xml")).Root;
+            Speed = 1 / (float)root.Element("NonMatching");
         }
 
         public static void ReadExtractorStats()
         {
-            XElement root = XDocument.Load(Command.FixPath(@"Extractor\ExtractorReport.xml")).Root;
-            ExtractionTime = Convert.ToSingle((string)root.Element("Time"), CultureInfo.InvariantCulture);
-            TemplateSize = Convert.ToSingle((string)root.Element("TemplateSize"), CultureInfo.InvariantCulture);
+            XElement root = XDocument.Load(Path.Combine("Extractor", "ExtractorReport.xml")).Root;
+            ExtractionTime = (float)root.Element("Time");
+            TemplateSize = (float)root.Element("TemplateSize");
         }
 
         public static void ReportStatistics()
         {
             Console.WriteLine("DatabaseAnalyzer results:");
-            Console.WriteLine("    EER: {0:F2}%", Accuracy * 100);
+            Console.WriteLine("    FRR: {0:F2}%", Accuracy * 100);
             Console.WriteLine("    Speed: {0:F0} fp/s", Speed);
             Console.WriteLine("    Extraction time: {0:F0}ms", ExtractionTime * 1000);
-            Console.WriteLine("    Template size: {0:F1} KB", TemplateSize / 1024);
+            Console.WriteLine("    Template size: {0:F2} KB", TemplateSize / 1024);
         }
     }
 }

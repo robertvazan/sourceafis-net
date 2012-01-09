@@ -41,7 +41,7 @@ namespace AfisBuilder
             {
                 string name = Path.GetFileName(subfolder);
                 Folders.Add(prefix + name);
-                ScanFolders(where + @"\" + name, prefix + name + @"\");
+                ScanFolders(Path.Combine(where, name), prefix + name + @"\");
             }
         }
 
@@ -57,8 +57,8 @@ namespace AfisBuilder
             Files = new List<string>();
             foreach (string folder in Folders)
             {
-                foreach (string path in Directory.GetFiles(SourceFolder + @"\" + folder))
-                    Files.Add(folder + @"\" + Path.GetFileName(path));
+                foreach (string path in Directory.GetFiles(Path.Combine(SourceFolder, folder)))
+                    Files.Add(Path.Combine(folder, Path.GetFileName(path)));
             }
         }
 
@@ -202,7 +202,7 @@ namespace AfisBuilder
                            select subdir).ToList();
             removed.ForEach(subdir => subdir.Remove());
             foreach (XElement subdir in directory.WixElements("Directory"))
-                RemoveOldFiles(subdir, path + (string)subdir.Attribute("Name") + @"\");
+                RemoveOldFolders(subdir, path + (string)subdir.Attribute("Name") + @"\");
         }
 
         public static void RemoveOldFolders()
@@ -212,8 +212,8 @@ namespace AfisBuilder
 
         public static void UpdateVersion(string version)
         {
-            Product.SetAttributeValue("Version", version + ".0");
-            Product.WixElement("Upgrade").WixElement("UpgradeVersion").SetAttributeValue("Maximum", version + ".0");
+            Product.SetAttributeValue("Version", version);
+            Product.WixElement("Upgrade").WixElement("UpgradeVersion").SetAttributeValue("Maximum", version);
         }
 
         static XElement WixElement(this XElement parent, string name)

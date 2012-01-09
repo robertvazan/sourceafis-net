@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
+#if !COMPACT_FRAMEWORK
+using System.Threading.Tasks;
+#endif
 using SourceAFIS.General;
+using SourceAFIS.Dummy;
 using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
@@ -23,7 +26,7 @@ namespace SourceAFIS.Extraction.Filters
             RectangleC rect = new RectangleC(new Point(BorderDistance, BorderDistance),
                 new Size(input.Width - 2 * BorderDistance, input.Height - 2 * BorderDistance));
             BinaryMap output = new BinaryMap(input.Size);
-            Threader.Split(rect.RangeY, delegate(int y)
+            Parallel.For(rect.RangeY.Begin, rect.RangeY.End, delegate(int y)
             {
                 for (int x = rect.Left; x < rect.Right; ++x)
                 {

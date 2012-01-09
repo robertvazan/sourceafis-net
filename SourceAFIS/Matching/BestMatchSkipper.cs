@@ -1,12 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SourceAFIS.General;
 
 namespace SourceAFIS.Simple
 {
     class BestMatchSkipper
     {
         float[][] Collected;
+
+        public struct PersonsSkipScore
+        {
+            public int Person;
+            public float Score;
+        }
 
         public BestMatchSkipper(int persons, int skip)
         {
@@ -44,20 +51,16 @@ namespace SourceAFIS.Simple
             return score;
         }
 
-        public float GetBestScore(out int person)
+        public PersonsSkipScore[] GetSortedScores()
         {
-            float best = 0;
-            person = -1;
-            for (int candidate = 0; candidate < Collected[0].Length; ++candidate)
+            PersonsSkipScore[] results = new PersonsSkipScore[Collected[0].Length];
+            for (int person = 0; person < results.Length; ++person)
             {
-                float score = GetSkipScore(candidate);
-                if (score > best)
-                {
-                    best = score;
-                    person = candidate;
-                }
+                results[person].Person = person;
+                results[person].Score = GetSkipScore(person);
             }
-            return best;
+            Array.Sort(results, (left, right) => Calc.Compare(right.Score, left.Score));
+            return results;
         }
     }
 }

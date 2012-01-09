@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 
@@ -11,7 +10,7 @@ namespace SourceAFIS.Extraction.Model
     {
         [DpiAdjusted]
         [Parameter(Lower = 3, Upper = 100)]
-        public int MaxArmLength = 45;
+        public int MaxArmLength = 52;
 
         [Nested]
         public KnotRemover KnotRemover = new KnotRemover();

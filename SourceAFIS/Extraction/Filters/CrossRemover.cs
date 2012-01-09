@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
 using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Filters

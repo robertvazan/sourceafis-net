@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug Mobile</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E52CBF23-F4CB-4979-B6B2-99E0B6414DCD}</ProjectGuid>
+    <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SourceAFIS</RootNamespace>
+    <AssemblyName>SourceAFIS.Mobile</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <TargetFrameworkProfile>WindowsPhone</TargetFrameworkProfile>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Mobile|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug Mobile</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT;WINDOWS_PHONE;COMPACT_FRAMEWORK</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Mobile|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release Mobile</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;COMPACT_FRAMEWORK</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Dummy\ApplicationException.cs" />
+    <Compile Include="Dummy\Dummy.cs" />
+    <Compile Include="Dummy\ICloneable.cs" />
+    <Compile Include="Dummy\IPAddress.cs" />
+    <Compile Include="Dummy\ParallelLoopState.cs" />
+    <Compile Include="Dummy\SerializableAttribute.cs" />
+    <Compile Include="Extraction\Filters\AbsoluteContrast.cs" />
+    <Compile Include="Extraction\Filters\ClippedContrast.cs" />
+    <Compile Include="Extraction\Filters\CrossRemover.cs" />
+    <Compile Include="Extraction\Extractor.cs" />
+    <Compile Include="Extraction\Filters\HillOrientation.cs" />
+    <Compile Include="Extraction\Filters\ImageInverter.cs" />
+    <Compile Include="Extraction\Filters\InnerMask.cs" />
+    <Compile Include="Extraction\Filters\LinesByOrientation.cs" />
+    <Compile Include="Extraction\Filters\LocalHistogram.cs" />
+    <Compile Include="Extraction\Filters\Equalizer.cs" />
+    <Compile Include="Extraction\Filters\OrientedSmoother.cs" />
+    <Compile Include="Extraction\Filters\RelativeContrast.cs" />
+    <Compile Include="Extraction\Filters\SegmentationMask.cs" />
+    <Compile Include="Extraction\Filters\Thinner.cs" />
+    <Compile Include="Extraction\Filters\ThresholdBinarizer.cs" />
+    <Compile Include="Extraction\Filters\VotingFilter.cs" />
+    <Compile Include="Extraction\Model\BranchMinutiaRemover.cs" />
+    <Compile Include="Extraction\Model\DotRemover.cs" />
+    <Compile Include="Extraction\Model\FragmentRemover.cs" />
+    <Compile Include="Extraction\Model\GapRemover.cs" />
+    <Compile Include="Extraction\Model\ISkeletonFilter.cs" />
+    <Compile Include="Extraction\Model\KnotRemover.cs" />
+    <Compile Include="Extraction\Model\MinutiaMask.cs" />
+    <Compile Include="Extraction\Model\PoreRemover.cs" />
+    <Compile Include="Extraction\Model\RidgeTracer.cs" />
+    <Compile Include="Extraction\Model\SkeletonBuilder.cs" />
+    <Compile Include="Extraction\Model\SkeletonShadow.cs" />
+    <Compile Include="Extraction\Model\TailRemover.cs" />
+    <Compile Include="Extraction\Templates\CompactFormat.cs" />
+    <Compile Include="Extraction\Templates\IsoFormat.cs" />
+    <Compile Include="Extraction\Templates\ITemplateFormat.cs" />
+    <Compile Include="Extraction\Templates\MinutiaCollector.cs" />
+    <Compile Include="Extraction\Templates\MinutiaSorter.cs" />
+    <Compile Include="Extraction\Templates\SerializedFormat.cs" />
+    <Compile Include="Extraction\Templates\Template.cs" />
+    <Compile Include="Extraction\Templates\TemplateBuilder.cs" />
+    <Compile Include="Extraction\Templates\TemplateFormatBase.cs" />
+    <Compile Include="Extraction\Templates\XmlFormat.cs" />
+    <Compile Include="General\Angle.cs" />
+    <Compile Include="General\AssertException.cs" />
+    <Compile Include="General\BinaryMap.cs" />
+    <Compile Include="General\BlockMap.cs" />
+    <Compile Include="General\Calc.cs" />
+    <Compile Include="General\CircularArray.cs" />
+    <Compile Include="General\DetailLogger.cs" />
+    <Compile Include="General\Neighborhood.cs" />
+    <Compile Include="Dummy\Parallel.cs" />
+    <Compile Include="General\Point.cs" />
+    <Compile Include="General\PointF.cs" />
+    <Compile Include="General\PointS.cs" />
+    <Compile Include="General\PolarPoint.cs" />
+    <Compile Include="General\PriorityQueueF.cs" />
+    <Compile Include="General\ReversedList.cs" />
+    <Compile Include="General\Size.cs" />
+    <Compile Include="General\SizeF.cs" />
+    <Compile Include="Matching\Minutia\RootPairSelector.cs" />
+    <Compile Include="Matching\ParallelMatcher.cs" />
+    <Compile Include="Matching\Minutia\EdgeConstructor.cs" />
+    <Compile Include="Matching\Minutia\EdgeInfo.cs" />
+    <Compile Include="Matching\Minutia\EdgeLookup.cs" />
+    <Compile Include="Matching\MatchAnalysis.cs" />
+    <Compile Include="Matching\Minutia\MinutiaMatcher.cs" />
+    <Compile Include="Matching\MatchScoring.cs" />
+    <Compile Include="Matching\Minutia\MinutiaPair.cs" />
+    <Compile Include="Matching\Minutia\MinutiaPairing.cs" />
+    <Compile Include="Matching\Minutia\NeighborEdge.cs" />
+    <Compile Include="Matching\Minutia\PairSelector.cs" />
+    <Compile Include="Matching\ProbeIndex.cs" />
+    <Compile Include="Matching\Minutia\EdgeTable.cs" />
+    <Compile Include="Meta\DpiAdjustedAttribute.cs" />
+    <Compile Include="Meta\DpiAdjuster.cs" />
+    <Compile Include="Meta\ParameterAttribute.cs" />
+    <Compile Include="Meta\NestedAttribute.cs" />
+    <Compile Include="Meta\ObjectTree.cs" />
+    <Compile Include="General\Range.cs" />
+    <Compile Include="General\RangeF.cs" />
+    <Compile Include="Meta\ParameterSet.cs" />
+    <Compile Include="Meta\ParameterValue.cs" />
+    <Compile Include="Simple\AfisEngine.cs" />
+    <Compile Include="Matching\BestMatchSkipper.cs" />
+    <Compile Include="Simple\Finger.cs" />
+    <Compile Include="Simple\Fingerprint.cs" />
+    <Compile Include="Simple\Person.cs" />
+    <Compile Include="General\RectangleC.cs" />
+    <Compile Include="Properties\AssemblyInfoMobile.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -14,8 +14,8 @@ namespace AfisBuilder
         public static void Collect()
         {
             Console.WriteLine("Reading release version");
-            Regex = new Regex(@"^\[assembly: AssemblyVersion\(""(\d+.\d+).\*""\)\]$");
-            foreach (string line in File.ReadAllLines(Command.FixPath(@"SourceAFIS\Properties\AssemblyInfo.cs")))
+            Regex = new Regex(@"^\[assembly: AssemblyVersion\(""(\d+\.\d+\.\d+)\.\*""\)\]$");
+            foreach (string line in File.ReadAllLines(Path.Combine("SourceAFIS", "Properties", "AssemblyInfo.cs")))
             {
                 Match match = Regex.Match(line);
                 if (match.Success)
@@ -27,7 +27,11 @@ namespace AfisBuilder
 
         public static void Update(string project)
         {
-            string path = Command.FixPath(project + @"\Properties\AssemblyInfo.cs");
+            UpdateIn(Command.FixPath(project + @"\Properties\AssemblyInfo.cs"));
+        }
+
+        public static void UpdateIn(string path)
+        {
             Console.WriteLine("Updating version: {0}", path);
             string[] lines = File.ReadAllLines(path);
             bool found = false;

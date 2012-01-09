@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using System.Xml.Serialization;
 using SourceAFIS.General;
+using SourceAFIS.Dummy;
 
 namespace SourceAFIS.Meta
 {
@@ -56,7 +57,7 @@ namespace SourceAFIS.Meta
             ObjectReference = instance;
             Field = field;
             foreach (object attribute in field.GetCustomAttributes(typeof(ParameterAttribute), true))
-                Attribute = (ParameterAttribute)attribute;
+                Attribute = attribute as ParameterAttribute;
             ReadAttribute();
             ReadValue();
         }
@@ -68,7 +69,7 @@ namespace SourceAFIS.Meta
             FieldPath = objectPath + "." + field.Name;
             Field = field;
             foreach (object attribute in field.GetCustomAttributes(typeof(ParameterAttribute), true))
-                Attribute = (ParameterAttribute)attribute;
+                Attribute = attribute as ParameterAttribute;
             ReadAttribute();
             ReadValue();
         }

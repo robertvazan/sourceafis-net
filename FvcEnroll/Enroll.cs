@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using System.Drawing;
+using System.Windows.Media.Imaging;
 using SourceAFIS.Simple;
 
 namespace FvcEnroll
@@ -24,12 +24,9 @@ namespace FvcEnroll
             {
                 AfisEngine afis = new AfisEngine();
                 Fingerprint fp = new Fingerprint();
-                using (Image image = Image.FromFile(args[0]))
-                {
-                    using (Bitmap bitmap = new Bitmap(image))
-                        fp.BitmapImage = bitmap;
-                }
-                afis.Extract(fp);
+                fp.AsBitmapSource = new BitmapImage(new Uri(args[0], UriKind.RelativeOrAbsolute));
+                Person person = new Person(fp);
+                afis.Extract(person);
                 File.WriteAllBytes(args[1], fp.Template);
                 WriteLog(args, "OK");
             }

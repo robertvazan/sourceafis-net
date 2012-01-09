@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 
@@ -11,11 +10,11 @@ namespace SourceAFIS.Extraction.Filters
     {
         [DpiAdjusted]
         [Parameter(Lower = 10 * 10, Upper = 2000 * 2000)]
-        public int SampleSize = 73813;
+        public int SampleSize = 172808;
         [Parameter]
         public float SampleFraction = 0.49f;
         [Parameter]
-        public float RelativeLimit = 0.3f;
+        public float RelativeLimit = 0.34f;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 

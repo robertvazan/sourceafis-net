@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="SourceAFIS.Visualization.ContrastView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Name="ContrastViewControl">
+    <ItemsControl DataContext="{Binding ElementName=ContrastViewControl}" ItemsSource="{Binding Pies}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <Canvas/>
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <Canvas>
+                    <Path Stroke="Cyan" Fill="#4000FFFF">
+                        <Path.Data>
+                            <PathGeometry>
+                                <PathFigure>
+                                    <LineSegment Point="{Binding ArcStart}" />
+                                    <ArcSegment Point="{Binding Top}" Size="{Binding ArcSize}" IsLargeArc="{Binding IsLargeArc}" />
+                                    <LineSegment/>
+                                </PathFigure>
+                            </PathGeometry>
+                        </Path.Data>
+                    </Path>
+                </Canvas>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        <ItemsControl.ItemContainerStyle>
+            <Style>
+                <Setter Property="Canvas.Top" Value="{Binding Center.Y}" />
+                <Setter Property="Canvas.Left" Value="{Binding Center.X}" />
+            </Style>
+        </ItemsControl.ItemContainerStyle>
+    </ItemsControl>
+</UserControl>

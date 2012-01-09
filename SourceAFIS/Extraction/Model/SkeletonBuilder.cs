@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
-using System.Drawing;
 using SourceAFIS.General;
+using SourceAFIS.Dummy;
 
 namespace SourceAFIS.Extraction.Model
 {
