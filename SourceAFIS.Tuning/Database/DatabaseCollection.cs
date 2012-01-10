@@ -38,7 +38,7 @@ namespace SourceAFIS.Tuning.Database
                                           orderby Path.GetFileNameWithoutExtension(filepath).ToLower()
                                           select filepath).ToList();
 
-                    Databases.Add(new TestDatabase(files));
+                    Databases.Add(new TestDatabase(files, (int)aboutXml.Attribute("dpi")));
                 }
             }
 
