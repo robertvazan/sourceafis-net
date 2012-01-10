@@ -5,6 +5,7 @@ using System.Linq;
 using SourceAFIS.Meta;
 using SourceAFIS.Tuning.Optimization;
 using SourceAFIS.Tuning.Reports;
+using SourceAFIS.Tuning.Errors;
 
 namespace SourceAFIS.Tuning
 {
@@ -16,6 +17,12 @@ namespace SourceAFIS.Tuning
         public MutationSequencer Mutations = new MutationSequencer();
 
         public Action<Exception> OnException;
+
+        public Optimizer()
+        {
+            NicheSlot.Measure.ErrorPolicyFunction = ErrorPolicy.ZeroFAR;
+            NicheSlot.Measure.ScalarMeasure = ScalarErrorMeasure.FRR;
+        }
 
         public void Run()
         {

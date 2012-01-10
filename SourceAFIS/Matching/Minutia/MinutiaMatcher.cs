@@ -10,7 +10,7 @@ namespace SourceAFIS.Matching.Minutia
     public sealed class MinutiaMatcher
     {
         [Nested]
-        public ExhaustiveRootSelector RootSelector = new ExhaustiveRootSelector();
+        public RootPairSelector RootSelector = new RootPairSelector();
         [Nested]
         public MinutiaPairing Pairing = new MinutiaPairing();
         [Nested]
@@ -26,8 +26,8 @@ namespace SourceAFIS.Matching.Minutia
         [Nested]
         public EdgeLookup EdgeLookup = new EdgeLookup();
 
-        [Parameter(Upper = 10000)]
-        public int MaxTriedRoots = 10000;
+        [Parameter(Upper = 1000)]
+        public int MaxTriedRoots = 1000;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
@@ -55,6 +55,7 @@ namespace SourceAFIS.Matching.Minutia
             int rootIndex = 0;
             float bestScore = 0;
             MinutiaPair bestRoot = new MinutiaPair();
+            int bestRootIndex = -1;
             foreach (MinutiaPair root in RootSelector.GetRoots(Probe.Template, candidate))
             {
                 float score = TryRoot(root, candidate);
@@ -62,19 +63,21 @@ namespace SourceAFIS.Matching.Minutia
                 {
                     bestScore = score;
                     bestRoot = root;
+                    bestRootIndex = rootIndex;
                 }
                 ++rootIndex;
                 if (rootIndex >= MaxTriedRoots)
                     break;
             }
             Logger.Log("Score", bestScore);
+            Logger.Log("BestRootIndex", bestRootIndex);
             if (bestScore > 0 && Logger.IsActive)
             {
                 Pairing.Reset();
                 Pairing.Add(bestRoot);
                 BuildPairing(candidate);
-                Logger.Log("Root", bestRoot);
-                Logger.Log("Pairing", Pairing);
+                Logger.Log("BestRoot", bestRoot);
+                Logger.Log("BestPairing", Pairing);
             }
             return bestScore;
         }
@@ -106,6 +109,7 @@ namespace SourceAFIS.Matching.Minutia
                     break;
                 Pairing.Add(PairSelector.Dequeue());
             }
+            Pairing.Log();
         }
 
         void CollectEdges(Template candidate)

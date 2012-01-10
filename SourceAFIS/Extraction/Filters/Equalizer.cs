@@ -13,7 +13,7 @@ namespace SourceAFIS.Extraction.Filters
     public sealed class Equalizer
     {
         [Parameter(Lower = 1, Upper = 10)]
-        public float MaxScaling = 4f;
+        public float MaxScaling = 3.99f;
         [Parameter(Lower = 0.1)]
         public float MinScaling = 0.25f;
 

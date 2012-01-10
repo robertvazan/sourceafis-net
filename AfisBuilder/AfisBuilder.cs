@@ -67,6 +67,7 @@ namespace AfisBuilder
 	            Command.ForceDeleteDirectory(@"Sample\bin");
                 Command.Build(@"Sample\Sample.csproj", "Debug");
                 Command.Build(@"DocProject\DocProject.csproj", "Release");
+            Command.BuildAnt("sourceafis", "clean", "jar");
 			}
         }
 
@@ -91,6 +92,7 @@ namespace AfisBuilder
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe", prefix + "Bin");
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe.config", prefix + "Bin");
             Command.CopyTo(@"Data\DatabaseAnalyzerConfiguration.xml", prefix + "Bin");
+            Command.CopyTo(@"java\sourceafis\bin\dist\sourceafis.jar", prefix + "Bin");
 
             Directory.CreateDirectory(prefix + "Documentation");
             Command.CopyTo(@"Data\license.txt", prefix + "Documentation");
@@ -174,7 +176,7 @@ namespace AfisBuilder
             Command.ZipFiles(fvcFolder, new[] { "SourceAFIS.dll", "match.exe", "match.exe.config" });
         }
 
-        void RunNUnitTests()
+        void RunTests()
         {
             string folder = @"SourceAFIS.Tests\bin\Release";
             Command.CopyTo(Path.Combine(MsiFolder, "SourceAFIS-" + Versions.Release + ".msi"), folder);
@@ -192,14 +194,19 @@ namespace AfisBuilder
                             orderby nunitRoot
                             select Path.Combine(nunitRoot, "bin", "net-2.0", "nunit-console.exe")).Last();
 
-            Command.Execute(nunit, "/labels", "/nodots", "/exclude=Special,Installer,UI", "SourceAFIS.Tests.dll");
+            Command.Execute(nunit, "/labels", "/nodots", "/exclude=Special,Installer,UI,JavaData", "SourceAFIS.Tests.dll");
             Command.Execute(nunit, "/labels", "/nodots", "/include=UI", "SourceAFIS.Tests.dll");
+
+            Command.Execute(nunit, "/labels", "/nodots", "/run=SourceAFIS.Tests.Executable.JavaData.Templates", "SourceAFIS.Tests.dll");
+            Command.Execute(nunit, "/labels", "/nodots", "/include=JavaData", "SourceAFIS.Tests.dll");
 
             Command.Execute(nunit, "/labels", "/nodots", "/run=SourceAFIS.Tests.Executable.InstallerRun.Install", "SourceAFIS.Tests.dll");
             Command.Execute(nunit, "/labels", "/nodots", "/run=SourceAFIS.Tests.Executable.Installer", "SourceAFIS.Tests.dll");
             Command.Execute(nunit, "/labels", "/nodots", "/run=SourceAFIS.Tests.Executable.InstallerRun.Uninstall", "SourceAFIS.Tests.dll");
 
             Directory.SetCurrentDirectory(SolutionFolder);
+
+            Command.BuildAnt("sourceafis", "test");
         }
 
         void RunAnalyzer()
@@ -234,6 +241,11 @@ namespace AfisBuilder
             Console.WriteLine("AfisBuilder finished successfully.");
         }
 
+        void Cleanup()
+        {
+            Command.BuildAnt("sourceafis", "clean");
+        }
+
         public void Run()
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -248,9 +260,10 @@ namespace AfisBuilder
                 AssembleFvcIsoSubmission();
             }
             if (!Mono)
-                RunNUnitTests();
+                RunTests();
             RunAnalyzer();
             Summary();
+            Cleanup();
         }
 
         static void Main(string[] args)

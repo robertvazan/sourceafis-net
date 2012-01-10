@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="sourceafis">
+    <path id="sourceafis.classpath">
+        <pathelement location="bin/classes"/>
+    </path>
+    <path id="test.classpath">
+        <pathelement location="bin/classes"/>
+        <pathelement location="bin/test-classes"/>
+        <pathelement location="lib/junit.jar"/>
+        <pathelement location="lib/commons-codec-1.5/commons-codec-1.5.jar"/>
+    </path>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target name="build">
+        <mkdir dir="bin/classes"/>
+        <javac destdir="bin/classes" source="1.6" target="1.6" includeantruntime="false">
+            <src path="src"/>
+            <classpath refid="sourceafis.classpath"/>
+        </javac>
+    </target>
+	<target depends="build" name="jar">
+        <mkdir dir="bin/dist"/>
+		<jar destfile="bin/dist/sourceafis.jar" basedir="bin/classes" />
+	</target>
+    <target depends="build" name="build-tests">
+        <mkdir dir="bin/test-classes"/>
+        <javac destdir="bin/test-classes" source="1.6" target="1.6" includeantruntime="false">
+            <src path="test"/>
+            <classpath refid="test.classpath"/>
+        </javac>
+    </target>
+    <target depends="build-tests" name="test">
+        <mkdir dir="bin/junit"/>
+        <junit fork="yes" printsummary="withOutAndErr" haltonfailure="on">
+            <formatter type="xml"/>
+			<batchtest todir="bin/junit">
+				<fileset dir="bin/test-classes"/>
+			</batchtest>
+            <classpath refid="test.classpath"/>
+        </junit>
+    </target>
+</project>

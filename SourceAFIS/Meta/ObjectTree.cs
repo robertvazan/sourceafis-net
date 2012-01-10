@@ -50,6 +50,14 @@ namespace SourceAFIS.Meta
             }
         }
 
+        public void Remove(object reference)
+        {
+            ByPath.Remove(GetPath(reference));
+            ByReference.Remove(reference);
+        }
+
+        public void Remove(string path) { Remove(GetObject(path)); }
+
         public object GetObject(string path) { return ByPath[path].Reference; }
         public string GetPath(object reference) { return ByReference[reference].Path; }
         public bool Contains(string path) { return ByPath.ContainsKey(path); }

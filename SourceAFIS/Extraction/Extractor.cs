@@ -17,7 +17,7 @@ namespace SourceAFIS.Extraction
     {
         [DpiAdjusted]
         [Parameter(Lower = 8, Upper = 32)]
-        public int BlockSize = 16;
+        public int BlockSize = 15;
 
         public DpiAdjuster DpiAdjuster = new DpiAdjuster();
         [Nested]
@@ -60,16 +60,19 @@ namespace SourceAFIS.Extraction
         public BranchMinutiaRemover BranchMinutiaRemover = new BranchMinutiaRemover();
         [Nested]
         public MinutiaCollector MinutiaCollector = new MinutiaCollector();
+        [Nested]
+        public MinutiaSorter MinutiaSorter = new MinutiaSorter();
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
         public Extractor()
         {
+            RidgeSmoother.Lines.StepFactor = 1.59f;
             OrthogonalSmoother.AngleOffset = Angle.PIB;
             OrthogonalSmoother.Lines.Radius = 4;
             BinarySmoother.Radius = 2;
             BinarySmoother.Majority = 0.66f;
-            BinarySmoother.BorderDistance = 9;
+            BinarySmoother.BorderDistance = 17;
         }
 
         public TemplateBuilder Extract(byte[,] invertedImage, int dpi)
@@ -116,6 +119,7 @@ namespace SourceAFIS.Extraction
 
                 MinutiaCollector.Collect(ridges, TemplateBuilder.MinutiaType.Ending, template);
                 MinutiaCollector.Collect(valleys, TemplateBuilder.MinutiaType.Bifurcation, template);
+                MinutiaSorter.Sort(template);
             });
             return template;
         }
