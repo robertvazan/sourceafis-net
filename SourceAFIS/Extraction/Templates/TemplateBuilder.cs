@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-#if !COMPACT_FRAMEWORK
-using System.Drawing;
-#endif
 using SourceAFIS.General;
-using SourceAFIS.Dummy;
 
 namespace SourceAFIS.Extraction.Templates
 {
@@ -22,6 +18,21 @@ namespace SourceAFIS.Extraction.Templates
             public Point Position;
             public byte Direction;
             public MinutiaType Type;
+        }
+
+        public int OriginalDpi;
+        public int OriginalWidth;
+        public int OriginalHeight;
+
+        public int StandardDpiWidth
+        {
+            get { return Calc.DivRoundUp(OriginalWidth * 500, OriginalDpi); }
+            set { OriginalWidth = value * OriginalDpi / 500; }
+        }
+        public int StandardDpiHeight
+        {
+            get { return Calc.DivRoundUp(OriginalHeight * 500, OriginalDpi); }
+            set { OriginalHeight = value * OriginalDpi / 500; }
         }
 
         public List<Minutia> Minutiae = new List<Minutia>();

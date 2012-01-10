@@ -110,13 +110,13 @@ namespace SourceAFIS.Simple
                 }
             }
         }
-        int SkipBestMatchesValue = 0;
+        int MinMatchesValue = 1;
         /// <summary>
-        /// Get/set number of matches to skip during multi-finger matching.
+        /// Get/set minimum number of fingerprints that must match in order for a whole person to match.
         /// </summary>
         /// <value>
-        /// Number of best matches to skip during multi-finger matching.
-        /// Default value is 0 (skipping feature is disabled).
+        /// Number of fingerprints that must match during multi-finger matching.
+        /// Default value is 1 (person matches if any of its fingerprints matches).
         /// </value>
         /// <remarks>
         /// <para>
@@ -124,35 +124,40 @@ namespace SourceAFIS.Simple
         /// every probe <see cref="Fingerprint"/> to every candidate <see cref="Fingerprint"/> and takes the
         /// best match, the one with highest similarity score. This behavior
         /// improves FRR (false reject rate), because low similarity scores caused
-        /// by damaged fingerprints are ignored.
+        /// by damaged fingerprints are ignored. This happens when <see cref="MinMatches"/> is 1 (default).
         /// </para>
         /// <para>
-        /// When <see cref="SkipBestMatches"/> is non-zero, SourceAFIS ignores specified number
-        /// of best matches and takes the next best match. This behavior improves
-        /// FAR (false accept rate), because it lowers probability that one accidentally
-        /// matching <see cref="Fingerprint"/> pair skews match results. In case there aren't
-        /// enough <see cref="Fingerprint"/> pairs to skip, SourceAFIS takes the lowest scoring
-        /// pair.
+        /// When <see cref="MinMatches"/> is 2 or higher, SourceAFIS compares every probe <see cref="Fingerprint"/>
+        /// to every candidate <see cref="Fingerprint"/> and records score for every comparison. It then sorts
+        /// collected partial scores in descending order and picks score that is on position specified by
+        /// <see cref="MinMatches"/> property, e.g. 2nd score if <see cref="MinMatches"/> is 2, 3rd score
+        /// if <see cref="MinMatches"/> is 3, etc. When combined with <see cref="Threshold"/>, this property
+        /// essentially specifies how many partial scores must be above <see cref="Threshold"/> in order for
+        /// the whole <see cref="Person"/> to match. As a special case, when there are too few partial scores
+        /// (less than value of <see cref="MinMatches"/>), SourceAFIS picks the lowest score.
         /// </para>
         /// <para>
-        /// <see cref="SkipBestMatches"/> can be used to distribute positive effects of multi-finger
-        /// matching evenly between FAR and FRR. It is recommended to set <see cref="SkipBestMatches"/>
-        /// to 1 in 3-finger and 4-finger matching and to 2 when there are 5 or more
-        /// <see cref="Fingerprint"/>s per <see cref="Person"/>.
+        /// <see cref="MinMatches"/> is useful in some rare cases where there is significant risk that
+        /// some fingerprint might match randomly with high score due to a broken template or due to some
+        /// rarely occuring matcher flaw. In these cases, <see cref="MinMatches"/> might improve FAR.
+        /// This is discouraged practice though. Application developers seeking ways to improve FAR
+        /// would do much better to increase <see cref="Threshold"/>. <see cref="Threshold"/> can be
+        /// safely raised to levels where FAR is essentially zero as far as fingerprints are of good quality.
         /// </para>
         /// </remarks>
         /// <seealso cref="Verify"/>
         /// <seealso cref="Identify"/>
-        public int SkipBestMatches
+        /// <seealso cref="Threshold"/>
+        public int MinMatches
         {
-            get { lock (this) return SkipBestMatchesValue; }
+            get { lock (this) return MinMatchesValue; }
             set
             {
                 lock (this)
                 {
-                    if (value < 0)
+                    if (value <= 0)
                         throw new ArgumentOutOfRangeException();
-                    SkipBestMatchesValue = value;
+                    MinMatchesValue = value;
                 }
             }
         }
@@ -168,14 +173,15 @@ namespace SourceAFIS.Simple
         }
 
         /// <summary>
-        /// Extract fingerprint template to be used during matching.
+        /// Extract fingerprint template(s) to be used during matching.
         /// </summary>
-        /// <param name="fp">Fingerprint object to use for template extraction.</param>
+        /// <param name="person">Person object to use for template extraction.</param>
         /// <remarks>
         /// <para>
-        /// <see cref="Extract"/> method takes <see cref="Fingerprint.Image"/> from <paramref name="fp"/> and constructs
-        /// fingerprint template that it stores in <paramref name="fp"/>'s <see cref="Fingerprint.Template"/>. This step must
-        /// be performed before the <see cref="Fingerprint"/> is used in <see cref="Verify"/> or <see cref="Identify"/> method,
+        /// <see cref="Extract"/> method takes <see cref="Fingerprint.Image"/> from every <see cref="Fingerprint"/>
+        /// in <paramref name="person"/> and constructs fingerprint template that it stores in
+        /// <see cref="Fingerprint.Template"/> property of the respective <see cref="Fingerprint"/>. This step must
+        /// be performed before the <see cref="Person"/> is used in <see cref="Verify"/> or <see cref="Identify"/> method,
         /// because matching is done on fingerprint templates, not on fingerprint images.
         /// </para>
         /// <para>
@@ -185,12 +191,15 @@ namespace SourceAFIS.Simple
         /// </para>
         /// </remarks>
         /// <seealso cref="Dpi"/>
-        public void Extract(Fingerprint fp)
+        public void Extract(Person person)
         {
             lock (this)
             {
-                TemplateBuilder builder = Extractor.Extract(fp.Image, Dpi);
-                fp.Decoded = new SerializedFormat().Export(builder);
+                foreach (Fingerprint fp in person.Fingerprints)
+                {
+                    TemplateBuilder builder = Extractor.Extract(fp.Image, Dpi);
+                    fp.Decoded = new SerializedFormat().Export(builder);
+                }
             }
         }
 
@@ -207,12 +216,12 @@ namespace SourceAFIS.Simple
         /// the two <see cref="Person"/>s. If this score falls below <see cref="Threshold"/>, <see cref="Verify"/> method returns zero.
         /// </para>
         /// <para>
-        /// <see cref="Fingerprint"/>s passed to this method must have valid <see cref="Fingerprint.Template"/>, i.e. they must
-        /// have passed through <see cref="Extract"/> method.
+        /// <see cref="Person"/>s passed to this method must have valid <see cref="Fingerprint.Template"/>
+        /// for every <see cref="Fingerprint"/>, i.e. they must have passed through <see cref="Extract"/> method.
         /// </para>
         /// </remarks>
         /// <seealso cref="Threshold"/>
-        /// <seealso cref="SkipBestMatches"/>
+        /// <seealso cref="MinMatches"/>
         /// <seealso cref="Identify"/>
         public float Verify(Person probe, Person candidate)
         {
@@ -220,7 +229,7 @@ namespace SourceAFIS.Simple
             {
                 probe.CheckForNulls();
                 candidate.CheckForNulls();
-                BestMatchSkipper collector = new BestMatchSkipper(1, SkipBestMatches);
+                BestMatchSkipper collector = new BestMatchSkipper(1, MinMatches - 1);
                 Parallel.ForEach(probe.Fingerprints, probeFp =>
                     {
                         var candidateTemplates = (from candidateFp in candidate.Fingerprints
@@ -240,33 +249,43 @@ namespace SourceAFIS.Simple
         }
 
         /// <summary>
-        /// Compares one <see cref="Person"/> against a set of other <see cref="Person"/>s and returns the best match.
+        /// Compares one <see cref="Person"/> against a set of other <see cref="Person"/>s and returns best matches.
         /// </summary>
         /// <param name="probe">Person to look up in the collection.</param>
         /// <param name="candidates">Collection of persons that will be searched.</param>
-        /// <returns>Best matching <see cref="Person"/> in the collection or <see langword="null"/> if there is no match.</returns>
+        /// <returns>All matching <see cref="Person"/> objects in the collection or an empty collection if
+        /// there is no match. Results are sorted by score in descending order. If you need only one best match,
+        /// call <see cref="Enumerable.FirstOrDefault{T}(IEnumerable{T})"/> method on the returned collection.</returns>
         /// <remarks>
         /// <para>
         /// Compares probe <see cref="Person"/> to all candidate <see cref="Person"/>s and returns the most similar
-        /// candidate. Calling <see cref="Identify"/> is conceptually identical to calling <see cref="Verify"/> in a loop
+        /// candidates. Calling <see cref="Identify"/> is conceptually identical to calling <see cref="Verify"/> in a loop
         /// except that <see cref="Identify"/> is significantly faster than loop of <see cref="Verify"/> calls.
-        /// If there is no candidate with score at or above <see cref="Threshold"/>, <see cref="Identify"/> returns <see langword="null"/>.
+        /// If there is no candidate with score at or above <see cref="Threshold"/>, <see cref="Identify"/> returns
+        /// empty collection.
         /// </para>
         /// <para>
-        /// <see cref="Fingerprint"/>s passed to this method must have valid <see cref="Fingerprint.Template"/>, i.e. they must
-        /// have passed through <see cref="Extract"/> method.
+        /// Most applications need only the best match which can be obtained by calling
+        /// <see cref="Enumerable.FirstOrDefault{T}(IEnumerable{T})"/> method on the returned collection.
+        /// Matching score for every returned <see cref="Person"/> can be obtained by calling
+        /// <see cref="Verify"/> on probe <see cref="Person"/> and the matching <see cref="Person"/>.
+        /// </para>
+        /// <para>
+        /// <see cref="Person"/>s passed to this method must have valid <see cref="Fingerprint.Template"/>
+        /// for every <see cref="Fingerprint"/>, i.e. they must have passed through <see cref="Extract"/> method.
         /// </para>
         /// </remarks>
         /// <seealso cref="Threshold"/>
-        /// <seealso cref="SkipBestMatches"/>
+        /// <seealso cref="MinMatches"/>
         /// <seealso cref="Verify"/>
-        public Person Identify(Person probe, IEnumerable<Person> candidates)
+        public IEnumerable<Person> Identify(Person probe, IEnumerable<Person> candidates)
         {
+            probe.CheckForNulls();
+            Person[] candidateArray = candidates.ToArray();
+            BestMatchSkipper.PersonsSkipScore[] results;
             lock (this)
             {
-                probe.CheckForNulls();
-                Person[] candidateArray = candidates.ToArray();
-                BestMatchSkipper collector = new BestMatchSkipper(candidateArray.Length, SkipBestMatches);
+                BestMatchSkipper collector = new BestMatchSkipper(candidateArray.Length, MinMatches - 1);
                 Parallel.ForEach(probe.Fingerprints, probeFp =>
                     {
                         List<int> personsByFingerprint = new List<int>();
@@ -279,14 +298,16 @@ namespace SourceAFIS.Simple
                             for (int i = 0; i < scores.Length; ++i)
                                 collector.AddScore(personsByFingerprint[i], scores[i]);
                     });
-
-                int bestPersonIndex;
-                float bestScore = collector.GetBestScore(out bestPersonIndex);
-                if (bestPersonIndex >= 0 && bestScore >= Threshold)
-                    return candidateArray[bestPersonIndex];
-                else
-                    return null;
+                results = collector.GetSortedScores();
             }
+            return GetMatchingCandidates(candidateArray, results);
+        }
+
+        IEnumerable<Person> GetMatchingCandidates(Person[] candidateArray, BestMatchSkipper.PersonsSkipScore[] results)
+        {
+            foreach (var match in results)
+                if (match.Score >= Threshold)
+                    yield return candidateArray[match.Person];
         }
 
         bool IsCompatibleFinger(Finger first, Finger second)

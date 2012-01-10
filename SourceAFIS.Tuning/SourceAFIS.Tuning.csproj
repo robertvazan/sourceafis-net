@@ -38,11 +38,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -51,6 +51,7 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\DatabaseCollection.cs" />
@@ -85,16 +86,11 @@
     <Compile Include="Reports\ExtractorReport.cs" />
     <Compile Include="Reports\MatcherReport.cs" />
     <Compile Include="Reports\MatcherTimings.cs" />
-    <Compile Include="Reports\ROCGraph.cs" />
     <Compile Include="Reports\TestConfiguration.cs" />
     <Compile Include="Reports\TestReport.cs" />
     <Compile Include="Reports\TopErrors.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SourceAFIS.Visualization\SourceAFIS.Visualization.csproj">
-      <Project>{5570647C-1F35-4FE7-9E9B-FF193154DD95}</Project>
-      <Name>SourceAFIS.Visualization</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SourceAFIS\SourceAFIS.csproj">
       <Project>{35075900-98B2-4F73-A8FE-11E0D2182689}</Project>
       <Name>SourceAFIS</Name>

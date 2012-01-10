@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Windows.Media.Imaging;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -39,26 +41,25 @@ namespace Sample
             // Initialize empty fingerprint object and set properties
             MyFingerprint fp = new MyFingerprint();
             fp.Filename = filename;
-            // Load image from the file, fp.AsBitmap makes a copy of the image, so that we can dispose it afterwards
+            // Load image from the file
             Console.WriteLine(" Loading image from {0}...", filename);
-            using (Image fromFile = Bitmap.FromFile(filename))
-                using (Bitmap bitmap = new Bitmap(fromFile))
-                    fp.AsBitmap = bitmap;
-            // Above update of fp.AsBitmap initialized also raw image in fp.Image
+            BitmapImage image = new BitmapImage(new Uri(filename, UriKind.RelativeOrAbsolute));
+            fp.AsBitmapSource = image;
+            // Above update of fp.AsBitmapSource initialized also raw image in fp.Image
             // Check raw image dimensions, Y axis is first, X axis is second
             Console.WriteLine(" Image size = {0} x {1} (width x height)", fp.Image.GetLength(1), fp.Image.GetLength(0));
-
-            // Execute extraction in order to initialize fp.Template
-            Console.WriteLine(" Extracting template...");
-            Afis.Extract(fp);
-            // Check template size
-            Console.WriteLine(" Template size = {0} bytes", fp.Template.Length);
 
             // Initialize empty person object and set its properties
             MyPerson person = new MyPerson();
             person.Name = name;
             // Add fingerprint to the person
             person.Fingerprints.Add(fp);
+
+            // Execute extraction in order to initialize fp.Template
+            Console.WriteLine(" Extracting template...");
+            Afis.Extract(person);
+            // Check template size
+            Console.WriteLine(" Template size = {0} bytes", fp.Template.Length);
 
             return person;
         }
@@ -89,7 +90,7 @@ namespace Sample
             // Look up the probe using Threshold = 10
             Afis.Threshold = 10;
             Console.WriteLine("Identifying {0} in database of {1} persons...", probe.Name, database.Count);
-            MyPerson match = Afis.Identify(probe, database) as MyPerson;
+            MyPerson match = Afis.Identify(probe, database).FirstOrDefault() as MyPerson;
             // Null result means that there is no candidate with similarity score above threshold
             if (match == null)
             {

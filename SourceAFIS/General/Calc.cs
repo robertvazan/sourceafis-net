@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-#if !COMPACT_FRAMEWORK
-using System.Drawing;
-#endif
 using System.Reflection;
 using System.Linq;
 using SourceAFIS.Dummy;
@@ -225,19 +222,6 @@ namespace SourceAFIS.General
             return result;
         }
 
-        public static T DeepClone<T>(this T root) where T : class
-        {
-            T clone = typeof(T).GetConstructor(new Type[0]).Invoke(new object[0]) as T;
-            foreach (FieldInfo fieldInfo in root.GetType().GetFields())
-            {
-                if (!fieldInfo.FieldType.IsClass)
-                    fieldInfo.SetValue(clone, fieldInfo.GetValue(root));
-                else
-                    fieldInfo.SetValue(clone, fieldInfo.GetValue(root).DeepClone());
-            }
-            return clone;
-        }
-
         public static object ShallowClone(this object root)
         {
             object clone = root.GetType().GetConstructor(new Type[0]).Invoke(new object[0]);
@@ -260,17 +244,6 @@ namespace SourceAFIS.General
                     select item.Clone() as T).ToList();
         }
 
-        public static void DeepCopyTo(this object source, object target)
-        {
-            foreach (FieldInfo fieldInfo in source.GetType().GetFields())
-            {
-                if (!fieldInfo.FieldType.IsClass)
-                    fieldInfo.SetValue(target, fieldInfo.GetValue(source));
-                else
-                    fieldInfo.GetValue(source).DeepCopyTo(fieldInfo.GetValue(target));
-            }
-        }
-
         public static bool BeginsWith(this string outer, string inner)
         {
             return outer.Length >= inner.Length && outer.Substring(0, inner.Length) == inner;
@@ -286,6 +259,21 @@ namespace SourceAFIS.General
         {
             if (start < list.Count)
                 list.RemoveRange(start, list.Count - start);
+        }
+
+        static public uint ReverseBitsInBytes(uint word)
+        {
+            uint phase1 = (word >> 4) & 0x0f0f0f0f | (word << 4) & 0xf0f0f0f0;
+            uint phase2 = (phase1 >> 2) & 0x33333333 | (phase1 << 2) & 0xcccccccc;
+            return (phase2 >> 1) & 0x55555555 | (phase2 << 1) & 0xaaaaaaaa;
+        }
+
+        public static IEnumerable<T> Shuffle<T>(IEnumerable<T> input, Random random)
+        {
+            T[] array = input.ToArray();
+            for (int i = array.Length - 1; i > 0; --i)
+                Swap(ref array[i], ref array[random.Next(i + 1)]);
+            return array;
         }
     }
 }

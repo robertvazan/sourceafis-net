@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.IO;
-#if !COMPACT_FRAMEWORK
-using System.Drawing;
-#endif
+using SourceAFIS.General;
 using SourceAFIS.Dummy;
 
 namespace SourceAFIS.Extraction.Templates
@@ -16,7 +14,10 @@ namespace SourceAFIS.Extraction.Templates
         public override XElement Export(TemplateBuilder builder)
         {
             return new XElement("FingerprintTemplate",
-                new XAttribute("Version", "1"),
+                new XAttribute("Version", "2"),
+                new XAttribute("OriginalDpi", builder.OriginalDpi),
+                new XAttribute("OriginalWidth", builder.OriginalWidth),
+                new XAttribute("OriginalHeight", builder.OriginalHeight),
                 from minutia in builder.Minutiae
                 select new XElement("Minutia",
                     new XAttribute("X", minutia.Position.X),
@@ -27,9 +28,10 @@ namespace SourceAFIS.Extraction.Templates
 
         public override TemplateBuilder Import(XElement template)
         {
-            if ((int)template.Attribute("Version") != 1)
+            int version = (int)template.Attribute("Version");
+            if (version < 1 || version > 2)
                 throw new ApplicationException("Unknown template version.");
-            return new TemplateBuilder()
+            TemplateBuilder builder = new TemplateBuilder()
             {
                 Minutiae = (from minutia in template.Elements("Minutia")
                             select new TemplateBuilder.Minutia()
@@ -44,6 +46,19 @@ namespace SourceAFIS.Extraction.Templates
                                     false)
                             }).ToList()
             };
+            if (version >= 2)
+            {
+                builder.OriginalDpi = (int)template.Attribute("OriginalDpi");
+                builder.OriginalWidth = (int)template.Attribute("OriginalWidth");
+                builder.OriginalHeight = (int)template.Attribute("OriginalHeight");
+            }
+            else
+            {
+                builder.OriginalDpi = 500;
+                builder.StandardDpiWidth = template.Elements("Minutia").Max(e => (int)e.Attribute("X")) + 1;
+                builder.StandardDpiHeight = template.Elements("Minutia").Max(e => (int)e.Attribute("Y")) + 1;
+            }
+            return builder;
         }
 
         public override void Serialize(Stream stream, XElement template)

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 #if !COMPACT_FRAMEWORK
-using System.Drawing;
 using System.Threading.Tasks;
 #endif
 using SourceAFIS.Dummy;
@@ -20,6 +19,7 @@ namespace SourceAFIS.General
         public const int WordShift = 5;
         public const uint WordMask = 31;
         public const int WordSize = 32;
+        public const int WordBytes = WordSize / 8;
 
         readonly uint[,] Map;
 
@@ -56,6 +56,7 @@ namespace SourceAFIS.General
         public bool GetBit(int x, int y) { return (Map[y, x >> WordShift] & (1u << (int)((uint)x & WordMask))) != 0; }
         public void SetBitOne(int x, int y) { Map[y, x >> WordShift] |= 1u << (int)((uint)x & WordMask); }
         public void SetBitZero(int x, int y) { Map[y, x >> WordShift] &= ~(1u << (int)((uint)x & WordMask)); }
+        public uint GetWord(int xw, int y) { return Map[y, xw]; }
 
         public void SetBit(int x, int y, bool value)
         {

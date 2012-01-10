@@ -4,10 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Serialization;
+using System.Xml.Linq;
 using NUnit.Framework;
 using SourceAFIS.Simple;
 
@@ -23,7 +26,7 @@ namespace SourceAFIS.Tests.Simple
             Assert.AreEqual(Finger.Any, fp.Finger);
             Assert.IsNull(fp.Template);
             Assert.IsNull(fp.Image);
-            Assert.IsNull(fp.AsBitmap);
+            Assert.IsNull(fp.AsBitmapSource);
             Assert.IsNull(fp.AsImageData);
             Assert.IsNull(fp.AsIsoTemplate);
         }
@@ -47,16 +50,16 @@ namespace SourceAFIS.Tests.Simple
         public void AsImageData()
         {
             Fingerprint fp = new Fingerprint();
-            Bitmap bitmap = Settings.SomeFingerprint;
+            BitmapSource bitmap = Settings.SomeFingerprint;
 
-            fp.AsBitmap = bitmap;
+            fp.AsBitmapSource = bitmap;
             byte[] data = fp.AsImageData;
             Assert.IsNotNull(data);
-            Assert.AreEqual(bitmap.Height * bitmap.Width + 8, data.Length);
+            Assert.AreEqual(bitmap.PixelHeight * bitmap.PixelWidth + 8, data.Length);
 
             Fingerprint fp2 = new Fingerprint() { AsImageData = data };
-            Assert.AreEqual(bitmap.Height, fp.Image.GetLength(0));
-            Assert.AreEqual(bitmap.Width, fp.Image.GetLength(1));
+            Assert.AreEqual(bitmap.PixelHeight, fp.Image.GetLength(0));
+            Assert.AreEqual(bitmap.PixelWidth, fp.Image.GetLength(1));
 
             byte[] data2 = fp2.AsImageData;
             Assert.AreNotSame(data, data2);
@@ -78,10 +81,47 @@ namespace SourceAFIS.Tests.Simple
         }
 
         [Test]
+        public void AsBitmapSource()
+        {
+            Fingerprint fp = new Fingerprint();
+            BitmapSource bitmap = Settings.SomeFingerprint;
+
+            fp.AsBitmapSource = bitmap;
+            Assert.IsNotNull(fp.Image);
+            Assert.AreEqual(bitmap.PixelHeight, fp.Image.GetLength(0));
+            Assert.AreEqual(bitmap.PixelWidth, fp.Image.GetLength(1));
+
+            BitmapSource bitmap2 = fp.AsBitmapSource;
+            Assert.AreNotSame(bitmap, bitmap2);
+            Assert.AreEqual(bitmap.PixelHeight, bitmap2.PixelHeight);
+            Assert.AreEqual(bitmap.PixelWidth, bitmap2.PixelWidth);
+
+            MemoryStream saved = new MemoryStream();
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmap2));
+            encoder.Save(saved);
+            saved.Close();
+
+            BitmapImage bitmap3 = new BitmapImage();
+            bitmap3.BeginInit();
+            bitmap3.StreamSource = new MemoryStream(saved.ToArray());
+            bitmap3.EndInit();
+
+            Fingerprint fp2 = new Fingerprint() { AsBitmapSource = bitmap3 };
+            Assert.AreEqual(bitmap.PixelHeight, fp.Image.GetLength(0));
+            Assert.AreEqual(bitmap.PixelWidth, fp.Image.GetLength(1));
+            Assert.AreEqual(fp.Image, fp2.Image);
+
+            fp.AsBitmapSource = null;
+            Assert.IsNull(fp.Image);
+
+            Assert.Throws<ApplicationException>(() => { fp.AsBitmapSource = new WriteableBitmap(50, 50, 500, 500, PixelFormats.Bgr32, null); });
+        }
+
         public void AsBitmap()
         {
             Fingerprint fp = new Fingerprint();
-            Bitmap bitmap = Settings.SomeFingerprint;
+            Bitmap bitmap = new Bitmap(Bitmap.FromFile(Settings.SomeFingerprintPath)); ;
 
             fp.AsBitmap = bitmap;
             Assert.IsNotNull(fp.Image);
@@ -111,11 +151,11 @@ namespace SourceAFIS.Tests.Simple
         [Test]
         public void Template()
         {
-            Fingerprint fp1 = new Fingerprint() { AsBitmap = Settings.SomeFingerprint };
+            Fingerprint fp1 = new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint };
             Assert.IsNull(fp1.Template);
 
             AfisEngine afis = new AfisEngine();
-            afis.Extract(fp1);
+            afis.Extract(new Person(fp1));
             Assert.IsNotNull(fp1.Template);
 
             byte[] saved = fp1.Template;
@@ -128,8 +168,8 @@ namespace SourceAFIS.Tests.Simple
 
             Person person1 = new Person(fp1);
             Person person2 = new Person(fp2);
-            Person person3 = new Person(new Fingerprint() { AsBitmap = Settings.NonMatchingFingerprint });
-            afis.Extract(person3.Fingerprints[0]);
+            Person person3 = new Person(new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint });
+            afis.Extract(person3);
             afis.Threshold = 0;
             Assert.That(afis.Verify(person1, person2) > afis.Verify(person1, person3));
             Assert.AreEqual(afis.Verify(person1, person3), afis.Verify(person2, person3));
@@ -144,11 +184,11 @@ namespace SourceAFIS.Tests.Simple
         [Test]
         public void AsIsoTemplate()
         {
-            Fingerprint fp1 = new Fingerprint() { AsBitmap = Settings.SomeFingerprint };
+            Fingerprint fp1 = new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint };
             Assert.IsNull(fp1.AsIsoTemplate);
 
             AfisEngine afis = new AfisEngine();
-            afis.Extract(fp1);
+            afis.Extract(new Person(fp1));
             Assert.IsNotNull(fp1.AsIsoTemplate);
 
             Fingerprint fp2 = new Fingerprint() { AsIsoTemplate = fp1.AsIsoTemplate };
@@ -158,8 +198,8 @@ namespace SourceAFIS.Tests.Simple
 
             Person person1 = new Person(fp1);
             Person person2 = new Person(fp2);
-            Person person3 = new Person(new Fingerprint() { AsBitmap = Settings.NonMatchingFingerprint });
-            afis.Extract(person3.Fingerprints[0]);
+            Person person3 = new Person(new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint });
+            afis.Extract(person3);
             afis.Threshold = 0;
             Assert.That(afis.Verify(person1, person2) > afis.Verify(person1, person3));
 
@@ -174,48 +214,77 @@ namespace SourceAFIS.Tests.Simple
             fp1.AsIsoTemplate = null;
             Assert.IsNull(fp1.AsIsoTemplate);
 
-            Assert.Catch(() => { fp1.Template = new byte[100]; });
+            Assert.Catch(() => { fp1.AsIsoTemplate = new byte[100]; });
             Assert.Catch(() => { fp1.AsIsoTemplate = fp2.Template; });
+        }
+
+        [Test]
+        public void AsXmlTemplate()
+        {
+            Fingerprint fp1 = new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint };
+            Assert.IsNull(fp1.AsXmlTemplate);
+
+            AfisEngine afis = new AfisEngine();
+            afis.Extract(new Person(fp1));
+            Assert.IsNotNull(fp1.AsXmlTemplate);
+
+            Fingerprint fp2 = new Fingerprint() { AsXmlTemplate = fp1.AsXmlTemplate };
+            Assert.AreEqual(fp1.AsXmlTemplate.ToString(), fp2.AsXmlTemplate.ToString());
+            Assert.IsNotNull(fp2.Template);
+            Assert.IsNull(fp2.Image);
+
+            Person person1 = new Person(fp1);
+            Person person2 = new Person(fp2);
+            Person person3 = new Person(new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint });
+            afis.Extract(person3);
+            afis.Threshold = 0;
+            Assert.That(afis.Verify(person1, person2) > afis.Verify(person1, person3));
+
+            fp1.AsXmlTemplate = null;
+            Assert.IsNull(fp1.AsXmlTemplate);
+            Assert.IsNull(fp1.Template);
+
+            Assert.Catch(() => { fp1.AsXmlTemplate = new XElement("garbage"); });
         }
 
         [Test]
         public void FingerTest()
         {
             AfisEngine afis = new AfisEngine();
-            afis.Threshold = 0;
-            Person person1 = new Person(new Fingerprint() { AsBitmap = Settings.SomeFingerprint });
-            afis.Extract(person1.Fingerprints[0]);
-            Person person2 = new Person(new Fingerprint() { AsBitmap = Settings.MatchingFingerprint });
-            afis.Extract(person2.Fingerprints[0]);
+            afis.Threshold = 0.0001f;
+            Person person1 = new Person(new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint });
+            afis.Extract(person1);
+            Person person2 = new Person(new Fingerprint() { AsBitmapSource = Settings.MatchingFingerprint });
+            afis.Extract(person2);
 
             person1.Fingerprints[0].Finger = Finger.RightThumb;
             Assert.AreEqual(Finger.RightThumb, person1.Fingerprints[0].Finger);
             person2.Fingerprints[0].Finger = Finger.RightThumb;
             Assert.That(afis.Verify(person1, person2) > 0);
-            Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
+            Assert.That(afis.Identify(person1, new[] { person2 }).Count() > 0);
 
             person2.Fingerprints[0].Finger = Finger.LeftIndex;
             Assert.That(afis.Verify(person1, person2) == 0);
-            Assert.That(afis.Identify(person1, new[] { person2 }) == null);
+            Assert.That(afis.Identify(person1, new[] { person2 }).Count() == 0);
 
             person1.Fingerprints[0].Finger = Finger.Any;
             Assert.That(afis.Verify(person1, person2) > 0);
             Assert.That(afis.Verify(person2, person1) > 0);
-            Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
-            Assert.That(afis.Identify(person2, new[] { person1 }) == person1);
+            Assert.That(afis.Identify(person1, new[] { person2 }).Count() > 0);
+            Assert.That(afis.Identify(person2, new[] { person1 }).Count() > 0);
 
             person2.Fingerprints[0].Finger = Finger.Any;
             Assert.That(afis.Verify(person1, person2) > 0);
-            Assert.That(afis.Identify(person1, new[] { person2 }) == person2);
+            Assert.That(afis.Identify(person1, new[] { person2 }).Count() > 0);
 
-            Person person3 = new Person(new Fingerprint() { AsBitmap = Settings.MatchingFingerprint });
-            afis.Extract(person3.Fingerprints[0]);
+            Person person3 = new Person(new Fingerprint() { AsBitmapSource = Settings.MatchingFingerprint });
+            afis.Extract(person3);
             person1.Fingerprints[0].Finger = Finger.LeftIndex;
             person2.Fingerprints[0].Finger = Finger.LeftIndex;
             person3.Fingerprints[0].Finger = Finger.RightMiddle;
-            Assert.That(afis.Identify(person1, new[] { person2, person3 }) == person2);
+            CollectionAssert.AreEqual(afis.Identify(person1, new[] { person2, person3 }), new[] { person2 });
             person1.Fingerprints[0].Finger = Finger.RightMiddle;
-            Assert.That(afis.Identify(person1, new[] { person2, person3 }) == person3);
+            CollectionAssert.AreEqual(afis.Identify(person1, new[] { person2, person3 }), new[] { person3 });
 
             Assert.Catch(() => { person1.Fingerprints[0].Finger = (Finger)(-1); });
         }
@@ -224,10 +293,10 @@ namespace SourceAFIS.Tests.Simple
         public void Clone()
         {
             Fingerprint fp1 = new Fingerprint();
-            fp1.AsBitmap = Settings.SomeFingerprint;
+            fp1.AsBitmapSource = Settings.SomeFingerprint;
             fp1.Finger = Finger.RightThumb;
             AfisEngine afis = new AfisEngine();
-            afis.Extract(fp1);
+            afis.Extract(new Person(fp1));
             Assert.IsNotNull(fp1.Template);
 
             Fingerprint fp2 = fp1.Clone();
@@ -250,10 +319,10 @@ namespace SourceAFIS.Tests.Simple
         public void Serialize()
         {
             Fingerprint fp1 = new Fingerprint();
-            fp1.AsBitmap = Settings.SomeFingerprint;
+            fp1.AsBitmapSource = Settings.SomeFingerprint;
             fp1.Finger = Finger.RightThumb;
             AfisEngine afis = new AfisEngine();
-            afis.Extract(fp1);
+            afis.Extract(new Person(fp1));
             Assert.IsNotNull(fp1.Template);
 
             MemoryStream stream = new MemoryStream();
@@ -271,10 +340,10 @@ namespace SourceAFIS.Tests.Simple
         public void XmlSerialize()
         {
             Fingerprint fp1 = new Fingerprint();
-            fp1.AsBitmap = Settings.SomeFingerprint;
+            fp1.AsBitmapSource = Settings.SomeFingerprint;
             fp1.Finger = Finger.RightThumb;
             AfisEngine afis = new AfisEngine();
-            afis.Extract(fp1);
+            afis.Extract(new Person(fp1));
             Assert.IsNotNull(fp1.Template);
 
             MemoryStream stream = new MemoryStream();

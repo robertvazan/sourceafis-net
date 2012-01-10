@@ -2,10 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Threading;
+using SourceAFIS.General;
 using SourceAFIS.Meta;
 using SourceAFIS.Tuning;
 using SourceAFIS.Tuning.Reports;
+using SourceAFIS.Tuning.Errors;
 using SourceAFIS.Tuning.Database;
+using SourceAFIS.Visualization;
 
 namespace DatabaseAnalyzer
 {
@@ -56,6 +60,8 @@ namespace DatabaseAnalyzer
 
         void RunMatcherBenchmark()
         {
+            AccuracyStatistics.GraphDrawer = (curve, file) => { WpfIO.Save(RocGraph.Render(curve), file); };
+
             string dbPath = Path.Combine("Extractor", "Templates.dat");
             if (File.Exists(dbPath))
                 TestDatabase.Load(dbPath);
@@ -87,6 +93,7 @@ namespace DatabaseAnalyzer
             Optimizer.Run();
         }
 
+        [STAThread]
         static void Main(string[] args)
         {
             DatabaseAnalyzer instance = new DatabaseAnalyzer();

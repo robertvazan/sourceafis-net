@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS", "SourceAFIS\SourceAFIS.csproj", "{35075900-98B2-4F73-A8FE-11E0D2182689}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FingerprintAnalyzer", "FingerprintAnalyzer\FingerprintAnalyzer.csproj", "{FFE9E85D-73A4-40B8-9C38-3DE03213B024}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseAnalyzer", "DatabaseAnalyzer\DatabaseAnalyzer.csproj", "{55566F34-65E7-49D0-BA8C-FAD2B161BF5F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocProject", "DocProject\DocProject.csproj", "{2B389531-B0AD-42DC-A778-C4718FC01C5E}"
@@ -28,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FvcIso", "FvcIso\FvcIso.csproj", "{2D8B9587-2100-40C6-983F-407DCAAD6F89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.FingerprintAnalysis", "SourceAFIS.FingerprintAnalysis\SourceAFIS.FingerprintAnalysis.csproj", "{937C3C43-81EA-4757-8356-6C46C64C9F0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,10 +38,6 @@ Global
 		{35075900-98B2-4F73-A8FE-11E0D2182689}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35075900-98B2-4F73-A8FE-11E0D2182689}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35075900-98B2-4F73-A8FE-11E0D2182689}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FFE9E85D-73A4-40B8-9C38-3DE03213B024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FFE9E85D-73A4-40B8-9C38-3DE03213B024}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FFE9E85D-73A4-40B8-9C38-3DE03213B024}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FFE9E85D-73A4-40B8-9C38-3DE03213B024}.Release|Any CPU.Build.0 = Release|Any CPU
 		{55566F34-65E7-49D0-BA8C-FAD2B161BF5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{55566F34-65E7-49D0-BA8C-FAD2B161BF5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55566F34-65E7-49D0-BA8C-FAD2B161BF5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -80,6 +76,10 @@ Global
 		{2D8B9587-2100-40C6-983F-407DCAAD6F89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D8B9587-2100-40C6-983F-407DCAAD6F89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D8B9587-2100-40C6-983F-407DCAAD6F89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -20,8 +20,8 @@ namespace SourceAFIS.Extraction.Templates
         // 4B version (ignored, set to " 20\0"
         // 4B total length (including header)
         // 2B rubbish (zeroed)
-        // 2B image size in pixels X (ignored, computed)
-        // 2B image size in pixels Y (used for inversion of Y coordinates, computed)
+        // 2B image size in pixels X
+        // 2B image size in pixels Y
         // 2B rubbish (pixels per cm X, set to 196 = 500dpi)
         // 2B rubbish (pixels per cm Y, set to 196 = 500dpi)
         // 1B rubbish (number of fingerprints, set to 1)
@@ -58,17 +58,11 @@ namespace SourceAFIS.Extraction.Templates
                 // 2B rubbish (zeroed)
                 writer.Write((short)0);
 
-                // 2B image size in pixels X (ignored, computed)
-                Range xRange = new Range(
-                    builder.Minutiae.Count > 0 ? builder.Minutiae.Min(minutia => minutia.Position.X) - 50 : 0,
-                    builder.Minutiae.Count > 0 ? builder.Minutiae.Max(minutia => minutia.Position.X) + 50 : 500);
-                writer.Write(IPAddress.HostToNetworkOrder((short)xRange.Length));
+                // 2B image size in pixels X
+                writer.Write(IPAddress.HostToNetworkOrder((short)builder.StandardDpiWidth));
             
-                // 2B image size in pixels Y (used for inversion of Y coordinates, computed)
-                Range yRange = new Range(
-                    builder.Minutiae.Count > 0 ? builder.Minutiae.Min(minutia => minutia.Position.Y) - 50 : 0,
-                    builder.Minutiae.Count > 0 ? builder.Minutiae.Max(minutia => minutia.Position.Y) + 50 : 500);
-                writer.Write(IPAddress.HostToNetworkOrder((short)yRange.Length));
+                // 2B image size in pixels Y
+                writer.Write(IPAddress.HostToNetworkOrder((short)builder.StandardDpiHeight));
             
                 // 2B rubbish (pixels per cm X, set to 196 = 500dpi)
                 writer.Write(IPAddress.HostToNetworkOrder((short)196));
@@ -99,13 +93,13 @@ namespace SourceAFIS.Extraction.Templates
                 {
                     //      2B minutia position X in pixels
                     //          2b (upper) minutia type (01 ending, 10 bifurcation, 00 other (considered ending))
-                    int x = minutia.Position.X - xRange.Begin;
+                    int x = minutia.Position.X;
                     AssertException.Check(x <= 0x3fff, "X position is out of range");
                     int type = minutia.Type == TemplateBuilder.MinutiaType.Ending ? 0x4000 : 0x8000;
                     writer.Write(IPAddress.HostToNetworkOrder(unchecked((short)(x | type))));
 
                     //      2B minutia position Y in pixels (upper 2b ignored, zeroed)
-                    int y = yRange.End - minutia.Position.Y;
+                    int y = builder.StandardDpiHeight - minutia.Position.Y - 1;
                     AssertException.Check(y <= 0x3fff, "Y position is out of range");
                     writer.Write(IPAddress.HostToNetworkOrder((short)y));
 
@@ -133,6 +127,7 @@ namespace SourceAFIS.Extraction.Templates
         public override TemplateBuilder Import(byte[] template)
         {
             TemplateBuilder builder = new TemplateBuilder();
+            builder.OriginalDpi = 500;
 
             MemoryStream stream = new MemoryStream(template);
             BinaryReader reader = new BinaryReader(stream, Encoding.UTF8);
@@ -149,11 +144,11 @@ namespace SourceAFIS.Extraction.Templates
             // 2B rubbish (zeroed)
             reader.ReadInt16();
 
-            // 2B image size in pixels X (ignored, computed)
-            reader.ReadInt16();
+            // 2B image size in pixels X
+            builder.StandardDpiWidth = IPAddress.NetworkToHostOrder(reader.ReadInt16());
 
-            // 2B image size in pixels Y (used for inversion of Y coordinates, computed)
-            int height = (ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16());
+            // 2B image size in pixels Y
+            builder.StandardDpiHeight = IPAddress.NetworkToHostOrder(reader.ReadInt16());
 
             // 2B rubbish (pixels per cm X, set to 196 = 500dpi)
             reader.ReadInt16();
@@ -191,7 +186,7 @@ namespace SourceAFIS.Extraction.Templates
                 minutia.Type = (xPacked & (ushort)0xc000) == 0x8000 ? TemplateBuilder.MinutiaType.Bifurcation : TemplateBuilder.MinutiaType.Ending;
 
                 //      2B minutia position Y in pixels (upper 2b ignored, zeroed)
-                minutia.Position.Y = height - ((ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16()) & (ushort)0x3fff);
+                minutia.Position.Y = builder.StandardDpiHeight - 1 - ((ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16()) & (ushort)0x3fff);
 
                 //      1B direction, compatible with SourceAFIS angles
                 minutia.Direction = reader.ReadByte();
