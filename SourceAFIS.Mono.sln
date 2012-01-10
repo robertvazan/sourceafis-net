@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS", "SourceAFIS\SourceAFIS.csproj", "{35075900-98B2-4F73-A8FE-11E0D2182689}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FingerprintAnalyzer", "FingerprintAnalyzer\FingerprintAnalyzer.csproj", "{FFE9E85D-73A4-40B8-9C38-3DE03213B024}"
