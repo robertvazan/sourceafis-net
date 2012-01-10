@@ -9,7 +9,9 @@ using SourceAFIS.Tuning;
 using SourceAFIS.Tuning.Reports;
 using SourceAFIS.Tuning.Errors;
 using SourceAFIS.Tuning.Database;
+#if !MONO
 using SourceAFIS.Visualization;
+#endif
 
 namespace DatabaseAnalyzer
 {
@@ -60,7 +62,9 @@ namespace DatabaseAnalyzer
 
         void RunMatcherBenchmark()
         {
+#if !MONO
             AccuracyStatistics.GraphDrawer = (curve, file) => { WpfIO.Save(RocGraph.Render(curve), file); };
+#endif
 
             string dbPath = Path.Combine("Extractor", "Templates.dat");
             if (File.Exists(dbPath))
