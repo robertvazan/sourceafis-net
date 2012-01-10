@@ -110,8 +110,6 @@
     <Compile Include="Matching\Minutia\EdgeConstructor.cs" />
     <Compile Include="Matching\Minutia\EdgeInfo.cs" />
     <Compile Include="Matching\Minutia\EdgeLookup.cs" />
-    <Compile Include="Matching\Minutia\ExhaustiveRootSelector.cs" />
-    <Compile Include="Matching\Minutia\IRootSelector.cs" />
     <Compile Include="Matching\MatchAnalysis.cs" />
     <Compile Include="Matching\Minutia\MinutiaMatcher.cs" />
     <Compile Include="Matching\MatchScoring.cs" />
@@ -140,6 +138,8 @@
     <Compile Include="Dummy\Dummy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="General\GdiIO.cs" />
+    <Compile Include="Extraction\Templates\MinutiaSorter.cs" />
+    <Compile Include="Matching\Minutia\RootPairSelector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="KeyPair.snk" />
