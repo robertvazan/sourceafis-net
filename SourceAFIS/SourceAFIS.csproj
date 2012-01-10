@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\SourceAFIS.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
+    <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,6 +41,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\SourceAFIS.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
+    <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -48,6 +50,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -86,6 +89,7 @@
     <Compile Include="Extraction\Templates\IsoFormat.cs" />
     <Compile Include="Extraction\Templates\ITemplateFormat.cs" />
     <Compile Include="Extraction\Templates\MinutiaCollector.cs" />
+    <Compile Include="Extraction\Templates\MinutiaSorter.cs" />
     <Compile Include="Extraction\Templates\SerializedFormat.cs" />
     <Compile Include="Extraction\Templates\Template.cs" />
     <Compile Include="Extraction\Templates\TemplateBuilder.cs" />
@@ -98,6 +102,7 @@
     <Compile Include="General\Calc.cs" />
     <Compile Include="General\CircularArray.cs" />
     <Compile Include="General\DetailLogger.cs" />
+    <Compile Include="General\GdiIO.cs" />
     <Compile Include="General\Neighborhood.cs" />
     <Compile Include="General\Point.cs" />
     <Compile Include="General\PointF.cs" />
@@ -111,8 +116,7 @@
     <Compile Include="Matching\Minutia\EdgeConstructor.cs" />
     <Compile Include="Matching\Minutia\EdgeInfo.cs" />
     <Compile Include="Matching\Minutia\EdgeLookup.cs" />
-    <Compile Include="Matching\Minutia\ExhaustiveRootSelector.cs" />
-    <Compile Include="Matching\Minutia\IRootSelector.cs" />
+    <Compile Include="Matching\Minutia\RootPairSelector.cs" />
     <Compile Include="Matching\MatchAnalysis.cs" />
     <Compile Include="Matching\Minutia\MinutiaMatcher.cs" />
     <Compile Include="Matching\MatchScoring.cs" />

@@ -13,13 +13,13 @@
 <!-- test database limits, any sample images beyond these limits will be ignored -->
 
 <!-- max. number of databases, database here means collection of fingerprints from single source -->
-<database-count>14</database-count>
+<database-count>15</database-count>
 
 <!-- max. number of fingers per database, one finger may have multiple views (scans) -->
-<fingers-per-database>8</fingers-per-database>
+<fingers-per-database>100</fingers-per-database>
 
 <!-- max. number of views (scans) per finger -->
-<views-per-finger>8</views-per-finger>
+<views-per-finger>10</views-per-finger>
 
 </test-database>
 
@@ -27,7 +27,7 @@
 <extractor-benchmark>
 
 <!-- cancel extraction process when this time limit is reached -->
-<max-seconds>600</max-seconds>
+<max-seconds>1800</max-seconds>
 
 </extractor-benchmark>
 
@@ -46,3 +46,4 @@
 <action>matcher-benchmark</action>
 
 </database-analyzer>
+

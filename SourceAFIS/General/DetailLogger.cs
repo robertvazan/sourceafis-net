@@ -61,21 +61,25 @@ namespace SourceAFIS.General
                 History[path].Add(data);
             }
 
+            public int Count(string path)
+            {
+                if (History.ContainsKey(path))
+                    return History[path].Count;
+                else
+                    return 0;
+            }
+
             public object Retrieve(string path)
             {
-                lock (this)
-                    return Retrieve(path, 0);
+                return Retrieve(path, 0);
             }
 
             public object Retrieve(string path, int index)
             {
-                lock (this)
-                {
-                    if (History.ContainsKey(path) && index < History[path].Count)
-                        return History[path][index];
-                    else
-                        return null;
-                }
+                if (History.ContainsKey(path) && index < History[path].Count)
+                    return History[path][index];
+                else
+                    return null;
             }
         }
 

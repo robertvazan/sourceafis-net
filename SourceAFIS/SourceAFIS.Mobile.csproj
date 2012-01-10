@@ -88,6 +88,7 @@
     <Compile Include="Extraction\Templates\IsoFormat.cs" />
     <Compile Include="Extraction\Templates\ITemplateFormat.cs" />
     <Compile Include="Extraction\Templates\MinutiaCollector.cs" />
+    <Compile Include="Extraction\Templates\MinutiaSorter.cs" />
     <Compile Include="Extraction\Templates\SerializedFormat.cs" />
     <Compile Include="Extraction\Templates\Template.cs" />
     <Compile Include="Extraction\Templates\TemplateBuilder.cs" />
@@ -110,12 +111,11 @@
     <Compile Include="General\ReversedList.cs" />
     <Compile Include="General\Size.cs" />
     <Compile Include="General\SizeF.cs" />
+    <Compile Include="Matching\Minutia\RootPairSelector.cs" />
     <Compile Include="Matching\ParallelMatcher.cs" />
     <Compile Include="Matching\Minutia\EdgeConstructor.cs" />
     <Compile Include="Matching\Minutia\EdgeInfo.cs" />
     <Compile Include="Matching\Minutia\EdgeLookup.cs" />
-    <Compile Include="Matching\Minutia\ExhaustiveRootSelector.cs" />
-    <Compile Include="Matching\Minutia\IRootSelector.cs" />
     <Compile Include="Matching\MatchAnalysis.cs" />
     <Compile Include="Matching\Minutia\MinutiaMatcher.cs" />
     <Compile Include="Matching\MatchScoring.cs" />
