@@ -32,7 +32,11 @@ namespace SourceAFIS.Tuning
             {
                 foreach (DatabaseIndex index in database.AllIndexes)
                 {
+#if !MONO
                     byte[,] grayscale = WpfIO.GetPixels(WpfIO.Load(database[index].FilePath));
+#else
+                    byte[,] grayscale = GdiIO.Load(database[index].FilePath);
+#endif
                     TemplateBuilder builder = Extractor.Extract(grayscale, 500);
                     Template template = serializedFormat.Export(builder);
                     database[index].Template = template;
