@@ -60,8 +60,8 @@ namespace SourceAFIS.Tests.Simple
         [Test]
         public void Clone()
         {
-            Fingerprint fp1 = new Fingerprint() { AsBitmap = Settings.SomeFingerprint };
-            Fingerprint fp2 = new Fingerprint() { AsBitmap = Settings.NonMatchingFingerprint };
+            Fingerprint fp1 = new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint };
+            Fingerprint fp2 = new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint };
             Person person1 = new Person(fp1, fp2);
             person1.Id = 15;
 
@@ -87,8 +87,8 @@ namespace SourceAFIS.Tests.Simple
         [Test]
         public void Serialize()
         {
-            Fingerprint fp1 = new Fingerprint() { AsBitmap = Settings.SomeFingerprint };
-            Fingerprint fp2 = new Fingerprint() { AsBitmap = Settings.NonMatchingFingerprint };
+            Fingerprint fp1 = new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint };
+            Fingerprint fp2 = new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint };
             Person person1 = new Person(fp1, fp2);
             person1.Id = 15;
 
@@ -107,8 +107,8 @@ namespace SourceAFIS.Tests.Simple
         [Test]
         public void XmlSerialize()
         {
-            Fingerprint fp1 = new Fingerprint() { AsBitmap = Settings.SomeFingerprint };
-            Fingerprint fp2 = new Fingerprint() { AsBitmap = Settings.NonMatchingFingerprint };
+            Fingerprint fp1 = new Fingerprint() { AsBitmapSource = Settings.SomeFingerprint };
+            Fingerprint fp2 = new Fingerprint() { AsBitmapSource = Settings.NonMatchingFingerprint };
             Person person1 = new Person(fp1, fp2);
             person1.Id = 15;
 

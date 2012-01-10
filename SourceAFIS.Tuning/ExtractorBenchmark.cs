@@ -5,7 +5,6 @@ using System.Diagnostics;
 using SourceAFIS.General;
 using SourceAFIS.Extraction;
 using SourceAFIS.Extraction.Templates;
-using SourceAFIS.Visualization;
 using SourceAFIS.Tuning.Reports;
 using SourceAFIS.Tuning.Database;
 
@@ -33,7 +32,7 @@ namespace SourceAFIS.Tuning
             {
                 foreach (DatabaseIndex index in database.AllIndexes)
                 {
-                    byte[,] grayscale = ImageIO.Load(database[index].FilePath);
+                    byte[,] grayscale = WpfIO.GetPixels(WpfIO.Load(database[index].FilePath));
                     TemplateBuilder builder = Extractor.Extract(grayscale, 500);
                     Template template = serializedFormat.Export(builder);
                     database[index].Template = template;

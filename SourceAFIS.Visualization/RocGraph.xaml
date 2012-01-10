@@ -1,0 +1,101 @@
+﻿<UserControl x:Class="SourceAFIS.Visualization.RocGraph"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Name="RocGraphControl">
+    <Viewbox DataContext="{Binding ElementName=RocGraphControl}">
+        <Canvas Width="600" Height="600" Background="White">
+            <TextBlock Text="FRR" Canvas.Bottom="560" Width="50" TextAlignment="Center" />
+            <TextBlock Text="FAR" Canvas.Right="0" Canvas.Bottom="10" Width="100" TextAlignment="Center" />
+            <ItemsControl Canvas.Right="550" Height="600">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="6" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <TextBlock Text="{Binding}" TextAlignment="Right" VerticalAlignment="Center" />
+                            <Line Y1="50" Y2="50" X2="10" Stroke="Black"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <sys:String>100%</sys:String>
+                <sys:String>10%</sys:String>
+                <sys:String>1%</sys:String>
+                <sys:String>0.1%</sys:String>
+                <sys:String>0.01%</sys:String>
+                <sys:String>0.001%</sys:String>
+            </ItemsControl>
+            <ItemsControl Canvas.Top="550" Width="600">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="6" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <Line X1="50" X2="50" Y2="10" Stroke="Black"/>
+                            <TextBlock Text="{Binding}" TextAlignment="Center" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <sys:String>0.001%</sys:String>
+                <sys:String>0.01%</sys:String>
+                <sys:String>0.1%</sys:String>
+                <sys:String>1%</sys:String>
+                <sys:String>10%</sys:String>
+                <sys:String>100%</sys:String>
+            </ItemsControl>
+            <Canvas Canvas.Left="50" Canvas.Bottom="50" Width="500" Height="500">
+                <Line Y2="500" Stroke="Black"/>
+                <Line Y1="500" Y2="500" X2="500" Stroke="Black"/>
+                <Rectangle Width="500" Height="500">
+                    <Rectangle.Fill>
+                        <VisualBrush TileMode="Tile" Viewport="0,0,0.2,0.2">
+                            <VisualBrush.Visual>
+                                <Canvas Width="100" Height="100">
+                                    <ItemsControl>
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <Canvas Width="100" Height="100" RenderTransformOrigin="0.5,0.5">
+                                                    <Canvas.RenderTransform>
+                                                        <ScaleTransform ScaleY="-1"/>
+                                                    </Canvas.RenderTransform>
+                                                </Canvas>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Canvas Width="100" Height="100">
+                                                    <Line X1="0" Y1="{Binding}" X2="100" Y2="{Binding}" Stroke="Blue" StrokeThickness="0.5" />
+                                                    <Line X1="{Binding}" Y1="0" X2="{Binding}" Y2="100" Stroke="Blue" StrokeThickness="0.5" />
+                                                </Canvas>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                        <sys:Double>30.1</sys:Double>
+                                        <sys:Double>47.7</sys:Double>
+                                        <sys:Double>60.2</sys:Double>
+                                        <sys:Double>69.9</sys:Double>
+                                        <sys:Double>77.8</sys:Double>
+                                        <sys:Double>84.5</sys:Double>
+                                        <sys:Double>90.3</sys:Double>
+                                        <sys:Double>95.4</sys:Double>
+                                    </ItemsControl>
+                                    <Line X2="100" Stroke="Black"/>
+                                    <Line X1="100" X2="100" Y2="100" Stroke="Black"/>
+                                </Canvas>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Polyline Stroke="Red" StrokeThickness="2" Points="{Binding Points}"/>
+            </Canvas>
+        </Canvas>
+    </Viewbox>
+</UserControl>

@@ -44,14 +44,17 @@
     <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extraction\Filters\AbsoluteContrast.cs" />
@@ -59,6 +62,7 @@
     <Compile Include="Extraction\Filters\CrossRemover.cs" />
     <Compile Include="Extraction\Extractor.cs" />
     <Compile Include="Extraction\Filters\HillOrientation.cs" />
+    <Compile Include="Extraction\Filters\ImageInverter.cs" />
     <Compile Include="Extraction\Filters\InnerMask.cs" />
     <Compile Include="Extraction\Filters\LinesByOrientation.cs" />
     <Compile Include="Extraction\Filters\LocalHistogram.cs" />
@@ -85,6 +89,7 @@
     <Compile Include="Extraction\Templates\IsoFormat.cs" />
     <Compile Include="Extraction\Templates\ITemplateFormat.cs" />
     <Compile Include="Extraction\Templates\MinutiaCollector.cs" />
+    <Compile Include="Extraction\Templates\MinutiaSorter.cs" />
     <Compile Include="Extraction\Templates\SerializedFormat.cs" />
     <Compile Include="Extraction\Templates\Template.cs" />
     <Compile Include="Extraction\Templates\TemplateBuilder.cs" />
@@ -97,19 +102,21 @@
     <Compile Include="General\Calc.cs" />
     <Compile Include="General\CircularArray.cs" />
     <Compile Include="General\DetailLogger.cs" />
+    <Compile Include="General\GdiIO.cs" />
     <Compile Include="General\Neighborhood.cs" />
+    <Compile Include="General\Point.cs" />
+    <Compile Include="General\PointF.cs" />
     <Compile Include="General\PointS.cs" />
     <Compile Include="General\PolarPoint.cs" />
     <Compile Include="General\PriorityQueueF.cs" />
     <Compile Include="General\ReversedList.cs" />
-    <Compile Include="General\Transformation2D.cs" />
+    <Compile Include="General\Size.cs" />
+    <Compile Include="General\SizeF.cs" />
     <Compile Include="Matching\ParallelMatcher.cs" />
     <Compile Include="Matching\Minutia\EdgeConstructor.cs" />
     <Compile Include="Matching\Minutia\EdgeInfo.cs" />
     <Compile Include="Matching\Minutia\EdgeLookup.cs" />
-    <Compile Include="Matching\Minutia\ExhaustiveRootSelector.cs" />
-    <Compile Include="Matching\GlobalTransformation.cs" />
-    <Compile Include="Matching\Minutia\IRootSelector.cs" />
+    <Compile Include="Matching\Minutia\RootPairSelector.cs" />
     <Compile Include="Matching\MatchAnalysis.cs" />
     <Compile Include="Matching\Minutia\MinutiaMatcher.cs" />
     <Compile Include="Matching\MatchScoring.cs" />
@@ -133,7 +140,7 @@
     <Compile Include="Simple\Finger.cs" />
     <Compile Include="Simple\Fingerprint.cs" />
     <Compile Include="Simple\Person.cs" />
-    <Compile Include="General\ImageIO.cs" />
+    <Compile Include="General\WpfIO.cs" />
     <Compile Include="General\RectangleC.cs" />
     <Compile Include="Dummy\Dummy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

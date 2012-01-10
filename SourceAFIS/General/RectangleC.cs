@@ -2,10 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-#if !COMPACT_FRAMEWORK
-using System.Drawing;
-#endif
-using SourceAFIS.Dummy;
 
 namespace SourceAFIS.General
 {

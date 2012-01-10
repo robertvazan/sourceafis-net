@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-#if !COMPACT_FRAMEWORK
-using System.Drawing;
-#endif
-using SourceAFIS.Dummy;
 
 namespace SourceAFIS.General
 {
@@ -72,6 +68,11 @@ namespace SourceAFIS.General
         public static byte FromDegreesB(int degrees)
         {
             return (byte)((degrees * 256 + 180) / 360);
+        }
+
+        public static int ToDegrees(byte angle)
+        {
+            return (angle * 360 + 128) / 256;
         }
 
         public static float Atan(double x, double y)

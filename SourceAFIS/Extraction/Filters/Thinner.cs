@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 #if !COMPACT_FRAMEWORK
-using System.Drawing;
 using System.Threading.Tasks;
 #endif
 using SourceAFIS.General;
@@ -15,7 +14,7 @@ namespace SourceAFIS.Extraction.Filters
     {
         [DpiAdjusted]
         [Parameter(Lower = 5, Upper = 50)]
-        public int MaxIterations = 15;
+        public int MaxIterations = 26;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 

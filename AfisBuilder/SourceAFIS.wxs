@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Name="SourceAFIS" Id="EF99AD8E-CC3D-491F-BF1F-4F998007A918" UpgradeCode="314DD5F0-4709-4378-915F-22526D7919F5" Language="1033" Codepage="1252" Version="1.3.0" Manufacturer="Robert Vanak">
+  <Product Name="SourceAFIS" Id="EF99AD8E-CC3D-491F-BF1F-4F998007A918" UpgradeCode="314DD5F0-4709-4378-915F-22526D7919F5" Language="1033" Codepage="1252" Version="1.5.0" Manufacturer="Robert Važan">
     <Package Id="*" Keywords="Installer" Description="SourceAFIS Installer" Comments="SourceAFIS is an open-source fingerprint matcher." InstallerVersion="100" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
     <Media Id="1" Cabinet="SourceAFIS.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" />
     <Property Id="DiskPrompt" Value="SourceAFIS Installation [1]" />
     <Upgrade Id="314DD5F0-4709-4378-915F-22526D7919F5">
-      <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="0.1.0" IncludeMinimum="yes" Maximum="1.3.0" IncludeMaximum="no" />
+      <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="0.1.0" IncludeMinimum="yes" Maximum="1.5.0" IncludeMaximum="no" />
     </Upgrade>
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallInitialize" />
@@ -30,9 +30,6 @@
             <Component Id="component_Bin_SourceAFIS.xml" Guid="5386fdd5-bf09-44b8-ac67-0806ed8ec3a1">
               <File Id="Bin_SourceAFIS.xml" Name="SourceAFIS.xml" DiskId="1" Source="Bin\SourceAFIS.xml" KeyPath="yes" />
             </Component>
-            <Component Id="component_Bin_FingerprintAnalyzer.exe" Guid="a5fd464e-7073-4558-9d9d-9309b470b45a">
-              <File Id="Bin_FingerprintAnalyzer.exe" Name="FingerprintAnalyzer.exe" DiskId="1" Source="Bin\FingerprintAnalyzer.exe" />
-            </Component>
             <Component Id="component_Bin_SourceAFIS.Tuning.dll" Guid="e78fdc07-3a4e-487f-9f72-5a6403a92144">
               <File Id="Bin_SourceAFIS.Tuning.dll" Name="SourceAFIS.Tuning.dll" DiskId="1" Source="Bin\SourceAFIS.Tuning.dll" KeyPath="yes" />
             </Component>
@@ -45,8 +42,11 @@
             <Component Id="component_Bin_DatabaseAnalyzer.exe.config" Guid="eafd52d3-6fc1-48d1-a117-8a420c73bbbe">
               <File Id="Bin_DatabaseAnalyzer.exe.config" Name="DatabaseAnalyzer.exe.config" DiskId="1" Source="Bin\DatabaseAnalyzer.exe.config" KeyPath="yes" />
             </Component>
-            <Component Id="component_Bin_FingerprintAnalyzer.exe.config" Guid="81f27d7a-a094-4179-8142-cbbfabbfcec7">
-              <File Id="Bin_FingerprintAnalyzer.exe.config" Name="FingerprintAnalyzer.exe.config" DiskId="1" Source="Bin\FingerprintAnalyzer.exe.config" KeyPath="yes" />
+            <Component Id="component_Bin_SourceAFIS.FingerprintAnalysis.exe" Guid="ad51f675-85f6-4bca-97e6-dbf18a60a742">
+              <File Id="Bin_SourceAFIS.FingerprintAnalysis.exe" Name="SourceAFIS.FingerprintAnalysis.exe" DiskId="1" Source="Bin\SourceAFIS.FingerprintAnalysis.exe" KeyPath="yes" />
+            </Component>
+            <Component Id="component_Bin_sourceafis.jar" Guid="421ca477-4096-4184-bc4c-ade7556831ef">
+              <File Id="Bin_sourceafis.jar" Name="sourceafis.jar" DiskId="1" Source="Bin\sourceafis.jar" KeyPath="yes" />
             </Component>
           </Directory>
           <Directory Id="Documentation" Name="Documentation">
@@ -79,9 +79,6 @@
                 <Component Id="component_Documentation_SourceAFIS__ods_T_SourceAFIS_Simple_Person.htm" Guid="ce3b757b-fbf6-46e7-a5a0-73119f8dda51">
                   <File Id="Documentation_SourceAFIS_html_Methods_T_SourceAFIS_Simple_Person.htm" Name="Methods_T_SourceAFIS_Simple_Person.htm" DiskId="1" Source="Documentation\SourceAFIS\html\Methods_T_SourceAFIS_Simple_Person.htm" KeyPath="yes" />
                 </Component>
-                <Component Id="component_Documentation_SourceAFIS___AfisEngine_Extract_1_ea6fe513.htm" Guid="bc931989-97e0-4d66-8741-aacc5b315787">
-                  <File Id="Documentation_SourceAFIS_html_M_So___AfisEngine_Extract_1_ea6fe513.htm" Name="M_SourceAFIS_Simple_AfisEngine_Extract_1_ea6fe513.htm" DiskId="1" Source="Documentation\SourceAFIS\html\M_SourceAFIS_Simple_AfisEngine_Extract_1_ea6fe513.htm" KeyPath="yes" />
-                </Component>
                 <Component Id="component_Documentation_SourceAFIS__e_AfisEngine_Verify_2_ad42c381.htm" Guid="fe3b0e0b-02fa-453e-8d39-d32d1a0a2fc2">
                   <File Id="Documentation_SourceAFIS_html_M_So__e_AfisEngine_Verify_2_ad42c381.htm" Name="M_SourceAFIS_Simple_AfisEngine_Verify_2_ad42c381.htm" DiskId="1" Source="Documentation\SourceAFIS\html\M_SourceAFIS_Simple_AfisEngine_Verify_2_ad42c381.htm" KeyPath="yes" />
                 </Component>
@@ -105,9 +102,6 @@
                 </Component>
                 <Component Id="component_Documentation_SourceAFIS__urceAFIS_Simple_AfisEngine_Dpi.htm" Guid="24f18b0a-c63b-4e2b-a478-f43d888a707e">
                   <File Id="Documentation_SourceAFIS_html_P_SourceAFIS_Simple_AfisEngine_Dpi.htm" Name="P_SourceAFIS_Simple_AfisEngine_Dpi.htm" DiskId="1" Source="Documentation\SourceAFIS\html\P_SourceAFIS_Simple_AfisEngine_Dpi.htm" KeyPath="yes" />
-                </Component>
-                <Component Id="component_Documentation_SourceAFIS__ple_AfisEngine_SkipBestMatches.htm" Guid="456f0c42-7ef1-45b0-8843-123d89fa2af8">
-                  <File Id="Documentation_SourceAFIS_html_P_So__ple_AfisEngine_SkipBestMatches.htm" Name="P_SourceAFIS_Simple_AfisEngine_SkipBestMatches.htm" DiskId="1" Source="Documentation\SourceAFIS\html\P_SourceAFIS_Simple_AfisEngine_SkipBestMatches.htm" KeyPath="yes" />
                 </Component>
                 <Component Id="component_Documentation_SourceAFIS__IS_Simple_AfisEngine_Threshold.htm" Guid="5c1cb08d-4536-412c-8f54-54ed7376ef67">
                   <File Id="Documentation_SourceAFIS_html_P_So__IS_Simple_AfisEngine_Threshold.htm" Name="P_SourceAFIS_Simple_AfisEngine_Threshold.htm" DiskId="1" Source="Documentation\SourceAFIS\html\P_SourceAFIS_Simple_AfisEngine_Threshold.htm" KeyPath="yes" />
@@ -145,9 +139,6 @@
                 <Component Id="component_Documentation_SourceAFIS___SourceAFIS_Simple_Person_ctor.htm2" Guid="4f293f4e-60bd-41c7-a4bd-dfca51668d77">
                   <File Id="Documentation_SourceAFIS_html_O_T_SourceAFIS_Simple_Person_ctor.htm" Name="O_T_SourceAFIS_Simple_Person_ctor.htm" DiskId="1" Source="Documentation\SourceAFIS\html\O_T_SourceAFIS_Simple_Person_ctor.htm" KeyPath="yes" />
                 </Component>
-                <Component Id="component_Documentation_SourceAFIS__IS_Simple_Fingerprint_AsBitmap.htm" Guid="322b6417-f9ce-4578-9dcf-045178f185c1">
-                  <File Id="Documentation_SourceAFIS_html_P_So__IS_Simple_Fingerprint_AsBitmap.htm" Name="P_SourceAFIS_Simple_Fingerprint_AsBitmap.htm" DiskId="1" Source="Documentation\SourceAFIS\html\P_SourceAFIS_Simple_Fingerprint_AsBitmap.htm" KeyPath="yes" />
-                </Component>
                 <Component Id="component_Documentation_SourceAFIS__Simple_Fingerprint_AsImageData.htm" Guid="2a90663a-a82e-4237-b1b6-a433b4a88f34">
                   <File Id="Documentation_SourceAFIS_html_P_So__Simple_Fingerprint_AsImageData.htm" Name="P_SourceAFIS_Simple_Fingerprint_AsImageData.htm" DiskId="1" Source="Documentation\SourceAFIS\html\P_SourceAFIS_Simple_Fingerprint_AsImageData.htm" KeyPath="yes" />
                 </Component>
@@ -156,6 +147,21 @@
                 </Component>
                 <Component Id="component_Documentation_SourceAFIS__mple_Fingerprint_AsIsoTemplate.htm" Guid="5380bcb7-f494-4153-a4ee-75d027592827">
                   <File Id="Documentation_SourceAFIS_html_P_So__mple_Fingerprint_AsIsoTemplate.htm" Name="P_SourceAFIS_Simple_Fingerprint_AsIsoTemplate.htm" DiskId="1" Source="Documentation\SourceAFIS\html\P_SourceAFIS_Simple_Fingerprint_AsIsoTemplate.htm" KeyPath="yes" />
+                </Component>
+                <Component Id="component_Documentation_SourceAFIS__ple_Fingerprint_AsBitmapSource.htm" Guid="40f4c7ca-754f-429d-bd30-b4ca30e01cae">
+                  <File Id="Documentation_SourceAFIS_html_P_So__ple_Fingerprint_AsBitmapSource.htm" Name="P_SourceAFIS_Simple_Fingerprint_AsBitmapSource.htm" DiskId="1" Source="Documentation\SourceAFIS\html\P_SourceAFIS_Simple_Fingerprint_AsBitmapSource.htm" KeyPath="yes" />
+                </Component>
+                <Component Id="component_Documentation_SourceAFIS___AfisEngine_Extract_1_d759b43b.htm" Guid="7a0aba1e-bd40-408a-a31c-f478a9908585">
+                  <File Id="Documentation_SourceAFIS_html_M_So___AfisEngine_Extract_1_d759b43b.htm" Name="M_SourceAFIS_Simple_AfisEngine_Extract_1_d759b43b.htm" DiskId="1" Source="Documentation\SourceAFIS\html\M_SourceAFIS_Simple_AfisEngine_Extract_1_d759b43b.htm" KeyPath="yes" />
+                </Component>
+                <Component Id="component_Documentation_SourceAFIS__S_Simple_AfisEngine_MinMatches.htm" Guid="199fb17f-e365-4081-a04a-e0f512ce395f">
+                  <File Id="Documentation_SourceAFIS_html_P_So__S_Simple_AfisEngine_MinMatches.htm" Name="P_SourceAFIS_Simple_AfisEngine_MinMatches.htm" DiskId="1" Source="Documentation\SourceAFIS\html\P_SourceAFIS_Simple_AfisEngine_MinMatches.htm" KeyPath="yes" />
+                </Component>
+                <Component Id="component_Documentation_SourceAFIS__IS_Simple_Fingerprint_AsBitmap.htm" Guid="048c7994-7f6c-4a4d-8f0c-2f1ec4940140">
+                  <File Id="Documentation_SourceAFIS_html_P_So__IS_Simple_Fingerprint_AsBitmap.htm" Name="P_SourceAFIS_Simple_Fingerprint_AsBitmap.htm" DiskId="1" Source="Documentation\SourceAFIS\html\P_SourceAFIS_Simple_Fingerprint_AsBitmap.htm" KeyPath="yes" />
+                </Component>
+                <Component Id="component_Documentation_SourceAFIS__mple_Fingerprint_AsXmlTemplate.htm" Guid="1a9d592f-0dcd-48c1-a5c1-649378a124db">
+                  <File Id="Documentation_SourceAFIS_html_P_So__mple_Fingerprint_AsXmlTemplate.htm" Name="P_SourceAFIS_Simple_Fingerprint_AsXmlTemplate.htm" DiskId="1" Source="Documentation\SourceAFIS\html\P_SourceAFIS_Simple_Fingerprint_AsXmlTemplate.htm" KeyPath="yes" />
                 </Component>
               </Directory>
               <Directory Id="Documentation_SourceAFIS_icons" Name="icons">
@@ -567,10 +573,10 @@
             <RemoveFolder Id="ProgramMenuDir" On="uninstall" />
             <RegistryValue Root="HKCU" Key="Software\[ProductName]" Type="string" Value="" KeyPath="yes" />
           </Component>
-          <Component Id="component_startmenu_Bin_FingerprintAnalyzer.exe" Guid="fa3e0762-7cc3-4af5-a435-86bd495e3cee">
-            <Shortcut Id="startmenu_FingerprintAnalyzer" Name="Fingerprint Analyzer" WorkingDirectory="INSTALLDIR" Target="[!Bin_FingerprintAnalyzer.exe]" Advertise="no" />
-            <RegistryValue Id="registry_FingerprintAnalyzer" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="FingerprintAnalyzer" Value="1" Type="integer" KeyPath="yes" />
-            <RemoveFolder Id="removefolder_FingerprintAnalyzer" On="uninstall" />
+          <Component Id="component_startmenu_Bin_SourceAFIS.FingerprintAnalysis.exe" Guid="fa3e0762-7cc3-4af5-a435-86bd495e3cee">
+            <Shortcut Id="startmenu_FingerprintAnalysis" Name="Fingerprint Analysis" WorkingDirectory="INSTALLDIR" Target="[!Bin_SourceAFIS.FingerprintAnalysis.exe]" Advertise="no" />
+            <RegistryValue Id="registry_FingerprintAnalysis" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="FingerprintAnalysis" Value="1" Type="integer" KeyPath="yes" />
+            <RemoveFolder Id="removefolder_FingerprintAnalysis" On="uninstall" />
           </Component>
           <Component Id="component_startmenu_HtmlDocs" Guid="fe08dfbe-1b55-462c-98dc-03788bf2ce01">
             <Shortcut Id="startmenu_HtmlDocs" Name="Documentation (HTML)" WorkingDirectory="INSTALLDIR" Target="[!Documentation_SourceAFIS_html_N_SourceAFIS_Simple.htm]" Advertise="no" />
@@ -620,7 +626,6 @@
       <ComponentRef Id="component_Documentation_SourceAFIS__T_SourceAFIS_Simple_AfisEngine.htm2" />
       <ComponentRef Id="component_Documentation_SourceAFIS___SourceAFIS_Simple_Fingerprint.htm2" />
       <ComponentRef Id="component_Documentation_SourceAFIS__ods_T_SourceAFIS_Simple_Person.htm" />
-      <ComponentRef Id="component_Documentation_SourceAFIS___AfisEngine_Extract_1_ea6fe513.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__e_AfisEngine_Verify_2_ad42c381.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__eAFIS_Simple_Fingerprint_Clone.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__SourceAFIS_Simple_Person_Clone.htm" />
@@ -629,7 +634,6 @@
       <ComponentRef Id="component_Documentation_SourceAFIS___SourceAFIS_Simple_Fingerprint.htm3" />
       <ComponentRef Id="component_Documentation_SourceAFIS__ies_T_SourceAFIS_Simple_Person.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__urceAFIS_Simple_AfisEngine_Dpi.htm" />
-      <ComponentRef Id="component_Documentation_SourceAFIS__ple_AfisEngine_SkipBestMatches.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__IS_Simple_AfisEngine_Threshold.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__AFIS_Simple_Fingerprint_Finger.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__eAFIS_Simple_Fingerprint_Image.htm" />
@@ -756,8 +760,7 @@
       <ComponentRef Id="component_Sample_images_candidate3.tif" />
       <ComponentRef Id="component_Sample_images_probe.tif" />
       <ComponentRef Id="component_Sample_Properties_AssemblyInfo.cs" />
-      <ComponentRef Id="component_Bin_FingerprintAnalyzer.exe" />
-      <ComponentRef Id="component_startmenu_Bin_FingerprintAnalyzer.exe" />
+      <ComponentRef Id="component_startmenu_Bin_SourceAFIS.FingerprintAnalysis.exe" />
       <ComponentRef Id="component_startmenu_HtmlDocs" />
       <ComponentRef Id="component_startmenu_ChmDocs" />
       <ComponentRef Id="component_startmenu_Online" />
@@ -770,16 +773,21 @@
       <ComponentRef Id="component_Documentation_SourceAFIS___Simple_Person_ctor_1_b024310e.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__AfisEngine_Identify_2_8250a68f.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS___SourceAFIS_Simple_Person_ctor.htm2" />
-      <ComponentRef Id="component_Documentation_SourceAFIS__IS_Simple_Fingerprint_AsBitmap.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__Simple_Fingerprint_AsImageData.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__FIS_Simple_Person_Fingerprints.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__mple_Fingerprint_AsIsoTemplate.htm" />
       <ComponentRef Id="component_Sample_app.config" />
       <ComponentRef Id="component_Sample_bin_Debug_Sample.exe.config" />
       <ComponentRef Id="component_Bin_DatabaseAnalyzer.exe.config" />
-      <ComponentRef Id="component_Bin_FingerprintAnalyzer.exe.config" />
       <ComponentRef Id="component_Sample_bin_Debug_SourceAFIS.xml" />
       <ComponentRef Id="component_Sample_dll_SourceAFIS.xml" />
+      <ComponentRef Id="component_Bin_SourceAFIS.FingerprintAnalysis.exe" />
+      <ComponentRef Id="component_Documentation_SourceAFIS__ple_Fingerprint_AsBitmapSource.htm" />
+      <ComponentRef Id="component_Documentation_SourceAFIS___AfisEngine_Extract_1_d759b43b.htm" />
+      <ComponentRef Id="component_Bin_sourceafis.jar" />
+      <ComponentRef Id="component_Documentation_SourceAFIS__S_Simple_AfisEngine_MinMatches.htm" />
+      <ComponentRef Id="component_Documentation_SourceAFIS__IS_Simple_Fingerprint_AsBitmap.htm" />
+      <ComponentRef Id="component_Documentation_SourceAFIS__mple_Fingerprint_AsXmlTemplate.htm" />
     </Feature>
   </Product>
 </Wix>

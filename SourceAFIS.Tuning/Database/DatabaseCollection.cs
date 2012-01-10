@@ -3,14 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using System.Drawing;
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
 using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
-using SourceAFIS.Visualization;
 
 namespace SourceAFIS.Tuning.Database
 {

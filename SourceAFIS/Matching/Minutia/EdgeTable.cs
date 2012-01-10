@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-#if !COMPACT_FRAMEWORK
-using System.Drawing;
-#endif
 using SourceAFIS.General;
-using SourceAFIS.Dummy;
 using SourceAFIS.Meta;
 using SourceAFIS.Extraction.Templates;
 
@@ -20,6 +16,8 @@ namespace SourceAFIS.Matching.Minutia
         public int MaxDistance = 191;
         [Parameter(Lower = 2, Upper = 100)]
         public int MaxNeighbors = 9;
+
+        public DetailLogger.Hook Logger = DetailLogger.Null;
 
         public NeighborEdge[][] Table;
 
@@ -44,12 +42,15 @@ namespace SourceAFIS.Matching.Minutia
                     }
                 }
 
-                edges.Sort((left, right) => Calc.Compare(left.Edge.Length, right.Edge.Length));
+                edges.Sort((left, right) => Calc.ChainCompare(
+                    Calc.Compare(left.Edge.Length, right.Edge.Length), Calc.Compare(left.Neighbor, right.Neighbor)));
                 if (edges.Count > MaxNeighbors)
                     edges.RemoveRange(MaxNeighbors, edges.Count - MaxNeighbors);
                 Table[reference] = edges.ToArray();
                 edges.Clear();
             }
+
+            Logger.Log(this);
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.Dummy;
+using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
 
 namespace SourceAFIS.Matching.Minutia
@@ -13,6 +14,8 @@ namespace SourceAFIS.Matching.Minutia
         int[] SupportingEdgesByProbe;
         MinutiaPair[] PairList;
         int PairCount;
+
+        public DetailLogger.Hook Logger = DetailLogger.Null;
 
         public int Count { get { return PairCount; } }
         public MinutiaPair LastAdded { get { return PairList[PairCount - 1]; } }
@@ -88,6 +91,8 @@ namespace SourceAFIS.Matching.Minutia
         {
             return SupportingEdgesByProbe[probe];
         }
+
+        public void Log() { Logger.Log(this); }
 
         public object Clone()
         {

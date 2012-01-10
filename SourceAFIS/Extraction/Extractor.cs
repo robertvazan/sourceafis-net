@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 #if !COMPACT_FRAMEWORK
-using System.Drawing;
 using System.Threading.Tasks;
 #endif
 using SourceAFIS.General;
@@ -18,7 +17,7 @@ namespace SourceAFIS.Extraction
     {
         [DpiAdjusted]
         [Parameter(Lower = 8, Upper = 32)]
-        public int BlockSize = 16;
+        public int BlockSize = 15;
 
         public DpiAdjuster DpiAdjuster = new DpiAdjuster();
         [Nested]
@@ -61,16 +60,19 @@ namespace SourceAFIS.Extraction
         public BranchMinutiaRemover BranchMinutiaRemover = new BranchMinutiaRemover();
         [Nested]
         public MinutiaCollector MinutiaCollector = new MinutiaCollector();
+        [Nested]
+        public MinutiaSorter MinutiaSorter = new MinutiaSorter();
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
         public Extractor()
         {
+            RidgeSmoother.Lines.StepFactor = 1.59f;
             OrthogonalSmoother.AngleOffset = Angle.PIB;
             OrthogonalSmoother.Lines.Radius = 4;
             BinarySmoother.Radius = 2;
             BinarySmoother.Majority = 0.66f;
-            BinarySmoother.BorderDistance = 9;
+            BinarySmoother.BorderDistance = 17;
         }
 
         public TemplateBuilder Extract(byte[,] invertedImage, int dpi)
@@ -78,7 +80,7 @@ namespace SourceAFIS.Extraction
             TemplateBuilder template = null;
             DpiAdjuster.Adjust(this, dpi, delegate()
             {
-                byte[,] image = ImageIO.GetInverted(invertedImage);
+                byte[,] image = ImageInverter.GetInverted(invertedImage);
 
                 BlockMap blocks = new BlockMap(new Size(image.GetLength(1), image.GetLength(0)), BlockSize);
                 Logger.Log("BlockMap", blocks);
@@ -111,8 +113,13 @@ namespace SourceAFIS.Extraction
                     () => { valleys = ProcessSkeleton("Valleys", inverted, innerMask); });
 
                 template = new TemplateBuilder();
+                template.OriginalDpi = dpi;
+                template.OriginalWidth = invertedImage.GetLength(1);
+                template.OriginalHeight = invertedImage.GetLength(0);
+
                 MinutiaCollector.Collect(ridges, TemplateBuilder.MinutiaType.Ending, template);
                 MinutiaCollector.Collect(valleys, TemplateBuilder.MinutiaType.Bifurcation, template);
+                MinutiaSorter.Sort(template);
             });
             return template;
         }

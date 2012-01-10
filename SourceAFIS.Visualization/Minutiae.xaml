@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="SourceAFIS.Visualization.Minutiae"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Name="MinutiaeControl">
+    <UserControl.Resources>
+        <Style x:Key="LineStyle" TargetType="Line">
+            <Setter Property="Stroke" Value="Cyan"/>
+            <Setter Property="StrokeStartLineCap" Value="Round"/>
+            <Setter Property="StrokeEndLineCap" Value="Round"/>
+            <Setter Property="StrokeThickness" Value="1.5"/>
+        </Style>
+        <Style x:Key="EllipseStyle" TargetType="Ellipse">
+            <Setter Property="Stroke" Value="Cyan"/>
+            <Setter Property="Fill" Value="Cyan"/>
+        </Style>
+    </UserControl.Resources>
+    <Canvas DataContext="{Binding ElementName=MinutiaeControl}">
+        <ItemsControl ItemsSource="{Binding Endings}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Canvas>
+                        <Ellipse Canvas.Left="-2.5" Canvas.Top="-2.5" Width="5" Height="5" Style="{StaticResource EllipseStyle}" />
+                        <Line X1="0" Y1="0" X2="15" Y2="0" Style="{StaticResource LineStyle}" />
+                        <Line X1="15" Y1="0" X2="11" Y2="4" Style="{StaticResource LineStyle}" />
+                        <Line X1="15" Y1="0" X2="11" Y2="-4" Style="{StaticResource LineStyle}" />
+                        <Canvas.RenderTransform>
+                            <RotateTransform Angle="{Binding Angle}"/>
+                        </Canvas.RenderTransform>
+                    </Canvas>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemContainerStyle>
+                <Style>
+                    <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                    <Setter Property="Canvas.Left" Value="{Binding X}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
+        <ItemsControl ItemsSource="{Binding Bifurcations}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Canvas>
+                        <Ellipse Canvas.Left="-2.5" Canvas.Top="-2.5" Width="5" Height="5" Style="{StaticResource EllipseStyle}" />
+                        <Line X1="0" Y1="0" X2="15" Y2="0" Style="{StaticResource LineStyle}" />
+                        <Line X1="15" Y1="0" X2="19" Y2="4" Style="{StaticResource LineStyle}" />
+                        <Line X1="15" Y1="0" X2="19" Y2="-4" Style="{StaticResource LineStyle}" />
+                        <Canvas.RenderTransform>
+                            <RotateTransform Angle="{Binding Angle}"/>
+                        </Canvas.RenderTransform>
+                    </Canvas>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemContainerStyle>
+                <Style>
+                    <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                    <Setter Property="Canvas.Left" Value="{Binding X}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
+    </Canvas>
+</UserControl>

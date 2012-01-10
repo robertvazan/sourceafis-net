@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 #if !COMPACT_FRAMEWORK
-using System.Drawing;
 using System.Threading.Tasks;
 #endif
 using SourceAFIS.General;
