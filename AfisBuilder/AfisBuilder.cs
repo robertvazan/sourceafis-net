@@ -84,13 +84,13 @@ namespace AfisBuilder
             {
                 Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.xml", prefix + "Bin");
                 Command.CopyTo(@"SourceAFIS\bin\Release Mobile\SourceAFIS.Mobile.dll", prefix + "Bin");
+	            Command.CopyTo(@"SourceAFIS.Visualization\bin\Release\SourceAFIS.Visualization.dll", prefix + "Bin");
+	            Command.CopyTo(@"SourceAFIS.FingerprintAnalysis\bin\Release\SourceAFIS.FingerprintAnalysis.exe", prefix + "Bin");
             }
-            Command.CopyTo(@"SourceAFIS.Visualization\bin\Release\SourceAFIS.Visualization.dll", prefix + "Bin");
             Command.CopyTo(@"SourceAFIS.Tuning\bin\Release\SourceAFIS.Tuning.dll", prefix + "Bin");
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe", prefix + "Bin");
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe.config", prefix + "Bin");
             Command.CopyTo(@"Data\DatabaseAnalyzerConfiguration.xml", prefix + "Bin");
-            Command.CopyTo(@"SourceAFIS.FingerprintAnalysis\bin\Release\SourceAFIS.FingerprintAnalysis.exe", prefix + "Bin");
 
             Directory.CreateDirectory(prefix + "Documentation");
             Command.CopyTo(@"Data\license.txt", prefix + "Documentation");
@@ -100,24 +100,21 @@ namespace AfisBuilder
                 Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.xml", prefix + "Documentation");
                 Command.CopyTo(@"DocProject\bin\Release\SourceAFIS.chm", prefix + "Documentation");
                 Command.CopyTo(@"DocProject\bin\Release\SourceAFIS.HxS", prefix + "Documentation");
-            }
 
-            if (!Mono)
-            {
-                Directory.CreateDirectory(prefix + @"Documentation\SourceAFIS");
+				Directory.CreateDirectory(prefix + @"Documentation\SourceAFIS");
                 Command.CopyDirectory(@"DocProject\Help\html", prefix + @"Documentation\SourceAFIS\html");
                 Command.CopyDirectory(@"DocProject\Help\Icons", prefix + @"Documentation\SourceAFIS\icons");
                 Command.CopyDirectory(@"DocProject\Help\Scripts", prefix + @"Documentation\SourceAFIS\scripts");
                 Directory.CreateDirectory(prefix + @"Documentation\SourceAFIS\styles");
                 File.Copy(@"DocProject\Help\Styles\Presentation.css", prefix + @"Documentation\SourceAFIS\styles\presentation.css");
                 Command.CopyTo(@"DocProject\Help\Styles\TopicDesigner.css", prefix + @"Documentation\SourceAFIS\styles");
-            }
 
-            Command.CopyDirectory("Sample", prefix + "Sample");
-            Command.DeleteFileIfExists(prefix + @"Sample\Sample.suo");
-            Command.ForceDeleteDirectory(prefix + @"Sample\obj");
-            Command.ForceDeleteDirectory(prefix + @"Sample\bin\Release");
-            Command.DeleteFileIfExists(prefix + @"Sample\bin\Debug\Sample.exe.mdb");
+	            Command.CopyDirectory("Sample", prefix + "Sample");
+	            Command.DeleteFileIfExists(prefix + @"Sample\Sample.suo");
+	            Command.ForceDeleteDirectory(prefix + @"Sample\obj");
+	            Command.ForceDeleteDirectory(prefix + @"Sample\bin\Release");
+	            Command.DeleteFileIfExists(prefix + @"Sample\bin\Debug\Sample.exe.mdb");
+            }
 
             Command.Zip(ZipFolder);
         }
@@ -219,7 +216,8 @@ namespace AfisBuilder
 
             Command.CopyTo(ZipFolder + @"\Bin\DatabaseAnalyzer.exe", analyzerDir);
             Command.CopyTo(ZipFolder + @"\Bin\SourceAFIS.dll", analyzerDir);
-            Command.CopyTo(ZipFolder + @"\Bin\SourceAFIS.Visualization.dll", analyzerDir);
+			if (!Mono)
+	            Command.CopyTo(ZipFolder + @"\Bin\SourceAFIS.Visualization.dll", analyzerDir);
             Command.CopyTo(ZipFolder + @"\Bin\SourceAFIS.Tuning.dll", analyzerDir);
             Command.Execute(Path.Combine(analyzerDir, "DatabaseAnalyzer.exe"));
 
