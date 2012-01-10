@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -16,14 +16,13 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;MONO</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -31,13 +30,11 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;MONO</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -54,20 +51,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SourceAFIS.Tuning\SourceAFIS.Tuning.csproj">
-      <Project>{7DD4AD3F-2836-4187-A6E7-D271F13F943E}</Project>
-      <Name>SourceAFIS.Tuning</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SourceAFIS.Visualization\SourceAFIS.Visualization.csproj">
-      <Project>{5570647C-1F35-4FE7-9E9B-FF193154DD95}</Project>
-      <Name>SourceAFIS.Visualization</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SourceAFIS\SourceAFIS.csproj">
-      <Project>{35075900-98B2-4F73-A8FE-11E0D2182689}</Project>
-      <Name>SourceAFIS</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -78,4 +61,14 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\SourceAFIS\SourceAFIS.Mono.csproj">
+      <Project>{35075900-98B2-4F73-A8FE-11E0D2182689}</Project>
+      <Name>SourceAFIS.Mono</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SourceAFIS.Tuning\SourceAFIS.Tuning.Mono.csproj">
+      <Project>{7DD4AD3F-2836-4187-A6E7-D271F13F943E}</Project>
+      <Name>SourceAFIS.Tuning.Mono</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
