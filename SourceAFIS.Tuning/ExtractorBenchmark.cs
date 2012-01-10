@@ -37,7 +37,7 @@ namespace SourceAFIS.Tuning
 #else
                     byte[,] grayscale = GdiIO.Load(database[index].FilePath);
 #endif
-                    TemplateBuilder builder = Extractor.Extract(grayscale, 500);
+                    TemplateBuilder builder = Extractor.Extract(grayscale, database.Dpi);
                     Template template = serializedFormat.Export(builder);
                     database[index].Template = template;
 

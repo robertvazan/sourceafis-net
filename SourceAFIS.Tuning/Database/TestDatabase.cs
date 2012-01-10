@@ -14,6 +14,7 @@ namespace SourceAFIS.Tuning.Database
     {
         public string DatabasePath;
         public List<Finger> Fingers;
+        public int Dpi;
 
         public override int FingerCount { get { return Fingers.Count; } }
         public override int ViewCount { get { return Fingers[0].Views.Count; } }
@@ -24,8 +25,10 @@ namespace SourceAFIS.Tuning.Database
             get { return Fingers[index.Finger].Views[index.View]; }
         }
 
-        public TestDatabase(List<string> files)
+        public TestDatabase(List<string> files, int dpi = 500)
         {
+            Dpi = dpi;
+
             DatabasePath = Path.GetDirectoryName(files[0]);
 
             var details = from filepath in files
@@ -55,7 +58,8 @@ namespace SourceAFIS.Tuning.Database
             TestDatabase clone = new TestDatabase
             {
                 DatabasePath = this.DatabasePath,
-                Fingers = this.Fingers.CloneItems()
+                Fingers = this.Fingers.CloneItems(),
+                Dpi = this.Dpi
             };
             return clone;
         }
