@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
+#if !MONO
 using System.Windows.Media.Imaging;
+#endif
 using SourceAFIS.General;
 using SourceAFIS.Dummy;
 using SourceAFIS.Extraction.Templates;
@@ -147,7 +149,7 @@ namespace SourceAFIS.Simple
             }
         }
 
-#if !COMPACT_FRAMEWORK
+#if !COMPACT_FRAMEWORK && !MONO
         /// <summary>
         /// Fingerprint image as <see cref="BitmapSource"/> object.
         /// </summary>

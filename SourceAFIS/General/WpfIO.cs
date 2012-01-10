@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if !MONO
 using System.Windows.Media.Imaging;
+#endif
 using System.Windows.Media;
 using System.Windows;
 using System.IO;
@@ -11,7 +13,7 @@ namespace SourceAFIS.General
 {
     public static class WpfIO
     {
-#if !COMPACT_FRAMEWORK
+#if !COMPACT_FRAMEWORK && !MONO
         public static BitmapSource GetBitmapSource(byte[,] pixels)
         {
             int width = pixels.GetLength(1);
@@ -41,7 +43,7 @@ namespace SourceAFIS.General
 
             return pixels;
         }
-
+		
         public static BitmapSource Load(string filename)
         {
             BitmapImage image = new BitmapImage();
