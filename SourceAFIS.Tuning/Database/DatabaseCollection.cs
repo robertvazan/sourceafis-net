@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
+using System.Xml.Linq;
 using SourceAFIS.General;
 using SourceAFIS.Extraction.Templates;
 
@@ -25,13 +26,21 @@ namespace SourceAFIS.Tuning.Database
 
         public void Scan(string path)
         {
-            List<string> files = (from extension in new string[] { "bmp", "png", "jpg", "jpeg", "tif" }
-                                  from filepath in Directory.GetFiles(path, "*_*." + extension)
-                                  orderby Path.GetFileNameWithoutExtension(filepath).ToLower()
-                                  select filepath).ToList();
+            var aboutPath = Path.Combine(path, "about.xml");
+            if (File.Exists(aboutPath))
+            {
+                var aboutXml = XDocument.Load(aboutPath).Root;
 
-            if (files.Count > 0)
-                Databases.Add(new TestDatabase(files));
+                if ((string)aboutXml.Attribute("tuning") == "enabled")
+                {
+                    List<string> files = (from extension in new string[] { "bmp", "png", "jpg", "jpeg", "tif" }
+                                          from filepath in Directory.GetFiles(path, "*_*." + extension)
+                                          orderby Path.GetFileNameWithoutExtension(filepath).ToLower()
+                                          select filepath).ToList();
+
+                    Databases.Add(new TestDatabase(files));
+                }
+            }
 
             var subfolders = from subfolder in Directory.GetDirectories(path)
                              orderby Path.GetFileNameWithoutExtension(subfolder).ToLower()
