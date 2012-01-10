@@ -62,13 +62,12 @@ namespace AfisBuilder
             Directory.CreateDirectory(Path.Combine("Sample", "dll"));
             Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", @"Sample\dll");
             Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.xml", @"Sample\dll");
-            Command.ForceDeleteDirectory(@"Sample\bin");
             if (!Mono)
+			{
+	            Command.ForceDeleteDirectory(@"Sample\bin");
                 Command.Build(@"Sample\Sample.csproj", "Debug");
-            else
-                Command.BuildSolution(@"Sample\Sample.sln", "Debug");
-            if (!Mono)
                 Command.Build(@"DocProject\DocProject.csproj", "Release");
+			}
         }
 
         void AssembleZip()
