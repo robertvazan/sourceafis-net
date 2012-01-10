@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AfisBuilder", "AfisBuilder\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Visualization", "SourceAFIS.Visualization\SourceAFIS.Visualization.csproj", "{5570647C-1F35-4FE7-9E9B-FF193154DD95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Tuning", "SourceAFIS.Tuning\SourceAFIS.Tuning.csproj", "{7DD4AD3F-2836-4187-A6E7-D271F13F943E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Mono", "SourceAFIS\SourceAFIS.Mono.csproj", "{35075900-98B2-4F73-A8FE-11E0D2182689}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Tuning.Mono", "SourceAFIS.Tuning\SourceAFIS.Tuning.Mono.csproj", "{7DD4AD3F-2836-4187-A6E7-D271F13F943E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
