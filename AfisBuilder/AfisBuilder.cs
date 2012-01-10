@@ -67,7 +67,7 @@ namespace AfisBuilder
 	            Command.ForceDeleteDirectory(@"Sample\bin");
                 Command.Build(@"Sample\Sample.csproj", "Debug");
                 Command.Build(@"DocProject\DocProject.csproj", "Release");
-            Command.BuildAnt("sourceafis", "clean", "jar");
+                Command.BuildAnt("sourceafis", "clean", "jar");
 			}
         }
 
@@ -92,7 +92,8 @@ namespace AfisBuilder
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe", prefix + "Bin");
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe.config", prefix + "Bin");
             Command.CopyTo(@"Data\DatabaseAnalyzerConfiguration.xml", prefix + "Bin");
-            Command.CopyTo(@"java\sourceafis\bin\dist\sourceafis.jar", prefix + "Bin");
+            if (!Mono)
+                Command.CopyTo(@"java\sourceafis\bin\dist\sourceafis.jar", prefix + "Bin");
 
             Directory.CreateDirectory(prefix + "Documentation");
             Command.CopyTo(@"Data\license.txt", prefix + "Documentation");
@@ -243,7 +244,8 @@ namespace AfisBuilder
 
         void Cleanup()
         {
-            Command.BuildAnt("sourceafis", "clean");
+            if (!Mono)
+                Command.BuildAnt("sourceafis", "clean");
         }
 
         public void Run()
