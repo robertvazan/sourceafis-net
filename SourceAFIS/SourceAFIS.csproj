@@ -112,6 +112,8 @@
     <Compile Include="General\ReversedList.cs" />
     <Compile Include="General\Size.cs" />
     <Compile Include="General\SizeF.cs" />
+    <Compile Include="Matching\Minutia\EdgeHash.cs" />
+    <Compile Include="Matching\Minutia\EdgeLocation.cs" />
     <Compile Include="Matching\ParallelMatcher.cs" />
     <Compile Include="Matching\Minutia\EdgeConstructor.cs" />
     <Compile Include="Matching\Minutia\EdgeInfo.cs" />
