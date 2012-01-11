@@ -38,7 +38,7 @@ namespace SourceAFIS.Matching.Minutia
         {
             index.Template = probe;
             index.Edges = ParameterSet.ClonePrototype(EdgeTablePrototype);
-            index.Edges.Reset(probe);
+            index.Edges.Reset(probe, false);
             index.EdgeHash = new EdgeHash(probe, EdgeLookup);
         }
 
@@ -87,7 +87,7 @@ namespace SourceAFIS.Matching.Minutia
         {
             Pairing.SelectCandidate(candidate);
             PairSelector.Clear();
-            CandidateEdges.Reset(candidate);
+            CandidateEdges.Reset(candidate, true);
         }
 
         float TryRoot(MinutiaPair root, Template candidate)
@@ -115,12 +115,13 @@ namespace SourceAFIS.Matching.Minutia
 
         void CollectEdges(Template candidate)
         {
-            List<EdgeLookup.EdgePair> edgePairs = EdgeLookup.FindMatchingPairs(
-                Probe.Edges.Table[Pairing.LastAdded.Probe], CandidateEdges.Table[Pairing.LastAdded.Candidate]);
+            var probeNeighbors = Probe.Edges.GetEdges(Pairing.LastAdded.Probe);
+            var candidateNeigbors = CandidateEdges.GetEdges(Pairing.LastAdded.Candidate);
+            List<EdgeLookup.EdgePair> edgePairs = EdgeLookup.FindMatchingPairs(probeNeighbors, candidateNeigbors);
             foreach (EdgeLookup.EdgePair edgePair in edgePairs)
             {
-                NeighborEdge probeEdge = Probe.Edges.Table[Pairing.LastAdded.Probe][edgePair.ProbeIndex];
-                NeighborEdge candidateEdge = CandidateEdges.Table[Pairing.LastAdded.Candidate][edgePair.CandidateIndex];
+                NeighborEdge probeEdge = probeNeighbors[edgePair.ProbeIndex];
+                NeighborEdge candidateEdge = candidateNeigbors[edgePair.CandidateIndex];
                 if (!Pairing.IsCandidatePaired(candidateEdge.Neighbor) && !Pairing.IsProbePaired(probeEdge.Neighbor))
                     PairSelector.Enqueue(new MinutiaPair(probeEdge.Neighbor, candidateEdge.Neighbor), candidateEdge.Edge.Length);
                 else if (Pairing.GetCandidateByProbe(probeEdge.Neighbor) == candidateEdge.Neighbor)

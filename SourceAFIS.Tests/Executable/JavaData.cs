@@ -108,15 +108,16 @@ namespace SourceAFIS.Tests.Executable
             root.SetAttributeValue("candidate", Settings.JavaFingerprintCandidatePath);
             root.SetAttributeValue("best-root", (int)log.Retrieve("MinutiaMatcher.BestRootIndex"));
             EdgeTable edgeTable = (EdgeTable)log.Retrieve("MinutiaMatcher.EdgeTablePrototype");
-            for (int i = 0; i < edgeTable.Table.Length; ++i)
+            for (int i = 0; i < probe.Minutiae.Length; ++i)
             {
                 XElement edgeList = new XElement("edge-list",
                     new XAttribute("offset", i));
                 root.Add(edgeList);
-                for (int j = 0; j < edgeTable.Table[i].Length; ++j)
+                var edges = edgeTable.GetEdges(i);
+                for (int j = 0; j < edges.Length; ++j)
                     edgeList.Add(new XElement("edge",
-                        new XAttribute("neighbor", edgeTable.Table[i][j].Neighbor),
-                        new XAttribute("length", edgeTable.Table[i][j].Edge.Length)));
+                        new XAttribute("neighbor", edges[j].Neighbor),
+                        new XAttribute("length", edges[j].Edge.Length)));
             }
 
             for (int i = 0; i < log.Count("MinutiaMatcher.RootSelector"); ++i)
