@@ -114,7 +114,7 @@ namespace SourceAFIS.Tests.Executable
                     new XAttribute("offset", i));
                 root.Add(edgeList);
                 var edges = edgeTable.GetEdges(i);
-                for (int j = 0; j < edges.Length && edges[j].Neighbor >= 0; ++j)
+                for (int j = 0; j < edges.Length; ++j)
                     edgeList.Add(new XElement("edge",
                         new XAttribute("neighbor", edges[j].Neighbor),
                         new XAttribute("length", edges[j].Edge.Length)));

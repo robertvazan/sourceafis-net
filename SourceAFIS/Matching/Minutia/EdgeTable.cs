@@ -19,9 +19,8 @@ namespace SourceAFIS.Matching.Minutia
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
-        Template Template;
         NeighborEdge[][] Table;
-        List<NeighborEdge[]> PreallocatedTable = new List<NeighborEdge[]>();
+        Template Template;
         List<NeighborEdge> Edges = new List<NeighborEdge>();
         List<int> AllSqDistances = new List<int>();
 
@@ -30,16 +29,9 @@ namespace SourceAFIS.Matching.Minutia
             Template = template;
             Table = new NeighborEdge[Template.Minutiae.Length][];
 
-            if (lazy && !Logger.IsActive)
-            {
-                while (PreallocatedTable.Count < template.Minutiae.Length)
-                    PreallocatedTable.Add(new NeighborEdge[MaxNeighbors]);
-            }
-            else
-            {
+            if (!lazy || Logger.IsActive)
                 for (int reference = 0; reference < Table.Length; ++reference)
                     GetEdges(reference);
-            }
 
             Logger.Log(this);
         }
@@ -73,15 +65,7 @@ namespace SourceAFIS.Matching.Minutia
                 Edges.Sort(NeighborEdgeComparer.Instance);
                 if (Edges.Count > MaxNeighbors)
                     Edges.RemoveRange(MaxNeighbors, Edges.Count - MaxNeighbors);
-                if (PreallocatedTable.Count > reference)
-                {
-                    Table[reference] = PreallocatedTable[reference];
-                    Edges.CopyTo(Table[reference]);
-                    if (Edges.Count < MaxNeighbors)
-                        Table[reference][Edges.Count].Neighbor = -1;
-                }
-                else
-                    Table[reference] = Edges.ToArray();
+                Table[reference] = Edges.ToArray();
                 Edges.Clear();
             }
             return Table[reference];
