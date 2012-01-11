@@ -39,6 +39,7 @@ namespace SourceAFIS.Matching.Minutia
             index.Template = probe;
             index.Edges = ParameterSet.ClonePrototype(EdgeTablePrototype);
             index.Edges.Reset(probe);
+            index.EdgeHash = new EdgeHash(probe, EdgeLookup);
         }
 
         public void SelectProbe(ProbeIndex probe)
@@ -56,7 +57,7 @@ namespace SourceAFIS.Matching.Minutia
             float bestScore = 0;
             MinutiaPair bestRoot = new MinutiaPair();
             int bestRootIndex = -1;
-            foreach (MinutiaPair root in RootSelector.GetRoots(Probe.Template, candidate))
+            foreach (MinutiaPair root in RootSelector.GetRoots(Probe, candidate))
             {
                 float score = TryRoot(root, candidate);
                 if (score > bestScore)

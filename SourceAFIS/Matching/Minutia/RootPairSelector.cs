@@ -10,16 +10,21 @@ namespace SourceAFIS.Matching.Minutia
     {
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
-        public IEnumerable<MinutiaPair> GetRoots(Template probeTemplate, Template candidateTemplate)
+        public IEnumerable<MinutiaPair> GetRoots(ProbeIndex probeIndex, Template candidateTemplate)
         {
-            for (int probe = 0; probe < probeTemplate.Minutiae.Length; ++probe)
-                for (int candidate = 0; candidate < candidateTemplate.Minutiae.Length; ++candidate)
+            var edgeConstructor = new EdgeConstructor();
+            for (int candidateReference = 1; candidateReference < candidateTemplate.Minutiae.Length; ++candidateReference)
+                for (int candidateNeighbor = 0; candidateNeighbor < candidateTemplate.Minutiae.Length; ++candidateNeighbor)
                 {
-                    int mixedProbe = (probe + candidate) % probeTemplate.Minutiae.Length;
-                    var pair = new MinutiaPair(mixedProbe, candidate);
-                    if (Logger.IsActive)
-                        Logger.Log(pair);
-                    yield return pair;
+                    int mixedCandidateReference = (candidateReference + candidateNeighbor) % candidateTemplate.Minutiae.Length;
+                    var candidateEdge = edgeConstructor.Construct(candidateTemplate, mixedCandidateReference, candidateNeighbor);
+                    foreach (var probeEdge in probeIndex.EdgeHash.FindMatching(candidateEdge))
+                    {
+                        var pair = new MinutiaPair(probeEdge.Reference, mixedCandidateReference);
+                        if (Logger.IsActive)
+                            Logger.Log(pair);
+                        yield return pair;
+                    }
                 }
         }
     }

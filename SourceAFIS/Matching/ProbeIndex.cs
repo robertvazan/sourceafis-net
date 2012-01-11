@@ -10,5 +10,6 @@ namespace SourceAFIS.Matching
     {
         public Template Template;
         public EdgeTable Edges;
+        public EdgeHash EdgeHash;
     }
 }

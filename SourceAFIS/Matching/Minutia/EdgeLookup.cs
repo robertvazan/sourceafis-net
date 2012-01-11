@@ -8,9 +8,9 @@ namespace SourceAFIS.Matching.Minutia
 {
     public sealed class EdgeLookup
     {
-        [Parameter(Lower = 0, Upper = 50)]
-        public int MaxDistanceError = 6;
-        [Parameter(Lower = 1)]
+        [Parameter(Lower = 1, Upper = 50)]
+        public int MaxDistanceError = 10;
+        [Parameter(Lower = 1, Upper = 63)]
         public byte MaxAngleError = Angle.FromDegreesB(10);
 
         public struct EdgePair
@@ -59,6 +59,45 @@ namespace SourceAFIS.Matching.Minutia
             }
 
             return ReturnList;
+        }
+
+        public bool MatchingEdges(EdgeInfo probe, EdgeInfo candidate)
+        {
+            int lengthDelta = probe.Length - candidate.Length;
+            if (lengthDelta >= -MaxDistanceError && lengthDelta <= MaxDistanceError)
+            {
+                byte complementaryAngleError = Angle.Complementary(MaxAngleError);
+                byte referenceDelta = Angle.Difference(probe.ReferenceAngle, candidate.ReferenceAngle);
+                if (referenceDelta <= MaxAngleError || referenceDelta >= complementaryAngleError)
+                {
+                    byte neighborDelta = Angle.Difference(probe.NeighborAngle, candidate.NeighborAngle);
+                    if (neighborDelta <= MaxAngleError || neighborDelta >= complementaryAngleError)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        public int ComputeHash(EdgeInfo edge)
+        {
+            return (edge.ReferenceAngle / MaxAngleError << 24) + (edge.NeighborAngle / MaxAngleError << 16) + edge.Length / MaxDistanceError;
+        }
+
+        public IEnumerable<int> HashCoverage(EdgeInfo edge)
+        {
+            int minLengthBin = (edge.Length - MaxDistanceError) / MaxDistanceError;
+            int maxLengthBin = (edge.Length + MaxDistanceError) / MaxDistanceError;
+            int angleBins = 255 / MaxAngleError + 1;
+            int minReferenceBin = Angle.Difference(edge.ReferenceAngle, MaxAngleError) / MaxAngleError;
+            int maxReferenceBin = Angle.Add(edge.ReferenceAngle, MaxAngleError) / MaxAngleError;
+            int endReferenceBin = (maxReferenceBin + 1) % angleBins;
+            int minNeighborBin = Angle.Difference(edge.NeighborAngle, MaxAngleError) / MaxAngleError;
+            int maxNeighborBin = Angle.Add(edge.NeighborAngle, MaxAngleError) / MaxAngleError;
+            int endNeighborBin = (maxNeighborBin + 1) % angleBins;
+            for (int lengthBin = minLengthBin; lengthBin <= maxLengthBin; ++lengthBin)
+                for (int referenceBin = minReferenceBin; referenceBin != endReferenceBin; referenceBin = (referenceBin + 1) % angleBins)
+                    for (int neighborBin = minNeighborBin; neighborBin != endNeighborBin; neighborBin = (neighborBin + 1) % angleBins)
+                        yield return (referenceBin << 24) + (neighborBin << 16) + lengthBin;
         }
     }
 }
