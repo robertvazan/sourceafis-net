@@ -62,14 +62,26 @@ namespace SourceAFIS.Matching.Minutia
                     }
                 }
 
-                Edges.Sort((left, right) => Calc.ChainCompare(
-                    Calc.Compare(left.Edge.Length, right.Edge.Length), Calc.Compare(left.Neighbor, right.Neighbor)));
+                Edges.Sort(NeighborEdgeComparer.Instance);
                 if (Edges.Count > MaxNeighbors)
                     Edges.RemoveRange(MaxNeighbors, Edges.Count - MaxNeighbors);
                 Table[reference] = Edges.ToArray();
                 Edges.Clear();
             }
             return Table[reference];
+        }
+
+        class NeighborEdgeComparer : IComparer<NeighborEdge>
+        {
+            public int Compare(NeighborEdge left, NeighborEdge right)
+            {
+                int result = Calc.Compare(left.Edge.Length, right.Edge.Length);
+                if (result != 0)
+                    return result;
+                return Calc.Compare(left.Neighbor, right.Neighbor);
+            }
+
+            public static NeighborEdgeComparer Instance = new NeighborEdgeComparer();
         }
     }
 }
