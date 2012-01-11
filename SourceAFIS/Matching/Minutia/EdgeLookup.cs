@@ -36,6 +36,8 @@ namespace SourceAFIS.Matching.Minutia
             for (int candidateIndex = 0; candidateIndex < candidateStar.Length; ++candidateIndex)
             {
                 NeighborEdge candidateEdge = candidateStar[candidateIndex];
+                if (candidateEdge.Neighbor < 0)
+                    break;
                 
                 while (range.Begin < probeStar.Length && probeStar[range.Begin].Edge.Length < candidateEdge.Edge.Length - MaxDistanceError)
                     ++range.Begin;
