@@ -41,10 +41,19 @@ namespace SourceAFIS.Matching.Minutia
             if (Table[reference] == null)
             {
                 Point referencePosition = Template.Minutiae[reference].Position;
+                int sqMaxDistance = Calc.Sq(MaxDistance);
+                if (Template.Minutiae.Length - 1 > MaxNeighbors)
+                {
+                    int[] allSqDistances = new int[Template.Minutiae.Length];
+                    for (int neighbor = 0; neighbor < Template.Minutiae.Length; ++neighbor)
+                        if (neighbor != reference)
+                            allSqDistances[neighbor] = Calc.DistanceSq(referencePosition, Template.Minutiae[neighbor].Position);
+                    Array.Sort(allSqDistances);
+                    sqMaxDistance = allSqDistances[MaxNeighbors];
+                }
                 for (int neighbor = 0; neighbor < Template.Minutiae.Length; ++neighbor)
                 {
-                    if (Calc.DistanceSq(referencePosition, Template.Minutiae[neighbor].Position)
-                        <= Calc.Sq(MaxDistance) && neighbor != reference)
+                    if (neighbor != reference && Calc.DistanceSq(referencePosition, Template.Minutiae[neighbor].Position) <= sqMaxDistance)
                     {
                         NeighborEdge record = new NeighborEdge();
                         record.Edge = EdgeConstructor.Construct(Template, reference, neighbor);
