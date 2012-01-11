@@ -21,12 +21,12 @@ namespace SourceAFIS.Matching.Minutia
 
         NeighborEdge[][] Table;
         Template Template;
-        List<NeighborEdge> Edges;
+        List<NeighborEdge> Edges = new List<NeighborEdge>();
+        List<int> AllSqDistances = new List<int>();
 
         public void Reset(Template template, bool lazy)
         {
             Template = template;
-            Edges = new List<NeighborEdge>();
             Table = new NeighborEdge[Template.Minutiae.Length][];
 
             if (!lazy || Logger.IsActive)
@@ -44,12 +44,12 @@ namespace SourceAFIS.Matching.Minutia
                 int sqMaxDistance = Calc.Sq(MaxDistance);
                 if (Template.Minutiae.Length - 1 > MaxNeighbors)
                 {
-                    int[] allSqDistances = new int[Template.Minutiae.Length];
                     for (int neighbor = 0; neighbor < Template.Minutiae.Length; ++neighbor)
                         if (neighbor != reference)
-                            allSqDistances[neighbor] = Calc.DistanceSq(referencePosition, Template.Minutiae[neighbor].Position);
-                    Array.Sort(allSqDistances);
-                    sqMaxDistance = allSqDistances[MaxNeighbors];
+                            AllSqDistances.Add(Calc.DistanceSq(referencePosition, Template.Minutiae[neighbor].Position));
+                    AllSqDistances.Sort();
+                    sqMaxDistance = AllSqDistances[MaxNeighbors - 1];
+                    AllSqDistances.Clear();
                 }
                 for (int neighbor = 0; neighbor < Template.Minutiae.Length; ++neighbor)
                 {
