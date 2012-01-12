@@ -34,6 +34,12 @@
 <!-- matcher options -->
 <matcher-benchmark>
 
+<!-- maximum number of matching pairs considered for every fingerprint in database -->
+<max-matching-pairs>10</max-matching-pairs>
+
+<!-- maximum number of non-matching pairs considered for every fingerprint in database -->
+<max-non-matching-pairs>1000</max-non-matching-pairs>
+
 <!-- render ROC graph, set this to false to get reports faster -->
 <render-graph>true</render-graph>
 

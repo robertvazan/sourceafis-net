@@ -15,9 +15,13 @@ namespace SourceAFIS.Tuning.Database
         public string DatabasePath;
         public List<Finger> Fingers;
         public int Dpi;
+        public int MaxMatchingPerProbe = Int32.MaxValue;
+        public int MaxNonMatchingPerProbe = Int32.MaxValue;
 
         public override int FingerCount { get { return Fingers.Count; } }
         public override int ViewCount { get { return Fingers[0].Views.Count; } }
+        public override int MatchingPerProbe { get { return Math.Min(MaxMatchingPerProbe, ViewCount - 1); } }
+        public override int NonMatchingPerProbe { get { return Math.Min(MaxNonMatchingPerProbe, (FingerCount - 1) * ViewCount); } }
 
 		[XmlIgnore]
         public View this[DatabaseIndex index]
@@ -25,10 +29,8 @@ namespace SourceAFIS.Tuning.Database
             get { return Fingers[index.Finger].Views[index.View]; }
         }
 
-        public TestDatabase(List<string> files, int dpi = 500)
+        public TestDatabase(List<string> files)
         {
-            Dpi = dpi;
-
             DatabasePath = Path.GetDirectoryName(files[0]);
 
             var details = from filepath in files
@@ -59,7 +61,9 @@ namespace SourceAFIS.Tuning.Database
             {
                 DatabasePath = this.DatabasePath,
                 Fingers = this.Fingers.CloneItems(),
-                Dpi = this.Dpi
+                Dpi = this.Dpi,
+                MaxMatchingPerProbe = this.MaxMatchingPerProbe,
+                MaxNonMatchingPerProbe = this.MaxNonMatchingPerProbe
             };
             return clone;
         }

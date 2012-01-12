@@ -27,6 +27,7 @@ namespace DatabaseAnalyzer
         {
             Options.TestDatabase = TestDatabase;
             Options.ExtractorBenchmark = ExtractorBenchmark;
+            Options.MatcherBenchmark = MatcherBenchmark;
             Options.Optimizer = Optimizer;
             ExtractorBenchmark.Database = TestDatabase;
             MatcherBenchmark.TestDatabase = TestDatabase;

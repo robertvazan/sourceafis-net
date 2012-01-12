@@ -17,6 +17,8 @@ namespace SourceAFIS.Tuning.Errors
 
         public override int FingerCount { get { return Table.Length; } }
         public override int ViewCount { get { return Table[0].Length; } }
+        public override int MatchingPerProbe { get { return Table[0][0].Matching.Length; } }
+        public override int NonMatchingPerProbe { get { return Table[0][0].NonMatching.Length; } }
 
         public Entry[][] Table;
 
@@ -29,6 +31,18 @@ namespace SourceAFIS.Tuning.Errors
         [XmlIgnore]
         public IEnumerable<float> NonMatching { get { return from entry in Entries from score in entry.NonMatching select score; } }
 
+        int GetCyclicOffset(int start, int at, int cycle) { return (at - start + cycle) % cycle; }
+        int GetViewOffset(int start, int at) { return GetCyclicOffset(start, at, ViewCount); }
+        int GetFingerOffset(int start, int at) { return GetCyclicOffset(start, at, FingerCount); }
+        int GetDistinctViewOffset(int start, int at) { return GetViewOffset(start + 1, at); }
+        int GetDistinctFingerOffset(int start, int at) { return GetFingerOffset(start + 1, at); }
+        int GetMatchingOffset(TestPair pair) { return GetDistinctViewOffset(pair.Probe.View, pair.Candidate.View); }
+        int GetNonMatchingOffset(TestPair pair)
+        {
+            return GetViewOffset(pair.Probe.View, pair.Candidate.View) * (FingerCount - 1)
+                + GetDistinctFingerOffset(pair.Probe.Finger, pair.Candidate.Finger);
+        }
+
         [XmlIgnore]
         public float this[TestPair pair]
         {
@@ -36,35 +50,35 @@ namespace SourceAFIS.Tuning.Errors
             {
                 Entry entry = Table[pair.Probe.Finger][pair.Probe.View];
                 if (pair.IsMatching)
-                    return entry.Matching[(ViewCount + pair.Candidate.View - pair.Probe.View - 1) % ViewCount];
+                    return entry.Matching[GetMatchingOffset(pair)];
                 else
-                    return entry.NonMatching[(FingerCount + pair.Candidate.Finger - pair.Probe.Finger - 1) % FingerCount];
+                    return entry.NonMatching[GetNonMatchingOffset(pair)];
             }
             set
             {
                 Entry entry = Table[pair.Probe.Finger][pair.Probe.View];
                 if (pair.IsMatching)
-                    entry.Matching[(ViewCount + pair.Candidate.View - pair.Probe.View - 1) % ViewCount] = value;
+                    entry.Matching[GetMatchingOffset(pair)] = value;
                 else
-                    entry.NonMatching[(FingerCount + pair.Candidate.Finger - pair.Probe.Finger - 1) % FingerCount] = value;
+                    entry.NonMatching[GetNonMatchingOffset(pair)] = value;
             }
         }
 
-        public void Initialize(int fingers, int views)
+        public void Initialize(DatabaseLayout layout)
         {
-            Table = (from finger in Enumerable.Range(0, fingers)
-                     select (from view in Enumerable.Range(0, views)
+            Table = (from finger in Enumerable.Range(0, layout.FingerCount)
+                     select (from view in Enumerable.Range(0, layout.ViewCount)
                              select new Entry
                              {
-                                 Matching = new float[views - 1],
-                                 NonMatching = new float[fingers - 1]
+                                 Matching = new float[layout.MatchingPerProbe],
+                                 NonMatching = new float[layout.NonMatchingPerProbe]
                              }).ToArray()).ToArray();
         }
 
         public ScoreTable GetMultiFingerTable(MultiFingerPolicy policy)
         {
             ScoreTable combined = new ScoreTable();
-            combined.Initialize(FingerCount, ViewCount);
+            combined.Initialize(this);
             foreach (TestPair pair in AllPairs)
             {
                 var probeSequence = GetConsequentFingers(pair.Probe).Take(policy.ExpectedCount).ToList();
