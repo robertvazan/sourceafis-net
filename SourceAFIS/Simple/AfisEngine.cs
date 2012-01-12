@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using SourceAFIS.General;
 using SourceAFIS.Dummy;
 using SourceAFIS.Extraction;
-using SourceAFIS.Extraction.Templates;
+using SourceAFIS.Templates;
 using SourceAFIS.Matching;
 
 namespace SourceAFIS.Simple

@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 using SourceAFIS.General;
-using SourceAFIS.Extraction.Templates;
+using SourceAFIS.Templates;
 
 namespace SourceAFIS.Tuning.Database
 {

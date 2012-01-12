@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-namespace SourceAFIS.Extraction.Templates
+namespace SourceAFIS.Templates
 {
     public interface ITemplateFormat<T> where T : class
     {

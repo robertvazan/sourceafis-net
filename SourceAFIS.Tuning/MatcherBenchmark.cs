@@ -4,7 +4,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Linq;
 using SourceAFIS.General;
-using SourceAFIS.Extraction.Templates;
+using SourceAFIS.Templates;
 using SourceAFIS.Matching;
 using SourceAFIS.Tuning.Errors;
 using SourceAFIS.Tuning.Reports;

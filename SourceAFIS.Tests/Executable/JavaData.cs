@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 using System.Globalization;
 using NUnit.Framework;
 using SourceAFIS.Simple;
-using SourceAFIS.Extraction.Templates;
+using SourceAFIS.Templates;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 using SourceAFIS.Tuning.Database;
