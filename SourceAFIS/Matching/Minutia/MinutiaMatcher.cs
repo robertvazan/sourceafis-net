@@ -38,7 +38,7 @@ namespace SourceAFIS.Matching.Minutia
         {
             index.Template = probe;
             index.Edges = ParameterSet.ClonePrototype(EdgeTablePrototype);
-            index.Edges.Reset(probe, false);
+            index.Edges.Reset(probe);
             index.EdgeHash = new EdgeHash(probe, EdgeLookup);
         }
 
@@ -87,7 +87,7 @@ namespace SourceAFIS.Matching.Minutia
         {
             Pairing.SelectCandidate(candidate);
             PairSelector.Clear();
-            CandidateEdges.Reset(candidate, true);
+            CandidateEdges.Reset(candidate);
         }
 
         float TryRoot(MinutiaPair root, Template candidate)
@@ -115,8 +115,8 @@ namespace SourceAFIS.Matching.Minutia
 
         void CollectEdges(Template candidate)
         {
-            var probeNeighbors = Probe.Edges.GetEdges(Pairing.LastAdded.Probe);
-            var candidateNeigbors = CandidateEdges.GetEdges(Pairing.LastAdded.Candidate);
+            var probeNeighbors = Probe.Edges.Table[Pairing.LastAdded.Probe];
+            var candidateNeigbors = CandidateEdges.Table[Pairing.LastAdded.Candidate];
             List<EdgeLookup.EdgePair> edgePairs = EdgeLookup.FindMatchingPairs(probeNeighbors, candidateNeigbors);
             foreach (EdgeLookup.EdgePair edgePair in edgePairs)
             {

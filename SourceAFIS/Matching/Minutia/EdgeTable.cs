@@ -19,56 +19,44 @@ namespace SourceAFIS.Matching.Minutia
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
-        NeighborEdge[][] Table;
-        Template Template;
-        List<NeighborEdge> Edges;
+        public NeighborEdge[][] Table;
 
-        public void Reset(Template template, bool lazy)
+        public void Reset(Template template)
         {
-            Template = template;
-            Edges = new List<NeighborEdge>();
-            Table = new NeighborEdge[Template.Minutiae.Length][];
+            Table = new NeighborEdge[template.Minutiae.Length][];
+            var edges = new List<NeighborEdge>();
+            var allSqDistances = new int[template.Minutiae.Length];
 
-            if (!lazy || Logger.IsActive)
-                for (int reference = 0; reference < Table.Length; ++reference)
-                    GetEdges(reference);
-
-            Logger.Log(this);
-        }
-
-        public NeighborEdge[] GetEdges(int reference)
-        {
-            if (Table[reference] == null)
+            for (int reference = 0; reference < Table.Length; ++reference)
             {
-                Point referencePosition = Template.Minutiae[reference].Position;
+                Point referencePosition = template.Minutiae[reference].Position;
                 int sqMaxDistance = Calc.Sq(MaxDistance);
-                if (Template.Minutiae.Length - 1 > MaxNeighbors)
+                if (template.Minutiae.Length - 1 > MaxNeighbors)
                 {
-                    int[] allSqDistances = new int[Template.Minutiae.Length];
-                    for (int neighbor = 0; neighbor < Template.Minutiae.Length; ++neighbor)
-                        if (neighbor != reference)
-                            allSqDistances[neighbor] = Calc.DistanceSq(referencePosition, Template.Minutiae[neighbor].Position);
+                    for (int neighbor = 0; neighbor < template.Minutiae.Length; ++neighbor)
+                        allSqDistances[neighbor] = Calc.DistanceSq(referencePosition, template.Minutiae[neighbor].Position);
                     Array.Sort(allSqDistances);
                     sqMaxDistance = allSqDistances[MaxNeighbors];
                 }
-                for (int neighbor = 0; neighbor < Template.Minutiae.Length; ++neighbor)
+                for (int neighbor = 0; neighbor < template.Minutiae.Length; ++neighbor)
                 {
-                    if (neighbor != reference && Calc.DistanceSq(referencePosition, Template.Minutiae[neighbor].Position) <= sqMaxDistance)
+                    if (neighbor != reference && Calc.DistanceSq(referencePosition, template.Minutiae[neighbor].Position) <= sqMaxDistance)
                     {
                         NeighborEdge record = new NeighborEdge();
-                        record.Edge = EdgeConstructor.Construct(Template, reference, neighbor);
+                        record.Edge = EdgeConstructor.Construct(template, reference, neighbor);
                         record.Neighbor = neighbor;
-                        Edges.Add(record);
+                        edges.Add(record);
                     }
                 }
 
-                Edges.Sort(NeighborEdgeComparer.Instance);
-                if (Edges.Count > MaxNeighbors)
-                    Edges.RemoveRange(MaxNeighbors, Edges.Count - MaxNeighbors);
-                Table[reference] = Edges.ToArray();
-                Edges.Clear();
+                edges.Sort(NeighborEdgeComparer.Instance);
+                if (edges.Count > MaxNeighbors)
+                    edges.RemoveRange(MaxNeighbors, edges.Count - MaxNeighbors);
+                Table[reference] = edges.ToArray();
+                edges.Clear();
             }
-            return Table[reference];
+
+            Logger.Log(this);
         }
 
         class NeighborEdgeComparer : IComparer<NeighborEdge>
