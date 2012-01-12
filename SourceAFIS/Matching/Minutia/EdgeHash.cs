@@ -10,7 +10,7 @@ namespace SourceAFIS.Matching.Minutia
     {
         class IndexedEdge
         {
-            public EdgeInfo Shape;
+            public EdgeShape Shape;
             public EdgeLocation Location;
         }
 
@@ -50,7 +50,7 @@ namespace SourceAFIS.Matching.Minutia
                     }
         }
 
-        public IEnumerable<EdgeLocation> FindMatching(EdgeInfo candidateEdge)
+        public IEnumerable<EdgeLocation> FindMatching(EdgeShape candidateEdge)
         {
             object value;
             if (Hash.TryGetValue(EdgeLookup.ComputeHash(candidateEdge), out value))
