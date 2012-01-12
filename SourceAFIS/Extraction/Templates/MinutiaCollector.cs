@@ -11,7 +11,7 @@ namespace SourceAFIS.Extraction.Templates
     {
         [DpiAdjusted(Min = 2)]
         [Parameter(Lower = 3, Upper = 50)]
-        public int DirectionSegmentLength = 23;
+        public int DirectionSegmentLength = 21;
         [DpiAdjusted(Min = 0)]
         [Parameter(Lower = 0, Upper = 20)]
         public int DirectionSegmentSkip = 3;
