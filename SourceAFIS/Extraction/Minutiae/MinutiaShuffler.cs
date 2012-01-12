@@ -7,9 +7,9 @@ using SourceAFIS.Templates;
 
 namespace SourceAFIS.Extraction.Minutiae
 {
-    public sealed class MinutiaSorter
+    public sealed class MinutiaShuffler
     {
-        public void Sort(TemplateBuilder template)
+        public void Shuffle(TemplateBuilder template)
         {
             int seed = 0;
             foreach (var minutia in template.Minutiae)
