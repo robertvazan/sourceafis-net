@@ -63,6 +63,8 @@ namespace SourceAFIS.Extraction
         public MinutiaCollector MinutiaCollector = new MinutiaCollector();
         [Nested]
         public MinutiaSorter MinutiaSorter = new MinutiaSorter();
+        [Nested]
+        public StandardDpiScaling StandardDpiScaling = new StandardDpiScaling();
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
@@ -110,8 +112,8 @@ namespace SourceAFIS.Extraction
                 SkeletonBuilder ridges = null;
                 SkeletonBuilder valleys = null;
                 Parallel.Invoke(
-                    () => { ridges = ProcessSkeleton("Ridges", binary, innerMask); },
-                    () => { valleys = ProcessSkeleton("Valleys", inverted, innerMask); });
+                    () => { ridges = ProcessSkeleton("Ridges", binary); },
+                    () => { valleys = ProcessSkeleton("Valleys", inverted); });
 
                 template = new TemplateBuilder();
                 template.OriginalDpi = dpi;
@@ -120,12 +122,14 @@ namespace SourceAFIS.Extraction
 
                 MinutiaCollector.Collect(ridges, TemplateBuilder.MinutiaType.Ending, template);
                 MinutiaCollector.Collect(valleys, TemplateBuilder.MinutiaType.Bifurcation, template);
+                MinutiaMask.Filter(template, innerMask);
+                StandardDpiScaling.Scale(template);
                 MinutiaSorter.Sort(template);
             });
             return template;
         }
 
-        SkeletonBuilder ProcessSkeleton(string name, BinaryMap binary, BinaryMap innerMask)
+        SkeletonBuilder ProcessSkeleton(string name, BinaryMap binary)
         {
             SkeletonBuilder skeleton = null;
             DetailLogger.RunInContext(name, delegate()
@@ -139,7 +143,6 @@ namespace SourceAFIS.Extraction
                 GapRemover.Filter(skeleton);
                 TailRemover.Filter(skeleton);
                 FragmentRemover.Filter(skeleton);
-                MinutiaMask.Filter(skeleton, innerMask);
                 BranchMinutiaRemover.Filter(skeleton);
             });
             return skeleton;

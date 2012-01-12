@@ -73,13 +73,14 @@
     <Compile Include="Extraction\Filters\Thinner.cs" />
     <Compile Include="Extraction\Filters\ThresholdBinarizer.cs" />
     <Compile Include="Extraction\Filters\VotingFilter.cs" />
+    <Compile Include="Extraction\Minutiae\StandardDpiScaling.cs" />
     <Compile Include="Extraction\Model\BranchMinutiaRemover.cs" />
     <Compile Include="Extraction\Model\DotRemover.cs" />
     <Compile Include="Extraction\Model\FragmentRemover.cs" />
     <Compile Include="Extraction\Model\GapRemover.cs" />
     <Compile Include="Extraction\Model\ISkeletonFilter.cs" />
     <Compile Include="Extraction\Model\KnotRemover.cs" />
-    <Compile Include="Extraction\Model\MinutiaMask.cs" />
+    <Compile Include="Extraction\Minutiae\MinutiaMask.cs" />
     <Compile Include="Extraction\Model\PoreRemover.cs" />
     <Compile Include="Extraction\Model\RidgeTracer.cs" />
     <Compile Include="Extraction\Model\SkeletonBuilder.cs" />
