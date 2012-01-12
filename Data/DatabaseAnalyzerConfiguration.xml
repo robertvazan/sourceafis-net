@@ -43,6 +43,9 @@
 <!-- render ROC graph, set this to false to get reports faster -->
 <render-graph>true</render-graph>
 
+<!-- generate combined score table and ROC data points in XML format, set this to false to get reports faster -->
+<write-score-tables>false</write-score-tables>
+
 </matcher-benchmark>
 
 <!-- optimizer options -->

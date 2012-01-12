@@ -35,18 +35,22 @@ namespace SourceAFIS.Tuning.Errors
 
             public void Save(string folder)
             {
-                Directory.CreateDirectory(folder);
+                if (ReportScoreDetails || GraphDrawer != null)
+                    Directory.CreateDirectory(folder);
 
-                using (FileStream stream = File.Open(Path.Combine(folder, "CombinedScores.xml"), FileMode.Create))
+                if (ReportScoreDetails)
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(ScoreTable));
-                    serializer.Serialize(stream, CombinedScores);
-                }
+                    using (FileStream stream = File.Open(Path.Combine(folder, "CombinedScores.xml"), FileMode.Create))
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(ScoreTable));
+                        serializer.Serialize(stream, CombinedScores);
+                    }
 
-                using (FileStream stream = File.Open(Path.Combine(folder, "ROC.xml"), FileMode.Create))
-                {
-                    XmlSerializer serializer = new XmlSerializer(typeof(ROCCurve));
-                    serializer.Serialize(stream, ROC);
+                    using (FileStream stream = File.Open(Path.Combine(folder, "ROC.xml"), FileMode.Create))
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(ROCCurve));
+                        serializer.Serialize(stream, ROC);
+                    }
                 }
 
                 if (GraphDrawer != null)
@@ -61,6 +65,7 @@ namespace SourceAFIS.Tuning.Errors
         [XmlIgnore]
         public TopErrors TopErrors;
         public static Action<ROCCurve, string> GraphDrawer;
+        public static bool ReportScoreDetails = true;
 
         AccuracyStatistics() { }
 
