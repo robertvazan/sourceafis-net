@@ -12,6 +12,7 @@ namespace DatabaseAnalyzer
     {
         public DatabaseCollection TestDatabase;
         public ExtractorBenchmark ExtractorBenchmark;
+        public MatcherBenchmark MatcherBenchmark;
         public Optimizer Optimizer;
 
         public string Action;
@@ -36,6 +37,8 @@ namespace DatabaseAnalyzer
 
             ExtractorBenchmark.Timeout = GetFloat("extractor-benchmark/max-seconds", ExtractorBenchmark.Timeout);
 
+            MatcherBenchmark.MaxMatchingPerProbe = GetInt("matcher-benchmark/max-matching-pairs", Int32.MaxValue);
+            MatcherBenchmark.MaxNonMatchingPerProbe = GetInt("matcher-benchmark/max-non-matching-pairs", Int32.MaxValue);
             RenderGraph = GetBoolean("matcher-benchmark/render-graph", true);
 
             foreach (XPathNavigator element in Root.Select("/database-analyzer/optimizer/mutate"))

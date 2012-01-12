@@ -17,6 +17,8 @@ namespace SourceAFIS.Tuning
         public DatabaseCollection TestDatabase = new DatabaseCollection();
         public ParallelMatcher Matcher = new ParallelMatcher();
         public float Timeout = 300;
+        public int MaxMatchingPerProbe = Int32.MaxValue;
+        public int MaxNonMatchingPerProbe = Int32.MaxValue;
 
         ParallelMatcher.PreparedProbe PreparedProbe;
 
@@ -32,7 +34,9 @@ namespace SourceAFIS.Tuning
             for (int databaseIndex = 0; databaseIndex < TestDatabase.Databases.Count; ++databaseIndex)
             {
                 TestDatabase database = TestDatabase.Databases[databaseIndex];
-                report.ScoreTables[databaseIndex].Initialize(database.Fingers.Count, database.ViewCount);
+                database.MaxMatchingPerProbe = MaxMatchingPerProbe;
+                database.MaxNonMatchingPerProbe = MaxNonMatchingPerProbe;
+                report.ScoreTables[databaseIndex].Initialize(database);
                 foreach (DatabaseIndex probe in database.AllIndexes)
                 {
                     RunPrepare(database[probe].Template, prepareTimer);

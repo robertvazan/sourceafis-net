@@ -13,20 +13,26 @@ namespace SourceAFIS.Tuning.Database
         public abstract int FingerCount { get; }
 		[XmlAttribute]
         public abstract int ViewCount { get; }
+        [XmlAttribute]
+        public abstract int MatchingPerProbe { get; }
+        [XmlAttribute]
+        public abstract int NonMatchingPerProbe { get; }
         
 		[XmlAttribute]
         public int FpCount { get { return FingerCount * ViewCount; } }
 
-        public IEnumerable<DatabaseIndex> GetConsequentViews(DatabaseIndex probe)
+        public IEnumerable<DatabaseIndex> GetSelfAndConsequentViews(DatabaseIndex probe)
         {
-            return from offset in Enumerable.Range(1, ViewCount - 1)
+            return from offset in Enumerable.Range(0, ViewCount)
                    select new DatabaseIndex(probe.Finger, (probe.View + offset) % ViewCount);
         }
 
+        public IEnumerable<DatabaseIndex> GetConsequentViews(DatabaseIndex probe) { return GetSelfAndConsequentViews(probe).Skip(1); }
+
         public IEnumerable<TestPair> GetMatchingPairs(DatabaseIndex probe)
         {
-            return from candidate in GetConsequentViews(probe)
-                   select new TestPair(probe, candidate);
+            return (from candidate in GetConsequentViews(probe)
+                    select new TestPair(probe, candidate)).Take(MatchingPerProbe);
         }
 
         public IEnumerable<DatabaseIndex> GetConsequentFingers(DatabaseIndex probe)
@@ -37,8 +43,9 @@ namespace SourceAFIS.Tuning.Database
 
         public IEnumerable<TestPair> GetNonMatchingPairs(DatabaseIndex probe)
         {
-            return from candidate in GetConsequentFingers(probe)
-                   select new TestPair(probe, candidate);
+            return (from view in GetSelfAndConsequentViews(probe)
+                    from candidate in GetConsequentFingers(view)
+                    select new TestPair(probe, candidate)).Take(NonMatchingPerProbe);
         }
 
         public IEnumerable<TestPair> GetAllPairs(DatabaseIndex probe)

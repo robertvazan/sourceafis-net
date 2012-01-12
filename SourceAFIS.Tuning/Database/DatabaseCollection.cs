@@ -38,7 +38,7 @@ namespace SourceAFIS.Tuning.Database
                                           orderby Path.GetFileNameWithoutExtension(filepath).ToLower()
                                           select filepath).ToList();
 
-                    Databases.Add(new TestDatabase(files, (int)aboutXml.Attribute("dpi")));
+                    Databases.Add(new TestDatabase(files) { Dpi = (int)aboutXml.Attribute("dpi") });
                 }
             }
 
@@ -96,12 +96,12 @@ namespace SourceAFIS.Tuning.Database
 
         public int GetMatchingPairCount()
         {
-            return Databases.Sum(db => db.Fingers.Count * db.ViewCount * (db.ViewCount - 1));
+            return Databases.Sum(db => db.FpCount * db.MatchingPerProbe);
         }
 
         public int GetNonMatchingPairCount()
         {
-            return Databases.Sum(db => db.ViewCount * db.Fingers.Count * (db.Fingers.Count - 1));
+            return Databases.Sum(db => db.FpCount * db.NonMatchingPerProbe);
         }
     }
 }
