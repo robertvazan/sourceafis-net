@@ -6,7 +6,7 @@ namespace SourceAFIS.Matching.Minutia
 {
     public struct NeighborEdge
     {
-        public EdgeInfo Edge;
+        public EdgeShape Edge;
         public int Neighbor;
     }
 }

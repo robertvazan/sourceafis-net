@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SourceAFIS.Matching.Minutia
 {
-    public struct EdgeInfo
+    public struct EdgeShape
     {
         public short Length;
         public byte ReferenceAngle;
