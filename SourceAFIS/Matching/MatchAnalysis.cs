@@ -10,7 +10,7 @@ namespace SourceAFIS.Matching
     public sealed class MatchAnalysis
     {
         [Parameter(Lower = 0, Upper = 5)]
-        public int MinSupportingEdges = 1;
+        public int MinSupportingEdges = 2;
 
         public int PairCount;
         public int CorrectTypeCount;

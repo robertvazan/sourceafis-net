@@ -9,7 +9,7 @@ namespace SourceAFIS.Matching
     public sealed class MatchScoring
     {
         [Parameter(Upper = 10)]
-        public float PairCountFactor = 0.48f;
+        public float PairCountFactor = 1.47f;
         [Parameter(Upper = 100)]
         public float PairFractionFactor = 6.7f;
         [Parameter(Upper = 10)]
