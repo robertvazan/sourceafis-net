@@ -34,8 +34,11 @@ namespace SourceAFIS.Tuning.Errors
         public static readonly TakeKofN Single = new TakeKofN(0, 1);
         public static readonly TakeKofN Take1Of1 = new TakeKofN(0, 1);
         public static readonly TakeKofN Take1Of2 = new TakeKofN(0, 2);
+        public static readonly TakeKofN Take1Of3 = new TakeKofN(0, 3);
         public static readonly TakeKofN Take2Of3 = new TakeKofN(1, 3);
+        public static readonly TakeKofN Take1Of4 = new TakeKofN(0, 4);
         public static readonly TakeKofN Take2Of4 = new TakeKofN(1, 4);
-        public static readonly TakeKofN Take3Of5 = new TakeKofN(2, 5);
+        public static readonly TakeKofN Take1Of5 = new TakeKofN(0, 5);
+        public static readonly TakeKofN Take2Of5 = new TakeKofN(1, 5);
     }
 }
