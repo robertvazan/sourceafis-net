@@ -23,6 +23,22 @@ namespace SourceAFIS.Matching.Minutia
 
         public void Reset(Template template)
         {
+            lock (template)
+                Table = template.MatcherCache as NeighborEdge[][];
+
+            if (Table == null)
+            {
+                BuildTable(template);
+
+                lock (template)
+                    template.MatcherCache = Table;
+            }
+
+            Logger.Log(this);
+        }
+
+        void BuildTable(Template template)
+        {
             Table = new NeighborEdge[template.Minutiae.Length][];
             var edges = new List<NeighborEdge>();
             var allSqDistances = new int[template.Minutiae.Length];
@@ -55,8 +71,6 @@ namespace SourceAFIS.Matching.Minutia
                 Table[reference] = edges.ToArray();
                 edges.Clear();
             }
-
-            Logger.Log(this);
         }
 
         class NeighborEdgeComparer : IComparer<NeighborEdge>
