@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
 
-namespace SourceAFIS.Extraction.Templates
+namespace SourceAFIS.Templates
 {
     public sealed class TemplateBuilder
     {

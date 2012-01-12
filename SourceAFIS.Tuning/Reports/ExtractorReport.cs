@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using SourceAFIS.Tuning;
 using SourceAFIS.Tuning.Database;
-using SourceAFIS.Extraction.Templates;
+using SourceAFIS.Templates;
 
 namespace SourceAFIS.Tuning.Reports
 {

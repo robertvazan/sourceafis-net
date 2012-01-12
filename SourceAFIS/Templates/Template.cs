@@ -4,7 +4,7 @@ using System.Text;
 using SourceAFIS.General;
 using SourceAFIS.Dummy;
 
-namespace SourceAFIS.Extraction.Templates
+namespace SourceAFIS.Templates
 {
     [Serializable]
     public sealed class Template : ICloneable

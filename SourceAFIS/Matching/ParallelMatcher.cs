@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using SourceAFIS.Meta;
 using SourceAFIS.General;
 using SourceAFIS.Dummy;
-using SourceAFIS.Extraction.Templates;
+using SourceAFIS.Templates;
 using SourceAFIS.Matching.Minutia;
 
 namespace SourceAFIS.Matching

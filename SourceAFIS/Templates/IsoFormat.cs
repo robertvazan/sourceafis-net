@@ -7,7 +7,7 @@ using System.Net;
 using SourceAFIS.General;
 using SourceAFIS.Dummy;
 
-namespace SourceAFIS.Extraction.Templates
+namespace SourceAFIS.Templates
 {
     public sealed class IsoFormat : TemplateFormatBase<byte[]>
     {

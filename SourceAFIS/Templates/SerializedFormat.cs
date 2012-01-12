@@ -8,7 +8,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 #endif
 using SourceAFIS.General;
 
-namespace SourceAFIS.Extraction.Templates
+namespace SourceAFIS.Templates
 {
     public sealed class SerializedFormat : TemplateFormatBase<Template>
     {

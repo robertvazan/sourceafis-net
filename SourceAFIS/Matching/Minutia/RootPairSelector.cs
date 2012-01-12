@@ -4,7 +4,7 @@ using System.Text;
 using System.Linq;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
-using SourceAFIS.Extraction.Templates;
+using SourceAFIS.Templates;
 
 namespace SourceAFIS.Matching.Minutia
 {

@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 using SourceAFIS.General;
 using SourceAFIS.Dummy;
-using SourceAFIS.Extraction.Templates;
+using SourceAFIS.Templates;
 
 namespace SourceAFIS.Simple
 {
@@ -229,15 +229,15 @@ namespace SourceAFIS.Simple
         /// </para>
         /// <para>
         /// If you need access to the internal structure of the template, use
-        /// <see cref="SourceAFIS.Extraction.Templates.CompactFormat"/> to convert it to
-        /// <see cref="SourceAFIS.Extraction.Templates.TemplateBuilder"/>.
+        /// <see cref="SourceAFIS.Templates.CompactFormat"/> to convert it to
+        /// <see cref="SourceAFIS.Templates.TemplateBuilder"/>.
         /// </para>
         /// </remarks>
         /// <seealso cref="Image"/>
         /// <seealso cref="AfisEngine.Extract"/>
         /// <seealso cref="AsIsoTemplate"/>
-        /// <seealso cref="SourceAFIS.Extraction.Templates.CompactFormat"/>
-        /// <seealso cref="SourceAFIS.Extraction.Templates.TemplateBuilder"/>
+        /// <seealso cref="SourceAFIS.Templates.CompactFormat"/>
+        /// <seealso cref="SourceAFIS.Templates.TemplateBuilder"/>
         public byte[] Template
         {
             get { return Decoded != null ? CompactFormat.Export(SerializedFormat.Import(Decoded)) : null; }
@@ -266,8 +266,8 @@ namespace SourceAFIS.Simple
         /// </remarks>
         /// <seealso cref="Template"/>
         /// <seealso cref="AfisEngine.Extract"/>
-        /// <seealso cref="SourceAFIS.Extraction.Templates.IsoFormat"/>
-        /// <seealso cref="SourceAFIS.Extraction.Templates.TemplateBuilder"/>
+        /// <seealso cref="SourceAFIS.Templates.IsoFormat"/>
+        /// <seealso cref="SourceAFIS.Templates.TemplateBuilder"/>
         [XmlIgnore]
         public byte[] AsIsoTemplate
         {
@@ -289,8 +289,8 @@ namespace SourceAFIS.Simple
         /// </remarks>
         /// <seealso cref="Template"/>
         /// <seealso cref="AfisEngine.Extract"/>
-        /// <seealso cref="SourceAFIS.Extraction.Templates.XmlFormat"/>
-        /// <seealso cref="SourceAFIS.Extraction.Templates.TemplateBuilder"/>
+        /// <seealso cref="SourceAFIS.Templates.XmlFormat"/>
+        /// <seealso cref="SourceAFIS.Templates.TemplateBuilder"/>
         [XmlIgnore]
         public XElement AsXmlTemplate
         {

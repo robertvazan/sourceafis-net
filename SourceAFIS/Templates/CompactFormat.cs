@@ -7,7 +7,7 @@ using System.Net;
 using SourceAFIS.Dummy;
 using SourceAFIS.General;
 
-namespace SourceAFIS.Extraction.Templates
+namespace SourceAFIS.Templates
 {
     public sealed class CompactFormat : TemplateFormatBase<byte[]>
     {

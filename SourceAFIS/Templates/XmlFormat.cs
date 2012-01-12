@@ -7,7 +7,7 @@ using System.IO;
 using SourceAFIS.General;
 using SourceAFIS.Dummy;
 
-namespace SourceAFIS.Extraction.Templates
+namespace SourceAFIS.Templates
 {
     public sealed class XmlFormat : TemplateFormatBase<XElement>
     {

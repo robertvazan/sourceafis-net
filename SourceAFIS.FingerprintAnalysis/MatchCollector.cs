@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using SourceAFIS.Meta;
 using SourceAFIS.Matching;
-using SourceAFIS.Extraction.Templates;
+using SourceAFIS.Templates;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
