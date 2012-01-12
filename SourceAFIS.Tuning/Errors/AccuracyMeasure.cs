@@ -46,8 +46,18 @@ namespace SourceAFIS.Tuning.Errors
             all.Add(measure);
 
             measure = new AccuracyMeasure();
+            measure.Name = "1-of-3";
+            measure.MultiFingerPolicy = MultiFingerPolicy.Take1Of3;
+            all.Add(measure);
+
+            measure = new AccuracyMeasure();
             measure.Name = "2-of-3";
             measure.MultiFingerPolicy = MultiFingerPolicy.Take2Of3;
+            all.Add(measure);
+
+            measure = new AccuracyMeasure();
+            measure.Name = "1-of-4";
+            measure.MultiFingerPolicy = MultiFingerPolicy.Take1Of4;
             all.Add(measure);
 
             measure = new AccuracyMeasure();
@@ -56,8 +66,13 @@ namespace SourceAFIS.Tuning.Errors
             all.Add(measure);
 
             measure = new AccuracyMeasure();
-            measure.Name = "3-of-5";
-            measure.MultiFingerPolicy = MultiFingerPolicy.Take3Of5;
+            measure.Name = "1-of-5";
+            measure.MultiFingerPolicy = MultiFingerPolicy.Take1Of5;
+            all.Add(measure);
+
+            measure = new AccuracyMeasure();
+            measure.Name = "2-of-5";
+            measure.MultiFingerPolicy = MultiFingerPolicy.Take2Of5;
             all.Add(measure);
 
             measure = new AccuracyMeasure();
