@@ -4,8 +4,9 @@ using System.Text;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 using SourceAFIS.Extraction.Model;
+using SourceAFIS.Extraction.Templates;
 
-namespace SourceAFIS.Extraction.Templates
+namespace SourceAFIS.Extraction.Minutiae
 {
     public sealed class MinutiaCollector
     {

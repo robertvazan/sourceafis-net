@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SourceAFIS.General;
+using SourceAFIS.Extraction.Templates;
 
-namespace SourceAFIS.Extraction.Templates
+namespace SourceAFIS.Extraction.Minutiae
 {
     public sealed class MinutiaSorter
     {
