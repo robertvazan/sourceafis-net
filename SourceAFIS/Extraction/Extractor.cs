@@ -9,6 +9,7 @@ using SourceAFIS.Dummy;
 using SourceAFIS.Meta;
 using SourceAFIS.Extraction.Filters;
 using SourceAFIS.Extraction.Model;
+using SourceAFIS.Extraction.Minutiae;
 using SourceAFIS.Extraction.Templates;
 
 namespace SourceAFIS.Extraction
