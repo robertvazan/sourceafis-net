@@ -12,17 +12,24 @@ namespace SourceAFIS.Matching.Minutia
     {
         [Parameter(Lower = 5, Upper = 300)]
         public int MinEdgeLength = 50;
+        [Parameter(Lower = 5, Upper = 100000)]
+        public int MaxEdgeLookups = 1000;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
+        int LookupCounter;
+
         public IEnumerable<MinutiaPair> GetRoots(ProbeIndex probeIndex, Template candidateTemplate)
         {
+            LookupCounter = 0;
             return GetFilteredRoots(probeIndex, candidateTemplate, shape => shape.Length >= MinEdgeLength)
                 .Concat(GetFilteredRoots(probeIndex, candidateTemplate, shape => shape.Length < MinEdgeLength));
         }
 
         public IEnumerable<MinutiaPair> GetFilteredRoots(ProbeIndex probeIndex, Template candidateTemplate, Predicate<EdgeShape> shapeFilter)
         {
+            if (LookupCounter >= MaxEdgeLookups)
+                yield break;
             var edgeConstructor = new EdgeConstructor();
             for (int step = 1; step < candidateTemplate.Minutiae.Length; ++step)
                 for (int pass = 0; pass < step + 1; ++pass)
@@ -38,6 +45,9 @@ namespace SourceAFIS.Matching.Minutia
                                 if (Logger.IsActive)
                                     Logger.Log(pair);
                                 yield return pair;
+                                ++LookupCounter;
+                                if (LookupCounter >= MaxEdgeLookups)
+                                    yield break;
                             }
                         }
                     }
