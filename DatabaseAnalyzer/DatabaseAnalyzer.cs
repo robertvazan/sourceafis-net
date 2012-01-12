@@ -63,7 +63,8 @@ namespace DatabaseAnalyzer
         void RunMatcherBenchmark()
         {
 #if !MONO
-            AccuracyStatistics.GraphDrawer = (curve, file) => { WpfIO.Save(RocGraph.Render(curve), file); };
+            if (Options.RenderGraph)
+                AccuracyStatistics.GraphDrawer = (curve, file) => { WpfIO.Save(RocGraph.Render(curve), file); };
 #endif
 
             string dbPath = Path.Combine("Extractor", "Templates.dat");

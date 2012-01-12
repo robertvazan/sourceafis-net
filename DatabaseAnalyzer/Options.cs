@@ -15,6 +15,7 @@ namespace DatabaseAnalyzer
         public Optimizer Optimizer;
 
         public string Action;
+        public bool RenderGraph;
 
         XPathDocument XmlDocument;
         XPathNavigator Root;
@@ -34,6 +35,8 @@ namespace DatabaseAnalyzer
             ClipDatabase("views-per-finger", TestDatabase.ClipViewsPerFinger);
 
             ExtractorBenchmark.Timeout = GetFloat("extractor-benchmark/max-seconds", ExtractorBenchmark.Timeout);
+
+            RenderGraph = GetBoolean("matcher-benchmark/render-graph", true);
 
             foreach (XPathNavigator element in Root.Select("/database-analyzer/optimizer/mutate"))
                 Optimizer.Mutations.ManualAdvisor.ParameterPaths.Add(element.Value);
@@ -62,6 +65,15 @@ namespace DatabaseAnalyzer
             XPathNavigator element = Root.SelectSingleNode("/database-analyzer/" + path);
             if (element != null)
                 return Convert.ToSingle(element.Value);
+            else
+                return defaultValue;
+        }
+
+        bool GetBoolean(string path, bool defaultValue)
+        {
+            XPathNavigator element = Root.SelectSingleNode("/database-analyzer/" + path);
+            if (element != null)
+                return Convert.ToBoolean(element.Value);
             else
                 return defaultValue;
         }
