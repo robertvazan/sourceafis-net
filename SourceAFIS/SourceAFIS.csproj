@@ -73,6 +73,7 @@
     <Compile Include="Extraction\Filters\Thinner.cs" />
     <Compile Include="Extraction\Filters\ThresholdBinarizer.cs" />
     <Compile Include="Extraction\Filters\VotingFilter.cs" />
+    <Compile Include="Extraction\Minutiae\MinutiaCloudRemover.cs" />
     <Compile Include="Extraction\Minutiae\StandardDpiScaling.cs" />
     <Compile Include="Extraction\Model\BranchMinutiaRemover.cs" />
     <Compile Include="Extraction\Model\DotRemover.cs" />
