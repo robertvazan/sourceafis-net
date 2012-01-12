@@ -10,7 +10,7 @@ namespace SourceAFIS.Tuning.Optimization
         public float Extraction = 0.3f;
         public float Prepare = 0.05f;
         public float Matching = 0.005f;
-        public float NonMatching = 0.005f;
+        public float NonMatching = 0.000095f;
 
         public bool Check(ExtractorReport report)
         {
