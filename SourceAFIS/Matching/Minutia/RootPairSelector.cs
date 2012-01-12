@@ -24,22 +24,23 @@ namespace SourceAFIS.Matching.Minutia
         public IEnumerable<MinutiaPair> GetFilteredRoots(ProbeIndex probeIndex, Template candidateTemplate, Predicate<EdgeShape> shapeFilter)
         {
             var edgeConstructor = new EdgeConstructor();
-            for (int candidateReference = 1; candidateReference < candidateTemplate.Minutiae.Length; ++candidateReference)
-                for (int candidateNeighbor = 0; candidateNeighbor < candidateTemplate.Minutiae.Length; ++candidateNeighbor)
-                {
-                    int mixedCandidateReference = (candidateReference + candidateNeighbor) % candidateTemplate.Minutiae.Length;
-                    var candidateEdge = edgeConstructor.Construct(candidateTemplate, mixedCandidateReference, candidateNeighbor);
-                    if (shapeFilter(candidateEdge))
+            for (int step = 1; step < candidateTemplate.Minutiae.Length; ++step)
+                for (int pass = 0; pass < step + 1; ++pass)
+                    for (int candidateReference = pass; candidateReference < candidateTemplate.Minutiae.Length; candidateReference += step + 1)
                     {
-                        foreach (var probeEdge in probeIndex.EdgeHash.FindMatching(candidateEdge))
+                        int candidateNeighbor = (candidateReference + step) % candidateTemplate.Minutiae.Length;
+                        var candidateEdge = edgeConstructor.Construct(candidateTemplate, candidateReference, candidateNeighbor);
+                        if (shapeFilter(candidateEdge))
                         {
-                            var pair = new MinutiaPair(probeEdge.Reference, mixedCandidateReference);
-                            if (Logger.IsActive)
-                                Logger.Log(pair);
-                            yield return pair;
+                            foreach (var probeEdge in probeIndex.EdgeHash.FindMatching(candidateEdge))
+                            {
+                                var pair = new MinutiaPair(probeEdge.Reference, candidateReference);
+                                if (Logger.IsActive)
+                                    Logger.Log(pair);
+                                yield return pair;
+                            }
                         }
                     }
-                }
         }
     }
 }
