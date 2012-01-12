@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.XPath;
 using SourceAFIS.Tuning;
 using SourceAFIS.Tuning.Database;
+using SourceAFIS.Tuning.Errors;
 
 namespace DatabaseAnalyzer
 {
@@ -39,6 +40,7 @@ namespace DatabaseAnalyzer
 
             MatcherBenchmark.MaxMatchingPerProbe = GetInt("matcher-benchmark/max-matching-pairs", Int32.MaxValue);
             MatcherBenchmark.MaxNonMatchingPerProbe = GetInt("matcher-benchmark/max-non-matching-pairs", Int32.MaxValue);
+            AccuracyStatistics.ReportScoreDetails = GetBoolean("matcher-benchmark/write-score-tables", true);
             RenderGraph = GetBoolean("matcher-benchmark/render-graph", true);
 
             foreach (XPathNavigator element in Root.Select("/database-analyzer/optimizer/mutate"))
