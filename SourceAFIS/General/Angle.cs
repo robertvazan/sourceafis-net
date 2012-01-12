@@ -207,13 +207,13 @@ namespace SourceAFIS.General
             return (byte)(angle + PIB);
         }
 
-        const int PolarCacheBits = 6;
+        const int PolarCacheBits = 8;
         const uint PolarCacheRadius = 1u << PolarCacheBits;
         const uint PolarCacheMask = PolarCacheRadius - 1;
 
         struct PolarPointB
         {
-            public byte Distance;
+            public short Distance;
             public byte Angle;
         }
 
@@ -225,7 +225,7 @@ namespace SourceAFIS.General
             for (int y = 0; y < PolarCacheRadius; ++y)
                 for (int x = 0; x < PolarCacheRadius; ++x)
                 {
-                    cache[y, x].Distance = Convert.ToByte(Math.Round(Math.Sqrt(Calc.Sq(x) + Calc.Sq(y))));
+                    cache[y, x].Distance = Convert.ToInt16(Math.Round(Math.Sqrt(Calc.Sq(x) + Calc.Sq(y))));
                     if (y > 0 || x > 0)
                         cache[y, x].Angle = Angle.AtanB(new Point(x, y));
                     else
