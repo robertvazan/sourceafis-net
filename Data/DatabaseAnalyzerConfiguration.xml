@@ -31,6 +31,14 @@
 
 </extractor-benchmark>
 
+<!-- matcher options -->
+<matcher-benchmark>
+
+<!-- render ROC graph, set this to false to get reports faster -->
+<render-graph>true</render-graph>
+
+</matcher-benchmark>
+
 <!-- optimizer options -->
 <optimizer>
 
