@@ -53,6 +53,9 @@ namespace SourceAFIS.Extraction.Templates
 
         public readonly Minutia[] Minutiae;
 
+        [NonSerialized]
+        internal object MatcherCache;
+
         public Template(TemplateBuilder builder)
         {
             OriginalDpi = builder.OriginalDpi;
