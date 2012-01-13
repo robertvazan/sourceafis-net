@@ -15,6 +15,8 @@ namespace SourceAFIS.Extraction.Minutiae
         [Parameter(Upper = 30)]
         public int MaxNeighbors = 4;
 
+        public DetailLogger.Hook Logger = DetailLogger.Null;
+
         public void Filter(TemplateBuilder template)
         {
             var radiusSq = Calc.Sq(NeighborhoodRadius);
@@ -22,6 +24,7 @@ namespace SourceAFIS.Extraction.Minutiae
                 (from minutia in template.Minutiae
                  where template.Minutiae.Count(neighbor => Calc.DistanceSq(neighbor.Position, minutia.Position) <= radiusSq) - 1 > MaxNeighbors
                  select minutia).ToList()).ToList();
+            Logger.Log(template);
         }
     }
 }

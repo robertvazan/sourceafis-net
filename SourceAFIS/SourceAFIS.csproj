@@ -75,6 +75,7 @@
     <Compile Include="Extraction\Filters\VotingFilter.cs" />
     <Compile Include="Extraction\Minutiae\MinutiaCloudRemover.cs" />
     <Compile Include="Extraction\Minutiae\StandardDpiScaling.cs" />
+    <Compile Include="Extraction\Minutiae\UniqueMinutiaSorter.cs" />
     <Compile Include="Extraction\Model\BranchMinutiaRemover.cs" />
     <Compile Include="Extraction\Model\DotRemover.cs" />
     <Compile Include="Extraction\Model\FragmentRemover.cs" />
@@ -91,7 +92,7 @@
     <Compile Include="Templates\IsoFormat.cs" />
     <Compile Include="Templates\ITemplateFormat.cs" />
     <Compile Include="Extraction\Minutiae\MinutiaCollector.cs" />
-    <Compile Include="Extraction\Minutiae\MinutiaSorter.cs" />
+    <Compile Include="Extraction\Minutiae\MinutiaShuffler.cs" />
     <Compile Include="Templates\SerializedFormat.cs" />
     <Compile Include="Templates\Template.cs" />
     <Compile Include="Templates\TemplateBuilder.cs" />

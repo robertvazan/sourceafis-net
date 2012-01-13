@@ -67,6 +67,8 @@ namespace SourceAFIS.Extraction
         public StandardDpiScaling StandardDpiScaling = new StandardDpiScaling();
         [Nested]
         public MinutiaCloudRemover MinutiaCloudRemover = new MinutiaCloudRemover();
+        [Nested]
+        public UniqueMinutiaSorter UniqueMinutiaSorter = new UniqueMinutiaSorter();
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
@@ -127,6 +129,7 @@ namespace SourceAFIS.Extraction
                 MinutiaMask.Filter(template, innerMask);
                 StandardDpiScaling.Scale(template);
                 MinutiaCloudRemover.Filter(template);
+                UniqueMinutiaSorter.Filter(template);
                 MinutiaSorter.Shuffle(template);
             });
             return template;
