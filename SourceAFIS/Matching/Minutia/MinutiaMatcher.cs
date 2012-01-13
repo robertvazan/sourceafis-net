@@ -123,7 +123,10 @@ namespace SourceAFIS.Matching.Minutia
                 if (!Pairing.IsCandidatePaired(neighbor.Candidate) && !Pairing.IsProbePaired(neighbor.Probe))
                     PairSelector.Enqueue(new EdgePair(reference, neighbor), match.Distance);
                 else if (Pairing.IsProbePaired(neighbor.Probe) && Pairing.GetByProbe(neighbor.Probe).Pair.Candidate == neighbor.Candidate)
+                {
+                    Pairing.AddSupportByProbe(reference.Probe);
                     Pairing.AddSupportByProbe(neighbor.Probe);
+                }
             }
         }
     }
