@@ -8,14 +8,8 @@ namespace SourceAFIS.Matching.Minutia
 {
     public sealed class EdgeHash
     {
-        class IndexedEdge
-        {
-            public EdgeShape Shape;
-            public EdgeLocation Location;
-        }
-
-        EdgeLookup EdgeLookup;
-        Dictionary<int, object> Hash = new Dictionary<int, object>();
+        internal EdgeLookup EdgeLookup;
+        internal Dictionary<int, object> Hash = new Dictionary<int, object>();
 
         public EdgeHash(Template template, EdgeLookup lookup)
         {
@@ -48,27 +42,6 @@ namespace SourceAFIS.Matching.Minutia
                             }
                         }
                     }
-        }
-
-        public IEnumerable<EdgeLocation> FindMatching(EdgeShape candidateEdge)
-        {
-            object value;
-            if (Hash.TryGetValue(EdgeLookup.ComputeHash(candidateEdge), out value))
-            {
-                var list = value as List<IndexedEdge>;
-                if (list != null)
-                {
-                    foreach (var entry in list)
-                        if (EdgeLookup.MatchingEdges(entry.Shape, candidateEdge))
-                            yield return entry.Location;
-                }
-                else
-                {
-                    var entry = value as IndexedEdge;
-                    if (EdgeLookup.MatchingEdges(entry.Shape, candidateEdge))
-                        yield return entry.Location;
-                }
-            }
         }
     }
 }
