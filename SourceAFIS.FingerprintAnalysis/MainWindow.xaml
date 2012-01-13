@@ -10,9 +10,16 @@
         <local:LogDecoder x:Key="Logs" />
         <ObjectDataProvider MethodName="GetEnumValues"
                         ObjectType="{x:Type local:Options}"
-                        x:Key="LayerTypeValues">
+                        x:Key="BitmapLayerValues">
             <ObjectDataProvider.MethodParameters>
-                <sys:String>SourceAFIS.FingerprintAnalysis.Layer</sys:String>
+                <sys:String>SourceAFIS.FingerprintAnalysis.BitmapLayer</sys:String>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider MethodName="GetEnumValues"
+                        ObjectType="{x:Type local:Options}"
+                        x:Key="MarkerLayerValues">
+            <ObjectDataProvider.MethodParameters>
+                <sys:String>SourceAFIS.FingerprintAnalysis.MarkerLayer</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider MethodName="GetEnumValues"
@@ -44,7 +51,8 @@
     <DockPanel Margin="2" DataContext="{StaticResource OptionsData}">
         <ScrollViewer VerticalScrollBarVisibility="Auto" DockPanel.Dock="Right" MinWidth="160">
             <StackPanel>
-                <ComboBox SelectedItem="{Binding DisplayLayer}" ItemsSource="{Binding Source={StaticResource LayerTypeValues}}" Name="LayerChoice" />
+                <ComboBox SelectedItem="{Binding BitmapLayer}" ItemsSource="{Binding Source={StaticResource BitmapLayerValues}}" Name="BitmapLayerChoice" />
+                <ComboBox SelectedItem="{Binding MarkerLayer}" ItemsSource="{Binding Source={StaticResource MarkerLayerValues}}" Name="MarkerLayerChoice" />
                 <ComboBox SelectedItem="{Binding Skeleton}" ItemsSource="{Binding Source={StaticResource SkeletonTypeValues}}" Name="SkeletonChoice" />
                 <ComboBox SelectedItem="{Binding Mask}" ItemsSource="{Binding Source={StaticResource MaskTypeValues}}" Name="MaskChoice" />
                 <CheckBox Content="Contrast" IsChecked="{Binding Contrast}" />

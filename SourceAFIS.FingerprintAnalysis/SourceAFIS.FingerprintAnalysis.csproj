@@ -60,7 +60,7 @@
     <Compile Include="FingerView.xaml.cs">
       <DependentUpon>FingerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Layer.cs" />
+    <Compile Include="BitmapLayer.cs" />
     <Compile Include="LogCollector.cs" />
     <Compile Include="ExtractionCollector.cs" />
     <Compile Include="ExtractionData.cs" />
@@ -68,6 +68,7 @@
     <Compile Include="IPushNotification.cs" />
     <Compile Include="LogDecoder.cs" />
     <Compile Include="LogData.cs" />
+    <Compile Include="MarkerLayer.cs" />
     <Compile Include="MaskType.cs" />
     <Compile Include="MatchCollector.cs" />
     <Compile Include="MatchData.cs" />

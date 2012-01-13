@@ -14,42 +14,42 @@
     <Viewbox DataContext="{Binding ElementName=FingerViewControl}">
         <Canvas Width="{Binding ExtractionData.Width}" Height="{Binding ExtractionData.Height}" ClipToBounds="True" Name="MainCanvas">
             <v:ByteArrayImage InputArray="{Binding ExtractionData.InputImage}"
-                              Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.OriginalImage}}"/>
+                              Visibility="{Binding Options.BitmapLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:BitmapLayer.OriginalImage}}"/>
             <v:FloatArrayImage InputArray="{Binding ExtractionData.Equalized}"
-                               Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.Equalized}}"/>
+                               Visibility="{Binding Options.BitmapLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:BitmapLayer.Equalized}}"/>
             <v:FloatArrayImage InputArray="{Binding ExtractionData.SmoothedRidges}"
-                               Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.SmoothedRidges}}"/>
+                               Visibility="{Binding Options.BitmapLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:BitmapLayer.SmoothedRidges}}"/>
             <v:FloatArrayImage InputArray="{Binding ExtractionData.OrthogonalSmoothing}"
-                               Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.OrthogonalSmoothing}}"/>
+                               Visibility="{Binding Options.BitmapLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:BitmapLayer.OrthogonalSmoothing}}"/>
             <v:MaskView Mask="{Binding ExtractionData.Binarized}" ZeroColor="White" OneColor="Black"
-                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.Binarized}}"/>
+                        Visibility="{Binding Options.BitmapLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:BitmapLayer.Binarized}}"/>
             <v:MaskView Mask="{Binding ExtractionData.BinarySmoothing}" ZeroColor="White" OneColor="Black"
-                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.BinarySmoothing}}"/>
+                        Visibility="{Binding Options.BitmapLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:BitmapLayer.BinarySmoothing}}"/>
             <v:MaskView Mask="{Binding ExtractionData.RemovedCrosses}" ZeroColor="White" OneColor="Black"
-                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.RemovedCrosses}}"/>
+                        Visibility="{Binding Options.BitmapLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:BitmapLayer.RemovedCrosses}}"/>
             <v:MaskView Mask="{Binding SkeletonData.Thinned}" ZeroColor="White" OneColor="Green"
-                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.Thinned}}"/>
+                        Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.Thinned}}"/>
             <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
                             Skeleton="{Binding SkeletonData.RidgeTracer}"
-                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.RidgeTracer}}"/>
+                            Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.RidgeTracer}}"/>
             <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
                             Skeleton="{Binding SkeletonData.DotRemover}"
-                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.DotRemover}}"/>
+                            Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.DotRemover}}"/>
             <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
                             Skeleton="{Binding SkeletonData.PoreRemover}"
-                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.PoreRemover}}"/>
+                            Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.PoreRemover}}"/>
             <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
                             Skeleton="{Binding SkeletonData.GapRemover}"
-                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.GapRemover}}"/>
+                            Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.GapRemover}}"/>
             <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
                             Skeleton="{Binding SkeletonData.TailRemover}"
-                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.TailRemover}}"/>
+                            Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.TailRemover}}"/>
             <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
                             Skeleton="{Binding SkeletonData.FragmentRemover}"
-                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.FragmentRemover}}"/>
+                            Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.FragmentRemover}}"/>
             <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
                             Skeleton="{Binding SkeletonData.BranchMinutiaRemover}"
-                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.BranchMinutiaRemover}}"/>
+                            Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.BranchMinutiaRemover}}"/>
             <v:BlockMaskBorder Mask="{Binding ExtractionData.AbsoluteContrast}" Blocks="{Binding ExtractionData.Blocks}"
                                Visibility="{Binding Options.Mask, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MaskType.AbsoluteContrast}}"/>
             <v:BlockMaskBorder Mask="{Binding ExtractionData.RelativeContrast}" Blocks="{Binding ExtractionData.Blocks}"
@@ -66,9 +66,9 @@
                                 OrientationMap="{Binding ExtractionData.Orientation}"
                                 Visibility="{Binding Options.Orientation, Converter={StaticResource BooleanToVisibility}}"/>
             <v:Minutiae FpTemplate="{Binding ExtractionData.MinutiaCollector}"
-                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.MinutiaCollector}}"/>
+                        Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.MinutiaCollector}}"/>
             <v:Minutiae FpTemplate="{Binding ExtractionData.MinutiaMask}"
-                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.MinutiaMask}}"/>
+                        Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.MinutiaMask}}"/>
             <v:MatchedMinutiae Pairing="{Binding MatchData.Pairing}" FpTemplate="{Binding ExtractionData.MinutiaCollector}" MatchSide="{Binding MatchSide}"
                                Visibility="{Binding Options.PairedMinutiae, Converter={StaticResource BooleanToVisibility}}" />
         </Canvas>
