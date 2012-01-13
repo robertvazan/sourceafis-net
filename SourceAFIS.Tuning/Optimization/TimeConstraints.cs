@@ -12,16 +12,18 @@ namespace SourceAFIS.Tuning.Optimization
         public float Matching = 0.005f;
         public float NonMatching = 0.000095f;
 
-        public bool Check(ExtractorReport report)
+        public bool Check(ExtractorReport report, bool tolerant)
         {
-            return report.Time <= Extraction;
+            var tolerance = tolerant ? 1.1 : 1;
+            return report.Time <= Extraction * tolerance;
         }
 
-        public bool Check(MatcherReport report)
+        public bool Check(MatcherReport report, bool tolerant)
         {
-            return report.Time.Prepare <= Prepare
-                && report.Time.Matching <= Matching
-                && report.Time.NonMatching <= NonMatching;
+            var tolerance = tolerant ? 1.1 : 1;
+            return report.Time.Prepare <= Prepare * tolerance
+                && report.Time.Matching <= Matching * tolerance
+                && report.Time.NonMatching <= NonMatching * tolerance;
         }
     }
 }

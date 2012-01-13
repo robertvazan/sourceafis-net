@@ -23,7 +23,7 @@ namespace SourceAFIS.Tuning.Optimization
 
         public bool Fit(TestReport solution)
         {
-            if (TimeConstraints.Check(solution.Extractor) && TimeConstraints.Check(solution.Matcher))
+            if (TimeConstraints.Check(solution.Extractor, BestSolution == null) && TimeConstraints.Check(solution.Matcher, BestSolution == null))
             {
                 AccuracyStatistics performance = new AccuracyStatistics(solution.Matcher.ScoreTables, Measure);
 
