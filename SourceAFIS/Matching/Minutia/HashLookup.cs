@@ -37,7 +37,10 @@ namespace SourceAFIS.Matching.Minutia
                 {
                     for (CurrentOffset = 0; CurrentOffset < CurrentList.Count; ++CurrentOffset)
                         if (EdgeLookup.MatchingEdges(CurrentList[CurrentOffset].Shape, candidate))
+                        {
+                            CurrentCandidate = candidate;
                             return CurrentList[CurrentOffset++];
+                        }
                     return null;
                 }
             }
