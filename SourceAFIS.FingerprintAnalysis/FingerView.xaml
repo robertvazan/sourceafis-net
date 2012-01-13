@@ -27,7 +27,7 @@
                         Visibility="{Binding Options.BitmapLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:BitmapLayer.BinarySmoothing}}"/>
             <v:MaskView Mask="{Binding ExtractionData.RemovedCrosses}" ZeroColor="White" OneColor="Black"
                         Visibility="{Binding Options.BitmapLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:BitmapLayer.RemovedCrosses}}"/>
-            <v:MaskView Mask="{Binding SkeletonData.Thinned}" ZeroColor="White" OneColor="Green"
+            <v:MaskView Mask="{Binding SkeletonData.Thinned}" ZeroColor="Transparent" OneColor="Green"
                         Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.Thinned}}"/>
             <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
                             Skeleton="{Binding SkeletonData.RidgeTracer}"
