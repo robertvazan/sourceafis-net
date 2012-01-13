@@ -64,6 +64,10 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public TemplateBuilder MinutiaMask { get { return (TemplateBuilder)GetLog("MinutiaMask", "MinutiaMask"); } }
 
+        public TemplateBuilder MinutiaCloudRemover { get { return (TemplateBuilder)GetLog("MinutiaCloudRemover", "MinutiaCloudRemover"); } }
+
+        public TemplateBuilder UniqueMinutiaSorter { get { return (TemplateBuilder)GetLog("UniqueMinutiaSorter", "UniqueMinutiaSorter"); } }
+
         public Template Template
         {
             get
