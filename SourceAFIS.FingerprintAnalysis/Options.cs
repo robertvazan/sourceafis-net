@@ -58,13 +58,6 @@ namespace SourceAFIS.FingerprintAnalysis
             set { OrientationValue = value; OnPropertyChanged("Orientation"); }
         }
 
-        bool MinutiaeValue;
-        public bool Minutiae
-        {
-            get { return MinutiaeValue; }
-            set { MinutiaeValue = value; OnPropertyChanged("Minutiae"); }
-        }
-
         bool PairedMinutiaeValue;
         public bool PairedMinutiae
         {

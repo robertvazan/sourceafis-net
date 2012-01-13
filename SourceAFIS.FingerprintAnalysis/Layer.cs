@@ -21,7 +21,8 @@ namespace SourceAFIS.FingerprintAnalysis
         GapRemover,
         TailRemover,
         FragmentRemover,
-        MinutiaMask,
-        BranchMinutiaRemover
+        BranchMinutiaRemover,
+        MinutiaCollector,
+        MinutiaMask
     }
 }

@@ -37,5 +37,11 @@ namespace SourceAFIS.FingerprintAnalysis
             Link(Collector, "Logs", propertyName);
             return Collector.Logs.Retrieve(LogStringDecoration(logName));
         }
+
+        public object GetLog(string propertyName, string logName, int offset)
+        {
+            Link(Collector, "Logs", propertyName);
+            return Collector.Logs.Retrieve(LogStringDecoration(logName), offset);
+        }
     }
 }

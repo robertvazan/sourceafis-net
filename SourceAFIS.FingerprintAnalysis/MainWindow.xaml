@@ -49,7 +49,6 @@
                 <ComboBox SelectedItem="{Binding Mask}" ItemsSource="{Binding Source={StaticResource MaskTypeValues}}" Name="MaskChoice" />
                 <CheckBox Content="Contrast" IsChecked="{Binding Contrast}" />
                 <CheckBox Content="Orientation field" IsChecked="{Binding Orientation}" />
-                <CheckBox Content="Minutiae" IsChecked="{Binding Minutiae}" />
                 <CheckBox Content="Paired minutiae" IsChecked="{Binding PairedMinutiae}" />
             </StackPanel>
         </ScrollViewer>
