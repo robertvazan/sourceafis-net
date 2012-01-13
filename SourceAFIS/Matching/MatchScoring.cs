@@ -18,6 +18,10 @@ namespace SourceAFIS.Matching
         public float SupportedCountFactor = 0.4f;
         [Parameter(Upper = 10, Precision = 3)]
         public float EdgeCountFactor = 0.208f;
+        [Parameter(Upper = 10)]
+        public float DistanceAccuracyFactor = 0.1f;
+        [Parameter(Upper = 10)]
+        public float AngleAccuracyFactor = 0.1f;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
@@ -30,6 +34,13 @@ namespace SourceAFIS.Matching
             score += SupportedCountFactor * analysis.SupportedCount;
             score += PairFractionFactor * analysis.PairFraction;
             score += EdgeCountFactor * analysis.EdgeCount;
+            if (analysis.PairCount >= 2)
+            {
+                var maxDistanceError = analysis.MaxDistanceError * (analysis.PairCount - 1);
+                score += DistanceAccuracyFactor * (maxDistanceError - analysis.DistanceErrorSum) / maxDistanceError;
+                var maxAngleError = analysis.MaxAngleError * (analysis.PairCount - 1) * 2;
+                score += AngleAccuracyFactor * (maxAngleError - analysis.AngleErrorSum) / maxAngleError;
+            }
             
             if (Logger.IsActive)
                 Logger.Log(score);

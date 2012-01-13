@@ -13,21 +13,15 @@ namespace SourceAFIS.Matching.Minutia
         [Parameter(Lower = 1, Upper = 63)]
         public byte MaxAngleError = Angle.FromDegreesB(10);
 
-        public struct EdgePair
+        public struct LookupResult
         {
-            public int ProbeIndex;
-            public int CandidateIndex;
-
-            public EdgePair(int probe, int candidate)
-            {
-                ProbeIndex = probe;
-                CandidateIndex = candidate;
-            }
+            public MinutiaPair Pair;
+            public short Distance;
         }
 
-        List<EdgePair> ReturnList = new List<EdgePair>();
+        List<LookupResult> ReturnList = new List<LookupResult>();
 
-        public List<EdgePair> FindMatchingPairs(NeighborEdge[] probeStar, NeighborEdge[] candidateStar)
+        public List<LookupResult> FindMatchingPairs(NeighborEdge[] probeStar, NeighborEdge[] candidateStar)
         {
             byte complementaryAngleError = Angle.Complementary(MaxAngleError);
             ReturnList.Clear();
@@ -46,14 +40,17 @@ namespace SourceAFIS.Matching.Minutia
 
                 for (int probeIndex = range.Begin; probeIndex < range.End; ++probeIndex)
                 {
-                    byte referenceDiff = Angle.Difference(probeStar[probeIndex].Edge.ReferenceAngle, candidateEdge.Edge.ReferenceAngle);
+                    var probeEdge = probeStar[probeIndex];
+                    byte referenceDiff = Angle.Difference(probeEdge.Edge.ReferenceAngle, candidateEdge.Edge.ReferenceAngle);
                     if (referenceDiff <= MaxAngleError || referenceDiff >= complementaryAngleError)
                     {
-                        byte neighborDiff = Angle.Difference(probeStar[probeIndex].Edge.NeighborAngle, candidateEdge.Edge.NeighborAngle);
+                        byte neighborDiff = Angle.Difference(probeEdge.Edge.NeighborAngle, candidateEdge.Edge.NeighborAngle);
                         if (neighborDiff <= MaxAngleError || neighborDiff >= complementaryAngleError)
-                        {
-                            ReturnList.Add(new EdgePair(probeIndex, candidateIndex));
-                        }
+                            ReturnList.Add(new LookupResult()
+                            {
+                                Pair = new MinutiaPair(probeEdge.Neighbor, candidateEdge.Neighbor),
+                                Distance = candidateEdge.Edge.Length
+                            });
                     }
                 }
             }

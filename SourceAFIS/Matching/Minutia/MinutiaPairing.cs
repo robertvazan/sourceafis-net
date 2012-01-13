@@ -9,87 +9,85 @@ namespace SourceAFIS.Matching.Minutia
 {
     public sealed class MinutiaPairing : ICloneable
     {
-        int[] ProbeByCandidate;
-        int[] CandidateByProbe;
-        int[] SupportingEdgesByProbe;
-        MinutiaPair[] PairList;
+        PairInfo[] CandidateIndex;
+        PairInfo[] ProbeIndex;
+        PairInfo[] PairList;
         int PairCount;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
         public int Count { get { return PairCount; } }
-        public MinutiaPair LastAdded { get { return PairList[PairCount - 1]; } }
+        public PairInfo LastAdded { get { return PairList[PairCount - 1]; } }
 
         public void SelectProbe(Template probe)
         {
-            CandidateByProbe = new int[probe.Minutiae.Length];
-            for (int i = 0; i < CandidateByProbe.Length; ++i)
-                CandidateByProbe[i] = -1;
-            SupportingEdgesByProbe = new int[probe.Minutiae.Length];
-            PairList = new MinutiaPair[probe.Minutiae.Length];
+            ProbeIndex = new PairInfo[probe.Minutiae.Length];
+            PairList = new PairInfo[probe.Minutiae.Length];
+            for (int i = 0; i < PairList.Length; ++i)
+                PairList[i] = new PairInfo();
             PairCount = 0;
         }
 
         public void SelectCandidate(Template candidate)
         {
-            if (ProbeByCandidate == null || ProbeByCandidate.Length < candidate.Minutiae.Length)
-                ProbeByCandidate = new int[candidate.Minutiae.Length];
-            for (int i = 0; i < ProbeByCandidate.Length; ++i)
-                ProbeByCandidate[i] = -1;
+            if (CandidateIndex == null || CandidateIndex.Length < candidate.Minutiae.Length)
+                CandidateIndex = new PairInfo[candidate.Minutiae.Length];
+            else
+            {
+                for (int i = 0; i < CandidateIndex.Length; ++i)
+                    CandidateIndex[i] = null;
+            }
         }
 
-        public void Reset()
+        public void Reset(MinutiaPair root)
         {
             for (int i = 0; i < PairCount; ++i)
             {
-                ProbeByCandidate[PairList[i].Candidate] = -1;
-                CandidateByProbe[PairList[i].Probe] = -1;
-                SupportingEdgesByProbe[PairList[i].Probe] = 0;
+                CandidateIndex[PairList[i].Pair.Candidate] = null;
+                ProbeIndex[PairList[i].Pair.Probe] = null;
+                PairList[i].SupportingEdges = 0;
             }
-            PairCount = 0;
+            CandidateIndex[root.Candidate] = ProbeIndex[root.Probe] = PairList[0];
+            PairList[0].Pair = root;
+            PairCount = 1;
         }
 
-        public void Add(MinutiaPair pair)
+        public void Add(EdgePair edge)
         {
-            ProbeByCandidate[pair.Candidate] = pair.Probe;
-            CandidateByProbe[pair.Probe] = pair.Candidate;
-            PairList[PairCount] = pair;
+            CandidateIndex[edge.Neighbor.Candidate] = ProbeIndex[edge.Neighbor.Probe] = PairList[PairCount];
+            PairList[PairCount].Pair = edge.Neighbor;
+            PairList[PairCount].Reference = edge.Reference;
             ++PairCount;
         }
 
-        public int GetProbeByCandidate(int candidate)
+        public PairInfo GetByCandidate(int candidate)
         {
-            return ProbeByCandidate[candidate];
+            return CandidateIndex[candidate];
         }
 
-        public int GetCandidateByProbe(int probe)
+        public PairInfo GetByProbe(int probe)
         {
-            return CandidateByProbe[probe];
+            return ProbeIndex[probe];
         }
 
         public bool IsProbePaired(int probe)
         {
-            return CandidateByProbe[probe] >= 0;
+            return ProbeIndex[probe] != null;
         }
 
         public bool IsCandidatePaired(int candidate)
         {
-            return ProbeByCandidate[candidate] >= 0;
+            return CandidateIndex[candidate] != null;
         }
 
-        public MinutiaPair GetPair(int index)
+        public PairInfo GetPair(int index)
         {
             return PairList[index];
         }
 
         public void AddSupportByProbe(int probe)
         {
-            ++SupportingEdgesByProbe[probe];
-        }
-
-        public int GetSupportByProbe(int probe)
-        {
-            return SupportingEdgesByProbe[probe];
+            ++ProbeIndex[probe].SupportingEdges;
         }
 
         public void Log() { Logger.Log(this); }
@@ -97,10 +95,9 @@ namespace SourceAFIS.Matching.Minutia
         public object Clone()
         {
             MinutiaPairing clone = new MinutiaPairing();
-            clone.CandidateByProbe = (int[])CandidateByProbe.Clone();
-            clone.ProbeByCandidate = (int[])ProbeByCandidate.Clone();
-            clone.SupportingEdgesByProbe = (int[])SupportingEdgesByProbe.Clone();
-            clone.PairList = (MinutiaPair[])PairList.Clone();
+            clone.ProbeIndex = (PairInfo[])ProbeIndex.Clone();
+            clone.CandidateIndex = (PairInfo[])CandidateIndex.Clone();
+            clone.PairList = (PairInfo[])PairList.CloneItems();
             clone.PairCount = PairCount;
             return clone;
         }

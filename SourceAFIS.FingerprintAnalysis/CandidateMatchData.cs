@@ -22,7 +22,7 @@ namespace SourceAFIS.FingerprintAnalysis
                 Link(Match, "Pairing", "PairedMinutiae");
                 MinutiaPairing pairing = Match.Pairing;
                 return (from index in Enumerable.Range(0, pairing.Count)
-                        select pairing.GetPair(index).Candidate).ToList();
+                        select (int)pairing.GetPair(index).Pair.Candidate).ToList();
             }
         }
     }

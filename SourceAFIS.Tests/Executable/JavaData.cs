@@ -132,9 +132,9 @@ namespace SourceAFIS.Tests.Executable
                 MinutiaPairing pairing = (MinutiaPairing)log.Retrieve("MinutiaMatcher.Pairing", i);
                 for (int j = 0; j < pairing.Count; ++j)
                     rootPairInXml.Add(new XElement("pair",
-                        new XAttribute("probe", pairing.GetPair(j).Probe),
-                        new XAttribute("candidate", pairing.GetPair(j).Candidate),
-                        new XAttribute("support", pairing.GetSupportByProbe(pairing.GetPair(j).Probe))));
+                        new XAttribute("probe", pairing.GetPair(j).Pair.Probe),
+                        new XAttribute("candidate", pairing.GetPair(j).Pair.Candidate),
+                        new XAttribute("support", pairing.GetPair(j).SupportingEdges)));
             }
             SaveXml(root, "matcher.xml");
         }

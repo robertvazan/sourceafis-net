@@ -240,8 +240,13 @@ namespace SourceAFIS.General
         public static List<T> CloneItems<T>(this List<T> sequence)
             where T : class, ICloneable
         {
-            return (from item in sequence
-                    select item.Clone() as T).ToList();
+            return (sequence as IEnumerable<T>).CloneItems().ToList();
+        }
+
+        public static T[] CloneItems<T>(this T[] sequence)
+            where T : class, ICloneable
+        {
+            return (sequence as IEnumerable<T>).CloneItems().ToArray();
         }
 
         public static bool BeginsWith(this string outer, string inner)

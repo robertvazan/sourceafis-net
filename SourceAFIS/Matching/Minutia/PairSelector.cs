@@ -7,32 +7,32 @@ namespace SourceAFIS.Matching.Minutia
 {
     public sealed class PairSelector
     {
-        PriorityQueueF<MinutiaPair> Queue = new PriorityQueueF<MinutiaPair>();
+        PriorityQueueF<EdgePair> Queue = new PriorityQueueF<EdgePair>();
 
         public void Clear()
         {
             Queue.Clear();
         }
 
-        public void Enqueue(MinutiaPair pair, float distance)
+        public void Enqueue(EdgePair pair, float distance)
         {
             Queue.Enqueue(distance, pair);
         }
 
         public void SkipPaired(MinutiaPairing pairing)
         {
-            while (Queue.Count > 0 && (pairing.IsProbePaired(Queue.Peek().Probe)
-                || pairing.IsCandidatePaired(Queue.Peek().Candidate)))
+            while (Queue.Count > 0 && (pairing.IsProbePaired(Queue.Peek().Neighbor.Probe)
+                || pairing.IsCandidatePaired(Queue.Peek().Neighbor.Candidate)))
             {
-                MinutiaPair pair = Queue.Dequeue();
-                if (pairing.GetCandidateByProbe(pair.Probe) == pair.Candidate)
-                    pairing.AddSupportByProbe(pair.Probe);
+                EdgePair edge = Queue.Dequeue();
+                if (pairing.IsProbePaired(edge.Neighbor.Probe) && pairing.GetByProbe(edge.Neighbor.Probe).Pair.Candidate == edge.Neighbor.Candidate)
+                    pairing.AddSupportByProbe(edge.Neighbor.Probe);
             }
         }
 
         public int Count { get { return Queue.Count; } }
 
-        public MinutiaPair Dequeue()
+        public EdgePair Dequeue()
         {
             return Queue.Dequeue();
         }
