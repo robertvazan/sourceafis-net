@@ -5,7 +5,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Templates
 {
-    public sealed class TemplateBuilder
+    public sealed class TemplateBuilder : ICloneable
     {
         public enum MinutiaType
         {
@@ -36,5 +36,12 @@ namespace SourceAFIS.Templates
         }
 
         public List<Minutia> Minutiae = new List<Minutia>();
+
+        public TemplateBuilder Clone()
+        {
+            return new Template(this).ToTemplateBuilder();
+        }
+
+        object ICloneable.Clone() { return Clone(); }
     }
 }

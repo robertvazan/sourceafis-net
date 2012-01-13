@@ -48,9 +48,6 @@
                             Skeleton="{Binding SkeletonData.FragmentRemover}"
                             Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.FragmentRemover}}"/>
             <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
-                            Skeleton="{Binding SkeletonData.MinutiaMask}"
-                            Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.MinutiaMask}}"/>
-            <v:SkeletonView OriginalWidth="{Binding ExtractionData.Width}" OriginalHeight="{Binding ExtractionData.Height}"
                             Skeleton="{Binding SkeletonData.BranchMinutiaRemover}"
                             Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.BranchMinutiaRemover}}"/>
             <v:BlockMaskBorder Mask="{Binding ExtractionData.AbsoluteContrast}" Blocks="{Binding ExtractionData.Blocks}"
@@ -69,7 +66,9 @@
                                 OrientationMap="{Binding ExtractionData.Orientation}"
                                 Visibility="{Binding Options.Orientation, Converter={StaticResource BooleanToVisibility}}"/>
             <v:Minutiae FpTemplate="{Binding ExtractionData.MinutiaCollector}"
-                        Visibility="{Binding Options.Minutiae, Converter={StaticResource BooleanToVisibility}}"/>
+                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.MinutiaCollector}}"/>
+            <v:Minutiae FpTemplate="{Binding ExtractionData.MinutiaMask}"
+                        Visibility="{Binding Options.DisplayLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:Layer.MinutiaMask}}"/>
             <v:MatchedMinutiae Pairing="{Binding MatchData.Pairing}" FpTemplate="{Binding ExtractionData.MinutiaCollector}" MatchSide="{Binding MatchSide}"
                                Visibility="{Binding Options.PairedMinutiae, Converter={StaticResource BooleanToVisibility}}" />
         </Canvas>

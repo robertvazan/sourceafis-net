@@ -60,7 +60,9 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public BinaryMap InnerMask { get { return (BinaryMap)GetLog("InnerMask", "InnerMask"); } }
 
-        public TemplateBuilder MinutiaCollector { get { return (TemplateBuilder)GetLog("MinutiaCollector", "MinutiaCollector"); } }
+        public TemplateBuilder MinutiaCollector { get { return (TemplateBuilder)GetLog("MinutiaCollector", "MinutiaCollector", 1); } }
+
+        public TemplateBuilder MinutiaMask { get { return (TemplateBuilder)GetLog("MinutiaMask", "MinutiaMask"); } }
 
         public Template Template
         {

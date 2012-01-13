@@ -30,8 +30,6 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public SkeletonBuilder FragmentRemover { get { return (SkeletonBuilder)GetLog("FragmentRemover", "FragmentRemover"); } }
 
-        public SkeletonBuilder MinutiaMask { get { return (SkeletonBuilder)GetLog("MinutiaMask", "MinutiaMask"); } }
-
         public SkeletonBuilder BranchMinutiaRemover { get { return (SkeletonBuilder)GetLog("BranchMinutiaRemover", "BranchMinutiaRemover"); } }
     }
 }
