@@ -7,7 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" Name="SkeletonViewControl">
     <Canvas DataContext="{Binding ElementName=SkeletonViewControl}">
-        <v:MaskView Mask="{Binding Shadow}" OneColor="Green" ZeroColor="Transparent"/>
+        <v:MaskView Mask="{Binding ShadowBlur}" OneColor="#7FFFA500" ZeroColor="Transparent"/>
+        <v:MaskView Mask="{Binding Shadow}" OneColor="Orange" ZeroColor="Transparent"/>
         <ItemsControl ItemsSource="{Binding Positions}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WPoint = System.Windows.Point;
 using SourceAFIS.General;
+using APoint = SourceAFIS.General.Point;
 using SourceAFIS.Extraction.Model;
 
 namespace SourceAFIS.Visualization
@@ -53,6 +54,13 @@ namespace SourceAFIS.Visualization
             get { return (BinaryMap)GetValue(ShadowProperty.DependencyProperty); }
         }
 
+        static readonly DependencyPropertyKey ShadowBlurProperty
+            = DependencyProperty.RegisterReadOnly("ShadowBlur", typeof(BinaryMap), typeof(SkeletonView), null);
+        public BinaryMap ShadowBlur
+        {
+            get { return (BinaryMap)GetValue(ShadowBlurProperty.DependencyProperty); }
+        }
+
         static readonly DependencyPropertyKey PositionsProperty
             = DependencyProperty.RegisterReadOnly("Positions", typeof(IEnumerable<WPoint>), typeof(SkeletonView), null);
         public IEnumerable<WPoint> Positions
@@ -70,6 +78,12 @@ namespace SourceAFIS.Visualization
                     BinaryMap shadow = new BinaryMap(OriginalWidth, OriginalHeight);
                     new SkeletonShadow().Draw(Skeleton, shadow);
                     SetValue(ShadowProperty, shadow);
+                    BinaryMap blur = new BinaryMap(shadow);
+                    blur.Or(shadow, new RectangleC(0, 0, OriginalWidth - 1, OriginalHeight), new APoint(1, 0));
+                    blur.Or(shadow, new RectangleC(1, 0, OriginalWidth - 1, OriginalHeight), new APoint(0, 0));
+                    blur.Or(shadow, new RectangleC(0, 0, OriginalWidth, OriginalHeight - 1), new APoint(0, 1));
+                    blur.Or(shadow, new RectangleC(0, 1, OriginalWidth, OriginalHeight - 1), new APoint(0, 0));
+                    SetValue(ShadowBlurProperty, blur);
 
                     var points = from minutia in Skeleton.Minutiae
                                  where minutia.Valid
