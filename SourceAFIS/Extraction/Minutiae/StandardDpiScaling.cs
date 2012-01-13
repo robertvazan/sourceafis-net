@@ -11,6 +11,7 @@ namespace SourceAFIS.Extraction.Minutiae
     public sealed class StandardDpiScaling
     {
         [DpiAdjusted]
+        [Parameter(Lower = 500, Upper = 500)]
         public int DpiScaling = 500;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;

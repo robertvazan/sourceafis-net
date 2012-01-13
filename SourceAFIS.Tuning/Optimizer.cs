@@ -71,10 +71,10 @@ namespace SourceAFIS.Tuning
 
         void SetTimeouts()
         {
-            ExtractorBenchmark.Timeout = NicheSlot.TimeConstraints.Extraction * ExtractorBenchmark.Database.FpCount;
+            ExtractorBenchmark.Timeout = NicheSlot.TimeConstraints.Extraction * ExtractorBenchmark.Database.FpCount + 10;
             MatcherBenchmark.Timeout = NicheSlot.TimeConstraints.Prepare * ExtractorBenchmark.Database.FpCount +
                 NicheSlot.TimeConstraints.Matching * ExtractorBenchmark.Database.GetMatchingPairCount() +
-                NicheSlot.TimeConstraints.NonMatching * ExtractorBenchmark.Database.GetNonMatchingPairCount();
+                NicheSlot.TimeConstraints.NonMatching * ExtractorBenchmark.Database.GetNonMatchingPairCount() + 10;
         }
     }
 }

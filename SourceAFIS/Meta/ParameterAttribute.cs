@@ -36,5 +36,7 @@ namespace SourceAFIS.Meta
             get { return PrecisionValue; }
             set { PrecisionValue = value; }
         }
+
+        public bool TuningDisabled { get { return !LowerIsDefaultValue && !UpperIsDefaultValue && LowerValue == UpperValue; } }
     }
 }
