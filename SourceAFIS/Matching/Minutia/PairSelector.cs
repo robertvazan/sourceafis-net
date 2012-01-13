@@ -26,7 +26,10 @@ namespace SourceAFIS.Matching.Minutia
             {
                 EdgePair edge = Queue.Dequeue();
                 if (pairing.IsProbePaired(edge.Neighbor.Probe) && pairing.GetByProbe(edge.Neighbor.Probe).Pair.Candidate == edge.Neighbor.Candidate)
+                {
+                    pairing.AddSupportByProbe(edge.Reference.Probe);
                     pairing.AddSupportByProbe(edge.Neighbor.Probe);
+                }
             }
         }
 
