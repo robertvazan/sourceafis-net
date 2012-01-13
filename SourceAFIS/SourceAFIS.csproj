@@ -88,6 +88,8 @@
     <Compile Include="Extraction\Model\SkeletonBuilder.cs" />
     <Compile Include="Extraction\Model\SkeletonShadow.cs" />
     <Compile Include="Extraction\Model\TailRemover.cs" />
+    <Compile Include="Matching\Minutia\EdgePair.cs" />
+    <Compile Include="Matching\Minutia\PairInfo.cs" />
     <Compile Include="Templates\CompactFormat.cs" />
     <Compile Include="Templates\IsoFormat.cs" />
     <Compile Include="Templates\ITemplateFormat.cs" />

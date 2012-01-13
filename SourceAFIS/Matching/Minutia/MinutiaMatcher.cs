@@ -74,8 +74,7 @@ namespace SourceAFIS.Matching.Minutia
             Logger.Log("BestRootIndex", bestRootIndex);
             if (bestScore > 0 && Logger.IsActive)
             {
-                Pairing.Reset();
-                Pairing.Add(bestRoot);
+                Pairing.Reset(bestRoot);
                 BuildPairing(candidate);
                 Logger.Log("BestRoot", bestRoot);
                 Logger.Log("BestPairing", Pairing);
@@ -92,11 +91,10 @@ namespace SourceAFIS.Matching.Minutia
 
         float TryRoot(MinutiaPair root, Template candidate)
         {
-            Pairing.Reset();
-            Pairing.Add(root);
+            Pairing.Reset(root);
             BuildPairing(candidate);
 
-            MatchAnalysis.Analyze(Pairing, Probe.Template, candidate);
+            MatchAnalysis.Analyze(Pairing, EdgeLookup, Probe.Template, candidate);
             return MatchScoring.Compute(MatchAnalysis);
         }
 
@@ -115,17 +113,17 @@ namespace SourceAFIS.Matching.Minutia
 
         void CollectEdges(Template candidate)
         {
-            var probeNeighbors = Probe.Edges.Table[Pairing.LastAdded.Probe];
-            var candidateNeigbors = CandidateEdges.Table[Pairing.LastAdded.Candidate];
-            List<EdgeLookup.EdgePair> edgePairs = EdgeLookup.FindMatchingPairs(probeNeighbors, candidateNeigbors);
-            foreach (EdgeLookup.EdgePair edgePair in edgePairs)
+            var reference = Pairing.LastAdded.Pair;
+            var probeNeighbors = Probe.Edges.Table[reference.Probe];
+            var candidateNeigbors = CandidateEdges.Table[reference.Candidate];
+            var matches = EdgeLookup.FindMatchingPairs(probeNeighbors, candidateNeigbors);
+            foreach (var match in matches)
             {
-                NeighborEdge probeEdge = probeNeighbors[edgePair.ProbeIndex];
-                NeighborEdge candidateEdge = candidateNeigbors[edgePair.CandidateIndex];
-                if (!Pairing.IsCandidatePaired(candidateEdge.Neighbor) && !Pairing.IsProbePaired(probeEdge.Neighbor))
-                    PairSelector.Enqueue(new MinutiaPair(probeEdge.Neighbor, candidateEdge.Neighbor), candidateEdge.Edge.Length);
-                else if (Pairing.GetCandidateByProbe(probeEdge.Neighbor) == candidateEdge.Neighbor)
-                    Pairing.AddSupportByProbe(probeEdge.Neighbor);
+                var neighbor = match.Pair;
+                if (!Pairing.IsCandidatePaired(neighbor.Candidate) && !Pairing.IsProbePaired(neighbor.Probe))
+                    PairSelector.Enqueue(new EdgePair(reference, neighbor), match.Distance);
+                else if (Pairing.IsProbePaired(neighbor.Probe) && Pairing.GetByProbe(neighbor.Probe).Pair.Candidate == neighbor.Candidate)
+                    Pairing.AddSupportByProbe(neighbor.Probe);
             }
         }
     }

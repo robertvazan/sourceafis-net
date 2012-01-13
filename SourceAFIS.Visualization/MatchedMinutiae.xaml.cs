@@ -58,7 +58,7 @@ namespace SourceAFIS.Visualization
             {
                 var minutiae = from index in Enumerable.Range(0, Pairing.Count)
                                let pair = Pairing.GetPair(index)
-                               select MatchSide == MatchSide.Probe ? pair.Probe : pair.Candidate;
+                               select MatchSide == MatchSide.Probe ? pair.Pair.Probe : pair.Pair.Candidate;
                 var dpiScaling = FpTemplate.OriginalDpi / 500.0;
                 var points = from minutia in minutiae
                              where minutia < FpTemplate.Minutiae.Count
