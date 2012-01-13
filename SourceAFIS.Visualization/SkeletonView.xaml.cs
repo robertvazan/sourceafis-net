@@ -99,6 +99,7 @@ namespace SourceAFIS.Visualization
             else
             {
                 SetValue(ShadowProperty, null);
+                SetValue(ShadowBlurProperty, null);
                 SetValue(PositionsProperty, null);
             }
         }
