@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using SourceAFIS.Meta;
 
 namespace SourceAFIS.Tuning.Optimization
@@ -28,7 +29,7 @@ namespace SourceAFIS.Tuning.Optimization
 
         ParameterValue PickParameter(ParameterSet parameters)
         {
-            ParameterValue[] all = parameters.AllParameters;
+            ParameterValue[] all = parameters.AllTunableParameters.ToArray();
             return all[Random.Next(all.Length)];
         }
     }

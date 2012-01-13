@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 using SourceAFIS.General;
@@ -23,6 +24,9 @@ namespace SourceAFIS.Meta
                     Add(parameter);
             }
         }
+
+        [XmlIgnore]
+        public IEnumerable<ParameterValue> AllTunableParameters { get { return AllParameters.Where(p => !p.Attribute.TuningDisabled); } }
 
         public ParameterSet()
         {
