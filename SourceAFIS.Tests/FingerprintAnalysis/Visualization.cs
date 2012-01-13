@@ -52,16 +52,20 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
                         SaveChecksum(GetSingleOption(name, Boolean.TrueString), name);
                 }
                 
-                var layerValues = LayerChoice.Items.Select(item => item.Name).ToList();
-                foreach (string value in layerValues)
+                foreach (string value in BitmapLayerChoice.Items.Select(item => item.Name))
                     if (value != "OriginalImage")
+                        SaveChecksum(GetSingleOption("BitmapLayerChoice", value), "BitmapLayerChoice: " + value);
+
+                var markerValues = MarkerLayerChoice.Items.Select(item => item.Name).ToList();
+                foreach (string value in markerValues)
+                    if (!new[] { "UniqueMinutiaSorter", "MinutiaCloudRemover", "UniqueMinutiaSorter" }.Contains(value))
                     {
-                        SaveChecksum(GetSingleOption("LayerChoice", value), "LayerChoice: " + value);
-                        if (layerValues.IndexOf(value) >= 7)
+                        SaveChecksum(GetSingleOption("MarkerLayerChoice", value), "MarkerLayerChoice: " + value);
+                        if (markerValues.IndexOf(value) >= 1 && markerValues.IndexOf(value) <= 8)
                         {
-                            Dictionary<string, string> valleys = GetSingleOption("LayerChoice", value);
+                            Dictionary<string, string> valleys = GetSingleOption("MarkerLayerChoice", value);
                             valleys["SkeletonChoice"] = "Valleys";
-                            SaveChecksum(valleys, "LayerChoice (valleys): " + value);
+                            SaveChecksum(valleys, "MarkerLayerChoice (valleys): " + value);
                         }
                     }
 
