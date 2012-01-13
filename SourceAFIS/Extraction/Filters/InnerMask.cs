@@ -10,7 +10,7 @@ namespace SourceAFIS.Extraction.Filters
     {
         [DpiAdjusted]
         [Parameter(Lower = 0, Upper = 50)]
-        public int MinBorderDistance = 15;
+        public int MinBorderDistance = 14;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
