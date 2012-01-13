@@ -45,22 +45,22 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
             App = null;
         }
 
-        public ComboBox LayerChoice { get { return Win.GetPatient<ComboBox>(SearchCriteria.ByAutomationId("LayerChoice")); } }
+        public ComboBox BitmapLayerChoice { get { return Win.GetPatient<ComboBox>(SearchCriteria.ByAutomationId("BitmapLayerChoice")); } }
+        public ComboBox MarkerLayerChoice { get { return Win.GetPatient<ComboBox>(SearchCriteria.ByAutomationId("MarkerLayerChoice")); } }
         public ComboBox SkeletonChoice { get { return Win.GetPatient<ComboBox>(SearchCriteria.ByAutomationId("SkeletonChoice")); } }
         public ComboBox MaskChoice { get { return Win.GetPatient<ComboBox>(SearchCriteria.ByAutomationId("MaskChoice")); } }
         public CheckBox Contrast { get { return Win.GetPatient<CheckBox>(SearchCriteria.ByText("Contrast")); } }
         public CheckBox Orientation { get { return Win.GetPatient<CheckBox>(SearchCriteria.ByText("Orientation field")); } }
-        public CheckBox Minutiae { get { return Win.GetPatient<CheckBox>(SearchCriteria.ByText("Minutiae")); } }
         public CheckBox Paired { get { return Win.GetPatient<CheckBox>(SearchCriteria.ByText("Paired minutiae")); } }
 
         public static string[] OptionNames = new string[]
         {
-            "LayerChoice",
+            "BitmapLayerChoice",
+            "MarkerLayerChoice",
             "SkeletonChoice",
             "MaskChoice",
             "Contrast",
             "Orientation",
-            "Minutiae",
             "Paired"
         };
 
@@ -99,12 +99,12 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
         public Dictionary<string, string> GetResetOptions()
         {
             Dictionary<string, string> options = new Dictionary<string, string>();
-            options["LayerChoice"] = "OriginalImage";
+            options["BitmapLayerChoice"] = "OriginalImage";
+            options["MarkerLayerChoice"] = "UniqueMinutiaSorter";
             options["SkeletonChoice"] = "Ridges";
             options["MaskChoice"] = "None";
             options["Contrast"] = Boolean.FalseString;
             options["Orientation"] = Boolean.FalseString;
-            options["Minutiae"] = Boolean.FalseString;
             options["Paired"] = Boolean.FalseString;
             return options;
         }
@@ -117,12 +117,12 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
         public Dictionary<string, string> GetFullOptions()
         {
             Dictionary<string, string> options = new Dictionary<string, string>();
-            options["LayerChoice"] = "MinutiaMask";
+            options["BitmapLayerChoice"] = "SmoothedRidges";
+            options["MarkerLayerChoice"] = "RidgeTracer";
             options["SkeletonChoice"] = "Valleys";
             options["MaskChoice"] = "Segmentation";
             options["Contrast"] = Boolean.TrueString;
             options["Orientation"] = Boolean.TrueString;
-            options["Minutiae"] = Boolean.TrueString;
             options["Paired"] = Boolean.TrueString;
             return options;
         }
