@@ -27,7 +27,7 @@ namespace SourceAFIS.FingerprintAnalysis
         public BitmapLayer BitmapLayer
         {
             get { return BitmapLayerValue; }
-            set { BitmapLayerValue = value; OnPropertyChanged("DisplayLayer"); }
+            set { BitmapLayerValue = value; OnPropertyChanged("BitmapLayer"); }
         }
 
         MarkerLayer MarkerLayerValue = MarkerLayer.MinutiaMask;
