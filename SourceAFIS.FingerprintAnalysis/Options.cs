@@ -23,11 +23,18 @@ namespace SourceAFIS.FingerprintAnalysis
             set { CandidateValue = value; OnPropertyChanged("Candidate"); }
         }
 
-        Layer DisplayLayerValue;
-        public Layer DisplayLayer
+        BitmapLayer BitmapLayerValue = BitmapLayer.OriginalImage;
+        public BitmapLayer BitmapLayer
         {
-            get { return DisplayLayerValue; }
-            set { DisplayLayerValue = value; OnPropertyChanged("DisplayLayer"); }
+            get { return BitmapLayerValue; }
+            set { BitmapLayerValue = value; OnPropertyChanged("DisplayLayer"); }
+        }
+
+        MarkerLayer MarkerLayerValue = MarkerLayer.MinutiaMask;
+        public MarkerLayer MarkerLayer
+        {
+            get { return MarkerLayerValue; }
+            set { MarkerLayerValue = value; OnPropertyChanged("MarkerLayer"); }
         }
 
         SkeletonType SkeletonValue;

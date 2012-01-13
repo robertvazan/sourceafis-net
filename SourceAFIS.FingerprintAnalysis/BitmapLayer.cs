@@ -5,24 +5,15 @@ using System.Text;
 
 namespace SourceAFIS.FingerprintAnalysis
 {
-    public enum Layer
+    public enum BitmapLayer
     {
+        None,
         OriginalImage,
         Equalized,
         SmoothedRidges,
         OrthogonalSmoothing,
         Binarized,
         BinarySmoothing,
-        RemovedCrosses,
-        Thinned,
-        RidgeTracer,
-        DotRemover,
-        PoreRemover,
-        GapRemover,
-        TailRemover,
-        FragmentRemover,
-        BranchMinutiaRemover,
-        MinutiaCollector,
-        MinutiaMask
+        RemovedCrosses
     }
 }
