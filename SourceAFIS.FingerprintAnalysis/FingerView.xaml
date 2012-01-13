@@ -69,6 +69,10 @@
                         Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.MinutiaCollector}}"/>
             <v:Minutiae FpTemplate="{Binding ExtractionData.MinutiaMask}"
                         Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.MinutiaMask}}"/>
+            <v:Minutiae FpTemplate="{Binding ExtractionData.MinutiaCloudRemover}"
+                        Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.MinutiaCloudRemover}}"/>
+            <v:Minutiae FpTemplate="{Binding ExtractionData.UniqueMinutiaSorter}"
+                        Visibility="{Binding Options.MarkerLayer, Converter={StaticResource VisibleIfEquals}, ConverterParameter={x:Static local:MarkerLayer.UniqueMinutiaSorter}}"/>
             <v:MatchedMinutiae Pairing="{Binding MatchData.Pairing}" FpTemplate="{Binding ExtractionData.MinutiaCollector}" MatchSide="{Binding MatchSide}"
                                Visibility="{Binding Options.PairedMinutiae, Converter={StaticResource BooleanToVisibility}}" />
         </Canvas>
