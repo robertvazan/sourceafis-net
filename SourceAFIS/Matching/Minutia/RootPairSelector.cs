@@ -17,11 +17,13 @@ namespace SourceAFIS.Matching.Minutia
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
+        HashLookup HashLookup = new HashLookup();
         int LookupCounter;
 
         public IEnumerable<MinutiaPair> GetRoots(ProbeIndex probeIndex, Template candidateTemplate)
         {
             LookupCounter = 0;
+            HashLookup.Reset(probeIndex.EdgeHash);
             return GetFilteredRoots(probeIndex, candidateTemplate, shape => shape.Length >= MinEdgeLength)
                 .Concat(GetFilteredRoots(probeIndex, candidateTemplate, shape => shape.Length < MinEdgeLength));
         }
@@ -39,9 +41,9 @@ namespace SourceAFIS.Matching.Minutia
                         var candidateEdge = edgeConstructor.Construct(candidateTemplate, candidateReference, candidateNeighbor);
                         if (shapeFilter(candidateEdge))
                         {
-                            foreach (var probeEdge in probeIndex.EdgeHash.FindMatching(candidateEdge))
+                            for (var match = HashLookup.Select(candidateEdge); match != null; match = HashLookup.Next())
                             {
-                                var pair = new MinutiaPair(probeEdge.Reference, candidateReference);
+                                var pair = new MinutiaPair(match.Location.Reference, candidateReference);
                                 if (Logger.IsActive)
                                     Logger.Log(pair);
                                 yield return pair;
