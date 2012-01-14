@@ -68,12 +68,14 @@ namespace SourceAFIS.FingerprintAnalysis
 
         public TemplateBuilder UniqueMinutiaSorter { get { return (TemplateBuilder)GetLog("UniqueMinutiaSorter", "UniqueMinutiaSorter"); } }
 
+        public TemplateBuilder FinalTemplate { get { return (TemplateBuilder)GetLog("FinalTemplate", "FinalTemplate"); } }
+
         public Template Template
         {
             get
             {
-                Link("MinutiaCollector", "Template");
-                return MinutiaCollector != null ? new SerializedFormat().Export(MinutiaCollector) : null;
+                Link("FinalTemplate", "Template");
+                return FinalTemplate != null ? new SerializedFormat().Export(FinalTemplate) : null;
             }
         }
     }

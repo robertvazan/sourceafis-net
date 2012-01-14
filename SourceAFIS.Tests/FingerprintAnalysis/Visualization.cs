@@ -58,7 +58,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
 
                 var markerValues = MarkerLayerChoice.Items.Select(item => item.Name).ToList();
                 foreach (string value in markerValues)
-                    if (!new[] { "UniqueMinutiaSorter", "MinutiaCloudRemover", "UniqueMinutiaSorter" }.Contains(value))
+                    if (!new[] { "FinalTemplate", "MinutiaCloudRemover", "UniqueMinutiaSorter", "MinutiaMask" }.Contains(value))
                     {
                         SaveChecksum(GetSingleOption("MarkerLayerChoice", value), "MarkerLayerChoice: " + value);
                         if (markerValues.IndexOf(value) >= 1 && markerValues.IndexOf(value) <= 8)
