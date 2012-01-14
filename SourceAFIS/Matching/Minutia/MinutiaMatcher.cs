@@ -26,8 +26,10 @@ namespace SourceAFIS.Matching.Minutia
         [Nested]
         public EdgeLookup EdgeLookup = new EdgeLookup();
 
-        [Parameter(Upper = 100)]
-        public int MaxTriedRoots = 50;
+        [Parameter(Upper = 10000)]
+        public int MaxTriedRoots = 60;
+        [Parameter(Upper = 10000)]
+        public int MaxTriedTriangles = 30;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
@@ -54,6 +56,7 @@ namespace SourceAFIS.Matching.Minutia
             PrepareCandidate(candidate);
 
             int rootIndex = 0;
+            int triangleIndex = 0;
             float bestScore = 0;
             MinutiaPair bestRoot = new MinutiaPair();
             int bestRootIndex = -1;
@@ -69,6 +72,12 @@ namespace SourceAFIS.Matching.Minutia
                 ++rootIndex;
                 if (rootIndex >= MaxTriedRoots)
                     break;
+                if (Pairing.Count >= 3)
+                {
+                    ++triangleIndex;
+                    if (triangleIndex >= MaxTriedTriangles)
+                        break;
+                }
             }
             Logger.Log("Score", bestScore);
             Logger.Log("BestRootIndex", bestRootIndex);
