@@ -18,12 +18,6 @@ namespace SourceAFIS.Tuning
 
         public Action<Exception> OnException;
 
-        public Optimizer()
-        {
-            NicheSlot.Measure.ErrorPolicyFunction = ErrorPolicy.ZeroFAR;
-            NicheSlot.Measure.ScalarMeasure = ScalarErrorMeasure.FRR;
-        }
-
         public void Run()
         {
             SetTimeouts();
