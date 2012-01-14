@@ -19,6 +19,7 @@ namespace SourceAFIS.FingerprintAnalysis
         MinutiaCollector,
         MinutiaMask,
         MinutiaCloudRemover,
-        UniqueMinutiaSorter
+        UniqueMinutiaSorter,
+        FinalTemplate
     }
 }

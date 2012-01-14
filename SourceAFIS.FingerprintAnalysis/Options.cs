@@ -30,7 +30,7 @@ namespace SourceAFIS.FingerprintAnalysis
             set { BitmapLayerValue = value; OnPropertyChanged("BitmapLayer"); }
         }
 
-        MarkerLayer MarkerLayerValue = MarkerLayer.UniqueMinutiaSorter;
+        MarkerLayer MarkerLayerValue = MarkerLayer.FinalTemplate;
         public MarkerLayer MarkerLayer
         {
             get { return MarkerLayerValue; }

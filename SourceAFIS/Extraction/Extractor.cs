@@ -131,6 +131,7 @@ namespace SourceAFIS.Extraction
                 MinutiaCloudRemover.Filter(template);
                 UniqueMinutiaSorter.Filter(template);
                 MinutiaSorter.Shuffle(template);
+                Logger.Log("FinalTemplate", template);
             });
             return template;
         }

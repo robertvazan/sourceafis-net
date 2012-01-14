@@ -100,7 +100,7 @@ namespace SourceAFIS.Tests.FingerprintAnalysis
         {
             Dictionary<string, string> options = new Dictionary<string, string>();
             options["BitmapLayerChoice"] = "OriginalImage";
-            options["MarkerLayerChoice"] = "UniqueMinutiaSorter";
+            options["MarkerLayerChoice"] = "FinalTemplate";
             options["SkeletonChoice"] = "Ridges";
             options["MaskChoice"] = "None";
             options["Contrast"] = Boolean.FalseString;
