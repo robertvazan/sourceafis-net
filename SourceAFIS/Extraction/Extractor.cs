@@ -78,7 +78,7 @@ namespace SourceAFIS.Extraction
             OrthogonalSmoother.AngleOffset = Angle.PIB;
             OrthogonalSmoother.Lines.Radius = 4;
             BinarySmoother.Radius = 2;
-            BinarySmoother.Majority = 0.66f;
+            BinarySmoother.Majority = 0.61f;
             BinarySmoother.BorderDistance = 17;
         }
 
