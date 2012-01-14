@@ -12,6 +12,10 @@ namespace SourceAFIS.Matching
     {
         [Parameter(Lower = 0, Upper = 5)]
         public int MinSupportingEdges = 2;
+        [Parameter]
+        public float DistanceErrorFlatness = 0.5f;
+        [Parameter]
+        public float AngleErrorFlatness = 0.5f;
 
         [Nested]
         public EdgeConstructor EdgeConstructor = new EdgeConstructor();
@@ -31,6 +35,8 @@ namespace SourceAFIS.Matching
         {
             MaxDistanceError = lookup.MaxDistanceError;
             MaxAngleError = lookup.MaxAngleError;
+            var innerDistanceRadius = Convert.ToInt32(DistanceErrorFlatness * MaxDistanceError);
+            var innerAngleRadius = Convert.ToInt32(AngleErrorFlatness * MaxAngleError);
 
             PairCount = pairing.Count;
 
@@ -53,8 +59,8 @@ namespace SourceAFIS.Matching
                     var probeEdge = EdgeConstructor.Construct(probe, pair.Reference.Probe, pair.Pair.Probe);
                     var candidateEdge = EdgeConstructor.Construct(candidate, pair.Reference.Candidate, pair.Pair.Candidate);
                     DistanceErrorSum += Math.Abs(probeEdge.Length - candidateEdge.Length);
-                    AngleErrorSum += Angle.Distance(probeEdge.ReferenceAngle, candidateEdge.ReferenceAngle);
-                    AngleErrorSum += Angle.Distance(probeEdge.NeighborAngle, candidateEdge.NeighborAngle);
+                    AngleErrorSum += Math.Max(innerDistanceRadius, Angle.Distance(probeEdge.ReferenceAngle, candidateEdge.ReferenceAngle));
+                    AngleErrorSum += Math.Max(innerAngleRadius, Angle.Distance(probeEdge.NeighborAngle, candidateEdge.NeighborAngle));
                 }
             }
 
