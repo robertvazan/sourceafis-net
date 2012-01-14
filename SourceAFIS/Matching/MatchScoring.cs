@@ -12,14 +12,14 @@ namespace SourceAFIS.Matching
         public float PairCountFactor = 1.47f;
         [Parameter(Upper = 100)]
         public float PairFractionFactor = 6.7f;
-        [Parameter(Upper = 10)]
+        [Parameter(Upper = 10, Precision = 3)]
         public float CorrectTypeFactor = 0.07f;
         [Parameter(Upper = 10)]
         public float SupportedCountFactor = 0.4f;
         [Parameter(Upper = 10, Precision = 3)]
         public float EdgeCountFactor = 0.208f;
         [Parameter(Upper = 10)]
-        public float DistanceAccuracyFactor = 0.1f;
+        public float DistanceAccuracyFactor = 0.21f;
         [Parameter(Upper = 10)]
         public float AngleAccuracyFactor = 0.1f;
 
