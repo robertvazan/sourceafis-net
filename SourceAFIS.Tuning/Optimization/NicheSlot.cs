@@ -32,7 +32,8 @@ namespace SourceAFIS.Tuning.Optimization
                     || performance.AverageError == BestPerformance.AverageError && performance.Separation == BestPerformance.Separation
                     && solution.Matcher.Time.NonMatching < BestSolution.Matcher.Time.NonMatching)
                 {
-                    bool improved = BestSolution != null;
+                    bool improved = BestSolution != null && (performance.AverageError < BestPerformance.AverageError
+                        || performance.Separation > BestPerformance.Separation);
 
                     BestSolution = solution;
                     BestPerformance = performance;
