@@ -9,7 +9,7 @@ namespace SourceAFIS.Matching.Minutia
     public sealed class EdgeLookup
     {
         [Parameter(Lower = 1, Upper = 50)]
-        public int MaxDistanceError = 10;
+        public int MaxDistanceError = 27;
         [Parameter(Lower = 1, Upper = 63)]
         public byte MaxAngleError = Angle.FromDegreesB(10);
 
