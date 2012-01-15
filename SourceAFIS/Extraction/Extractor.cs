@@ -77,6 +77,7 @@ namespace SourceAFIS.Extraction
             RidgeSmoother.Lines.StepFactor = 1.59f;
             OrthogonalSmoother.AngleOffset = Angle.PIB;
             OrthogonalSmoother.Lines.Radius = 4;
+            OrthogonalSmoother.Lines.AngularResolution = 11;
             BinarySmoother.Radius = 2;
             BinarySmoother.Majority = 0.61f;
             BinarySmoother.BorderDistance = 17;
