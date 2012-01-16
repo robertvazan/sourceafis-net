@@ -19,32 +19,65 @@ namespace SourceAFIS.Tuning.Optimization
         public TestReport BestSolution;
         public AccuracyStatistics BestPerformance;
 
-        public Action OnChange;
+        public Action<string> OnAccepted;
+        public Action<string> OnRejected;
 
         public bool Fit(TestReport solution)
         {
-            if (TimeConstraints.Check(solution.Extractor, BestSolution == null) && TimeConstraints.Check(solution.Matcher, BestSolution == null))
+            try
             {
+                TimeConstraints.Check(solution.Extractor);
+                TimeConstraints.Check(solution.Matcher);
+
                 AccuracyStatistics performance = new AccuracyStatistics(solution.Matcher.ScoreTables, Measure);
+                string acceptance;
 
-                if (BestSolution == null || performance.AverageError < BestPerformance.AverageError
-                    || performance.AverageError == BestPerformance.AverageError && performance.Separation > BestPerformance.Separation
-                    || performance.AverageError == BestPerformance.AverageError && performance.Separation == BestPerformance.Separation
-                    && solution.Matcher.Time.NonMatching < BestSolution.Matcher.Time.NonMatching)
+                if (BestSolution != null)
                 {
-                    bool improved = BestSolution != null && (performance.AverageError < BestPerformance.AverageError
-                        || performance.Separation > BestPerformance.Separation);
-
-                    BestSolution = solution;
-                    BestPerformance = performance;
-
-                    if (OnChange != null)
-                        OnChange();
-
-                    return improved;
+                    if (performance.AverageError > BestPerformance.AverageError)
+                        throw new FailedMutationException("Worse accuracy: {0:P2} -> {1:P2}", BestPerformance.AverageError, performance.AverageError);
+                    else if (performance.AverageError == BestPerformance.AverageError)
+                    {
+                        if (performance.Separation > BestPerformance.Separation)
+                            throw new FailedMutationException("Same accuracy, worse separation: {0:F4} -> {1:F4}",
+                                BestPerformance.Separation, performance.Separation);
+                        else if (performance.Separation == BestPerformance.Separation)
+                        {
+                            if (solution.Matcher.Time.NonMatching > BestSolution.Matcher.Time.NonMatching)
+                                throw new FailedMutationException("Same accuracy, same separation, worse speed: {0}fp/s -> {1}fp/s",
+                                    1 / BestSolution.Matcher.Time.NonMatching, 1 / solution.Matcher.Time.NonMatching);
+                            else if (solution.Matcher.Time.NonMatching > BestSolution.Matcher.Time.NonMatching)
+                                throw new FailedMutationException("Same accuracy, same separation, same performance");
+                            else
+                                acceptance = String.Format("Better speed: {0}fp/s -> {1}fp/s",
+                                    1 / BestSolution.Matcher.Time.NonMatching, 1 / solution.Matcher.Time.NonMatching);
+                        }
+                        else
+                            acceptance = String.Format("Better separation: {0:F4} -> {1:F4}", BestPerformance.Separation, performance.Separation);
+                    }
+                    else
+                        acceptance = String.Format("Better accuracy: {0:P2} -> {1:P2}", BestPerformance.AverageError, performance.AverageError);
                 }
+                else
+                    acceptance = "Initial";
+
+                bool improved = BestSolution != null && (performance.AverageError < BestPerformance.AverageError
+                    || performance.Separation > BestPerformance.Separation);
+
+                BestSolution = solution;
+                BestPerformance = performance;
+
+                if (OnAccepted != null)
+                    OnAccepted(acceptance);
+
+                return improved;
             }
-            return false;
+            catch (FailedMutationException e)
+            {
+                if (OnRejected != null)
+                    OnRejected(e.Message);
+                return false;
+            }
         }
 
         public void Save(string folder)
