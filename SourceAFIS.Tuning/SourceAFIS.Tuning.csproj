@@ -72,6 +72,7 @@
     <Compile Include="ExtractorBenchmark.cs" />
     <Compile Include="MatcherBenchmark.cs" />
     <Compile Include="Optimization\AxisFocusMutation.cs" />
+    <Compile Include="Optimization\FailedMutationException.cs" />
     <Compile Include="Optimization\ManualMutation.cs" />
     <Compile Include="Optimization\MutationAdvice.cs" />
     <Compile Include="Optimization\MutationAdvisor.cs" />

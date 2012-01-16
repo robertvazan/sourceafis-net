@@ -90,10 +90,14 @@ namespace DatabaseAnalyzer
             {
                 Console.WriteLine("Mutated {0}, {1} -> {2}", initial.FieldPath, initial.Value.Double, mutated.Value.Double);
             };
-            Optimizer.NicheSlot.OnChange += delegate()
+            Optimizer.NicheSlot.OnAccepted += message =>
             {
-                Console.WriteLine("NicheSlot has improved");
+                Console.WriteLine("-----> Accepted: " + message);
                 Optimizer.NicheSlot.Save("Optimizer");
+            };
+            Optimizer.NicheSlot.OnRejected += message =>
+            {
+                Console.WriteLine("Rejected: " + message);
             };
             Console.WriteLine("Running optimizer");
             Optimizer.Run();
