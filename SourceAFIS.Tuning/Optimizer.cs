@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using SourceAFIS.Meta;
+using SourceAFIS.Extraction;
+using SourceAFIS.Matching;
 using SourceAFIS.Tuning.Optimization;
 using SourceAFIS.Tuning.Reports;
 using SourceAFIS.Tuning.Errors;
@@ -28,6 +30,8 @@ namespace SourceAFIS.Tuning
 
             while (true)
             {
+                ExtractorBenchmark.Extractor = new Extractor();
+                MatcherBenchmark.Matcher = new ParallelMatcher();
                 trial.Rebind(new ObjectTree(ExtractorBenchmark.Extractor, "Extractor"));
                 trial.Rebind(new ObjectTree(MatcherBenchmark.Matcher, "Matcher"));
                 trial.SaveValues();
