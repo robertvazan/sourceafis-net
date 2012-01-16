@@ -44,12 +44,12 @@ namespace SourceAFIS.Tuning.Optimization
                         else if (performance.Separation == BestPerformance.Separation)
                         {
                             if (solution.Matcher.Time.NonMatching > BestSolution.Matcher.Time.NonMatching)
-                                throw new FailedMutationException("Same accuracy, same separation, worse speed: {0}fp/s -> {1}fp/s",
+                                throw new FailedMutationException("Same accuracy, same separation, worse speed: {0:F0} fp/s -> {1:F0} fp/s",
                                     1 / BestSolution.Matcher.Time.NonMatching, 1 / solution.Matcher.Time.NonMatching);
                             else if (solution.Matcher.Time.NonMatching > BestSolution.Matcher.Time.NonMatching)
                                 throw new FailedMutationException("Same accuracy, same separation, same performance");
                             else
-                                acceptance = String.Format("Better speed: {0}fp/s -> {1}fp/s",
+                                acceptance = String.Format("Better speed: {0:F0} fp/s -> {1:F0} fp/s",
                                     1 / BestSolution.Matcher.Time.NonMatching, 1 / solution.Matcher.Time.NonMatching);
                         }
                         else

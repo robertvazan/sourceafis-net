@@ -54,7 +54,7 @@ namespace SourceAFIS.Templates
         public readonly Minutia[] Minutiae;
 
         [NonSerialized]
-        internal object MatcherCache;
+        public object MatcherCache;
 
         public Template(TemplateBuilder builder)
         {

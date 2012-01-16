@@ -34,6 +34,8 @@ namespace SourceAFIS.Tuning
             for (int databaseIndex = 0; databaseIndex < TestDatabase.Databases.Count; ++databaseIndex)
             {
                 TestDatabase database = TestDatabase.Databases[databaseIndex];
+                foreach (var template in database.AllIndexes)
+                    database[template].Template.MatcherCache = null;
                 database.MaxMatchingPerProbe = MaxMatchingPerProbe;
                 database.MaxNonMatchingPerProbe = MaxNonMatchingPerProbe;
                 report.ScoreTables[databaseIndex].Initialize(database);
