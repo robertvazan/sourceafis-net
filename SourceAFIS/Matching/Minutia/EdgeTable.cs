@@ -15,7 +15,7 @@ namespace SourceAFIS.Matching.Minutia
         [Parameter(Lower = 30, Upper = 1500)]
         public int MaxDistance = 1074;
         [Parameter(Lower = 2, Upper = 100)]
-        public int MaxNeighbors = 9;
+        public int MaxNeighbors = 71;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 

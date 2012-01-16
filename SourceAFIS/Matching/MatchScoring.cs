@@ -17,9 +17,9 @@ namespace SourceAFIS.Matching
         [Parameter(Upper = 10)]
         public float SupportedCountFactor = 0.4f;
         [Parameter(Upper = 10, Precision = 3)]
-        public float EdgeCountFactor = 0.208f;
+        public float EdgeCountFactor = 0.032f;
         [Parameter(Upper = 10)]
-        public float DistanceAccuracyFactor = 2.8f;
+        public float DistanceAccuracyFactor = 2.79f;
         [Parameter(Upper = 10)]
         public float AngleAccuracyFactor = 0.1f;
 
