@@ -12,7 +12,7 @@ namespace SourceAFIS.Extraction.Filters
         public int AngularResolution = 32;
         [DpiAdjusted]
         [Parameter(Upper = 50)]
-        public int Radius = 5;
+        public int Radius = 7;
         [Parameter(Lower = 1.1, Upper = 4)]
         public float StepFactor = 1.5f;
 

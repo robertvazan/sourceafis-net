@@ -29,7 +29,7 @@ namespace SourceAFIS.Matching.Minutia
         [Parameter(Upper = 10000)]
         public int MaxTriedRoots = 60;
         [Parameter(Upper = 10000)]
-        public int MaxTriedTriangles = 30;
+        public int MaxTriedTriangles = 29;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
