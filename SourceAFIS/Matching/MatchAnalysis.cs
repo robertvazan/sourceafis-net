@@ -13,7 +13,7 @@ namespace SourceAFIS.Matching
         [Parameter(Lower = 0, Upper = 5)]
         public int MinSupportingEdges = 2;
         [Parameter]
-        public float DistanceErrorFlatness = 0.5f;
+        public float DistanceErrorFlatness = 0.47f;
         [Parameter]
         public float AngleErrorFlatness = 0.48f;
 

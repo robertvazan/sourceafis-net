@@ -11,9 +11,9 @@ namespace SourceAFIS.Matching.Minutia
     public sealed class RootPairSelector
     {
         [Parameter(Lower = 5, Upper = 300)]
-        public int MinEdgeLength = 50;
+        public int MinEdgeLength = 48;
         [Parameter(Lower = 5, Upper = 100000)]
-        public int MaxEdgeLookups = 1080;
+        public int MaxEdgeLookups = 50188;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
