@@ -15,7 +15,7 @@ namespace SourceAFIS.Matching
         [Parameter]
         public float DistanceErrorFlatness = 0.62f;
         [Parameter]
-        public float AngleErrorFlatness = 0.46f;
+        public float AngleErrorFlatness = 0.37f;
 
         [Nested]
         public EdgeConstructor EdgeConstructor = new EdgeConstructor();
