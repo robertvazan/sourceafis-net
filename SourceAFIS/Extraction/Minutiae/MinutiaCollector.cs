@@ -15,7 +15,7 @@ namespace SourceAFIS.Extraction.Minutiae
         public int DirectionSegmentLength = 21;
         [DpiAdjusted(Min = 0)]
         [Parameter(Lower = 0, Upper = 20)]
-        public int DirectionSegmentSkip = 3;
+        public int DirectionSegmentSkip = 1;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 

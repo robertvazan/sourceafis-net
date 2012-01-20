@@ -12,7 +12,7 @@ namespace SourceAFIS.Extraction.Minutiae
     {
         [DpiAdjusted(Min = 0)]
         [Parameter(Lower = 0, Upper = 50)]
-        public float DirectedExtension = 10.03f;
+        public float DirectedExtension = 10.06f;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
