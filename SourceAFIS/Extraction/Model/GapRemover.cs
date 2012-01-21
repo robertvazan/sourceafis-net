@@ -13,7 +13,7 @@ namespace SourceAFIS.Extraction.Model
         public int RuptureSize = 5;
         [DpiAdjusted]
         [Parameter(Lower = 0, Upper = 100)]
-        public int GapSize = 22;
+        public int GapSize = 20;
         [Parameter(Upper = Angle.B90)]
         public byte GapAngle = 31;
         [DpiAdjusted]
