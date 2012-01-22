@@ -27,7 +27,7 @@ namespace SourceAFIS.Matching.Minutia
         public EdgeLookup EdgeLookup = new EdgeLookup();
 
         [Parameter(Upper = 10000)]
-        public int MaxTriedRoots = 62;
+        public int MaxTriedRoots = 70;
         [Parameter(Upper = 10000)]
         public int MaxTriedTriangles = 7538;
 

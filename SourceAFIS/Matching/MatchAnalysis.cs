@@ -11,11 +11,11 @@ namespace SourceAFIS.Matching
     public sealed class MatchAnalysis
     {
         [Parameter(Lower = 0, Upper = 5)]
-        public int MinSupportingEdges = 1;
+        public int MinSupportingEdges = 0;
         [Parameter]
-        public float DistanceErrorFlatness = 0.62f;
+        public float DistanceErrorFlatness = 0.58f;
         [Parameter]
-        public float AngleErrorFlatness = 0.24f;
+        public float AngleErrorFlatness = 0.27f;
 
         [Nested]
         public EdgeConstructor EdgeConstructor = new EdgeConstructor();
