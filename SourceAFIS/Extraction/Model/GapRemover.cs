@@ -15,7 +15,7 @@ namespace SourceAFIS.Extraction.Model
         [Parameter(Lower = 0, Upper = 100)]
         public int GapSize = 20;
         [Parameter(Upper = Angle.B90)]
-        public byte GapAngle = 31;
+        public byte GapAngle = 32;
         [DpiAdjusted]
         [Parameter(Lower = 3, Upper = 40)]
         public int AngleSampleOffset = 22;
