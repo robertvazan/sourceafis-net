@@ -9,19 +9,19 @@ namespace SourceAFIS.Matching
     public sealed class MatchScoring
     {
         [Parameter(Upper = 10, Precision = 3)]
-        public float PairCountFactor = 0.025f;
+        public float PairCountFactor = 0.032f;
         [Parameter(Upper = 100)]
-        public float PairFractionFactor = 7.34f;
+        public float PairFractionFactor = 8.98f;
         [Parameter(Upper = 10, Precision = 3)]
         public float CorrectTypeFactor = 0.629f;
         [Parameter(Upper = 10, Precision = 3)]
-        public float SupportedCountFactor = 0.19f;
+        public float SupportedCountFactor = 0.193f;
         [Parameter(Upper = 10, Precision = 3)]
-        public float EdgeCountFactor = 0.267f;
+        public float EdgeCountFactor = 0.265f;
         [Parameter(Upper = 100)]
         public float DistanceAccuracyFactor = 9.9f;
         [Parameter(Upper = 100)]
-        public float AngleAccuracyFactor = 2.8f;
+        public float AngleAccuracyFactor = 2.79f;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
