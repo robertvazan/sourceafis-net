@@ -13,7 +13,7 @@ namespace SourceAFIS.Matching.Minutia
         public EdgeConstructor EdgeConstructor = new EdgeConstructor();
 
         [Parameter(Lower = 30, Upper = 1500)]
-        public int MaxDistance = 485;
+        public int MaxDistance = 490;
         [Parameter(Lower = 2, Upper = 100)]
         public int MaxNeighbors = 9;
 

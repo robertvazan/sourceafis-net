@@ -13,7 +13,7 @@ namespace SourceAFIS.Matching.Minutia
         [Parameter(Lower = 5, Upper = 300)]
         public int MinEdgeLength = 58;
         [Parameter(Lower = 5, Upper = 100000)]
-        public int MaxEdgeLookups = 1632;
+        public int MaxEdgeLookups = 1633;
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
