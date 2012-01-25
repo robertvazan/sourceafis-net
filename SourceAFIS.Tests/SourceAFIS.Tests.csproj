@@ -46,8 +46,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="UIAutomationClient" />
     <Reference Include="UIAutomationTypes" />
-    <Reference Include="White.Core">
-      <HintPath>..\..\..\..\..\Program Files\NUnit 2.5.7\bin\net-2.0\addins\White.Core.dll</HintPath>
+    <Reference Include="White.Core, Version=0.2.1.0, Culture=neutral, PublicKeyToken=2672efbf3e161801, processorArchitecture=MSIL">
+      <HintPath>..\deps\White\White.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>

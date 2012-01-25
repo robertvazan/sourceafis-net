@@ -21,3 +21,4 @@ syntax: glob
 Data/JavaTestData
 java/*/dist
 java/*/lib
+deps/*
