@@ -1,4 +1,4 @@
-package sourceafis.extraction.templates;
+package sourceafis.templates;
 
 import java.io.Serializable;
 
@@ -13,6 +13,7 @@ public class Template implements Cloneable, Serializable {
 	public int StandardDpiWidth;
 	public int StandardDpiHeight;
 	public Minutia[] Minutiae;
+	public Object MatcherCache;
    /*
 	public class Minutia {
 		public PointS Position;

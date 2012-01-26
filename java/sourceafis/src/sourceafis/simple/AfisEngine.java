@@ -3,9 +3,9 @@ package sourceafis.simple;
 import java.util.ArrayList;
 import java.util.List;
 
-import sourceafis.extraction.templates.Template;
 import sourceafis.matching.BestMatchSkipper;
 import sourceafis.matching.ParallelMatcher;
+import sourceafis.templates.Template;
 
 public class AfisEngine
 {
@@ -215,7 +215,7 @@ public class AfisEngine
             		}
             	}
             	
-            	ParallelMatcher.PreparedProbe probeIndex = Matcher.Prepare(fp.Decoded);
+            	ParallelMatcher.PreparedProbe probeIndex = Matcher.prepare(fp.Decoded);
             	float[] scores = Matcher.Match(probeIndex, candidateTemplates);
             	
                 for (float score :scores){

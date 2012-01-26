@@ -1,4 +1,4 @@
-package sourceafis.extraction.templates;
+package sourceafis.templates;
 /*
  * Added Convert to be able to serialize as byte  
  */

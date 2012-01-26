@@ -1,108 +1,101 @@
 package sourceafis.matching.minutia;
 
-import sourceafis.extraction.templates.Template;
 import sourceafis.general.DetailLogger;
+import sourceafis.templates.Template;
 
 public class MinutiaPairing implements Cloneable 
 {
-    int[] ProbeByCandidate;
-    int[] CandidateByProbe;
-    int[] SupportingEdgesByProbe;
-    MinutiaPair[] PairList;
-    int PairCount;
+    PairInfo[] candidateIndex;
+    PairInfo[] probeIndex;
+    PairInfo[] pairList;
+    int pairCount;
 
     public DetailLogger.Hook logger = DetailLogger.off;
 
     public int getCount() { 
-    	return PairCount; 
-    	}
-    public MinutiaPair getLastAdded() {   
-    	return PairList[PairCount - 1]; 
+    	return pairCount; 
     }
-    public void SelectProbe(Template probe)
-    {
-        CandidateByProbe = new int[probe.Minutiae.length];
-        for (int i = 0; i < CandidateByProbe.length; ++i)
-            CandidateByProbe[i] = -1;
-        SupportingEdgesByProbe = new int[probe.Minutiae.length];
-        PairList = new MinutiaPair[probe.Minutiae.length];
-        PairCount = 0;
+    public PairInfo getLastAdded() {   
+    	return pairList[pairCount - 1]; 
     }
-
-    public void SelectCandidate(Template candidate)
+    public void selectProbe(Template probe)
     {
-        if (ProbeByCandidate == null || ProbeByCandidate.length < candidate.Minutiae.length)
-            ProbeByCandidate = new int[candidate.Minutiae.length];
-        for (int i = 0; i < ProbeByCandidate.length; ++i)
-            ProbeByCandidate[i] = -1;
+        probeIndex = new PairInfo[probe.Minutiae.length];
+        pairList = new PairInfo[probe.Minutiae.length];
+        for (int i = 0; i < pairList.length; ++i)
+           pairList[i] = new PairInfo();
+        pairCount = 0;
     }
 
-    public void Reset()
+    public void selectCandidate(Template candidate)
     {
-        for (int i = 0; i < PairCount; ++i)
-        {
-            ProbeByCandidate[PairList[i].Candidate] = -1;
-            CandidateByProbe[PairList[i].Probe] = -1;
-            SupportingEdgesByProbe[PairList[i].Probe] = 0;
+        if (candidateIndex == null || candidateIndex.length < candidate.Minutiae.length)
+        	candidateIndex = new PairInfo[candidate.Minutiae.length];
+        else{
+        	for (int i = 0; i < candidateIndex.length; ++i)
+            candidateIndex[i] = null;
         }
-        PairCount = 0;
     }
 
-    public void Add(MinutiaPair pair)
+    public void Reset(MinutiaPair root)
     {
-        ProbeByCandidate[pair.Candidate] = pair.Probe;
-        CandidateByProbe[pair.Probe] = pair.Candidate;
-        PairList[PairCount] = pair;
-        ++PairCount;
+        for (int i = 0; i < pairCount; ++i)
+        {
+            candidateIndex[pairList[i].pair.candidate] = null;
+            probeIndex[pairList[i].pair.probe] = null;
+            pairList[i].supportingEdges = 0;
+        }
+        
+        candidateIndex[root.candidate] = probeIndex[root.probe] = pairList[0];
+        pairList[0].pair = root;
+        pairCount = 1;
     }
 
-    public int GetProbeByCandidate(int candidate)
+    public void add(EdgePair edge)
     {
-        return ProbeByCandidate[candidate];
-    }
+    	 candidateIndex[edge.neighbor.candidate] = probeIndex[edge.neighbor.probe] = pairList[pairCount];
+         pairList[pairCount].pair = edge.neighbor;
+         pairList[pairCount].reference = edge.reference;
+         ++pairCount;
+      }
 
-    public int GetCandidateByProbe(int probe)
+    public PairInfo getByCandidate(int candidate)
     {
-        return CandidateByProbe[probe];
+        return candidateIndex[candidate];
     }
 
-    public boolean IsProbePaired(int probe)
+    public PairInfo getByProbe(int probe)
     {
-        return CandidateByProbe[probe] >= 0;
+        return probeIndex[probe];
     }
 
-    public boolean IsCandidatePaired(int candidate)
+    public boolean isProbePaired(int probe)
     {
-        return ProbeByCandidate[candidate] >= 0;
+        return probeIndex[probe] != null;
     }
 
-    public MinutiaPair GetPair(int index)
+    public boolean isCandidatePaired(int candidate)
     {
-        return PairList[index];
+        return candidateIndex[candidate] != null;
     }
 
-    public void AddSupportByProbe(int probe)
+    public PairInfo getPair(int index)
     {
-        ++SupportingEdgesByProbe[probe];
+        return pairList[index];
     }
 
-    public int GetSupportByProbe(int probe)
+    public void addSupportByProbe(int probe)
     {
-        return SupportingEdgesByProbe[probe];
+        ++probeIndex[probe].supportingEdges;
     }
-
     public void log() { logger.log(this); }
-    
+   
     public MinutiaPairing clone() {
     	MinutiaPairing clone = new MinutiaPairing();
-    	clone.CandidateByProbe = (int[])CandidateByProbe.clone();
-        clone.ProbeByCandidate = (int[])ProbeByCandidate.clone();
-        clone.SupportingEdgesByProbe = (int[])SupportingEdgesByProbe.clone();
-        clone.PairList = new MinutiaPair[PairList.length];
-        for (int i = 0; i < clone.PairList.length; ++i)
-        	if (PairList[i] != null)
-        		clone.PairList[i] = PairList[i].clone();
-        clone.PairCount = PairCount;
+    	clone.probeIndex = (PairInfo[])probeIndex.clone();
+        clone.candidateIndex = (PairInfo[])candidateIndex.clone();
+        clone.pairList = (PairInfo[])pairList.clone();
+        clone.pairCount = pairCount;
         return clone;
     }
 }
