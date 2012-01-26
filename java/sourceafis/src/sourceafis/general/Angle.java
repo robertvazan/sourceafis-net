@@ -203,14 +203,14 @@ package sourceafis.general;
             return (byte)(angle + PIB);
         }
 
-        final static int PolarCacheBits = 6;
+        final static int PolarCacheBits = 8;
         final static int PolarCacheRadius = 1 << PolarCacheBits;
         final  int PolarCacheMask = PolarCacheRadius - 1;
 
         /* struct in c# */
         static class PolarPointB
         {
-            public byte Distance;
+            public short Distance;
             public byte Angle;
         }
 
@@ -219,14 +219,14 @@ package sourceafis.general;
         static PolarPointB[][] CreatePolarCache()
         {
             PolarPointB[][] cache = new PolarPointB[PolarCacheRadius][PolarCacheRadius];
-            
+
             for (int y = 0; y < PolarCacheRadius; ++y)
                 for (int x = 0; x < PolarCacheRadius; ++x)
                 {
                 	//Extra in java as array is not initilized
                 	cache[y][x]=new PolarPointB();
-                	
-                    cache[y][x].Distance = (byte)(Math.round(Math.sqrt(Calc.Sq(x) + Calc.Sq(y))));
+
+                    cache[y][x].Distance = (short)(Math.round(Math.sqrt(Calc.Sq(x) + Calc.Sq(y))));
                     if (y > 0 || x > 0)
                         cache[y][x].Angle = Angle.AtanB(new Point(x, y));
                     else
@@ -239,7 +239,7 @@ package sourceafis.general;
         {
             if (PolarCache == null)
                 PolarCache = CreatePolarCache();
-            
+
             int quadrant = 0;
             int x = point.X;
             int y = point.Y;
