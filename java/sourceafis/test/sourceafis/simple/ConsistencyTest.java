@@ -23,8 +23,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import sourceafis.extraction.templates.CompactFormat;
-import sourceafis.extraction.templates.Template;
 import sourceafis.general.DetailLogger;
 import sourceafis.matching.ParallelMatcher;
 import sourceafis.matching.minutia.EdgeTable;
@@ -34,6 +32,8 @@ import sourceafis.matching.minutia.NeighborEdge;
 import sourceafis.meta.ObjectTree;
 import sourceafis.meta.ParameterSet;
 import sourceafis.meta.ParameterValue;
+import sourceafis.templates.CompactFormat;
+import sourceafis.templates.Template;
 
 
 public class ConsistencyTest {
@@ -103,7 +103,7 @@ public class ConsistencyTest {
 		ParallelMatcher matcher = new ParallelMatcher();
 		DetailLogger logger = new DetailLogger();
 		logger.attach(new ObjectTree(matcher));
-		ParallelMatcher.PreparedProbe prepared = matcher.Prepare(probe);
+		ParallelMatcher.PreparedProbe prepared = matcher.prepare(probe);
 		matcher.Match(prepared, Arrays.asList(candidate));
 		DetailLogger.LogData log = logger.popLog();
 		
@@ -117,8 +117,8 @@ public class ConsistencyTest {
 			for (int j = 0; j < edgeList.length; ++j) {
 				Element csEdge = (Element)csEdgeList.item(j);
 				String atEdge = "from: " + i + ", edge: " + j;
-				assertEquals(atEdge, parseInt(csEdge.getAttribute("length")), edgeList[j].Edge.Length);
-				assertEquals(atEdge, parseInt(csEdge.getAttribute("neighbor")), edgeList[j].Neighbor);
+				assertEquals(atEdge, parseInt(csEdge.getAttribute("length")), edgeList[j].edge.length);
+				assertEquals(atEdge, parseInt(csEdge.getAttribute("neighbor")), edgeList[j].neighbor);
 			}
 		}
 
@@ -129,18 +129,19 @@ public class ConsistencyTest {
 			MinutiaPair root = (MinutiaPair)log.retrieve("MinutiaMatcher.RootSelector", i);
 			float score = (Float)log.retrieve("MinutiaMatcher.MatchScoring", i);
 			String offset = "offset: " + i; 
-			assertEquals(offset, parseInt(csRoot.getAttribute("probe")), root.Probe);
-			assertEquals(offset, parseInt(csRoot.getAttribute("candidate")), root.Candidate);
+			assertEquals(offset, parseInt(csRoot.getAttribute("probe")), root.probe);
+			assertEquals(offset, parseInt(csRoot.getAttribute("candidate")), root.candidate);
 			NodeList csPairs = csRoot.getElementsByTagName("pair");
 			MinutiaPairing pairing = (MinutiaPairing)log.retrieve("MinutiaMatcher.Pairing", i);
 			assertEquals(csPairs.getLength(), pairing.getCount());
 			for (int j = 0; j < pairing.getCount(); ++j) {
 				String atPair = offset + ", pair: " + j;
 				Element csPair = (Element)csPairs.item(j);
-				assertEquals(atPair, parseInt(csPair.getAttribute("probe")), pairing.GetPair(j).Probe);
-				assertEquals(atPair, parseInt(csPair.getAttribute("candidate")), pairing.GetPair(j).Candidate);
-				assertEquals(atPair, parseInt(csPair.getAttribute("support")),
-						pairing.GetSupportByProbe(pairing.GetPair(j).Probe));
+				assertEquals(atPair, parseInt(csPair.getAttribute("probe")), pairing.getPair(j).pair);//Probe
+				assertEquals(atPair, parseInt(csPair.getAttribute("candidate")), pairing.getPair(j).reference);//Candidate
+				//assertEquals(atPair, parseInt(csPair.getAttribute("support")),pairing.getSupportByProbe(pairing.getPair(j).pair));//Probe
+				assertEquals(atPair, parseInt(csPair.getAttribute("support")),pairing.getByProbe(j));//Probe
+
 			}
 			assertEquals(offset, parseFloat(csRoot.getAttribute("score")), score, 0.0001);
 		}
