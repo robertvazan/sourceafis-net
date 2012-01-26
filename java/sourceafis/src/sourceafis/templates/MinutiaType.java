@@ -4,7 +4,7 @@ package sourceafis.templates;
  */
 public enum MinutiaType // : byte
 {
-	Ending(0), Bifurcation(1);
+	Ending(0), Bifurcation(1), Other(2);
 	private final byte value;
 
 	MinutiaType(int value) {
