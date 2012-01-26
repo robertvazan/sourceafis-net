@@ -1,9 +1,11 @@
 package sourceafis.matching;
 
 import sourceafis.matching.minutia.EdgeTable;
-import sourceafis.extraction.templates.Template;
-public class ProbeIndex
+import sourceafis.templates.Template;
+import sourceafis.matching.minutia.EdgeHash;
+public final class ProbeIndex
 {
-    public Template Template;
-    public EdgeTable Edges;
+    public Template template;
+    public EdgeTable edges;
+    public EdgeHash edgeHash;
 }

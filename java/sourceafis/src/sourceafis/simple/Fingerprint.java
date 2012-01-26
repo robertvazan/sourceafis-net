@@ -1,10 +1,10 @@
 package sourceafis.simple;
 import java.io.Serializable;
 
-import sourceafis.extraction.templates.IsoFormat;
-import sourceafis.extraction.templates.CompactFormat;
-import sourceafis.extraction.templates.SerializedFormat;
-import sourceafis.extraction.templates.Template;
+import sourceafis.templates.CompactFormat;
+import sourceafis.templates.IsoFormat;
+import sourceafis.templates.SerializedFormat;
+import sourceafis.templates.Template;
 
 /// <summary>
 /// Collection of fingerprint-related information.

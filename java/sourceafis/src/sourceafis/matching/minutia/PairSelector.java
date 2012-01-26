@@ -2,36 +2,37 @@ package sourceafis.matching.minutia;
 
 import sourceafis.general.PriorityQueueF;
 
-public class PairSelector
+public final class PairSelector
 {
-    PriorityQueueF<MinutiaPair> Queue = new PriorityQueueF<MinutiaPair>();
+    PriorityQueueF<EdgePair> queue = new PriorityQueueF<EdgePair>();
 
-    public void Clear()
+    public void clear()
     {
-        Queue.clear();
+        queue.clear();
     }
 
-    public void Enqueue(MinutiaPair pair, float distance)
+    public void enqueue(EdgePair pair, float distance)
     {
-        Queue.enqueue(distance, pair);
+        queue.enqueue(distance, pair);
     }
 
-    public void SkipPaired(MinutiaPairing pairing)
+    public void skipPaired(MinutiaPairing pairing)
     {
-        while (Queue.size() > 0 && (pairing.IsProbePaired(Queue.peek().Probe)
-            || pairing.IsCandidatePaired(Queue.peek().Candidate)))
+        while (queue.size() > 0 && (pairing.isProbePaired(queue.peek().neighbor.probe)
+            || pairing.isCandidatePaired(queue.peek().neighbor.candidate)))
         {
-            MinutiaPair pair = (MinutiaPair)Queue.dequeue();
-            if (pairing.GetCandidateByProbe(pair.Probe) == pair.Candidate)
-                pairing.AddSupportByProbe(pair.Probe);
+            EdgePair edge = (EdgePair)queue.dequeue();
+            if (pairing.isProbePaired(edge.neighbor.probe) && pairing.getByProbe(edge.neighbor.probe).pair.candidate == edge.neighbor.candidate)
+            	pairing.addSupportByProbe(edge.reference.probe);
+                pairing.addSupportByProbe(edge.neighbor.probe);
         }
     }
 
-    public int getCount() {  return Queue.size();  }
+    public int getCount() {  return queue.size();  }
 
-    public MinutiaPair Dequeue()
+    public EdgePair dequeue()
     {
-        return (MinutiaPair)Queue.dequeue();
+        return  queue.dequeue();
     }
 }
 

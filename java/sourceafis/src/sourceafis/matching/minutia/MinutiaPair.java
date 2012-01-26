@@ -1,8 +1,8 @@
 package sourceafis.matching.minutia;
  
-public class MinutiaPair implements Cloneable {
-    public int Probe;
-    public int Candidate;
+public class MinutiaPair{
+    public int probe;
+    public int candidate;
     /*
      * Empty Constcture 
      */
@@ -11,15 +11,11 @@ public class MinutiaPair implements Cloneable {
     }
     public MinutiaPair(int probe, int candidate)
     {
-        Probe = probe;
-        Candidate = candidate;
+        this.probe = probe;
+        this.candidate = candidate;
     }
     
     public MinutiaPair clone() {
-    	try {
-    		return (MinutiaPair)super.clone();
-    	} catch (CloneNotSupportedException e) {
-    		throw new RuntimeException(e);
-    	}
+    	return new MinutiaPair(this.probe,this.candidate);   		 
     }
 }

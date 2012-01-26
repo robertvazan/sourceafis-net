@@ -3,66 +3,63 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import sourceafis.extraction.templates.Template;
 import sourceafis.matching.minutia.MinutiaMatcher;
 import sourceafis.meta.Nested;
 import sourceafis.meta.ParameterSet;
+import sourceafis.templates.Template;
 public class ParallelMatcher
 {
     @Nested
-    public MinutiaMatcher MinutiaMatcher = new MinutiaMatcher();
+    public MinutiaMatcher minutiaMatcher = new MinutiaMatcher();
 
     public class PreparedProbe
     {
         public ProbeIndex ProbeIndex = new ProbeIndex();
     }
 
-    Queue<MinutiaMatcher> Matchers = new LinkedList<MinutiaMatcher>();
+    Queue<MinutiaMatcher> matchers = new LinkedList<MinutiaMatcher>();
   /*
    * Review the code, it is creaating new matcher everytime
    */
-    MinutiaMatcher DequeueMatcher()
+    MinutiaMatcher dequeueMatcher()
     {
         MinutiaMatcher matcher = null;
        // lock (Matchers)
-        synchronized(Matchers){
-           // if (Matchers.Count > 0)
-             matcher = Matchers.poll();
-          // Can be implemented later when using real parallel
+        synchronized(matchers){
+            if (matchers.size() > 0)
+             matcher = matchers.poll();
         }
        if (matcher == null) {
-     //     matcher = ParameterSet.ClonePrototype(MinutiaMatcher);
-    	   matcher = ParameterSet.clonePrototype(MinutiaMatcher);
+    	   matcher = ParameterSet.clonePrototype(minutiaMatcher);
        }
         return matcher;
     }
 
     MinutiaMatcher DequeueMatcher(PreparedProbe probe)
     {
-        MinutiaMatcher matcher = DequeueMatcher();
+        MinutiaMatcher matcher = dequeueMatcher();
         matcher.SelectProbe(probe.ProbeIndex);
         return matcher;
     }
 
-    void EnqueueMatcher(MinutiaMatcher matcher)
+    void enqueueMatcher(MinutiaMatcher matcher)
     {
-        //lock (Matchers)
-    	synchronized(Matchers){
-             Matchers.offer(matcher);
+    	synchronized(matchers){
+             matchers.offer(matcher);
     	}
     }
 
-    public PreparedProbe Prepare(Template probe)
+    public PreparedProbe prepare(Template probe)
     {
         PreparedProbe prepared = new PreparedProbe();
-        MinutiaMatcher matcher = DequeueMatcher();
+        MinutiaMatcher matcher = dequeueMatcher();
         try
         {
             matcher.BuildIndex(probe, prepared.ProbeIndex);
         }
         finally
         {
-            EnqueueMatcher(matcher);
+            enqueueMatcher(matcher);
         }
         return prepared;
     }
@@ -74,7 +71,7 @@ public class ParallelMatcher
         for(int x=0;x<scores.length;x++){
           MinutiaMatcher matcher= DequeueMatcher(probe);
           scores[x]=matcher.Match(candidates.get(x));
-          EnqueueMatcher(matcher);
+          enqueueMatcher(matcher);
         }
         
         /*

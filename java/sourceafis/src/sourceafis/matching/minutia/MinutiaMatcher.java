@@ -2,56 +2,59 @@ package sourceafis.matching.minutia;
 
 import java.util.List;
 
-import sourceafis.extraction.templates.Template;
 import sourceafis.general.DetailLogger;
 import sourceafis.matching.MatchAnalysis;
 import sourceafis.matching.MatchScoring;
 import sourceafis.matching.ProbeIndex;
+import sourceafis.matching.minutia.EdgeLookup.LookupResult;
 import sourceafis.meta.Nested;
 import sourceafis.meta.Parameter;
 import sourceafis.meta.ParameterSet;
+import sourceafis.templates.Template;
 
  
 
 public class MinutiaMatcher
 {
     @Nested
-    public RootPairSelector RootSelector = new RootPairSelector();
+    public RootPairSelector rootSelector = new RootPairSelector();
     @Nested
-    public MinutiaPairing Pairing = new MinutiaPairing();
+    public MinutiaPairing pairing = new MinutiaPairing();
     @Nested
-    public EdgeTable EdgeTablePrototype = new EdgeTable();
+    public EdgeTable edgeTablePrototype = new EdgeTable();
     @Nested
-    public EdgeConstructor EdgeConstructor = new EdgeConstructor();
+    public EdgeConstructor edgeConstructor = new EdgeConstructor();
     @Nested
-    public PairSelector PairSelector = new PairSelector();
+    public PairSelector pairSelector = new PairSelector();
     @Nested
-    public MatchAnalysis MatchAnalysis = new MatchAnalysis();
+    public MatchAnalysis matchAnalysis = new MatchAnalysis();
     @Nested
-    public MatchScoring MatchScoring = new MatchScoring();
+    public MatchScoring matchScoring = new MatchScoring();
     @Nested
-    public EdgeLookup EdgeLookup = new EdgeLookup();
+    public EdgeLookup edgeLookup = new EdgeLookup();
 
-    @Parameter
-    public int MaxTriedRoots = 1000;
-
+    @Parameter(upper=10000)
+    public int MaxTriedRoots = 70;
+    @Parameter(upper = 10000)
+    public int MaxTriedTriangles = 7538;
     public DetailLogger.Hook logger = DetailLogger.off;
 
-    ProbeIndex Probe;
-    EdgeTable CandidateEdges;
+    ProbeIndex probe;
+    EdgeTable candidateEdges;
     
     public void BuildIndex(Template probe, ProbeIndex index)
     {
-        index.Template = probe;
-        index.Edges = ParameterSet.clonePrototype(EdgeTablePrototype);
-        index.Edges.Reset(probe);
+        index.template = probe;
+        index.edges = ParameterSet.clonePrototype(edgeTablePrototype);
+        index.edges.reset(probe);
+        index.edgeHash = new EdgeHash(probe, edgeLookup);
     }
 
     public void SelectProbe(ProbeIndex probe)
     {
-        Probe = probe;
-        Pairing.SelectProbe(probe.Template);
-        CandidateEdges = ParameterSet.clonePrototype(EdgeTablePrototype);
+        this.probe = probe;
+        pairing.selectProbe(probe.template);
+        candidateEdges = ParameterSet.clonePrototype(edgeTablePrototype);
     }
 
    
@@ -60,11 +63,12 @@ public class MinutiaMatcher
         PrepareCandidate(candidate);
 
         int rootIndex = 0;
+        int triangleIndex = 0;
         float bestScore = 0;
-        MinutiaPair bestRoot = null;
+        MinutiaPair bestRoot = new MinutiaPair();
         int bestRootIndex = -1;
      
-        for(MinutiaPair root : RootSelector.getRoots(Probe.Template, candidate))
+        for(MinutiaPair root : rootSelector.getRoots(probe, candidate))
         {
             float score = TryRoot(root, candidate);
             if (score > bestScore)
@@ -76,30 +80,37 @@ public class MinutiaMatcher
             ++rootIndex;
             if (rootIndex >= MaxTriedRoots)
                 break;
+            if(pairing.getCount() >= 3){
+            	++ triangleIndex;
+            	if(triangleIndex >= MaxTriedTriangles)
+            		break;
+            }
         }
         logger.log("score", bestScore);
-        logger.log("bestRootIndex", bestRootIndex);
-        if (bestScore > 0 && logger.isActive())
-            logger.log("bestRoot", bestRoot);
+        logger.log("BestRootIndex", bestRootIndex);
         
+        if (bestScore > 0 && logger.isActive())
+        {   pairing.Reset(bestRoot);
+            BuildPairing(candidate);
+            logger.log("bestRoot", bestRoot);
+            logger.log("BestPairing",pairing);
+        }
         return bestScore;
     }
 
     void PrepareCandidate(Template candidate)
     {
-        Pairing.SelectCandidate(candidate);
-        PairSelector.Clear();
-        CandidateEdges.Reset(candidate);
+        pairing.selectCandidate(candidate);
+        pairSelector.clear();
+        candidateEdges.reset(candidate);
     }
    
     float TryRoot(MinutiaPair root, Template candidate)
     {
-        Pairing.Reset();
-        Pairing.Add(root);
-       
+        pairing.Reset(root);
         BuildPairing(candidate);
-        MatchAnalysis.Analyze(Pairing, Probe.Template, candidate);
-        return MatchScoring.Compute(MatchAnalysis);
+        matchAnalysis.analyze(pairing,edgeLookup, probe.template, candidate);
+        return matchScoring.Compute(matchAnalysis);
     }
      
     void BuildPairing(Template candidate)
@@ -107,29 +118,34 @@ public class MinutiaMatcher
         while (true)
         {  
           	CollectEdges(candidate);
-           	PairSelector.SkipPaired(Pairing);
-            if (PairSelector.getCount() == 0)
+           	pairSelector.skipPaired(pairing);
+            if (pairSelector.getCount() == 0)
                 break;
-            Pairing.Add(PairSelector.Dequeue());
+            pairing.add(pairSelector.dequeue());
             
         }
-        Pairing.log();
+        pairing.log();
     }
     void CollectEdges(Template candidate)
     {
-        List<EdgeLookup.EdgePair> edgePairs = EdgeLookup.FindMatchingPairs(
-           Probe.Edges.Table[Pairing.getLastAdded().Probe], CandidateEdges.Table[Pairing.getLastAdded().Candidate]);
+        MinutiaPair reference=pairing.getLastAdded().pair;
+        NeighborEdge[] probeNeighbors = probe.edges.Table[reference.probe];
+        NeighborEdge[] candidateNeigbors = candidateEdges.Table[reference.candidate];
       
-        for(EdgeLookup.EdgePair edgePair : edgePairs)
+    	List<LookupResult> matches = edgeLookup.FindMatchingPairs(
+    			probeNeighbors,candidateNeigbors);
+      
+        for(LookupResult match : matches)
         {
-            NeighborEdge probeEdge = Probe.Edges.Table[Pairing.getLastAdded().Probe][edgePair.ProbeIndex];
-            NeighborEdge candidateEdge = CandidateEdges.Table[Pairing.getLastAdded().Candidate][edgePair.CandidateIndex];
-            if (!Pairing.IsCandidatePaired(candidateEdge.Neighbor) && !Pairing.IsProbePaired(probeEdge.Neighbor))
-            {
-            	PairSelector.Enqueue(new MinutiaPair(probeEdge.Neighbor, candidateEdge.Neighbor), candidateEdge.Edge.Length);
-            }
-            else if (Pairing.GetCandidateByProbe(probeEdge.Neighbor) == candidateEdge.Neighbor)
-                Pairing.AddSupportByProbe(probeEdge.Neighbor);
+        	 MinutiaPair neighbor = match.pair;
+             if (!pairing.isCandidatePaired(neighbor.candidate) && !pairing.isProbePaired(neighbor.probe))
+                 pairSelector.enqueue(new EdgePair(reference, neighbor), match.distance);
+             else if (pairing.isProbePaired(neighbor.probe) && pairing.getByProbe(neighbor.probe).pair.candidate == neighbor.candidate)
+             {
+                 pairing.addSupportByProbe(reference.probe);
+                 pairing.addSupportByProbe(neighbor.probe);
+             }
+         
         }
     }
 }

@@ -1,4 +1,4 @@
-package sourceafis.extraction.templates;
+package sourceafis.templates;
 
 import java.util.ArrayList;
 import java.util.List;

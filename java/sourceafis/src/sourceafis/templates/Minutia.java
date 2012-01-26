@@ -1,4 +1,4 @@
-package sourceafis.extraction.templates;
+package sourceafis.templates;
 
 import java.io.Serializable;
 

@@ -1,41 +1,76 @@
 package sourceafis.matching;
 
-import sourceafis.extraction.templates.Template;
-import sourceafis.matching.minutia.MinutiaPair;
+import sourceafis.general.Angle;
+import sourceafis.matching.minutia.EdgeLookup;
+import sourceafis.matching.minutia.EdgeShape;
 import sourceafis.matching.minutia.MinutiaPairing;
+import sourceafis.matching.minutia.PairInfo;
+import sourceafis.meta.Nested;
 import sourceafis.meta.Parameter;
- 
+import sourceafis.templates.Template;
+import sourceafis.matching.minutia.EdgeConstructor; 
 public  class MatchAnalysis
 {
-    @Parameter
+    @Parameter(lower=0 , upper= 5)
     public int MinSupportingEdges = 1;
+    @Parameter
+    public float DistanceErrorFlatness = 0.69f;
+    @Parameter
+    public float AngleErrorFlatness = 0.27f;
+    @Nested
+    public EdgeConstructor edgeConstructor = new EdgeConstructor();
 
-    public int PairCount;
-    public int CorrectTypeCount;
-    public int SupportedCount;
-    public float PairFraction;
-    public int EdgeCount;
+    public int maxDistanceError;
+    public byte maxAngleError;
+    public int pairCount;
+    public int correctTypeCount;
+    public int supportedCount;
+    public float pairFraction;
+    public int edgeCount;
+    public int distanceErrorSum;
+    public int angleErrorSum;
    
-    public void Analyze(MinutiaPairing pairing, Template probe, Template candidate)
+    public void analyze(MinutiaPairing pairing,EdgeLookup lookup,Template probe, Template candidate)
     {
-        PairCount = pairing.getCount();
-        EdgeCount = 0;
-        SupportedCount = 0;
-        CorrectTypeCount = 0;
+    	  maxDistanceError = lookup.MaxDistanceError;
+          maxAngleError = lookup.MaxAngleError;
+          int innerDistanceRadius =(int)(DistanceErrorFlatness * maxDistanceError);
+          int innerAngleRadius = (int)(AngleErrorFlatness * maxAngleError);
+
+          pairCount = pairing.getCount();
+
+          edgeCount = 0;
+          supportedCount = 0;
+          correctTypeCount = 0;
+          distanceErrorSum = 0;
+          angleErrorSum = 0;
+
+        pairCount = pairing.getCount();
+        edgeCount = 0;
+        supportedCount = 0;
+        correctTypeCount = 0;
         
-        for (int i = 0; i < PairCount; ++i)
+        for (int i = 0; i < pairCount; ++i)
         {
-            MinutiaPair pair = pairing.GetPair(i);
-            int support = pairing.GetSupportByProbe(pair.Probe);
-            if (support >= MinSupportingEdges)
-                ++SupportedCount;
-            EdgeCount += support + 1;
-            if (probe.Minutiae[pair.Probe].Type == candidate.Minutiae[pair.Candidate].Type)
-                ++CorrectTypeCount;
+            PairInfo pair = pairing.getPair(i);
+            if (pair.supportingEdges >= MinSupportingEdges)
+                ++supportedCount;
+            edgeCount += pair.supportingEdges + 1;
+            if (probe.Minutiae[pair.pair.probe].Type == candidate.Minutiae[pair.pair.candidate].Type)
+                ++correctTypeCount;
+            if (i > 0)
+            {
+                EdgeShape probeEdge = edgeConstructor.Construct(probe, pair.reference.probe, pair.pair.probe);
+                EdgeShape candidateEdge = edgeConstructor.Construct(candidate, pair.reference.candidate, pair.pair.candidate);
+                distanceErrorSum += Math.abs(probeEdge.length - candidateEdge.length);
+                angleErrorSum += Math.max(innerDistanceRadius, Angle.Distance(probeEdge.referenceAngle, candidateEdge.referenceAngle));
+                angleErrorSum += Math.max(innerAngleRadius, Angle.Distance(probeEdge.neighborAngle, candidateEdge.neighborAngle));
+            }
+            
         }
-        float probeFraction = PairCount / (float)probe.Minutiae.length;
-        float candidateFraction = PairCount / (float)candidate.Minutiae.length;
-        PairFraction = (probeFraction + candidateFraction) / 2;
+        float probeFraction = pairCount / (float)probe.Minutiae.length;
+        float candidateFraction = pairCount / (float)candidate.Minutiae.length;
+        pairFraction = (probeFraction + candidateFraction) / 2;
        
       
     }
