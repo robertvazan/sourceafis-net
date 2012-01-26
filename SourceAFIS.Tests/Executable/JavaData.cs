@@ -76,14 +76,15 @@ namespace SourceAFIS.Tests.Executable
                     var template = (string)templates.First(t => (string)t.Attribute("image-path") == database[index].FilePath).Attribute("compact");
                     database[index].Template = new SerializedFormat().Export(new CompactFormat().Import(Convert.FromBase64String(template)));
                 }
-                foreach (var pair in database.AllPairs)
-                {
-                    float score = afis.Verify(ToPerson(database[pair.Probe].Template), ToPerson(database[pair.Candidate].Template));
-                    root.Add(new XElement("pair",
-                        new XAttribute("probe", database[pair.Probe].FilePath),
-                        new XAttribute("candidate", database[pair.Candidate].FilePath),
-                        new XAttribute("score", score)));
-                }
+                foreach (var probe in database.AllIndexes)
+                    foreach (var pair in database.GetMatchingPairs(probe).Take(10).Concat(database.GetNonMatchingPairs(probe).Take(10)))
+                    {
+                        float score = afis.Verify(ToPerson(database[pair.Probe].Template), ToPerson(database[pair.Candidate].Template));
+                        root.Add(new XElement("pair",
+                            new XAttribute("probe", database[pair.Probe].FilePath),
+                            new XAttribute("candidate", database[pair.Candidate].FilePath),
+                            new XAttribute("score", score)));
+                    }
             }
             SaveXml(root, "score.xml");
         }
