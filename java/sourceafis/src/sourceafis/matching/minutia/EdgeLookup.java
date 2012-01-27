@@ -71,21 +71,14 @@ public final class EdgeLookup {
 		return returnList;
 	}
 
-	/*
-	 * Review use of 0xFF
-	 */
 	public boolean MatchingEdges(EdgeShape probe, EdgeShape candidate) {
 		int lengthDelta = probe.length - candidate.length;
 		if (lengthDelta >= -MaxDistanceError && lengthDelta <= MaxDistanceError) {
 			byte complementaryAngleError = Angle.Complementary(MaxAngleError);
-			byte referenceDelta = Angle.Difference(probe.referenceAngle,
-					candidate.referenceAngle);
-			if (referenceDelta <= (MaxAngleError & 0xFF)
-					|| referenceDelta >= complementaryAngleError) {
-				byte neighborDelta = Angle.Difference(probe.neighborAngle,
-						candidate.neighborAngle);
-				if (neighborDelta <= (MaxAngleError & 0xFF)
-						|| neighborDelta >= complementaryAngleError)
+			byte referenceDelta = Angle.Difference(probe.referenceAngle, candidate.referenceAngle);
+			if ((referenceDelta & 0xFF) <= MaxAngleError || (referenceDelta & 0xFF) >= complementaryAngleError) {
+				byte neighborDelta = Angle.Difference(probe.neighborAngle, candidate.neighborAngle);
+				if ((neighborDelta & 0xFF) <= MaxAngleError || (neighborDelta & 0xFF) >= complementaryAngleError)
 					return true;
 			}
 		}
@@ -93,38 +86,28 @@ public final class EdgeLookup {
 	}
 
 	public int ComputeHash(EdgeShape edge) {
-		return (edge.referenceAngle / MaxAngleError << 24)
-				+ (edge.neighborAngle / MaxAngleError << 16) + edge.length
+		return ((edge.referenceAngle & 0xFF) / MaxAngleError << 24)
+				+ ((edge.neighborAngle & 0xFF) / MaxAngleError << 16) + edge.length
 				/ MaxDistanceError;
 	}
 
-	/*
-         *  
-         */
 	public Iterable<Integer> HashCoverage(EdgeShape edge) {
 		int minLengthBin = (edge.length - MaxDistanceError) / MaxDistanceError;
 		int maxLengthBin = (edge.length + MaxDistanceError) / MaxDistanceError;
 		int angleBins = 255 / MaxAngleError + 1;
-		int minReferenceBin = (Angle.Difference(edge.referenceAngle, MaxAngleError) & 0xFF)
-				/ MaxAngleError;
-		int maxReferenceBin = (Angle.Add(edge.referenceAngle, MaxAngleError) & 0xFF)
-				/ MaxAngleError;
+		int minReferenceBin = (Angle.Difference(edge.referenceAngle, MaxAngleError) & 0xFF) / MaxAngleError;
+		int maxReferenceBin = (Angle.Add(edge.referenceAngle, MaxAngleError) & 0xFF) / MaxAngleError;
 		int endReferenceBin = (maxReferenceBin + 1) % angleBins;
-		int minNeighborBin = (Angle.Difference(edge.neighborAngle, MaxAngleError) & 0xFF)
-				/ MaxAngleError;
-		int maxNeighborBin = (Angle.Add(edge.neighborAngle, MaxAngleError) & 0xFF)
-				/ MaxAngleError;
+		int minNeighborBin = (Angle.Difference(edge.neighborAngle, MaxAngleError) & 0xFF) / MaxAngleError;
+		int maxNeighborBin = (Angle.Add(edge.neighborAngle, MaxAngleError) & 0xFF) / MaxAngleError;
 		int endNeighborBin = (maxNeighborBin + 1) % angleBins;
 		ArrayList<Integer> v = new ArrayList<Integer>();
 		for (int lengthBin = minLengthBin; lengthBin <= maxLengthBin; ++lengthBin) {
-			for (int referenceBin = minReferenceBin; referenceBin != endReferenceBin; referenceBin = (referenceBin + 1)
-					% angleBins) {
-				for (int neighborBin = minNeighborBin; neighborBin != endNeighborBin; neighborBin = (neighborBin + 1)
-						% angleBins) {
-					// yield return (referenceBin << 24) + (neighborBin << 16) +
-					// lengthBin;
-					v.add((referenceBin << 24) + (neighborBin << 16)
-							+ lengthBin);
+			for (int referenceBin = minReferenceBin; referenceBin != endReferenceBin;
+					referenceBin = (referenceBin + 1) % angleBins) {
+				for (int neighborBin = minNeighborBin; neighborBin != endNeighborBin;
+						neighborBin = (neighborBin + 1) % angleBins) {
+					v.add((referenceBin << 24) + (neighborBin << 16) + lengthBin);
 				}
 			}
 		}
