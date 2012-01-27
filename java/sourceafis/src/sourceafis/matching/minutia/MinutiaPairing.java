@@ -94,7 +94,10 @@ public class MinutiaPairing implements Cloneable
     	MinutiaPairing clone = new MinutiaPairing();
     	clone.probeIndex = (PairInfo[])probeIndex.clone();
         clone.candidateIndex = (PairInfo[])candidateIndex.clone();
-        clone.pairList = (PairInfo[])pairList.clone();
+        clone.pairList = new PairInfo[pairList.length];
+        for (int i = 0; i < pairList.length; ++i)
+        	if (pairList[i] != null)
+        		clone.pairList[i] = (PairInfo)pairList[i].clone();
         clone.pairCount = pairCount;
         return clone;
     }
