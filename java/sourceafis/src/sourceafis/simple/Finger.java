@@ -1,4 +1,9 @@
 package sourceafis.simple;
+
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Finger position on hand.
  * 
@@ -43,7 +48,19 @@ public enum Finger
     Finger(int value) {
 		this.value = (byte) value;
 	}
-	public byte convert() {
+    private static final Map<Byte,Finger> lookup 
+    = new HashMap<Byte,Finger>();
+
+    static {
+    for(Finger s : EnumSet.allOf(Finger.class))
+         lookup.put(s.getCode(), s);
+    }
+
+	public byte getCode() {
 		return value;
 	}
+	public static Finger get(byte code) { 
+        return lookup.get(code); 
+   }
+
 }

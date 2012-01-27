@@ -2,14 +2,13 @@ package sourceafis.templates;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-
 import sourceafis.general.AssertException;
-import sourceafis.general.BinaryReader;
-import sourceafis.general.BinaryWriter;
 
 public final class CompactFormat extends TemplateFormatBase<byte[]>
 {
@@ -37,52 +36,50 @@ public final class CompactFormat extends TemplateFormatBase<byte[]>
             //MemoryStream stream = new MemoryStream();
     	    ByteArrayOutputStream stream=new ByteArrayOutputStream(); 
             //BinaryWriter writer = new BinaryWriter(stream, Encoding.UTF8);
-    	    BinaryWriter writer = new BinaryWriter(stream);
+    	    DataOutputStream writer = new DataOutputStream(stream);
 
             // 4B magic
-            writer.Write(Magic);
+            writer.write(Magic);
 
             // 1B version (current = 2)
-            writer.Write((byte)2);
+            writer.writeByte(2);
 
             // 2B total length (including magic), will be filled later
-            writer.Write((short)0);
+            writer.writeShort(0);
 
             // 2B original DPI (since version 2)
-            //writer.Write(IPAddress.HostToNetworkOrder((short)builder.OriginalDpi));
-            writer.Write((short)builder.OriginalDpi);
+            writer.writeShort(builder.OriginalDpi);
 
             // 2B original width (since version 2)
-            writer.Write((short)builder.OriginalWidth);
+            writer.writeShort(builder.OriginalWidth);
 
             // 2B original height (since version 2)
-            writer.Write((short)builder.OriginalHeight);
+            writer.writeShort(builder.OriginalHeight);
 
             // 2B minutia count
-            writer.Write((short)builder.Minutiae.size());
+            writer.writeShort(builder.Minutiae.size());
 
             // N*6B minutia records
             for(Minutia minutia: builder.Minutiae)
             {
                 //      2B position X
-                writer.Write((short)minutia.Position.X);
+                writer.writeShort(minutia.Position.X);
 
                 //      2B position Y
-                writer.Write((short)minutia.Position.Y);
+                writer.writeShort(minutia.Position.Y);
 
                 //      1B direction
-                writer.Write(minutia.Direction);
+                writer.writeByte(minutia.Direction);
 
                 //      1B type
-                writer.Write((byte)minutia.Type.convert());
+                writer.writeByte((byte)minutia.Type.getValue());
             }
 
-            writer.Close();
+            writer.close();
 
             // update length
             byte[] template = stream.toByteArray();
-           // BitConverter.GetBytes((short)template.Length)).CopyTo(template, 5);
-            ByteBuffer.wrap(template).putShort(5, (short)template.length);
+             ByteBuffer.wrap(template).putShort(5, (short)template.length);
             return template;
     	   }catch(IOException e){
     		   throw new RuntimeException(e);
@@ -97,35 +94,34 @@ public final class CompactFormat extends TemplateFormatBase<byte[]>
 	    
     	 TemplateBuilder builder = new TemplateBuilder();
 
-        //MemoryStream stream = new MemoryStream(template);
         ByteArrayInputStream stream=new ByteArrayInputStream(template);
-        BinaryReader reader = new BinaryReader(stream);
+        DataInputStream reader = new DataInputStream(stream);
 
         // 4B magic
         for (int i = 0; i < Magic.length; ++i)
-            AssertException.Check(reader.ReadByte() == Magic[i],"This is not an Compact template.");
+            AssertException.Check(reader.readByte() == Magic[i],"This is not an Compact template.");
 
         // 1B version (current = 2)
-        byte version = reader.ReadByte();
+        byte version = reader.readByte();
         AssertException.Check(version >= 1 && version <= 2,"Invalid Template Version");
 
         // 2B total length (including magic)
-        reader.ReadInt16();
+        reader.readShort();
 
         if (version >= 2)
         {
             // 2B original DPI (since version 2)
-            builder.OriginalDpi =  reader.ReadInt16();
+            builder.OriginalDpi =  reader.readShort();
 
             // 2B original width (since version 2)
-            builder.OriginalWidth =  reader.ReadInt16();
+            builder.OriginalWidth =  reader.readShort();
 
             // 2B original height (since version 2)
-            builder.OriginalHeight = reader.ReadInt16();
+            builder.OriginalHeight = reader.readShort();
         }
 
         // 2B minutia count
-        int minutiaCount = reader.ReadInt16();
+        int minutiaCount = reader.readShort();
 
         // N*6B minutia records
         for (int i = 0; i < minutiaCount; ++i)
@@ -133,24 +129,18 @@ public final class CompactFormat extends TemplateFormatBase<byte[]>
             Minutia minutia = new  Minutia();
 
             //      2B position X
-            minutia.Position.X = reader.ReadInt16();
+            minutia.Position.X = reader.readShort();
 
             //      2B position Y
-            minutia.Position.Y =  reader.ReadInt16();
+            minutia.Position.Y =  reader.readShort();
 
             //      1B direction
-            minutia.Direction = reader.ReadByte();
+            minutia.Direction = reader.readByte();
 
             //      1B type
-            // Re-implement following logic
-            byte type=reader.ReadByte();
-            if(type==MinutiaType.Bifurcation.convert()){
-            	minutia.Type = MinutiaType.Bifurcation;
-            }else{
-            	minutia.Type = MinutiaType.Ending;
-            }
-            //AssertException.Check(Enum.IsDefined(typeof(TemplateBuilder.MinutiaType), minutia.Type));
-
+            byte type=reader.readByte();
+            minutia.Type = MinutiaType.get(type);
+            
             builder.Minutiae.add(minutia);
         }
 

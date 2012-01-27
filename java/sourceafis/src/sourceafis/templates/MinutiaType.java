@@ -1,6 +1,11 @@
 package sourceafis.templates;
+
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+
 /*
- * Added Convert to be able to serialize as byte  
+ *  
  */
 public enum MinutiaType // : byte
 {
@@ -10,8 +15,21 @@ public enum MinutiaType // : byte
 	MinutiaType(int value) {
 		this.value = (byte) value;
 	}
-	public byte convert() {
-		return value;
-	}
-
+	
+	 private static final Map<Byte,MinutiaType> lookup 
+	    = new HashMap<Byte,MinutiaType>();
+     /*
+      * Supporting Reverse LookUp
+      */
+	 static {
+	 for(MinutiaType s : EnumSet.allOf(MinutiaType.class))
+	      lookup.put(s.getValue(), s);
+	 }
+	 public byte getValue() {
+			return value;
+     }
+	 public static MinutiaType get(byte code) { 
+	        return lookup.get(code); 
+	 }
+	 
 }
