@@ -2,6 +2,7 @@ package sourceafis.matching.minutia;
 
 import java.util.List;
 
+import sourceafis.general.IteratorSink;
 import sourceafis.general.DetailLogger;
 import sourceafis.matching.MatchAnalysis;
 import sourceafis.matching.MatchScoring;
@@ -73,7 +74,7 @@ public class MinutiaMatcher
         bestRoot = new MinutiaPair();
         bestRootIndex = -1;
      
-        rootSelector.getRoots(probe, candidate, new RootPairSelector.PairSink() {
+        rootSelector.getRoots(probe, candidate, new IteratorSink<MinutiaPair>() {
         	@Override public boolean next(MinutiaPair root) {
                 float score = TryRoot(root, candidate);
                 if (score > bestScore)
