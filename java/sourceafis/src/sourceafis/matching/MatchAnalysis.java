@@ -34,8 +34,8 @@ public  class MatchAnalysis
     {
     	  maxDistanceError = lookup.MaxDistanceError;
           maxAngleError = lookup.MaxAngleError;
-          int innerDistanceRadius =(int)(DistanceErrorFlatness * maxDistanceError);
-          int innerAngleRadius = (int)(AngleErrorFlatness * maxAngleError);
+          int innerDistanceRadius = Math.round(DistanceErrorFlatness * maxDistanceError);
+          int innerAngleRadius = Math.round(AngleErrorFlatness * maxAngleError);
 
           pairCount = pairing.getCount();
 
