@@ -105,16 +105,14 @@ public final class EdgeLookup {
 		int minLengthBin = (edge.length - MaxDistanceError) / MaxDistanceError;
 		int maxLengthBin = (edge.length + MaxDistanceError) / MaxDistanceError;
 		int angleBins = 255 / MaxAngleError + 1;
-		int minReferenceBin = Angle.Difference(edge.referenceAngle,
-				MaxAngleError)
+		int minReferenceBin = (Angle.Difference(edge.referenceAngle, MaxAngleError) & 0xFF)
 				/ MaxAngleError;
-		int maxReferenceBin = Angle.Add(edge.referenceAngle, MaxAngleError)
+		int maxReferenceBin = (Angle.Add(edge.referenceAngle, MaxAngleError) & 0xFF)
 				/ MaxAngleError;
 		int endReferenceBin = (maxReferenceBin + 1) % angleBins;
-		int minNeighborBin = Angle
-				.Difference(edge.neighborAngle, MaxAngleError)
+		int minNeighborBin = (Angle.Difference(edge.neighborAngle, MaxAngleError) & 0xFF)
 				/ MaxAngleError;
-		int maxNeighborBin = Angle.Add(edge.neighborAngle, MaxAngleError)
+		int maxNeighborBin = (Angle.Add(edge.neighborAngle, MaxAngleError) & 0xFF)
 				/ MaxAngleError;
 		int endNeighborBin = (maxNeighborBin + 1) % angleBins;
 		ArrayList<Integer> v = new ArrayList<Integer>();
@@ -123,8 +121,6 @@ public final class EdgeLookup {
 					% angleBins) {
 				for (int neighborBin = minNeighborBin; neighborBin != endNeighborBin; neighborBin = (neighborBin + 1)
 						% angleBins) {
-					System.out.println(referenceBin + ":" + neighborBin + ":"
-							+ lengthBin);
 					// yield return (referenceBin << 24) + (neighborBin << 16) +
 					// lengthBin;
 					v.add((referenceBin << 24) + (neighborBin << 16)

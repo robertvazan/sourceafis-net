@@ -108,7 +108,7 @@ public class ConsistencyTest {
 		DetailLogger.LogData log = logger.popLog();
 		
 		NodeList csEdgeTable = csLog.getElementsByTagName("edge-list");
-		EdgeTable edgeTable = (EdgeTable)log.retrieve("MinutiaMatcher.EdgeTablePrototype");
+		EdgeTable edgeTable = (EdgeTable)log.retrieve("minutiaMatcher.edgeTablePrototype");
 		assertEquals(csEdgeTable.getLength(), edgeTable.Table.length);
 		for (int i = 0; i < edgeTable.Table.length; ++i) {
 			NodeList csEdgeList = ((Element)csEdgeTable.item(i)).getElementsByTagName("edge");
@@ -123,16 +123,16 @@ public class ConsistencyTest {
 		}
 
 		NodeList csRoots = csLog.getElementsByTagName("root");
-		assertEquals(csRoots.getLength(), log.count("MinutiaMatcher.RootSelector"));
+		assertEquals(csRoots.getLength(), log.count("minutiaMatcher.rootSelector"));
 		for (int i = 0; i < csRoots.getLength(); ++i) {
 			Element csRoot = (Element)csRoots.item(i);
-			MinutiaPair root = (MinutiaPair)log.retrieve("MinutiaMatcher.RootSelector", i);
-			float score = (Float)log.retrieve("MinutiaMatcher.MatchScoring", i);
+			MinutiaPair root = (MinutiaPair)log.retrieve("minutiaMatcher.rootSelector", i);
+			float score = (Float)log.retrieve("minutiaMatcher.matchScoring", i);
 			String offset = "offset: " + i; 
 			assertEquals(offset, parseInt(csRoot.getAttribute("probe")), root.probe);
 			assertEquals(offset, parseInt(csRoot.getAttribute("candidate")), root.candidate);
 			NodeList csPairs = csRoot.getElementsByTagName("pair");
-			MinutiaPairing pairing = (MinutiaPairing)log.retrieve("MinutiaMatcher.Pairing", i);
+			MinutiaPairing pairing = (MinutiaPairing)log.retrieve("minutiaMatcher.pairing", i);
 			assertEquals(csPairs.getLength(), pairing.getCount());
 			for (int j = 0; j < pairing.getCount(); ++j) {
 				String atPair = offset + ", pair: " + j;
@@ -145,7 +145,7 @@ public class ConsistencyTest {
 			}
 			assertEquals(offset, parseFloat(csRoot.getAttribute("score")), score, 0.0001);
 		}
-		assertEquals(parseInt(csLog.getAttribute("best-root")), log.retrieve("MinutiaMatcher.bestRootIndex"));
+		assertEquals(parseInt(csLog.getAttribute("best-root")), log.retrieve("minutiaMatcher.bestRootIndex"));
 	}
 	
 	@Test
