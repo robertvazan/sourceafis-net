@@ -10,7 +10,7 @@ public class MatchScoring {
 	public float PairFractionFactor = 8.98f;
 	@Parameter(upper =10 , precision=3)
 	public float CorrectTypeFactor = 0.629f;
-	@Parameter
+	@Parameter(precision = 3)
 	public float SupportedCountFactor = 0.193f;
 	@Parameter(precision = 3)
 	public float EdgeCountFactor = 0.265f;
