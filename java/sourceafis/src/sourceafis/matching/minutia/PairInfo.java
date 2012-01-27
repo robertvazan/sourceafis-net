@@ -8,9 +8,11 @@ public class PairInfo implements Cloneable{
     public Object clone()
     {
     	PairInfo pairInfo = new PairInfo();
-        pairInfo.pair = this.pair.clone();  
+    	if (this.pair != null)
+    		pairInfo.pair = this.pair.clone();  
         pairInfo.supportingEdges = this.supportingEdges;
-        pairInfo.reference = this.reference.clone();//
+        if (this.reference != null)
+        	pairInfo.reference = this.reference.clone();
         return pairInfo;
     }
 }
