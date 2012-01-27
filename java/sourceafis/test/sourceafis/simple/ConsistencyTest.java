@@ -137,10 +137,9 @@ public class ConsistencyTest {
 			for (int j = 0; j < pairing.getCount(); ++j) {
 				String atPair = offset + ", pair: " + j;
 				Element csPair = (Element)csPairs.item(j);
-				assertEquals(atPair, parseInt(csPair.getAttribute("probe")), pairing.getPair(j).pair);//Probe
-				assertEquals(atPair, parseInt(csPair.getAttribute("candidate")), pairing.getPair(j).reference);//Candidate
-				//assertEquals(atPair, parseInt(csPair.getAttribute("support")),pairing.getSupportByProbe(pairing.getPair(j).pair));//Probe
-				assertEquals(atPair, parseInt(csPair.getAttribute("support")),pairing.getByProbe(j));//Probe
+				assertEquals(atPair, parseInt(csPair.getAttribute("probe")), pairing.getPair(j).pair.probe);
+				assertEquals(atPair, parseInt(csPair.getAttribute("candidate")), pairing.getPair(j).pair.candidate);
+				assertEquals(atPair, parseInt(csPair.getAttribute("support")),pairing.getPair(j).supportingEdges);
 
 			}
 			assertEquals(offset, parseFloat(csRoot.getAttribute("score")), score, 0.0001);
