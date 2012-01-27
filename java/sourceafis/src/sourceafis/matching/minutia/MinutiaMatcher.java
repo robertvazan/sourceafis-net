@@ -57,35 +57,42 @@ public class MinutiaMatcher
         candidateEdges = ParameterSet.clonePrototype(edgeTablePrototype);
     }
 
+    int rootIndex;
+    int triangleIndex;
+    float bestScore;
+    MinutiaPair bestRoot;
+    int bestRootIndex;
    
-    public float Match(Template candidate)
+    public float Match(final Template candidate)
     {
         PrepareCandidate(candidate);
 
-        int rootIndex = 0;
-        int triangleIndex = 0;
-        float bestScore = 0;
-        MinutiaPair bestRoot = new MinutiaPair();
-        int bestRootIndex = -1;
+        rootIndex = 0;
+        triangleIndex = 0;
+        bestScore = 0;
+        bestRoot = new MinutiaPair();
+        bestRootIndex = -1;
      
-        for(MinutiaPair root : rootSelector.getRoots(probe, candidate))
-        {
-            float score = TryRoot(root, candidate);
-            if (score > bestScore)
-            {
-                bestScore = score;
-                bestRoot = root;
-                bestRootIndex = rootIndex;
-            }
-            ++rootIndex;
-            if (rootIndex >= MaxTriedRoots)
-                break;
-            if(pairing.getCount() >= 3){
-            	++ triangleIndex;
-            	if(triangleIndex >= MaxTriedTriangles)
-            		break;
-            }
-        }
+        rootSelector.getRoots(probe, candidate, new RootPairSelector.PairSink() {
+        	@Override public boolean next(MinutiaPair root) {
+                float score = TryRoot(root, candidate);
+                if (score > bestScore)
+                {
+                    bestScore = score;
+                    bestRoot = root;
+                    bestRootIndex = rootIndex;
+                }
+                ++rootIndex;
+                if (rootIndex >= MaxTriedRoots)
+                    return false;
+                if(pairing.getCount() >= 3){
+                	++ triangleIndex;
+                	if(triangleIndex >= MaxTriedTriangles)
+                		return false;
+                }
+				return true;
+			}
+		});
         logger.log("score", bestScore);
         logger.log("BestRootIndex", bestRootIndex);
         

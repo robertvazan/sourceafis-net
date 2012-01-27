@@ -1,6 +1,5 @@
 package sourceafis.matching.minutia;
 
-import java.util.ArrayList;
 import sourceafis.general.DetailLogger;
 import sourceafis.matching.ProbeIndex;
 import sourceafis.meta.Parameter;
@@ -17,13 +16,19 @@ public class RootPairSelector{
 
     public DetailLogger.Hook logger = DetailLogger.off;
 
-	public Iterable<MinutiaPair> getRoots(ProbeIndex probeIndex, Template candidateTemplate) {
+    public interface PairSink {
+    	boolean next(MinutiaPair root);
+    }
+    
+	public void getRoots(ProbeIndex probeIndex, Template candidateTemplate, PairSink sink) {
 	      lookupCounter = 0;
           hashLookup.reset(probeIndex.edgeHash);
-          ArrayList<MinutiaPair> pairs=GetFilteredRoots(probeIndex, candidateTemplate,0);
-          pairs.addAll(GetFilteredRoots(probeIndex, candidateTemplate,1));
-          return pairs;
+          if (!getFilteredRoots(probeIndex, candidateTemplate, 0, sink))
+        	  return;
+          if (!getFilteredRoots(probeIndex, candidateTemplate, 1, sink))
+        	  return;
  	}
+
 	private boolean predicate(EdgeShape shape,int mode){
 	   	if(mode==0){
 		   return  shape.length >= MinEdgeLength;	
@@ -31,12 +36,10 @@ public class RootPairSelector{
 		   return shape.length < MinEdgeLength;	
 		}
 	}
-    public ArrayList<MinutiaPair> GetFilteredRoots(ProbeIndex probeIndex, Template candidateTemplate, int mode)
-    {
-    	ArrayList<MinutiaPair> list=new ArrayList<MinutiaPair>();
+    
+	public boolean getFilteredRoots(ProbeIndex probeIndex, Template candidateTemplate, int mode, PairSink sink) {
         if (lookupCounter >= MaxEdgeLookups)
-            //yield break;
-        	return list;
+        	return false;
         EdgeConstructor edgeConstructor = new EdgeConstructor();
         for (int step = 1; step < candidateTemplate.Minutiae.length; ++step)
             for (int pass = 0; pass < step + 1; ++pass)
@@ -49,14 +52,16 @@ public class RootPairSelector{
                         for (IndexedEdge match = hashLookup.select(candidateEdge); match != null; match = hashLookup.next())
                         {
                         	MinutiaPair pair = new MinutiaPair(match.location.reference, candidateReference);
-                            if (logger.isActive()) logger.log(pair);
-                                list.add(pair);
+                            if (logger.isActive())
+                            	logger.log(pair);
+                            if (!sink.next(pair))
+                            	return false;
                             ++lookupCounter;
                             if (lookupCounter >= MaxEdgeLookups)
-                            	return list;
+                            	return false;
                         }
                     }
                 }
-        return list;
+        return true;
     }
 }
