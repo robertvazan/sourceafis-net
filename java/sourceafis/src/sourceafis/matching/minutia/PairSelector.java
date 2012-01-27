@@ -22,9 +22,10 @@ public final class PairSelector
             || pairing.isCandidatePaired(queue.peek().neighbor.candidate)))
         {
             EdgePair edge = (EdgePair)queue.dequeue();
-            if (pairing.isProbePaired(edge.neighbor.probe) && pairing.getByProbe(edge.neighbor.probe).pair.candidate == edge.neighbor.candidate)
+            if (pairing.isProbePaired(edge.neighbor.probe) && pairing.getByProbe(edge.neighbor.probe).pair.candidate == edge.neighbor.candidate) {
             	pairing.addSupportByProbe(edge.reference.probe);
                 pairing.addSupportByProbe(edge.neighbor.probe);
+            }
         }
     }
 
