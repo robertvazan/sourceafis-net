@@ -2,14 +2,15 @@ package sourceafis.templates;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 import sourceafis.general.AssertException;
-import sourceafis.general.BinaryReader;
-import sourceafis.general.BinaryWriter;
+//import sourceafis.general.BinaryWriter;
 public final class IsoFormat extends TemplateFormatBase<byte[]>
 {
     // References:
@@ -46,75 +47,72 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
         //MemoryStream stream = new MemoryStream();
     	ByteArrayOutputStream stream = new ByteArrayOutputStream();
     	  
-        BinaryWriter writer = new BinaryWriter(stream);
+        DataOutputStream writer = new DataOutputStream(stream);
 
         
             // 4B magic "FMR\0"
-            writer.Write("FMR\0".toCharArray());
+            writer.writeChars("FMR\0");
 
             // 4B version (ignored, set to " 20\0"
-            writer.Write(" 20\0".toCharArray());
+            writer.writeChars(" 20\0");
 
             // 4B total length (including header, will be updated later)
-            writer.Write(0);
+            writer.writeInt(0);
 
             // 2B rubbish (zeroed)
-            writer.Write((short)0);
+            writer.writeShort((short)0);
 
             // 2B image size in pixels X
-            writer.Write((short)builder.getStandardDpiWidth());
+            writer.writeShort((short)builder.getStandardDpiWidth());
         
             // 2B image size in pixels Y
-            writer.Write((short)builder.getStandardDpiHeight());
+            writer.writeShort((short)builder.getStandardDpiHeight());
         
             // 2B rubbish (pixels per cm X, set to 196 = 500dpi)
-            writer.Write((short)196);
+            writer.writeShort((short)196);
 
             // 2B rubbish (pixels per cm Y, set to 196 = 500dpi)
-            writer.Write((short)196);
+            writer.writeShort((short)196);
             // 1B rubbish (number of fingerprints, set to 1)
-            writer.Write((byte)1);
+            writer.writeByte(1);
             // 1B rubbish (zeroed)
-            writer.Write((byte)0);
+            writer.writeByte(0);
             // 1B rubbish (finger position, zeroed)
-            writer.Write((byte)0);
+            writer.writeByte(0);
 
             // 1B rubbish (zeroed)
-            writer.Write((byte)0);
-
+            writer.writeByte(0);
             // 1B rubbish (fingerprint quality, set to 100)
-            writer.Write((byte)100);
+            writer.writeByte(100);
 
             // 1B minutia count
-            writer.Write((byte)builder.Minutiae.size());
+            writer.writeByte(builder.Minutiae.size());
 
             // N*6B minutiae
             for(Minutia minutia : builder.Minutiae)
             {
-                //      2B minutia position X in pixels
-                //          2b (upper) minutia type (01 ending, 10 bifurcation, 00 other (considered ending))
+                // B minutia position X in pixels
+                // 2b (upper) minutia type (01 ending, 10 bifurcation, 00 other (considered ending))
                 int x = minutia.Position.X;
                 AssertException.Check(x <= 0x3fff, "X position is out of range");
                 int type = minutia.Type == MinutiaType.Ending ? 0x4000 : 0x8000;
-                writer.Write( (short)(x | type));
-                //      2B minutia position Y in pixels (upper 2b ignored, zeroed)
+                writer.writeShort( x | type);
+                // 2B minutia position Y in pixels (upper 2b ignored, zeroed)
                 int y = builder.getStandardDpiHeight() - minutia.Position.Y - 1;
                 AssertException.Check(y <= 0x3fff, "Y position is out of range");
-                writer.Write((short)y);
+                writer.writeShort((short)y);
 
-                //      1B direction, compatible with SourceAFIS angles
-                writer.Write(minutia.Direction);
+                //1B direction, compatible with SourceAFIS angles
+                writer.writeByte(minutia.Direction);
 
-                //      1B quality (ignored, zeroed)
-                writer.Write((byte)0);
+                //1B quality (ignored, zeroed)
+                writer.writeByte(0);
             }
 
             // 2B rubbish (extra data length, zeroed)
             // N*1B rubbish (extra data)
-            writer.Write((short)0);
-        
-
-        writer.Close();
+            writer.writeShort(0);
+        writer.close();
 
         // update length
         byte[] template = stream.toByteArray();
@@ -137,50 +135,52 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
     
         //MemoryStream stream = new MemoryStream(template);
         ByteArrayInputStream stream=new ByteArrayInputStream(template);
-        BinaryReader reader = new BinaryReader(stream);
-
+        //BinaryReader reader = new BinaryReader(stream);
+        DataInputStream reader = new DataInputStream(stream); 
         // 4B magic "FMR\0"
-        
-        AssertException.Check(reader.readString(4) .equals("FMR"+NULL), "This is not an ISO template.");
+        byte[] magic=new byte[4];
+        reader.read(magic);
+        AssertException.Check(new String(magic) .equals("FMR"+NULL), "This is not an ISO template.");
 
         // 4B version (ignored, set to " 20\0"
-        reader.readString(4);
+        byte[] version=new byte[4];
+        reader.read(version);
 
         // 4B total length (including header)
-        AssertException.Check( reader.ReadInt32() == template.length, "Invalid template length.");
+        AssertException.Check( reader.readInt() == template.length, "Invalid template length.");
 
         // 2B rubbish (zeroed)
-        reader.ReadInt16();
+        reader.readShort();
 
         // 2B image size in pixels X
-        builder.setStandardDpiWidth(reader.ReadInt16());
+        builder.setStandardDpiWidth(reader.readShort());
 
         // 2B image size in pixels Y
-        builder.setStandardDpiHeight(reader.ReadInt16());
+        builder.setStandardDpiHeight(reader.readShort());
 
         // 2B rubbish (pixels per cm X, set to 196 = 500dpi)
-        reader.ReadInt16();
+        reader.readShort();
 
         // 2B rubbish (pixels per cm Y, set to 196 = 500dpi)
-        reader.ReadInt16();
+        reader.readShort();
 
         // 1B rubbish (number of fingerprints, set to 1)
-        AssertException.Check(reader.ReadByte() == 1, "Only single-fingerprint ISO templates are supported.");
+        AssertException.Check(reader.readByte() == 1, "Only single-fingerprint ISO templates are supported.");
 
         // 1B rubbish (zeroed)
-        reader.ReadByte();
+        reader.readByte();
 
         // 1B rubbish (finger position, zeroed)
-        reader.ReadByte();
+        reader.readByte();
 
         // 1B rubbish (zeroed)
-        reader.ReadByte();
+        reader.readByte();
 
         // 1B rubbish (fingerprint quality, set to 100)
-        reader.ReadByte();
+        reader.readByte();
 
         // 1B minutia count
-        int minutiaCount = reader.ReadByte();
+        int minutiaCount = reader.readByte();
          // N*6B minutiae
         //16602-F
         //16543-F
@@ -192,17 +192,17 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
             //      2B minutia position X in pixels
             //      2b (upper) minutia type (01 ending, 10 bifurcation, 00 other (considered ending))
             //Making it int (unsigened short)
-            int xPacked = reader.ReadInt16();
+            int xPacked = reader.readShort();
              
             minutia.Position.X = xPacked &  0x3fff;
             minutia.Type = (xPacked & (short)0xc000) == 0x8000 ? MinutiaType.Bifurcation : MinutiaType.Ending;
             //      2B minutia position Y in pixels (upper 2b ignored, zeroed)
-            minutia.Position.Y = builder.getStandardDpiHeight() - 1 - ( reader.ReadInt16() &  0x3fff);
+            minutia.Position.Y = builder.getStandardDpiHeight() - 1 - ( reader.readShort() &  0x3fff);
             //      1B direction, compatible with SourceAFIS angles
-            minutia.Direction = reader.ReadByte();
+            minutia.Direction = reader.readByte();
 
             //      1B quality (ignored, zeroed)
-            reader.ReadByte();
+            reader.readByte();
 
             builder.Minutiae.add(minutia);
         }
