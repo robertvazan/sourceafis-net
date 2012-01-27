@@ -74,7 +74,7 @@ public final class EdgeLookup {
 	public boolean MatchingEdges(EdgeShape probe, EdgeShape candidate) {
 		int lengthDelta = probe.length - candidate.length;
 		if (lengthDelta >= -MaxDistanceError && lengthDelta <= MaxDistanceError) {
-			byte complementaryAngleError = Angle.Complementary(MaxAngleError);
+			int complementaryAngleError = Angle.Complementary(MaxAngleError) & 0xFF;
 			byte referenceDelta = Angle.Difference(probe.referenceAngle, candidate.referenceAngle);
 			if ((referenceDelta & 0xFF) <= MaxAngleError || (referenceDelta & 0xFF) >= complementaryAngleError) {
 				byte neighborDelta = Angle.Difference(probe.neighborAngle, candidate.neighborAngle);
