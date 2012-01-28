@@ -30,15 +30,15 @@ public final class EdgeHash {
 							 hash.put(key, edge);//first time only one object
 						} else {//It can be single object or a ArrayList
 							Object value=hash.get(key);
-							if (value instanceof IndexedEdge)
-							 {
+							if (value instanceof IndexedEdge) {
 								ArrayList<IndexedEdge> list=new ArrayList<IndexedEdge>();	
 							    list.add((IndexedEdge)value);
+							    list.add(edge);
 							    hash.put(key,list);
-							 }else{//list is available
-								 ArrayList<IndexedEdge> list=(ArrayList<IndexedEdge>)value;
-							     list.add(edge);
-							 }
+							} else {//list is available
+								ArrayList<IndexedEdge> list=(ArrayList<IndexedEdge>)value;
+								list.add(edge);
+							}
 						}
 					}
 				}
