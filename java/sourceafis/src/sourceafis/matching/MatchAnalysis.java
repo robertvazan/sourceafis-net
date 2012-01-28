@@ -63,8 +63,8 @@ public  class MatchAnalysis
                 EdgeShape probeEdge = edgeConstructor.Construct(probe, pair.reference.probe, pair.pair.probe);
                 EdgeShape candidateEdge = edgeConstructor.Construct(candidate, pair.reference.candidate, pair.pair.candidate);
                 distanceErrorSum += Math.abs(probeEdge.length - candidateEdge.length);
-                angleErrorSum += Math.max(innerDistanceRadius, Angle.Distance(probeEdge.referenceAngle, candidateEdge.referenceAngle));
-                angleErrorSum += Math.max(innerAngleRadius, Angle.Distance(probeEdge.neighborAngle, candidateEdge.neighborAngle));
+                angleErrorSum += Math.max(innerDistanceRadius, Angle.Distance(probeEdge.referenceAngle, candidateEdge.referenceAngle) & 0xFF);
+                angleErrorSum += Math.max(innerAngleRadius, Angle.Distance(probeEdge.neighborAngle, candidateEdge.neighborAngle) & 0xFF);
             }
             
         }
