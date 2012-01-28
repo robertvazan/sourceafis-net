@@ -7,11 +7,11 @@ package sourceafis.general;
         public static byte PIB = (byte)128;
 
         public static byte B180 = PIB;
-        public static byte B90 = (byte)(B180 / 2);
-        public static byte B60 = (byte)(B180 / 3);
-        public static byte B45 = (byte)(B180 / 4);
-        public static byte B30 = (byte)(B180 / 6);
-        public static byte B15 = (byte)(B180 / 12);
+        public static byte B90 = (byte)((B180 & 0xFF) / 2);
+        public static byte B60 = (byte)((B180 & 0xFF) / 3);
+        public static byte B45 = (byte)((B180 & 0xFF) / 4);
+        public static byte B30 = (byte)((B180 & 0xFF) / 6);
+        public static byte B15 = (byte)((B180 & 0xFF) / 12);
 
         public static float FromFraction(float fraction)
         {
@@ -187,7 +187,7 @@ package sourceafis.general;
         public static byte Distance(byte first, byte second)
         {
             byte diff = Difference(first, second);
-            if (diff <= PIB)
+            if ((diff & 0xFF) <= (PIB & 0xFF))
                 return diff;
             else
                 return Complementary(diff);
