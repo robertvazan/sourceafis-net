@@ -73,6 +73,7 @@ public class ConsistencyTest {
 		Document scoreDoc = docBuilder.parse(new File(folderJavaTestData, "score.xml")); 
 		NodeList scores = scoreDoc.getDocumentElement().getElementsByTagName("pair");
 		AfisEngine afis = new AfisEngine();
+		afis.setThreshold(0);
 		
 		for (int i = 0; i < scores.getLength(); ++i) {
 			if (scores.item(i).getNodeType() == Node.ELEMENT_NODE) {
@@ -144,7 +145,7 @@ public class ConsistencyTest {
 			}
 			assertEquals(offset, parseFloat(csRoot.getAttribute("score")), score, 0.0001);
 		}
-		assertEquals(parseInt(csLog.getAttribute("best-root")), log.retrieve("minutiaMatcher.bestRootIndex"));
+		assertEquals(parseInt(csLog.getAttribute("best-root")), log.retrieve("minutiaMatcher.BestRootIndex"));
 	}
 	
 	@Test
