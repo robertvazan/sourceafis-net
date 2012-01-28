@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FvcIso", "FvcIso\FvcIso.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.FingerprintAnalysis", "SourceAFIS.FingerprintAnalysis\SourceAFIS.FingerprintAnalysis.csproj", "{937C3C43-81EA-4757-8356-6C46C64C9F0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Tests.Runner", "SourceAFIS.Tests.Runner\SourceAFIS.Tests.Runner.csproj", "{89794D67-BD90-4608-BBFA-189411D0368B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,10 @@ Global
 		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89794D67-BD90-4608-BBFA-189411D0368B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89794D67-BD90-4608-BBFA-189411D0368B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89794D67-BD90-4608-BBFA-189411D0368B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89794D67-BD90-4608-BBFA-189411D0368B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
