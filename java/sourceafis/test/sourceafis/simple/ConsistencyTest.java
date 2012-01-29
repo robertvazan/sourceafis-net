@@ -105,7 +105,7 @@ public class ConsistencyTest {
 		DetailLogger logger = new DetailLogger();
 		logger.attach(new ObjectTree(matcher));
 		ParallelMatcher.PreparedProbe prepared = matcher.prepare(probe);
-		matcher.Match(prepared, Arrays.asList(candidate));
+		float[] totalScore = matcher.Match(prepared, Arrays.asList(candidate));
 		DetailLogger.LogData log = logger.popLog();
 		
 		NodeList csEdgeTable = csLog.getElementsByTagName("edge-list");
@@ -146,6 +146,7 @@ public class ConsistencyTest {
 			assertEquals(offset, parseFloat(csRoot.getAttribute("score")), score, 0.0001);
 		}
 		assertEquals(parseInt(csLog.getAttribute("best-root")), log.retrieve("minutiaMatcher.BestRootIndex"));
+		assertEquals(parseFloat(csLog.getAttribute("score")), totalScore[0], 0.0001);
 	}
 	
 	@Test

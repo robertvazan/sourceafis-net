@@ -69,6 +69,7 @@ namespace SourceAFIS.Tests.Executable
             XElement root = new XElement("score-list");
             AfisEngine afis = new AfisEngine();
             DatabaseCollection db = LoadDatabase();
+            afis.Threshold = 0;
             foreach (var database in db.Databases)
             {
                 foreach (var index in database.AllIndexes)
@@ -101,13 +102,14 @@ namespace SourceAFIS.Tests.Executable
             Template probe = new Template(extractor.Extract(WpfIO.GetPixels(Settings.JavaFingerprintProbe), 500));
             Template candidate = new Template(extractor.Extract(WpfIO.GetPixels(Settings.JavaFingerprintCandidate), 500));
             ParallelMatcher.PreparedProbe prepared = matcher.Prepare(probe);
-            matcher.Match(prepared, new[] { candidate });
+            var totalScore = matcher.Match(prepared, new[] { candidate });
             DetailLogger.LogData log = logger.PopLog();
 
             XElement root = new XElement("matcher");
             root.SetAttributeValue("probe", Settings.JavaFingerprintProbePath);
             root.SetAttributeValue("candidate", Settings.JavaFingerprintCandidatePath);
             root.SetAttributeValue("best-root", (int)log.Retrieve("MinutiaMatcher.BestRootIndex"));
+            root.SetAttributeValue("score", totalScore[0]);
             EdgeTable edgeTable = (EdgeTable)log.Retrieve("MinutiaMatcher.EdgeTablePrototype");
             for (int i = 0; i < probe.Minutiae.Length; ++i)
             {
