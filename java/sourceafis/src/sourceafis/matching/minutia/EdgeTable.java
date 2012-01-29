@@ -102,7 +102,5 @@ import sourceafis.templates.Template;
                 Table[reference] =  edges.toArray(ne);
                 edges.clear();
             }
-            
-            logger.log(this);
         }
     }
