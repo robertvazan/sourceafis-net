@@ -15,6 +15,7 @@ import java.util.Hashtable;
         {
             this.edgeLookup = hash.edgeLookup;
             this.hash = hash.hash;
+            this.currentList = null;
         }
 
         @SuppressWarnings("unchecked")
