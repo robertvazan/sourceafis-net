@@ -1,14 +1,14 @@
 package sourceafis.matching.minutia;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import sourceafis.templates.Template;
 /*
  * This object should be used like a prototype 
  */
 public final class EdgeHash {
 	protected EdgeLookup edgeLookup;
-	protected Hashtable<Integer,Object> hash = new Hashtable<Integer,Object>();
+	protected HashMap<Integer, Object> hash = new HashMap<Integer,Object>();
 
 	@SuppressWarnings("unchecked")
 	public EdgeHash(Template template, EdgeLookup lookup) {
