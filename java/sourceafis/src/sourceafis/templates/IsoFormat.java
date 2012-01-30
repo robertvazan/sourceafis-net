@@ -195,7 +195,7 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
             int xPacked = reader.readShort();
              
             minutia.Position.X = xPacked &  0x3fff;
-            minutia.Type = (xPacked & (short)0xc000) == 0x8000 ? MinutiaType.Bifurcation : MinutiaType.Ending;
+            minutia.Type = MinutiaType.get((byte)(xPacked & 0xc0000));
             //      2B minutia position Y in pixels (upper 2b ignored, zeroed)
             minutia.Position.Y = builder.getStandardDpiHeight() - 1 - ( reader.readShort() &  0x3fff);
             //      1B direction, compatible with SourceAFIS angles
