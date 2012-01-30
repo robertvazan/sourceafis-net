@@ -10,7 +10,8 @@ namespace SourceAFIS.Templates
         public enum MinutiaType
         {
             Ending = 0,
-            Bifurcation = 1
+            Bifurcation = 1,
+            Other = 2
         }
 
         public class Minutia
