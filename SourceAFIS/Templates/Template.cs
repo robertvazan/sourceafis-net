@@ -12,7 +12,8 @@ namespace SourceAFIS.Templates
         public enum MinutiaType : byte
         {
             Ending = 0,
-            Bifurcation = 1
+            Bifurcation = 1,
+            Other = 2
         }
 
         [Serializable]
@@ -26,10 +27,13 @@ namespace SourceAFIS.Templates
             {
                 Position = new PointS(builderMinutia.Position);
                 Direction = builderMinutia.Direction;
-                if (builderMinutia.Type == TemplateBuilder.MinutiaType.Ending)
-                    Type = MinutiaType.Ending;
-                else
-                    Type = MinutiaType.Bifurcation;
+                switch (builderMinutia.Type)
+                {
+                    case TemplateBuilder.MinutiaType.Ending: Type = MinutiaType.Ending; break;
+                    case TemplateBuilder.MinutiaType.Bifurcation: Type = MinutiaType.Bifurcation; break;
+                    case TemplateBuilder.MinutiaType.Other: Type = MinutiaType.Other; break;
+                    default: throw new ApplicationException();
+                }
             }
 
             public TemplateBuilder.Minutia ToBuilderMinutia()
@@ -37,10 +41,13 @@ namespace SourceAFIS.Templates
                 TemplateBuilder.Minutia builderMinutia = new TemplateBuilder.Minutia();
                 builderMinutia.Position = Position;
                 builderMinutia.Direction = Direction;
-                if (Type == MinutiaType.Ending)
-                    builderMinutia.Type = TemplateBuilder.MinutiaType.Ending;
-                else
-                    builderMinutia.Type = TemplateBuilder.MinutiaType.Bifurcation;
+                switch (Type)
+                {
+                    case MinutiaType.Ending: builderMinutia.Type = TemplateBuilder.MinutiaType.Ending; break;
+                    case MinutiaType.Bifurcation: builderMinutia.Type = TemplateBuilder.MinutiaType.Bifurcation; break;
+                    case MinutiaType.Other: builderMinutia.Type = TemplateBuilder.MinutiaType.Other; break;
+                    default: throw new ApplicationException();
+                }
                 return builderMinutia;
             }
         }

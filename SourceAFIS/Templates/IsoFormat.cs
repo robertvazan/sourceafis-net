@@ -32,7 +32,7 @@ namespace SourceAFIS.Templates
         // 1B minutia count
         // N*6B minutiae
         //      2B minutia position X in pixels
-        //          2b (upper) minutia type (01 ending, 10 bifurcation, 00 other (considered ending))
+        //          2b (upper) minutia type (01 ending, 10 bifurcation, 00 other)
         //      2B minutia position Y in pixels (upper 2b ignored, zeroed)
         //      1B direction, compatible with SourceAFIS angles
         //      1B quality (ignored, zeroed)
@@ -95,7 +95,14 @@ namespace SourceAFIS.Templates
                     //          2b (upper) minutia type (01 ending, 10 bifurcation, 00 other (considered ending))
                     int x = minutia.Position.X;
                     AssertException.Check(x <= 0x3fff, "X position is out of range");
-                    int type = minutia.Type == TemplateBuilder.MinutiaType.Ending ? 0x4000 : 0x8000;
+                    int type;
+                    switch (minutia.Type)
+                    {
+                        case TemplateBuilder.MinutiaType.Ending: type = 0x4000; break;
+                        case TemplateBuilder.MinutiaType.Bifurcation: type = 0x8000; break;
+                        case TemplateBuilder.MinutiaType.Other: type = 0; break;
+                        default: throw new ApplicationException();
+                    }
                     writer.Write(IPAddress.HostToNetworkOrder(unchecked((short)(x | type))));
 
                     //      2B minutia position Y in pixels (upper 2b ignored, zeroed)
@@ -183,7 +190,13 @@ namespace SourceAFIS.Templates
                 //          2b (upper) minutia type (01 ending, 10 bifurcation, 00 other (considered ending))
                 ushort xPacked = (ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16());
                 minutia.Position.X = xPacked & (ushort)0x3fff;
-                minutia.Type = (xPacked & (ushort)0xc000) == 0x8000 ? TemplateBuilder.MinutiaType.Bifurcation : TemplateBuilder.MinutiaType.Ending;
+                switch (xPacked & (ushort)0xc000)
+                {
+                    case 0x4000: minutia.Type = TemplateBuilder.MinutiaType.Ending; break;
+                    case 0x8000: minutia.Type = TemplateBuilder.MinutiaType.Bifurcation; break;
+                    case 0: minutia.Type = TemplateBuilder.MinutiaType.Other; break;
+                    default: throw new ApplicationException();
+                }
 
                 //      2B minutia position Y in pixels (upper 2b ignored, zeroed)
                 minutia.Position.Y = builder.StandardDpiHeight - 1 - ((ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16()) & (ushort)0x3fff);
