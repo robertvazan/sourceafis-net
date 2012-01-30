@@ -3,6 +3,7 @@ package sourceafis.matching.minutia;
 import java.util.List;
 import java.util.ArrayList;
 import sourceafis.general.Angle;
+import sourceafis.general.Calc;
 import sourceafis.general.Range;
 import sourceafis.meta.Parameter;
 /*
@@ -94,7 +95,7 @@ public final class EdgeLookup {
 	public Iterable<Integer> HashCoverage(EdgeShape edge) {
 		int minLengthBin = (edge.length - MaxDistanceError) / MaxDistanceError;
 		int maxLengthBin = (edge.length + MaxDistanceError) / MaxDistanceError;
-		int angleBins = 255 / MaxAngleError + 1;
+		int angleBins = Calc.DivRoundUp(256, MaxAngleError);
 		int minReferenceBin = (Angle.Difference(edge.referenceAngle, MaxAngleError) & 0xFF) / MaxAngleError;
 		int maxReferenceBin = (Angle.Add(edge.referenceAngle, MaxAngleError) & 0xFF) / MaxAngleError;
 		int endReferenceBin = (maxReferenceBin + 1) % angleBins;

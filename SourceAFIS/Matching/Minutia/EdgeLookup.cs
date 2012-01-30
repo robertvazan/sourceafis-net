@@ -84,7 +84,7 @@ namespace SourceAFIS.Matching.Minutia
         {
             int minLengthBin = (edge.Length - MaxDistanceError) / MaxDistanceError;
             int maxLengthBin = (edge.Length + MaxDistanceError) / MaxDistanceError;
-            int angleBins = 255 / MaxAngleError + 1;
+            int angleBins = Calc.DivRoundUp(256, MaxAngleError);
             int minReferenceBin = Angle.Difference(edge.ReferenceAngle, MaxAngleError) / MaxAngleError;
             int maxReferenceBin = Angle.Add(edge.ReferenceAngle, MaxAngleError) / MaxAngleError;
             int endReferenceBin = (maxReferenceBin + 1) % angleBins;
