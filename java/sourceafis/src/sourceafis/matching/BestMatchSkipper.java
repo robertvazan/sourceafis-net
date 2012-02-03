@@ -23,7 +23,7 @@ public class BestMatchSkipper
         }
     }
 
-    public void AddScore(int person, float score)
+    public void addScore(int person, float score)
     {
         for (int nth = collected.length - 1; nth >= 0; --nth)
         {
@@ -36,7 +36,7 @@ public class BestMatchSkipper
         }
     }
 
-    public float GetSkipScore(int person)
+    public float getSkipScore(int person)
     {
         float score = 0;
         for (int nth = collected.length - 1; nth >= 0; --nth)
@@ -48,39 +48,22 @@ public class BestMatchSkipper
         return score;
     }
    /*
-    * Unused method??
+    * 
     */
     public PersonsSkipScore[] getSortedScores()
     {
         PersonsSkipScore[] results = new PersonsSkipScore[collected[0].length];
         for (int person = 0; person < results.length; ++person)
-        {
+        {   results[person]=new PersonsSkipScore();
             results[person].person = person;
-            results[person].score = GetSkipScore(person);
+            results[person].score = getSkipScore(person);
         }
         
-        //Array.Sort(results, (left, right) => Calc.Compare(right.Score, left.Score));
-         Arrays.sort(results,new Comparator<PersonsSkipScore>() {
+          Arrays.sort(results,new Comparator<PersonsSkipScore>() {
 			public int compare(PersonsSkipScore left, PersonsSkipScore right) {
 			  return	Calc.Compare(right.score, left.score);
 		      }
 		   });
         return results;
     }
-    //out person
-    /*public float GetBestScore(int person)
-    {
-        float best = 0;
-        person = -1;
-        for (int candidate = 0; candidate < collected[0].length; ++candidate)
-        {
-            float score = GetSkipScore(candidate);
-            if (score > best)
-            {
-                best = score;
-                person = candidate;
-            }
-        }
-        return best;
-    }*/
 }
