@@ -1,215 +1,72 @@
 package sourceafis.simple;
 import java.io.Serializable;
-
+import org.w3c.dom.Element;
 import sourceafis.templates.CompactFormat;
 import sourceafis.templates.IsoFormat;
 import sourceafis.templates.SerializedFormat;
 import sourceafis.templates.Template;
+import sourceafis.templates.XmlFormat;
 
-/// <summary>
-/// Collection of fingerprint-related information.
-/// </summary>
-/// <remarks>
-/// <para>
-/// This class contains basic information (<see cref="Image"/>, <see cref="Template"/>) about the fingerprint that
-/// is used by SourceAFIS to perform template extraction and fingerprint matching.
-/// If you need to attach application-specific information to <see cref="Fingerprint"/> object,
-/// inherit from this class and add fields as necessary. <see cref="Fingerprint"/> objects can be
-/// grouped in <see cref="Person"/> objects.
-/// </para>
-/// <para>
-/// This class is designed to be easy to serialize in order to be stored in binary format (BLOB)
-/// in application database, binary or XML files, or sent over network. You can either serialize
-/// the whole object or serialize individual properties. You can set some properties to <see langword="null"/>
-/// to exclude them from serialization.
-/// </para>
-/// </remarks>
-/// <seealso cref="Person"/>
-//[Serializable]
+/*
+ * Collection of fingerprint-related information.
+ * 
+ * <p>This class contains basic information {@link Template} about the fingerprint that
+ * is used by SourceAFIS to perform template extraction and fingerprint matching.
+ * If you need to attach application-specific information to {@link Fingerprint} object,
+ * inherit from this class and add fields as necessary. {@link Fingerprint} objects can be
+ * grouped in {@link Person} objects.
+ * </p>
+ * <p>
+ * This class is designed to be easy to serialize in order to be stored in binary format (BLOB)
+ * in application database, binary or XML files, or sent over network. You can either serialize
+ * the whole object or serialize individual properties. You can set some properties to <see langword="null"/>
+ * to exclude them from serialization.
+ * </p>
+ * @see Person 
+ */
 @SuppressWarnings("serial")
 public class Fingerprint implements Cloneable, Serializable
 {
-    /// <summary>
-    /// Creates empty <see cref="Fingerprint"/> object.
-    /// </summary>
     public Fingerprint() { }
 
-    byte[][] ImageData; // Not Used in java
+    static CompactFormat compactFormat = new CompactFormat();
+    static SerializedFormat serializedFormat = new SerializedFormat();
+    static IsoFormat isoFormat = new IsoFormat();
+    static XmlFormat xmlFormat = new XmlFormat();
+    private Finger fingerPosition;
+    Template decoded;
+    private byte[][] image;
 
-    /// <summary>
-    /// Fingerprint image.
-    /// </summary>
-    /// <value>
-    /// Raw fingerprint image that was used to extract the <see cref="Template"/> or other image
-    /// attached later after extraction. This property is <see langword="null"/> by default.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// This is the fingerprint image. This property must be set before call to <see cref="AfisEngine.Extract"/>
-    /// in order to generate valid <see cref="Template"/>. Once the <see cref="Template"/> is generated, <see cref="Image"/> property has only
-    /// informational meaning and it can be set to <see langword="null"/> to save space. It is however recommended to
-    /// keep the original image just in case it is needed to regenerate the <see cref="Template"/> in future.
-    /// </para>
-    /// <para>
-    /// The format of this image is a simple raw 2D array of <see langword="byte"/>s. Every byte
-    /// represents shade of gray from black (0) to white (255). When indexing the 2D array, Y axis
-    /// goes first, X axis goes second, e.g. <c>Image[y, x]</c>. To convert to/from <see cref="BitmapSource"/>
-    /// object, use <see cref="AsBitmapSource"/> property.
-    /// </para>
-    /// <para>
-    /// Accessors of this property do not clone the image. To avoid unwanted sharing of the <see langword="byte"/>
-    /// array, call <see cref="ICloneable.Clone"/> on the <see cref="Image"/>.
-    /// </para>
-    /// </remarks>
-    /// <seealso cref="Template"/>
-    /// <seealso cref="AsBitmapSource"/>
-    /// <seealso cref="AsImageData"/>
-    /// <seealso cref="AfisEngine.Extract"/>
-    //[XmlIgnore]
     /*
-    public byte[][] Image
-    {
-        get { return ImageData; }
-        set
-        {
-            if (value == null)
-                ImageData = null;
-            else
-            {
-                if (value.GetLength(0) < 100 || value.GetLength(1) < 100)
-                    throw new ApplicationException("Fingerprint image is too small.");
-                ImageData = value;
-            }
-        }
-    }
-  */
-    /// <summary>
-    /// Fingerprint image as raw image in byte array.
-    /// </summary>
-    /// <value>
-    /// Fingerprint image from <see cref="Image"/> property converted to raw image
-    /// (one-dimensional byte array) or <see langword="null"/> if <see cref="Image"/>
-    /// is <see langword="null"/>.
-    /// </value>
-    /// <seealso cref="Image"/>
-    /// <seealso cref="AsBitmapSource"/>
-    /// <seealso cref="Template"/>
-    /// <seealso cref="AfisEngine.Extract"/>
-    /*
-    public byte[] AsImageData
-    {
-        get
-        {
-            byte[,] image = Image;
-            if (image == null)
-                return null;
-            else
-            {
-                int height = image.GetLength(0);
-                int width = image.GetLength(1);
-
-                byte[] packed = new byte[8 + image.Length];
-                BitConverter.GetBytes(height).CopyTo(packed, 0);
-                BitConverter.GetBytes(width).CopyTo(packed, 4);
-
-                for (int y = 0; y < height; ++y)
-                    for (int x = 0; x < width; ++x)
-                        packed[8 + y * width + x] = image[y, x];
-
-                return packed;
-            }
-        }
-        set
-        {
-            if (value == null)
-                Image = null;
-            else
-            {
-                if (value.Length <= 8)
-                    throw new ApplicationException("Raw image array is too short.");
-                
-                int height = BitConverter.ToInt32(value, 0);
-                int width = BitConverter.ToInt32(value, 4);
-
-                if (height <= 0 || width <= 0)
-                    throw new ApplicationException("Invalid image dimensions in raw image array.");
-                if (8 + width * height != value.Length)
-                    throw new ApplicationException("Incorrect length of raw image array.");
-
-                byte[,] unpacked = new byte[height, width];
-                for (int y = 0; y < height; ++y)
-                    for (int x = 0; x < width; ++x)
-                        unpacked[y, x] = value[8 + y * width + x];
-
-                Image = unpacked;
-            }
-        }
-    }
-
-*/
-    /// <summary>
-    /// Fingerprint image as <see cref="BitmapSource"/> object.
-    /// </summary>
-    /// <value>
-    /// Fingerprint image from <see cref="Image"/> property converted to <see cref="BitmapSource"/>
-    /// object or <see langword="null"/> if <see cref="Image"/> is <see langword="null"/>.
-    /// </value>
-    /// <remarks>
-    /// Use this property in WPF applications.
-    /// </remarks>
-    /// <seealso cref="Image"/>
-    /// <seealso cref="AsImageData"/>
-    /// <seealso cref="Template"/>
-    /// <seealso cref="AfisEngine.Extract"/>
-    //[XmlIgnore]
-  /*
-    public BitmapSource AsBitmapSource
-    {
-        get { return Image != null ? WpfIO.GetBitmapSource(Image) : null; }
-        set { Image = value != null ? WpfIO.GetPixels(value) : null; }
-    }
- */
-
-    static  CompactFormat compactFormat = new CompactFormat();
-    static  SerializedFormat serializedFormat = new SerializedFormat();
-    static  IsoFormat isoFormat = new IsoFormat();
-
-    /// <summary>
-    /// Fingerprint template.
-    /// </summary>
-    /// <value>
-    /// Fingerprint template generated by <see cref="AfisEngine.Extract"/> or other template assigned
-    /// for example after deserialization. This property is <see langword="null"/> by default.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Fingerprint template is an abstract model of the fingerprint that is serialized
-    /// in a very compact binary format (up to a few KB). Templates are better than fingerprint images,
-    /// because they require less space and they are easier to match than images. To generate
-    /// <see cref="Template"/>, pass <see cref="Fingerprint"/> object with valid <see cref="Image"/> to <see cref="AfisEngine.Extract"/>.
-    /// <see cref="Template"/> is required by <see cref="AfisEngine.Verify"/> and <see cref="AfisEngine.Identify"/>.
-    /// </para>
-    /// <para>
-    /// Format of the template may change in later versions of SourceAFIS.
-    /// Applications are recommended to keep the original <see cref="Image"/> in order to be able
-    /// to regenerate the <see cref="Template"/>.
-    /// </para>
-    /// <para>
-    /// If you need access to the internal structure of the template, use
-    /// <see cref="SourceAFIS.Extraction.Templates.CompactFormat"/> to convert it to
-    /// <see cref="SourceAFIS.Extraction.Templates.TemplateBuilder"/>.
-    /// </para>
-    /// </remarks>
-    /// <seealso cref="Image"/>
-    /// <seealso cref="AfisEngine.Extract"/>
-    /// <seealso cref="AsIsoTemplate"/>
-    /// <seealso cref="SourceAFIS.Extraction.Templates.CompactFormat"/>
-    /// <seealso cref="SourceAFIS.Extraction.Templates.TemplateBuilder"/>
+     * Fingerprint template.
+     * 
+     * <p>
+     * Fingerprint template generated by {@link AfisEngine.Extract}  or other template assigned
+     * for example after deserialization. This property is "null" by default.
+     * </p>
+     * <p> Fingerprint template is an abstract model of the fingerprint that is serialized
+     * in a very compact binary format (up to a few KB). Templates are better than fingerprint images,
+     * because they require less space and they are easier to match than images. To generate
+     * {@link Template}, pass {@link Fingerprint} object with valid {@link Image} to {@link AfisEngine.Extract}.
+     * {@link Template} is required by {@link AfisEngine.Verify} and {@link AfisEngine.Identify}.
+     * </p>
+     * <p>Format of the template may change in later versions of SourceAFIS.
+     * Applications are recommended to keep the original {@link Image in order to be able
+     * to regenerate the {@link Template}.
+     * </p>
+     * <p>
+     * If you need access to the internal structure of the template, use
+     * {@link sourceafis.templates.CompactFormat} to convert it to
+     * {@link sourceafis.templates.TemplateBuilder}.
+     * </p>
+     * @see sourceafis.templates.CompactFormat
+     * @see sourceafis.templates.TemplateBuilder
+     */
     public byte[] getTemplate(){
-         return Decoded != null ? compactFormat.Export(serializedFormat.Import(Decoded)) : null; 
+         return decoded != null ? compactFormat.Export(serializedFormat.Import(decoded)) : null; 
     }
     public void  setTemplate(byte[] value) { 
-    	Decoded = value != null ? serializedFormat.Export(compactFormat.Import(value)) : null;
+    	decoded = value != null ? serializedFormat.Export(compactFormat.Import(value)) : null;
     }
     
 
@@ -239,16 +96,20 @@ public class Fingerprint implements Cloneable, Serializable
     /// <seealso cref="SourceAFIS.Extraction.Templates.TemplateBuilder"/>
     //[XmlIgnore]
     public void setIsoTemplate(byte[] value){
-        
-         Decoded = value != null ? serializedFormat.Export(isoFormat.Import(value)) : null;
+         decoded = value != null ? serializedFormat.Export(isoFormat.Import(value)) : null;
     }
-    
     public byte[] getIsoTemplate(){
-    	return Decoded != null ? isoFormat.Export(serializedFormat.Import(Decoded)) : null; 
+    	return decoded != null ? isoFormat.Export(serializedFormat.Import(decoded)) : null; 
     }
-    
-    Finger FingerPosition;
-
+    public void setXmlTemplate(Element value)
+    {
+        this.decoded = value != null ? serializedFormat.Export(xmlFormat.Import(value)) : null; 
+    }
+    public Element getXmlTemplate()
+    {
+        return decoded != null ? xmlFormat.Export(serializedFormat.Import(decoded)) : null; 
+    }
+   
     /// <summary>
     /// Position of the finger on hand.
     /// </summary>
@@ -264,39 +125,17 @@ public class Fingerprint implements Cloneable, Serializable
     /// <seealso cref="SourceAFIS.Simple.Finger"/>
     //[XmlAttribute]
     public Finger getFinger(){
-       return FingerPosition; 
+       return fingerPosition; 
     }
     public void setFinger(Finger value){
-            //if (!Enum.IsDefined(typeof(Finger), value))
-              //  throw new ApplicationException("Invalid finger position.");
-            FingerPosition = value;
+            fingerPosition = value;
     }
-
- 
-    Template Decoded;
 
     public Fingerprint clone() {
-    	try {
-    		return (Fingerprint)super.clone();
-    	} catch (CloneNotSupportedException e) {
-    		throw new RuntimeException(e);
-    	}
+    		Fingerprint fp=new Fingerprint();
+    		fp.decoded=this.decoded.clone();
+    		fp.fingerPosition=this.fingerPosition;
+    		return fp;
     }
-    
-    /// <summary>
-    /// Create deep copy of the <see cref="Fingerprint"/>.
-    /// </summary>
-    /// <returns>Deep copy of this <see cref="Fingerprint"/>.</returns>
-    /*public Fingerprint Clone()
-    {
-        Fingerprint clone = new Fingerprint();
-        clone.Image = Image != null ? (byte[,])Image.Clone() : null;
-        clone.Decoded = Decoded != null ? Decoded.Clone() : null;
-        clone.Finger = Finger;
-        return clone;
-    }
-
-    object ICloneable.Clone() { 
-    	return Clone(); 
-    }*/
+   
 }
