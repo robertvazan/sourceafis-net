@@ -41,7 +41,7 @@ public class XmlFormat extends TemplateFormatBase<Element> {
 	public void Serialize(OutputStream stream, Element template) {
 		try {
 			Transformer tf = TransformerFactory.newInstance().newTransformer();
-			tf.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+			//tf.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 			tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			tf.setOutputProperty(OutputKeys.INDENT, "yes");
 			tf.transform(new DOMSource(template), new StreamResult(stream));
@@ -71,8 +71,8 @@ public class XmlFormat extends TemplateFormatBase<Element> {
 				Element m = document.createElement("Minutia");
 				m.setAttribute("X", Integer.toString(minutia.Position.X));
 				m.setAttribute("Y", Integer.toString(minutia.Position.Y));
-				m.setAttribute("Direction", Integer.toString(minutia.Direction));
-				m.setAttribute("Type", Integer.toString(minutia.Type.getValue()));
+				m.setAttribute("Direction", Integer.toString(minutia.Direction & 0xFF));
+				m.setAttribute("Type", minutia.Type.toString());
 				template.appendChild(m);
 			}
 			return template;
@@ -89,6 +89,7 @@ public class XmlFormat extends TemplateFormatBase<Element> {
 		TemplateBuilder builder = new TemplateBuilder();
 
 		NodeList list = template.getElementsByTagName("Minutia");
+		Point ref=new Point(0, 0);
 		for (int x = 0; x < list.getLength(); x++) {
 			Element node = (Element) list.item(x);
 			String X = node.getAttribute("X");
@@ -98,7 +99,9 @@ public class XmlFormat extends TemplateFormatBase<Element> {
 			Minutia m = new Minutia();
 			m.Direction = Byte.parseByte(D);
 			m.Position = new Point(Integer.parseInt(X), Integer.parseInt(Y));
-			m.Type = MinutiaType.get(Byte.parseByte(T));
+			m.Type = MinutiaType.valueOf(T);
+			if(m.Position.X > ref.X) ref.X = m.Position.X;
+			if(m.Position.Y > ref.Y) ref.Y = m.Position.Y;
 		}
 
 		if (version >= 2) {
@@ -107,10 +110,8 @@ public class XmlFormat extends TemplateFormatBase<Element> {
 			builder.OriginalHeight = Integer.parseInt(template.getAttribute("OriginalHeight"));
 		} else {
 			builder.OriginalDpi = 500;
-			// builder.StandardDpiWidth = template.Elements("Minutia").Max(e =>
-			// (int)e.Attribute("X")) + 1;
-			// builder.StandardDpiHeight = template.Elements("Minutia").Max(e =>
-			// (int)e.Attribute("Y")) + 1;
+			builder.setStandardDpiWidth(ref.X+1);
+			builder.setStandardDpiHeight(ref.Y+1);
 		}
 		return builder;
 	}
