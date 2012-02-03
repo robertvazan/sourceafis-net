@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-
 import sourceafis.general.AssertException;
+
 //import sourceafis.general.BinaryWriter;
 public final class IsoFormat extends TemplateFormatBase<byte[]>
 {
@@ -95,12 +95,17 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
                 // 2b (upper) minutia type (01 ending, 10 bifurcation, 00 other (considered ending))
                 int x = minutia.Position.X;
                 AssertException.Check(x <= 0x3fff, "X position is out of range");
-                int type = minutia.Type == MinutiaType.Ending ? 0x4000 : 0x8000;
+                int type=0;
+                switch (minutia.Type){
+                 case Ending: type = 0x4000; break;
+                 case Bifurcation: type = 0x8000; break;
+                 case Other: type = 0; break;
+                }
                 writer.writeShort( x | type);
                 // 2B minutia position Y in pixels (upper 2b ignored, zeroed)
                 int y = builder.getStandardDpiHeight() - minutia.Position.Y - 1;
                 AssertException.Check(y <= 0x3fff, "Y position is out of range");
-                writer.writeShort((short)y);
+                writer.writeShort(y);
 
                 //1B direction, compatible with SourceAFIS angles
                 writer.writeByte(minutia.Direction);
@@ -140,6 +145,7 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
         // 4B magic "FMR\0"
         byte[] magic=new byte[4];
         reader.read(magic);
+        
         AssertException.Check(new String(magic) .equals("FMR"+NULL), "This is not an ISO template.");
 
         // 4B version (ignored, set to " 20\0"
@@ -192,10 +198,14 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
             //      2B minutia position X in pixels
             //      2b (upper) minutia type (01 ending, 10 bifurcation, 00 other (considered ending))
             //Making it int (unsigened short)
-            int xPacked = reader.readShort();
-             
-            minutia.Position.X = xPacked &  0x3fff;
-            minutia.Type = MinutiaType.get((byte)(xPacked & 0xc0000));
+            int xPacked = reader.readUnsignedShort();
+            minutia.Position.X = xPacked  &  0x3fff;
+            switch (xPacked & 0xc000)
+             {
+                 case 0x4000: minutia.Type=MinutiaType.Ending; break;//need to shift 6 places
+                 case 0x8000: minutia.Type=MinutiaType.Bifurcation; break;
+                 case 0: minutia.Type=MinutiaType.Other; break;
+             } 
             //      2B minutia position Y in pixels (upper 2b ignored, zeroed)
             minutia.Position.Y = builder.getStandardDpiHeight() - 1 - ( reader.readShort() &  0x3fff);
             //      1B direction, compatible with SourceAFIS angles
@@ -237,7 +247,6 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
         int length = ByteBuffer.wrap(header).getInt(8);
 
         byte[] template = new byte[length];
-        //header.CopyTo(template, 0);
         System.arraycopy(header,0,template, 0, 12);
         stream.read(template, 12, length - 12);
         return template;
