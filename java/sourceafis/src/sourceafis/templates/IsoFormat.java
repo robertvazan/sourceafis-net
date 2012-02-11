@@ -186,7 +186,7 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
         reader.readByte();
 
         // 1B minutia count
-        int minutiaCount = reader.readByte();
+        int minutiaCount = reader.readUnsignedByte();
          // N*6B minutiae
         //16602-F
         //16543-F
