@@ -14,35 +14,65 @@ import java.util.Map;
  * </p>
  * 
  * <p>
- *   This feature is optional. It can be disabled by using finger position <see cref="Any"/>
- *   which is default value of <see cref="Fingerprint.Finger"/> for new <see cref="Fingerprint"/> objects.
+ *   This feature is optional. It can be disabled by using finger position {@link #ANY} 
+ *   which is default value of {@link Fingerprint#fingerPosition} for new {@link Fingerprint} objects.
  * </p>
  * 
  * <p>
  * A compatible fingerprint pair consists of two fingerprints with the same
- * finger position, e.g. <see cref="RightThumb"/> matches only other <see cref="RightThumb"/>. Alternatively,
+ * finger position, e.g. {@link #RIGHT_THUMB} matches only other {@link #RIGHT_THUMB}. Alternatively,
  * compatible fingerprint pair can be also formed if one of the fingerprints
- * has <see cref="Any"/> finger position, e.g. <see cref="Any"/> can be matched against all other finger
- * positions and all other finger positions can be matched against <see cref="Any"/>. Two
- * fingerprints with <see cref="Any"/> positions are compatible as well, of course.
+ * has {@link #ANY} finger position, e.g. {@link #ANY} can be matched against all other finger
+ * positions and all other finger positions can be matched against {@link #ANY}. Two
+ * fingerprints with{@link #ANY} positions are compatible as well, of course.
  * </p>
- *  <seealso cref="Fingerprint.Finger"/>
- * 
  */
 public enum Finger
 {
-
-    ANY(0),//Unspecified finger position
-    RIGHT_THUMB(1), // Thumb finger on the right hand.
-    LEFT_THUMB(2), // Thumb finger on the left hand.
-    RIGHT_INDEX(3), //Index finger on the right hand.
-    LEFT_INDEX(4), // Index finger on the left hand.
-    RIGHT_MIDDLE(5), // Middle finger on the right hand.
-    LEFT_MIDDLE(6), // Middle finger on the left hand.
-    RIGHT_RING(7),//Ring finger on the right hand.
-    LEFT_RING(8),//Ring finger on the left hand.
-    RIGHT_LITTLE(9),//Little finger on the right hand.
-    LEFT_LITTLE(10); //Little finger on the left hand.
+    /**
+     * Unspecified finger position.
+     */
+    ANY(0), 
+    /**
+     * Thumb finger on the right hand.
+     */
+    RIGHT_THUMB(1), 
+    /**
+     * Thumb finger on the left hand.
+     */
+    LEFT_THUMB(2), 
+    /**
+     * Index finger on the right hand.
+     */
+    RIGHT_INDEX(3),  
+    /**
+     * Index finger on the left hand.
+     */
+    LEFT_INDEX(4),  
+    /**
+     *  Middle finger on the right hand.
+     */
+    RIGHT_MIDDLE(5),  
+    /**
+     *  Middle finger on the left hand.
+     */
+    LEFT_MIDDLE(6), 
+    /**
+     * Ring finger on the right hand.
+     */
+    RIGHT_RING(7), 
+    /**
+     * Ring finger on the left hand.
+     */
+    LEFT_RING(8),
+    /**
+     * Little finger on the right hand.
+     */
+    RIGHT_LITTLE(9),
+    /**
+     * Little finger on the left hand.
+     */
+    LEFT_LITTLE(10); 
     private final byte value;
 
     Finger(int value) {

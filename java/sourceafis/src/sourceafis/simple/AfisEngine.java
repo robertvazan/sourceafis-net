@@ -111,10 +111,10 @@ public class AfisEngine
     	throw new RuntimeException("Extract not implemted in this java version of SourceAFIS");
     }
 
-    /*
+    /**
     *  Compute similarity score between two {@link Person}s.
     * <p>
-    * {@link verify} method compares two {@link Person}s, {@link Fingerprint} by {@link Fingerprint}, and returns
+    * {@link #verify} method compares two {@link Person}s, {@link Fingerprint} by {@link Fingerprint}, and returns
     * floating-point similarity score that indicates degree of similarity between
     * the two {@link Person}s. If this score falls below {@link #threshold}, {@link #verify} method returns zero.
     * </p>
@@ -124,8 +124,7 @@ public class AfisEngine
     * </p>
     * @param probe First of the two persons to compare. 
     * @param candidate Second of the two persons to compare.
-    * @returns float Similarity score indicating similarity between the two persons or 0 if there is no match. 
-  
+    * @return float Similarity score indicating similarity between the two persons or 0 if there is no match. 
     * @see #threshold 
     * @see #identify 
     */
@@ -133,8 +132,8 @@ public class AfisEngine
     {
       //  lock (this)
        // {
-            probe.CheckForNulls(); //Check this later?? why they are null??
-            candidate.CheckForNulls();//Check this later?? why they are null??
+            probe.CheckForNulls(); 
+            candidate.CheckForNulls(); 
             BestMatchSkipper collector = new BestMatchSkipper(1, minMatches-1);
             /*Parallel.ForEach(probe.Fingerprints, probeFp =>
                 {
