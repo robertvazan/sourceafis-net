@@ -97,11 +97,12 @@ public class XmlFormat extends TemplateFormatBase<Element> {
 			String D = node.getAttribute("Direction");
 			String T = node.getAttribute("Type");
 			Minutia m = new Minutia();
-			m.Direction = Byte.parseByte(D);
+			m.Direction =(byte)Short.parseShort(D);
 			m.Position = new Point(Integer.parseInt(X), Integer.parseInt(Y));
 			m.Type = MinutiaType.valueOf(T);
 			if(m.Position.X > ref.X) ref.X = m.Position.X;
 			if(m.Position.Y > ref.Y) ref.Y = m.Position.Y;
+			builder.Minutiae.add(m);
 		}
 
 		if (version >= 2) {
