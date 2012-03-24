@@ -51,10 +51,10 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
 
         
             // 4B magic "FMR\0"
-            writer.writeChars("FMR\0");
+            writer.writeBytes("FMR\0");
 
             // 4B version (ignored, set to " 20\0"
-            writer.writeChars(" 20\0");
+            writer.writeBytes(" 20\0");
 
             // 4B total length (including header, will be updated later)
             writer.writeInt(0);
@@ -87,13 +87,12 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
 
             // 1B minutia count
             writer.writeByte(builder.Minutiae.size());
-
             // N*6B minutiae
             for(Minutia minutia : builder.Minutiae)
             {
                 // B minutia position X in pixels
                 // 2b (upper) minutia type (01 ending, 10 bifurcation, 00 other (considered ending))
-                int x = minutia.Position.X;
+            	int x = minutia.Position.X;
                 AssertException.Check(x <= 0x3fff, "X position is out of range");
                 int type=0;
                 switch (minutia.Type){
@@ -117,7 +116,7 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
             // 2B rubbish (extra data length, zeroed)
             // N*1B rubbish (extra data)
             writer.writeShort(0);
-        writer.close();
+            writer.close();
 
         // update length
         byte[] template = stream.toByteArray();
