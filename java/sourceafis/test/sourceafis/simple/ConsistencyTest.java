@@ -61,7 +61,7 @@ public class ConsistencyTest {
 	}
 	
 	Template findTemplate(NodeList templates, String path) throws IOException {
-		return new Template(new CompactFormat().Import(findTemplateBytes(templates, path)));
+		return new Template(new CompactFormat().importTemplate(findTemplateBytes(templates, path)));
 	}
 	
 	@Test
