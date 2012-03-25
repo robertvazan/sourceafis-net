@@ -38,11 +38,11 @@ public class RootPairSelector{
         if (lookupCounter >= MaxEdgeLookups)
         	return false;
         EdgeConstructor edgeConstructor = new EdgeConstructor();
-        for (int step = 1; step < candidateTemplate.Minutiae.length; ++step)
+        for (int step = 1; step < candidateTemplate.minutiae.length; ++step)
             for (int pass = 0; pass < step + 1; ++pass)
-                for (int candidateReference = pass; candidateReference < candidateTemplate.Minutiae.length; candidateReference += step + 1)
+                for (int candidateReference = pass; candidateReference < candidateTemplate.minutiae.length; candidateReference += step + 1)
                 {
-                    int candidateNeighbor = (candidateReference + step) % candidateTemplate.Minutiae.length;
+                    int candidateNeighbor = (candidateReference + step) % candidateTemplate.minutiae.length;
                     EdgeShape candidateEdge = edgeConstructor.Construct(candidateTemplate, candidateReference, candidateNeighbor);
                     if (shapeFilter.apply(candidateEdge))
                     {

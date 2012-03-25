@@ -41,7 +41,7 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
     // 2B rubbish (extra data length, zeroed)
     // N*1B rubbish (extra data)
     @Override
-    public byte[] Export(TemplateBuilder builder)
+    public byte[] exportTemplate(TemplateBuilder builder)
     {
     	try{
         //MemoryStream stream = new MemoryStream();
@@ -86,9 +86,9 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
             writer.writeByte(100);
 
             // 1B minutia count
-            writer.writeByte(builder.Minutiae.size());
+            writer.writeByte(builder.minutiae.size());
             // N*6B minutiae
-            for(Minutia minutia : builder.Minutiae)
+            for(Minutia minutia : builder.minutiae)
             {
                 // B minutia position X in pixels
                 // 2b (upper) minutia type (01 ending, 10 bifurcation, 00 other (considered ending))
@@ -130,12 +130,12 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
 
     
     @Override 
-    public TemplateBuilder Import(byte[] template)
+    public TemplateBuilder importTemplate(byte[] template)
     {
     	String NULL=new String(new byte[]{0x00});
     	try{
         TemplateBuilder builder = new TemplateBuilder();
-        builder.OriginalDpi = 500;
+        builder.originalDpi = 500;
     
         //MemoryStream stream = new MemoryStream(template);
         ByteArrayInputStream stream=new ByteArrayInputStream(template);
@@ -213,7 +213,7 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
             //      1B quality (ignored, zeroed)
             reader.readByte();
 
-            builder.Minutiae.add(minutia);
+            builder.minutiae.add(minutia);
         }
 
         // 2B rubbish (extra data length, zeroed)
@@ -227,7 +227,7 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
     	}
     }
     @Override
-    public  void Serialize(OutputStream stream, byte[] template)
+    public  void serialize(OutputStream stream, byte[] template)
     {
         try {
 			stream.write(template, 0, template.length);
@@ -237,7 +237,7 @@ public final class IsoFormat extends TemplateFormatBase<byte[]>
 		}
     }
     @Override
-    public  byte[] Deserialize(InputStream stream)
+    public  byte[] deserialize(InputStream stream)
     {
     	try {
     	byte[] header = new byte[12];

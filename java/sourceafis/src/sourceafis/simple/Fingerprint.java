@@ -63,10 +63,10 @@ public class Fingerprint implements Cloneable, Serializable
      * @see sourceafis.templates.TemplateBuilder
      */
     public byte[] getTemplate(){
-         return decoded != null ? compactFormat.Export(serializedFormat.Import(decoded)) : null; 
+         return decoded != null ? compactFormat.exportTemplate(serializedFormat.importTemplate(decoded)) : null; 
     }
     public void  setTemplate(byte[] value) { 
-    	decoded = value != null ? serializedFormat.Export(compactFormat.Import(value)) : null;
+    	decoded = value != null ? serializedFormat.exportTemplate(compactFormat.importTemplate(value)) : null;
     }
     
 
@@ -91,18 +91,18 @@ public class Fingerprint implements Cloneable, Serializable
     * @see sourceafis.templates.TemplateBuilder 
     */
     public void setIsoTemplate(byte[] value){
-         decoded = value != null ? serializedFormat.Export(isoFormat.Import(value)) : null;
+         decoded = value != null ? serializedFormat.exportTemplate(isoFormat.importTemplate(value)) : null;
     }
     public byte[] getIsoTemplate(){
-    	return decoded != null ? isoFormat.Export(serializedFormat.Import(decoded)) : null; 
+    	return decoded != null ? isoFormat.exportTemplate(serializedFormat.importTemplate(decoded)) : null; 
     }
     public void setXmlTemplate(Element value)
     {
-        this.decoded = value != null ? serializedFormat.Export(xmlFormat.Import(value)) : null; 
+        this.decoded = value != null ? serializedFormat.exportTemplate(xmlFormat.importTemplate(value)) : null; 
     }
     public Element getXmlTemplate()
     {
-        return decoded != null ? xmlFormat.Export(serializedFormat.Import(decoded)) : null; 
+        return decoded != null ? xmlFormat.exportTemplate(serializedFormat.importTemplate(decoded)) : null; 
     }
    
     /**

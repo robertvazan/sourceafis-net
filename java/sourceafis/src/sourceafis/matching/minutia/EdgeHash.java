@@ -14,8 +14,8 @@ public final class EdgeHash {
 	public EdgeHash(Template template, EdgeLookup lookup) {
 		this.edgeLookup = lookup;
 		EdgeConstructor edgeConstructor = new EdgeConstructor();
-		for (int referenceMinutia = 0; referenceMinutia < template.Minutiae.length; ++referenceMinutia)
-			for (int neighborMinutia = 0; neighborMinutia < template.Minutiae.length; ++neighborMinutia)
+		for (int referenceMinutia = 0; referenceMinutia < template.minutiae.length; ++referenceMinutia)
+			for (int neighborMinutia = 0; neighborMinutia < template.minutiae.length; ++neighborMinutia)
 				if (referenceMinutia != neighborMinutia) {
 					
 					IndexedEdge edge = new IndexedEdge();

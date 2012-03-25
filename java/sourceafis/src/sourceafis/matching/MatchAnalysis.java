@@ -56,7 +56,7 @@ public  class MatchAnalysis
             if (pair.supportingEdges >= MinSupportingEdges)
                 ++supportedCount;
             edgeCount += pair.supportingEdges + 1;
-            if (probe.Minutiae[pair.pair.probe].Type == candidate.Minutiae[pair.pair.candidate].Type)
+            if (probe.minutiae[pair.pair.probe].Type == candidate.minutiae[pair.pair.candidate].Type)
                 ++correctTypeCount;
             if (i > 0)
             {
@@ -68,8 +68,8 @@ public  class MatchAnalysis
             }
             
         }
-        float probeFraction = pairCount / (float)probe.Minutiae.length;
-        float candidateFraction = pairCount / (float)candidate.Minutiae.length;
+        float probeFraction = pairCount / (float)probe.minutiae.length;
+        float candidateFraction = pairCount / (float)candidate.minutiae.length;
         pairFraction = (probeFraction + candidateFraction) / 2;
        
       

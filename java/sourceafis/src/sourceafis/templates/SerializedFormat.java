@@ -9,18 +9,18 @@ import java.io.OutputStream;
 
 public final class SerializedFormat extends TemplateFormatBase<Template>{
     @Override
-	public Template Export(TemplateBuilder builder)
+	public Template exportTemplate(TemplateBuilder builder)
     {
         return new Template(builder);
     }
 
     @Override
-    public TemplateBuilder Import(Template template)
+    public TemplateBuilder importTemplate(Template template)
     {
-        return template.ToTemplateBuilder();
+        return template.toTemplateBuilder();
     }
     @Override
-    public void Serialize(OutputStream stream, Template template)
+    public void serialize(OutputStream stream, Template template)
     {
        
 		try {
@@ -31,7 +31,7 @@ public final class SerializedFormat extends TemplateFormatBase<Template>{
 		}
      }
     @Override
-    public Template Deserialize(InputStream stream)
+    public Template deserialize(InputStream stream)
     {
     	try {
           ObjectInputStream formatter=new ObjectInputStream(stream);

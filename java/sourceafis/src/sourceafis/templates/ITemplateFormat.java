@@ -4,19 +4,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public interface ITemplateFormat<T>{
-    T Export(TemplateBuilder builder);
-    TemplateBuilder Import(T template);
-    /*
-     * Stream in .net is converted as OutputStream 
-     */
-    void Serialize(OutputStream stream, T template);
-    /*
-     * Stream in .net is converted as InputStream
-     */
-    T Deserialize(InputStream stream);
-    
-    byte[] Serialize(T template);
-    T Deserialize(byte[] serialized);
-    byte[] SerializeBuilder(TemplateBuilder builder);
-    TemplateBuilder DeserializeBuilder(byte[] serialized);
+    T exportTemplate(TemplateBuilder builder);
+    TemplateBuilder importTemplate(T template);
+    void serialize(OutputStream stream, T template);
+    T deserialize(InputStream stream);
+    byte[] serialize(T template);
+    T deserialize(byte[] serialized);
+    byte[] serializeBuilder(TemplateBuilder builder);
+    TemplateBuilder deserializeBuilder(byte[] serialized);
 }
