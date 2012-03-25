@@ -33,7 +33,7 @@ public final class CompactFormat extends TemplateFormatBase<byte[]>
 
     static byte[] Magic = new byte[] { (byte)0x50, (byte)0xBC, (byte)0xAF, 0x15 }; // read "SorcAFIS"
     @Override
-    public  byte[] Export(TemplateBuilder builder)
+    public  byte[] exportTemplate(TemplateBuilder builder)
     {
          try{
             ByteArrayOutputStream stream=new ByteArrayOutputStream(); 
@@ -45,15 +45,15 @@ public final class CompactFormat extends TemplateFormatBase<byte[]>
             // 2B total length (including magic), will be filled later
             writer.writeShort(0);
             // 2B original DPI (since version 2)
-            writer.writeShort(builder.OriginalDpi);
+            writer.writeShort(builder.originalDpi);
             // 2B original width (since version 2)
-            writer.writeShort(builder.OriginalWidth);
+            writer.writeShort(builder.originalWidth);
             // 2B original height (since version 2)
-            writer.writeShort(builder.OriginalHeight);
+            writer.writeShort(builder.originalHeight);
             // 2B minutia count
-            writer.writeShort(builder.Minutiae.size());
+            writer.writeShort(builder.minutiae.size());
             // N*6B minutia records
-            for(Minutia minutia: builder.Minutiae)
+            for(Minutia minutia: builder.minutiae)
             {
                 //      2B position X
                 writer.writeShort(minutia.Position.X);
@@ -76,7 +76,7 @@ public final class CompactFormat extends TemplateFormatBase<byte[]>
     }
 
    @Override
-    public  TemplateBuilder Import(byte[] template)
+    public  TemplateBuilder importTemplate(byte[] template)
     {
       try{
 	    
@@ -94,11 +94,11 @@ public final class CompactFormat extends TemplateFormatBase<byte[]>
         if (version >= 2)
         {
             // 2B original DPI (since version 2)
-            builder.OriginalDpi =  reader.readShort();
+            builder.originalDpi =  reader.readShort();
             // 2B original width (since version 2)
-            builder.OriginalWidth =  reader.readShort();
+            builder.originalWidth =  reader.readShort();
             // 2B original height (since version 2)
-            builder.OriginalHeight = reader.readShort();
+            builder.originalHeight = reader.readShort();
         }
         // 2B minutia count
         int minutiaCount = reader.readShort();
@@ -115,7 +115,7 @@ public final class CompactFormat extends TemplateFormatBase<byte[]>
             //1B type
             byte type=reader.readByte();
             minutia.Type = MinutiaType.get(type);
-            builder.Minutiae.add(minutia);
+            builder.minutiae.add(minutia);
         }
         return builder;
       }catch(IOException e){
@@ -123,7 +123,7 @@ public final class CompactFormat extends TemplateFormatBase<byte[]>
       }
     }
     @Override
-    public  void Serialize(OutputStream stream, byte[] template)
+    public  void serialize(OutputStream stream, byte[] template)
     {
         try {
 			stream.write(template, 0, template.length);
@@ -133,7 +133,7 @@ public final class CompactFormat extends TemplateFormatBase<byte[]>
     }
 
     @Override
-    public  byte[] Deserialize(InputStream stream)
+    public  byte[] deserialize(InputStream stream)
     {
     	 try {
            byte[] header = new byte[7];

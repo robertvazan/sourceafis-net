@@ -7,13 +7,13 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class Template implements Cloneable, Serializable {
  
-	public int OriginalDpi;
-	public int OriginalWidth;
-	public int OriginalHeight;
-	public int StandardDpiWidth;
-	public int StandardDpiHeight;
-	public Minutia[] Minutiae;
-	public Object MatcherCache;
+	public int originalDpi;
+	public int originalWidth;
+	public int originalHeight;
+	public int standardDpiWidth;
+	public int standardDpiHeight;
+	public Minutia[] minutiae;
+	public Object matcherCache;
    /*
 	public class Minutia {
 		public PointS Position;
@@ -43,32 +43,32 @@ public class Template implements Cloneable, Serializable {
 	}*/
 	
 	public Template(TemplateBuilder builder) {
-		OriginalDpi = builder.OriginalDpi;
-		OriginalWidth = builder.OriginalWidth;
-		OriginalHeight = builder.OriginalHeight;
-		StandardDpiWidth = builder.getStandardDpiWidth();
-		StandardDpiHeight = builder.getStandardDpiHeight();
+		originalDpi = builder.originalDpi;
+		originalWidth = builder.originalWidth;
+		originalHeight = builder.originalHeight;
+		standardDpiWidth = builder.getStandardDpiWidth();
+		standardDpiHeight = builder.getStandardDpiHeight();
 
-		Minutiae = new Minutia[builder.Minutiae.size()];
-		for (int i = 0; i < builder.Minutiae.size(); ++i)
-			Minutiae[i] = builder.Minutiae.get(i);//new Minutia(builder.Minutiae.get(i));
+		minutiae = new Minutia[builder.minutiae.size()];
+		for (int i = 0; i < builder.minutiae.size(); ++i)
+			minutiae[i] = builder.minutiae.get(i);//new Minutia(builder.Minutiae.get(i));
 	}
 
-	public TemplateBuilder ToTemplateBuilder() {
+	public TemplateBuilder toTemplateBuilder() {
 		TemplateBuilder builder = new TemplateBuilder();
 
-		builder.OriginalDpi = OriginalDpi;
-		builder.OriginalWidth = OriginalWidth;
-		builder.OriginalHeight = OriginalHeight;
-		for (Minutia minutia : Minutiae) {
+		builder.originalDpi = originalDpi;
+		builder.originalWidth = originalWidth;
+		builder.originalHeight = originalHeight;
+		for (Minutia minutia : minutiae) {
 			//builder.Minutiae.add(minutia.ToBuilderMinutia());
-			builder.Minutiae.add(minutia);
+			builder.minutiae.add(minutia);
 		}
 		return builder;
 	}
 
 	public Template clone() {
-		return new Template(ToTemplateBuilder());
+		return new Template(toTemplateBuilder());
 	}
 
  

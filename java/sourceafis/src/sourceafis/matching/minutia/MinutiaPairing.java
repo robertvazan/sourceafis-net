@@ -20,8 +20,8 @@ public class MinutiaPairing implements Cloneable
     }
     public void selectProbe(Template probe)
     {
-        probeIndex = new PairInfo[probe.Minutiae.length];
-        pairList = new PairInfo[probe.Minutiae.length];
+        probeIndex = new PairInfo[probe.minutiae.length];
+        pairList = new PairInfo[probe.minutiae.length];
         for (int i = 0; i < pairList.length; ++i)
            pairList[i] = new PairInfo();
         pairCount = 0;
@@ -29,8 +29,8 @@ public class MinutiaPairing implements Cloneable
 
     public void selectCandidate(Template candidate)
     {
-        if (candidateIndex == null || candidateIndex.length < candidate.Minutiae.length)
-        	candidateIndex = new PairInfo[candidate.Minutiae.length];
+        if (candidateIndex == null || candidateIndex.length < candidate.minutiae.length)
+        	candidateIndex = new PairInfo[candidate.minutiae.length];
         else{
         	for (int i = 0; i < candidateIndex.length; ++i)
             candidateIndex[i] = null;

@@ -29,13 +29,13 @@ import sourceafis.templates.Template;
         public void reset(Template template)
         {
             synchronized (template){
-                Table = (NeighborEdge[][])template.MatcherCache;
+                Table = (NeighborEdge[][])template.matcherCache;
             }
             if (Table == null)
             {
                 buildTable(template);
                 synchronized (template) {
-                	 template.MatcherCache = Table;
+                	 template.matcherCache = Table;
 				}  
                    
             }
@@ -45,27 +45,27 @@ import sourceafis.templates.Template;
         public void buildTable(Template template)
         {
         	
-            Table = new NeighborEdge[template.Minutiae.length][];
+            Table = new NeighborEdge[template.minutiae.length][];
             List<NeighborEdge> edges = new ArrayList<NeighborEdge>();
-            int[] allSqDistances = new int[template.Minutiae.length];
+            int[] allSqDistances = new int[template.minutiae.length];
 
             for (int reference = 0; reference < Table.length; ++reference)
             {
             	//PointS to Point
-                Point referencePosition = template.Minutiae[reference].Position;
+                Point referencePosition = template.minutiae[reference].Position;
                 int sqMaxDistance = Calc.Sq(MaxDistance);
-                if (template.Minutiae.length - 1 > MaxNeighbors)
+                if (template.minutiae.length - 1 > MaxNeighbors)
                 {
-                    for (int neighbor = 0; neighbor < template.Minutiae.length; ++neighbor)
-                        allSqDistances[neighbor] = Calc.DistanceSq(referencePosition, template.Minutiae[neighbor].Position);
+                    for (int neighbor = 0; neighbor < template.minutiae.length; ++neighbor)
+                        allSqDistances[neighbor] = Calc.DistanceSq(referencePosition, template.minutiae[neighbor].Position);
                     //Array.Sort(allSqDistances);
                     Arrays.sort(allSqDistances);
                     sqMaxDistance = allSqDistances[MaxNeighbors];
                 }
                 
-                for (int neighbor = 0; neighbor < template.Minutiae.length; ++neighbor)
+                for (int neighbor = 0; neighbor < template.minutiae.length; ++neighbor)
                 {
-                	if (neighbor != reference && Calc.DistanceSq(referencePosition, template.Minutiae[neighbor].Position)
+                	if (neighbor != reference && Calc.DistanceSq(referencePosition, template.minutiae[neighbor].Position)
                         <= sqMaxDistance)
                     {
                         NeighborEdge record = new NeighborEdge();

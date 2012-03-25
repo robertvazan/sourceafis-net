@@ -20,7 +20,7 @@ import sourceafis.general.Point;
 public class XmlFormat extends TemplateFormatBase<Element> {
 
 	@Override
-	public Element Deserialize(InputStream stream) {
+	public Element deserialize(InputStream stream) {
 		try {
 			DocumentBuilder docBuilder;
 			docBuilder = DocumentBuilderFactory.newInstance()
@@ -38,7 +38,7 @@ public class XmlFormat extends TemplateFormatBase<Element> {
 	}
 
 	@Override
-	public void Serialize(OutputStream stream, Element template) {
+	public void serialize(OutputStream stream, Element template) {
 		try {
 			Transformer tf = TransformerFactory.newInstance().newTransformer();
 			//tf.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
@@ -51,7 +51,7 @@ public class XmlFormat extends TemplateFormatBase<Element> {
 	}
 
 	@Override
-	public Element Export(TemplateBuilder builder) {
+	public Element exportTemplate(TemplateBuilder builder) {
 
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -60,13 +60,13 @@ public class XmlFormat extends TemplateFormatBase<Element> {
 			Element template = document.createElement("FingerprintTemplate");
 			template.setAttribute("Version", "2");
 			template.setAttribute("OriginalDpi", Integer
-					.toString(builder.OriginalDpi));
+					.toString(builder.originalDpi));
 			template.setAttribute("OriginalWidth", Integer
-					.toString(builder.OriginalWidth));
+					.toString(builder.originalWidth));
 			template.setAttribute("OriginalHeight", Integer
-					.toString(builder.OriginalHeight));
+					.toString(builder.originalHeight));
 			document.appendChild(template);
-			for (Minutia minutia : builder.Minutiae) {
+			for (Minutia minutia : builder.minutiae) {
 
 				Element m = document.createElement("Minutia");
 				m.setAttribute("X", Integer.toString(minutia.Position.X));
@@ -82,7 +82,7 @@ public class XmlFormat extends TemplateFormatBase<Element> {
 	}
 
 	@Override
-	public TemplateBuilder Import(Element template) {
+	public TemplateBuilder importTemplate(Element template) {
 		int version = Integer.parseInt(template.getAttribute("Version"));
 		if (version < 1 || version > 2)
 			throw new RuntimeException("Unknown template version.");
@@ -102,15 +102,15 @@ public class XmlFormat extends TemplateFormatBase<Element> {
 			m.Type = MinutiaType.valueOf(T);
 			if(m.Position.X > ref.X) ref.X = m.Position.X;
 			if(m.Position.Y > ref.Y) ref.Y = m.Position.Y;
-			builder.Minutiae.add(m);
+			builder.minutiae.add(m);
 		}
 
 		if (version >= 2) {
-			builder.OriginalDpi = Integer.parseInt(template.getAttribute("OriginalDpi"));
-			builder.OriginalWidth = Integer.parseInt(template.getAttribute("OriginalWidth"));
-			builder.OriginalHeight = Integer.parseInt(template.getAttribute("OriginalHeight"));
+			builder.originalDpi = Integer.parseInt(template.getAttribute("OriginalDpi"));
+			builder.originalWidth = Integer.parseInt(template.getAttribute("OriginalWidth"));
+			builder.originalHeight = Integer.parseInt(template.getAttribute("OriginalHeight"));
 		} else {
-			builder.OriginalDpi = 500;
+			builder.originalDpi = 500;
 			builder.setStandardDpiWidth(ref.X+1);
 			builder.setStandardDpiHeight(ref.Y+1);
 		}

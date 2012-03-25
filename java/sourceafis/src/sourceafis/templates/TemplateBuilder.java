@@ -7,7 +7,7 @@ import sourceafis.general.Calc;
  
 public class TemplateBuilder {
 	 
-	public List<Minutia> Minutiae = new ArrayList<Minutia>();
+	public List<Minutia> minutiae = new ArrayList<Minutia>();
 
 	/*
 	public static class Minutia {
@@ -16,24 +16,24 @@ public class TemplateBuilder {
 		public MinutiaType Type;
 	}
 	*/
-	public int OriginalDpi;
-	public int OriginalWidth;
-	public int OriginalHeight;
+	public int originalDpi;
+	public int originalWidth;
+	public int originalHeight;
 
 	public int getStandardDpiWidth() {
-		return Calc.DivRoundUp(OriginalWidth * 500, OriginalDpi);
+		return Calc.DivRoundUp(originalWidth * 500, originalDpi);
 	}
 
 	public void setStandardDpiWidth(int value) {
-		OriginalWidth = value * OriginalDpi / 500;
+		originalWidth = value * originalDpi / 500;
 	}
 
 	public int getStandardDpiHeight() {
-		return Calc.DivRoundUp(OriginalHeight * 500, OriginalDpi);
+		return Calc.DivRoundUp(originalHeight * 500, originalDpi);
 	}
 
 	public void setStandardDpiHeight(int value) {
-		OriginalHeight = value * OriginalDpi / 500;
+		originalHeight = value * originalDpi / 500;
 	}
  
 
