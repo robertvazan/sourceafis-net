@@ -33,7 +33,7 @@ public class Fingerprint implements Cloneable, Serializable
     static SerializedFormat serializedFormat = new SerializedFormat();
     static IsoFormat isoFormat = new IsoFormat();
     static XmlFormat xmlFormat = new XmlFormat();
-    public Finger fingerPosition;
+    private Finger fingerPosition;
     Template decoded;
     private byte[][] image;
 
