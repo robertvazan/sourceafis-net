@@ -2,7 +2,7 @@
 
 namespace SourceAFIS.Dummy
 {
-    public sealed class SerializableAttribute : Attribute
+    public sealed class NonSerializedAttribute : Attribute
     {
     }
 }
