@@ -9,7 +9,7 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
+import static junit.framework.Assert.assertTrue;
 
 public class TemplateFormatTests {
 	File folderJavaProject = new File(System.getProperty("user.dir"));
@@ -39,7 +39,7 @@ public class TemplateFormatTests {
 				"1_1.xml"));
 		XmlFormat xml2 = new XmlFormat();
 		Element template2 = xml2.deserialize(fis2);
-		assert (compareXmlTemplates(template1, template2));
+		assertTrue (compareXmlTemplates(template1, template2));
 
 	}
 
@@ -62,7 +62,7 @@ public class TemplateFormatTests {
 				"1_1.compact"));
 		byte[] compatTemplate2 = new byte[fis2.available()];
 		fis2.read(compatTemplate2);
-		assert (Arrays.equals(comapactTemplate, compatTemplate2));
+		assertTrue (Arrays.equals(comapactTemplate, compatTemplate2));
 	}
 
 	/*
@@ -82,7 +82,7 @@ public class TemplateFormatTests {
 		
 		 TemplateBuilder builder2 = isoFormat.importTemplate(isoTemplate);
 		 Element element2=xmlFormat.exportTemplate(builder2);
-		 assert (compareXmlTemplates(element1, element2));
+		 assertTrue (compareXmlTemplates(element1, element2));
 	}
 	/*
 	 * Compatability Test for CompactFormat  
@@ -101,7 +101,7 @@ public class TemplateFormatTests {
 		
 		 TemplateBuilder builder2 = compactFormat.importTemplate(compactTemplate);
 		 Element element2=xmlFormat.exportTemplate(builder2);
-		 assert (compareXmlTemplates(element1, element2));
+		 assertTrue (compareXmlTemplates(element1, element2));
 	}	
 
 	/*
