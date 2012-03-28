@@ -6,7 +6,6 @@ import static java.lang.Integer.parseInt;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -24,6 +23,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import sourceafis.general.DetailLogger;
+import sourceafis.general.TestSettings;
 import sourceafis.matching.ParallelMatcher;
 import sourceafis.matching.minutia.EdgeTable;
 import sourceafis.matching.minutia.MinutiaPair;
@@ -36,11 +36,7 @@ import sourceafis.templates.CompactFormat;
 import sourceafis.templates.Template;
 
 
-public class ConsistencyTest {
-
-	File folderJavaProject = new File(System.getProperty("user.dir"));
-	File folderRoot = new File(new File(folderJavaProject, ".."), "..");
-	File folderJavaTestData = new File(new File(folderRoot, "Data"), "JavaTestData");
+public class ScoreConsistencyTest {
 
 	byte[] findTemplateBytes(NodeList templates, String path) throws IOException {
 		for (int i = 0; i < templates.getLength(); ++i) {
@@ -68,9 +64,9 @@ public class ConsistencyTest {
 	public void testScore()
 	throws IOException, SAXException, ParserConfigurationException {
 		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		Document templateDoc = docBuilder.parse(new File(folderJavaTestData, "templates.xml")); 
+		Document templateDoc = docBuilder.parse(TestSettings.fileTemplates); 
 		NodeList templates = templateDoc.getDocumentElement().getElementsByTagName("template");
-		Document scoreDoc = docBuilder.parse(new File(folderJavaTestData, "score.xml")); 
+		Document scoreDoc = docBuilder.parse(TestSettings.fileScore); 
 		NodeList scores = scoreDoc.getDocumentElement().getElementsByTagName("pair");
 		AfisEngine afis = new AfisEngine();
 		afis.setThreshold(0);
@@ -95,9 +91,9 @@ public class ConsistencyTest {
 	public void testMatcherLog()
 	throws IOException, SAXException, ParserConfigurationException {
 		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		Document templateDoc = docBuilder.parse(new File(folderJavaTestData, "templates.xml")); 
+		Document templateDoc = docBuilder.parse(TestSettings.fileTemplates); 
 		NodeList templates = templateDoc.getDocumentElement().getElementsByTagName("template");
-		Element csLog = docBuilder.parse(new File(folderJavaTestData, "matcher.xml")).getDocumentElement();
+		Element csLog = docBuilder.parse(TestSettings.fileMatcherLog).getDocumentElement();
 		Template probe = findTemplate(templates, csLog.getAttribute("probe")); 
 		Template candidate = findTemplate(templates, csLog.getAttribute("candidate"));
 		
@@ -153,7 +149,7 @@ public class ConsistencyTest {
 	public void testParameters()
 	throws IOException, SAXException, ParserConfigurationException {
 		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		Document csParamsDoc = docBuilder.parse(new File(folderJavaTestData, "parameters.xml"));
+		Document csParamsDoc = docBuilder.parse(TestSettings.fileParameters);
 		NodeList csParams = csParamsDoc.getDocumentElement().getElementsByTagName("param");
 		
 		ParallelMatcher matcher = new ParallelMatcher();
