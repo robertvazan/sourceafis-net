@@ -65,6 +65,28 @@ namespace SourceAFIS.Tests.Executable
 
         [Test]
         [Category("JavaData")]
+        public void IsoTemplates()
+        {
+            XElement root = new XElement("template-list");
+            AfisEngine afis = new AfisEngine();
+            var files = Directory.GetFiles(Settings.IsoTemplatePath);
+            foreach (var file in files)
+            {
+                var iso = File.ReadAllBytes(file);
+                Fingerprint fp = new Fingerprint();
+                fp.AsIsoTemplate = iso;
+                root.Add(new XElement("template",
+                    new XAttribute("iso-path", file),
+                    new XAttribute("iso-original", Convert.ToBase64String(iso)),
+                    new XAttribute("compact", Convert.ToBase64String(fp.Template)),
+                    new XAttribute("iso", Convert.ToBase64String(fp.AsIsoTemplate)),
+                    fp.AsXmlTemplate));
+            }
+            SaveXml(root, "iso.xml");
+        }
+
+        [Test]
+        [Category("JavaData")]
         public void Scores()
         {
             var templates = XDocument.Load(Path.Combine(Settings.JavaDataPath, "templates.xml")).Root.Elements();
