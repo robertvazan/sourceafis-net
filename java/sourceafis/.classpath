@@ -9,5 +9,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/sourceafis/lib/commons-codec-1.5/commons-codec-1.5-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/xmlunit-1.3/lib/xmlunit-1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
