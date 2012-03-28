@@ -56,7 +56,9 @@ namespace SourceAFIS.Tests.Executable
                     afis.Extract(new Person(fp));
                     root.Add(new XElement("template",
                         new XAttribute("image-path", database[index].FilePath),
-                        new XAttribute("compact", Convert.ToBase64String(fp.Template))));
+                        new XAttribute("compact", Convert.ToBase64String(fp.Template)),
+                        new XAttribute("iso", Convert.ToBase64String(fp.AsIsoTemplate)),
+                        fp.AsXmlTemplate));
                 }
             SaveXml(root, "templates.xml");
         }
