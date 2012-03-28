@@ -22,3 +22,4 @@ Data/JavaTestData
 java/*/dist
 java/*/lib
 deps/*
+java/*/doc
