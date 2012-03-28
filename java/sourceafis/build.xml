@@ -42,19 +42,18 @@
     </target>
 	<target name="javadoc">
 		    <javadoc
-		        excludepackagenames="org.test.supercsv.mock"
-		          access="public"
-		           destdir="javadoc"
-		           author="true"
-		           version="true"
-		           use="true"
-		           windowtitle="sourceafis"
-		       >
-
-		        <fileset dir="src" defaultexcludes="yes">
-		            <include name="**/*.java"/>
-		            <exclude name="org/test/**/*.java" />
-		        </fileset>
+					sourcepath="src"
+		            excludepackagenames="*"
+		            access="public"
+					source="1.6"
+		            destdir="doc"
+		            author="false" version="false"
+		            use="false" notree="true" splitindex="false" nohelp="true" nodeprecatedlist="true"
+		            windowtitle="SourceAFIS for Java"
+		        >
+				<arg value="-notimestamp"/>
+				<source file="src/sourceafis/simple/*.java"/>
+				<link href="http://download.oracle.com/javase/6/docs/api"/>
 		    </javadoc>
-	</target>
+    </target>
 </project>

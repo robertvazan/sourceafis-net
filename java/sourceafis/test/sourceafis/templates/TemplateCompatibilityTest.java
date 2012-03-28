@@ -1,11 +1,8 @@
 package sourceafis.templates;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,7 +21,6 @@ import org.xml.sax.SAXException;
 
 import sourceafis.general.TestSettings;
 import sourceafis.simple.Fingerprint;
-import static junit.framework.Assert.assertTrue;
 
 public class TemplateCompatibilityTest {
 	static abstract class TemplateLoader {
