@@ -192,10 +192,13 @@ public class AfisEngine
      * @see #threshold
      * @see #verify 
      */
-    public  List<Person> identify(Person probe, List<Person> candidates)
+    public synchronized Iterable<Person> identify(Person probe, Iterable<Person> candidates)
     {
        	    probe.CheckForNulls();
-            Person[] candidateArray = candidates.toArray(new Person[candidates.size()]);
+       	    ArrayList<Person> candidateList = new ArrayList<Person>();
+       	    for (Person candidate : candidates)
+       	    	candidateList.add(candidate);
+            Person[] candidateArray = candidateList.toArray(new Person[candidateList.size()]);
             BestMatchSkipper.PersonsSkipScore[] results;
             
             BestMatchSkipper collector = new BestMatchSkipper(candidateArray.length, minMatches - 1);
