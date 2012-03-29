@@ -7,7 +7,18 @@ import sourceafis.matching.ParallelMatcher;
 import sourceafis.templates.Template;
 
 /**
- * Methods and settings of SourceAFIS fingerprint matching engine. 
+ * Methods and settings of SourceAFIS fingerprint matching engine.
+ * <p>
+ * After setting relevant properties (notably {@link #setThreshold threshold}), application can call one of the three
+ * main methods ({@link #extract extract}, {@link #verify verify}, {@link #identify identify})
+ * to perform template extraction and fingerprint matching.
+ * </p>
+ * <p>
+ * AfisEngine objects are thread-safe. AfisEngine is lightweight, but application is encouraged
+ * to cache AfisEngine instances anyway. Every AfisEngine method utilizes multiple cores automatically.
+ * Applications that wish to execute several methods of AfisEngine in parallel should create multiple
+ * AfisEngine objects, perhaps one per thread.
+ * </p> 
  */
 public class AfisEngine
 {

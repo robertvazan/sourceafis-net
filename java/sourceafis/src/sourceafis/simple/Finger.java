@@ -17,7 +17,7 @@ import sourceafis.general.AssertException;
  * 
  * <p>
  *   This feature is optional. It can be disabled by using finger position {@link #ANY} 
- *   which is default value of {@link Fingerprint#fingerPosition} for new {@link Fingerprint} objects.
+ *   which is default value of {@link Fingerprint#setFinger finger} property for new {@link Fingerprint} objects.
  * </p>
  * 
  * <p>
@@ -28,6 +28,7 @@ import sourceafis.general.AssertException;
  * positions and all other finger positions can be matched against {@link #ANY}. Two
  * fingerprints with{@link #ANY} positions are compatible as well, of course.
  * </p>
+ * @see Fingerprint#setFinger Fingerprint.setFinger 
  */
 public enum Finger
 {
