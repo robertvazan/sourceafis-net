@@ -37,6 +37,9 @@ public class Fingerprint implements Cloneable, Serializable
     Template decoded;
     private byte[][] image;
 
+    public byte[][] getImage() { return image; }
+    public void setImage(byte[][] newImage) { image = newImage; }
+    
     /**
      * Fingerprint template.
      * 
