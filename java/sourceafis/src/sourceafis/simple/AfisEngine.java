@@ -6,6 +6,9 @@ import sourceafis.matching.BestMatchSkipper;
 import sourceafis.matching.ParallelMatcher;
 import sourceafis.templates.Template;
 
+/**
+ * Methods and settings of SourceAFIS fingerprint matching engine. 
+ */
 public class AfisEngine
 {
     int dpiValue = 500;
