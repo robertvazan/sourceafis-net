@@ -39,7 +39,7 @@ public class Person implements Cloneable,Serializable
       * inherit from <see cref="Person"/> class and add fields as necessary.
       * </p>
       */ 
-    public int Id; // { get; set; }
+    private int Id; // { get; set; }
 
     private List<Fingerprint> fingerprints = new ArrayList<Fingerprint>();
 
