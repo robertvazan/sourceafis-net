@@ -10,8 +10,8 @@ import sourceafis.templates.XmlFormat;
 /**
  * Collection of fingerprint-related information.
  * 
- * <p>This class contains basic information {@link Template} about the fingerprint that
- * is used by SourceAFIS to perform template extraction and fingerprint matching.
+ * <p>This class contains basic information ({@link #setImage image}, {@link #getTemplate template})
+ * about the fingerprint that is used by SourceAFIS to perform template extraction and fingerprint matching.
  * If you need to attach application-specific information to {@link Fingerprint} object,
  * inherit from this class and add fields as necessary. {@link Fingerprint} objects can be
  * grouped in {@link Person} objects.
@@ -22,7 +22,8 @@ import sourceafis.templates.XmlFormat;
  * the whole object or serialize individual properties. You can set some properties to "null" 
  * to exclude them from serialization.
  * </p>
- * @see Person 
+ * @see Person
+ * @serial exclude
  */
 @SuppressWarnings("serial")
 public class Fingerprint implements Cloneable, Serializable

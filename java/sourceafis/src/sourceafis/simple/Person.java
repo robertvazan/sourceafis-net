@@ -12,7 +12,7 @@ import java.util.List;
   * it is possible to match two {@link Person}s directly instead of iterating over their {@link Fingerprint}s.
   * </p>
   * <p>
-  * <tt>Id</tt> property is provided as simple means to bind {@link Person} objects to application-specific
+  * {@link #setId Id} property is provided as a simple means to bind {@link Person} objects to application-specific
   * information. If you need more flexibility, inherit from {@link Person} class and add
   * application-specific fields as necessary.
   * </p>
@@ -22,6 +22,7 @@ import java.util.List;
   * the whole {@link Person} or serialize individual {@link Fingerprint}s.
   * </p>
   * @see Fingerprint 
+  * @serial exclude
   */
  
 @SuppressWarnings("serial")
