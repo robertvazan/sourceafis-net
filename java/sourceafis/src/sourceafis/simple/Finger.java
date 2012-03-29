@@ -4,6 +4,8 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import sourceafis.general.AssertException;
+
 /**
  * Finger position on hand.
  * 
@@ -83,14 +85,15 @@ public enum Finger
 
     static {
     for(Finger s : EnumSet.allOf(Finger.class))
-         lookup.put(s.getCode(), s);
+         lookup.put(s.toByte(), s);
     }
 
-	public byte getCode() {
+	public byte toByte() {
 		return value;
 	}
-	public static Finger get(byte code) { 
-        return lookup.get(code); 
+	public static Finger valueOf(int code) { 
+        AssertException.Check(code >= 0 && code <= 10, "Unknown finger position.");
+        return lookup.get((byte)code);
    }
 
 }
