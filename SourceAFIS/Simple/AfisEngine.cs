@@ -27,7 +27,7 @@ namespace SourceAFIS.Simple
     /// but application is encouraged to cache AfisEngine instances anyway. Every
     /// <see cref="AfisEngine"/> method utilizes multiple cores automatically. Applications
     /// that wish to execute several methods of <see cref="AfisEngine"/> in parallel should
-    /// create multiple <see cref="AfisEngine"/> objects, perhaphs one per thread.
+    /// create multiple <see cref="AfisEngine"/> objects, perhaps one per thread.
     /// </para>
     /// </remarks>
     public class AfisEngine
