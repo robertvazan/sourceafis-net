@@ -54,6 +54,7 @@
 				<arg value="-notimestamp"/>
 				<source file="src/sourceafis/simple/*.java"/>
 				<link href="http://download.oracle.com/javase/6/docs/api"/>
+				<link href="http://docs.guava-libraries.googlecode.com/git-history/v11.0.2/javadoc"/>
 		    </javadoc>
     </target>
 </project>
