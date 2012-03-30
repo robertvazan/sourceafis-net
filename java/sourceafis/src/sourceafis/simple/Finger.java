@@ -4,8 +4,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-import sourceafis.general.AssertException;
-
 /**
  * Finger position on hand.
  * 
