@@ -227,17 +227,11 @@ namespace SourceAFIS.Simple
         /// Applications are recommended to keep the original <see cref="Image"/> in order to be able
         /// to regenerate the <see cref="Template"/>.
         /// </para>
-        /// <para>
-        /// If you need access to the internal structure of the template, use
-        /// <see cref="SourceAFIS.Templates.CompactFormat"/> to convert it to
-        /// <see cref="SourceAFIS.Templates.TemplateBuilder"/>.
-        /// </para>
         /// </remarks>
         /// <seealso cref="Image"/>
         /// <seealso cref="AfisEngine.Extract"/>
         /// <seealso cref="AsIsoTemplate"/>
-        /// <seealso cref="SourceAFIS.Templates.CompactFormat"/>
-        /// <seealso cref="SourceAFIS.Templates.TemplateBuilder"/>
+        /// <seealso cref="AsXmlTemplate"/>
         public byte[] Template
         {
             get { return Decoded != null ? CompactFormat.Export(SerializedFormat.Import(Decoded)) : null; }
@@ -265,9 +259,8 @@ namespace SourceAFIS.Simple
         /// </para>
         /// </remarks>
         /// <seealso cref="Template"/>
+        /// <seealso cref="AsXmlTemplate"/>
         /// <seealso cref="AfisEngine.Extract"/>
-        /// <seealso cref="SourceAFIS.Templates.IsoFormat"/>
-        /// <seealso cref="SourceAFIS.Templates.TemplateBuilder"/>
         [XmlIgnore]
         public byte[] AsIsoTemplate
         {
@@ -283,14 +276,19 @@ namespace SourceAFIS.Simple
         /// This property is <see langword="null"/> if <see cref="Template"/> is <see langword="null"/>.
         /// </value>
         /// <remarks>
+        /// <para>
         /// Use XML template format where clean data format is more important than compact and fast encoding.
         /// XML templates are suitable for XML-based data exchange, encoding of multiple fingerprints along
         /// with accompanying data into single XML file, and for debugging and logging purposes.
+        /// </para>
+        /// <para>
+        /// Value of <see cref="Fingerprint.Finger"/> property is not automatically stored in the XML template.
+        /// It must be decoded separately.
+        /// </para>
         /// </remarks>
         /// <seealso cref="Template"/>
+        /// <seealso cref="AsIsoTemplate"/>
         /// <seealso cref="AfisEngine.Extract"/>
-        /// <seealso cref="SourceAFIS.Templates.XmlFormat"/>
-        /// <seealso cref="SourceAFIS.Templates.TemplateBuilder"/>
         [XmlIgnore]
         public XElement AsXmlTemplate
         {
