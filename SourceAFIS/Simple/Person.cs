@@ -58,6 +58,7 @@ namespace SourceAFIS.Simple
         /// This collection is initially empty. Add <see cref="Fingerprint"/> objects
         /// here. You can also assign the whole collection.
         /// </remarks>
+        /// <seealso cref="Fingerprint"/>
         public List<Fingerprint> Fingerprints
         {
             get { return FingerprintList; }
@@ -70,7 +71,7 @@ namespace SourceAFIS.Simple
         }
 
         /// <summary>
-        /// Creates empty <see cref="Person"/> object.
+        /// Creates an empty <see cref="Person"/> object.
         /// </summary>
         public Person()
         {
