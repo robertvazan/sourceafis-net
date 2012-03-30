@@ -18,13 +18,14 @@ namespace SourceAFIS.Simple
     /// </summary>
     /// <remarks>
     /// <para>
+    /// This class is an entry point to core SourceAFIS functionality.
     /// After setting relevant properties (notably <see cref="Threshold"/>), application
     /// can call one of the three main methods (<see cref="Extract"/>, <see cref="Verify"/>, <see cref="Identify"/>)
     /// to perform template extraction and fingerprint matching.
     /// </para>
     /// <para>
-    /// <see cref="AfisEngine"/> objects are thread-safe. <see cref="AfisEngine"/> is lightweight,
-    /// but application is encouraged to cache AfisEngine instances anyway. Every
+    /// <see cref="AfisEngine"/> objects are thread-safe, i.e. synchronized. <see cref="AfisEngine"/> is a lightweight object,
+    /// but application is encouraged to keep only one global AfisEngine instance anyway. Every
     /// <see cref="AfisEngine"/> method utilizes multiple cores automatically. Applications
     /// that wish to execute several methods of <see cref="AfisEngine"/> in parallel should
     /// create multiple <see cref="AfisEngine"/> objects, perhaps one per thread.
@@ -34,7 +35,7 @@ namespace SourceAFIS.Simple
     {
         int DpiValue = 500;
         /// <summary>
-        /// Get/set DPI setting.
+        /// Get/set DPI for processed images.
         /// </summary>
         /// <value>
         /// DPI of images submitted for template extraction. Default is 500.
@@ -86,7 +87,7 @@ namespace SourceAFIS.Simple
         /// non-match. This property is used by <see cref="Verify"/> and <see cref="Identify"/> methods to make match decisions.
         /// </para>
         /// <para>
-        /// Appropriate <see cref="Threshold"/> is application-specific. Application developoer must adjust this
+        /// Appropriate <see cref="Threshold"/> is application-specific. Application developer must adjust this
         /// property to reflect differences in fingerprint readers, population, and application requirements.
         /// Start with default threshold. If there are too many false accepts (SourceAFIS
         /// reports match for fingerprints from two different people), increase the <see cref="Threshold"/>.
@@ -265,7 +266,7 @@ namespace SourceAFIS.Simple
         /// empty collection.
         /// </para>
         /// <para>
-        /// Most applications need only the best match which can be obtained by calling
+        /// Most applications need only the best match, which can be obtained by calling
         /// <see cref="Enumerable.FirstOrDefault{T}(IEnumerable{T})"/> method on the returned collection.
         /// Matching score for every returned <see cref="Person"/> can be obtained by calling
         /// <see cref="Verify"/> on probe <see cref="Person"/> and the matching <see cref="Person"/>.
