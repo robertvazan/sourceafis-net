@@ -489,6 +489,11 @@
                 </Component>
               </Directory>
             </Directory>
+            <Directory Id="Documentation_javadoc" Name="javadoc">
+              <Component Id="component_Documentation_javadoc_index.html" Guid="bc1e1e73-ee72-4ef6-86a8-2d523682c7b8">
+                <File Id="Documentation_javadoc_index.html" Name="index.html" DiskId="1" Source="Documentation\javadoc\index.html" KeyPath="yes" />
+              </Component>
+            </Directory>
             <Component Id="component_Documentation_license.txt" Guid="1d822ce0-0d24-4da4-9454-347d31a68770">
               <File Id="Documentation_license.txt" Name="license.txt" DiskId="1" Source="Documentation\license.txt" KeyPath="yes" />
             </Component>
@@ -578,16 +583,6 @@
             <RegistryValue Id="registry_FingerprintAnalysis" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="FingerprintAnalysis" Value="1" Type="integer" KeyPath="yes" />
             <RemoveFolder Id="removefolder_FingerprintAnalysis" On="uninstall" />
           </Component>
-          <Component Id="component_startmenu_HtmlDocs" Guid="fe08dfbe-1b55-462c-98dc-03788bf2ce01">
-            <Shortcut Id="startmenu_HtmlDocs" Name="Documentation (HTML)" WorkingDirectory="INSTALLDIR" Target="[!Documentation_SourceAFIS_html_N_SourceAFIS_Simple.htm]" Advertise="no" />
-            <RegistryValue Id="registry_HtmlDocs" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="HtmlDocs" Value="1" Type="integer" KeyPath="yes" />
-            <RemoveFolder Id="removefolder_HtmlDocs" On="uninstall" />
-          </Component>
-          <Component Id="component_startmenu_ChmDocs" Guid="5eb9a8a8-ce21-4776-95b8-14c70daa3a72">
-            <Shortcut Id="startmenu_ChmDocs" Name="Documentation (CHM)" WorkingDirectory="INSTALLDIR" Target="[!Documentation_SourceAFIS.chm]" Advertise="no" />
-            <RegistryValue Id="registry_ChmDocs" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="ChmDocs" Value="1" Type="integer" KeyPath="yes" />
-            <RemoveFolder Id="removefolder_ChmDocs" On="uninstall" />
-          </Component>
           <Component Id="component_startmenu_Online" Guid="3408896c-f5ff-4867-be3b-133b68717e79">
             <util:InternetShortcut Id="startmenu_Online" Name="Project Homepage" Target="http://sourceforge.net/apps/mediawiki/sourceafis/" />
             <RegistryValue Id="registry_Online" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="Online" Value="1" Type="integer" KeyPath="yes" />
@@ -598,11 +593,30 @@
             <RegistryValue Id="registry_PFiles" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="PFiles" Value="1" Type="integer" KeyPath="yes" />
             <RemoveFolder Id="removefolder_PFiles" On="uninstall" />
           </Component>
-          <Component Id="component_startmenu_Sample" Guid="06f3c8f8-7b38-4506-aa4a-a75ee9433f8d">
-            <Shortcut Id="startmenu_Sample" Name="Sample (C#, console)" WorkingDirectory="INSTALLDIR" Target="[Sample]" Advertise="no" />
-            <RegistryValue Id="registry_Sample" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="Sample" Value="1" Type="integer" KeyPath="yes" />
-            <RemoveFolder Id="removefolder_Sample" On="uninstall" />
-          </Component>
+          <Directory Id="ProgramMenuDirCSharp" Name="C# API">
+            <Component Id="component_startmenu_HtmlDocs" Guid="fe08dfbe-1b55-462c-98dc-03788bf2ce01">
+              <Shortcut Id="startmenu_HtmlDocs" Name="C# API Documentation (HTML)" WorkingDirectory="INSTALLDIR" Target="[!Documentation_SourceAFIS_html_N_SourceAFIS_Simple.htm]" Advertise="no" />
+              <RegistryValue Id="registry_HtmlDocs" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="HtmlDocs" Value="1" Type="integer" KeyPath="yes" />
+              <RemoveFolder Id="removefolder_HtmlDocs" On="uninstall" />
+            </Component>
+            <Component Id="component_startmenu_ChmDocs" Guid="5eb9a8a8-ce21-4776-95b8-14c70daa3a72">
+              <Shortcut Id="startmenu_ChmDocs" Name="C# API Documentation (CHM)" WorkingDirectory="INSTALLDIR" Target="[!Documentation_SourceAFIS.chm]" Advertise="no" />
+              <RegistryValue Id="registry_ChmDocs" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="ChmDocs" Value="1" Type="integer" KeyPath="yes" />
+              <RemoveFolder Id="removefolder_ChmDocs" On="uninstall" />
+            </Component>
+            <Component Id="component_startmenu_Sample" Guid="06f3c8f8-7b38-4506-aa4a-a75ee9433f8d">
+              <Shortcut Id="startmenu_Sample" Name="C# Console Sample" WorkingDirectory="INSTALLDIR" Target="[Sample]" Advertise="no" />
+              <RegistryValue Id="registry_Sample" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="Sample" Value="1" Type="integer" KeyPath="yes" />
+              <RemoveFolder Id="removefolder_Sample" On="uninstall" />
+            </Component>
+          </Directory>
+          <Directory Id="ProgramMenuDirJava" Name="Java API">
+            <Component Id="component_startmenu_JavaDocs" Guid="82e4f097-4283-41b1-af31-29b0431d0d35">
+              <Shortcut Id="startmenu_JavaDocs" Name="Java API Documentation" WorkingDirectory="INSTALLDIR" Target="[!Documentation_javadoc_index.html]" Advertise="no" />
+              <RegistryValue Id="registry_JavaDocs" Root="HKCU" Key="SOFTWARE\SourceAFIS\Shortcuts" Name="JavaDocs" Value="1" Type="integer" KeyPath="yes" />
+              <RemoveFolder Id="removefolder_JavaDocs" On="uninstall" />
+            </Component>
+          </Directory>
         </Directory>
       </Directory>
     </Directory>
@@ -788,6 +802,7 @@
       <ComponentRef Id="component_Documentation_SourceAFIS__S_Simple_AfisEngine_MinMatches.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__IS_Simple_Fingerprint_AsBitmap.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__mple_Fingerprint_AsXmlTemplate.htm" />
+      <ComponentRef Id="component_Documentation_javadoc_index.html" />
     </Feature>
   </Product>
 </Wix>
