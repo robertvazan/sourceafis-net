@@ -249,6 +249,12 @@ namespace AfisBuilder
             Console.WriteLine("AfisBuilder finished successfully.");
         }
 
+        void Upload()
+        {
+            if (Mono)
+                File.Copy(ZipFolder + ".zip", "/mnt/WindowsShare/" + Path.GetFileName(ZipFolder) + ".zip", true);
+        }
+        
         void Cleanup()
         {
             if (!Mono)
@@ -272,6 +278,7 @@ namespace AfisBuilder
                 RunTests();
             RunAnalyzer();
             Summary();
+            Upload();
             Cleanup();
         }
 
