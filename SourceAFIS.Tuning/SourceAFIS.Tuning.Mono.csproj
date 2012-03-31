@@ -87,6 +87,7 @@
     <Compile Include="Reports\TestConfiguration.cs" />
     <Compile Include="Reports\TestReport.cs" />
     <Compile Include="Reports\TopErrors.cs" />
+    <Compile Include="Optimization\FailedMutationException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="KeyPair.snk" />
