@@ -238,9 +238,13 @@ namespace AfisBuilder
                 "DatabaseAnalyzerConfiguration.xml");
 
             Command.CopyTo(ZipFolder + @"\Bin\DatabaseAnalyzer.exe", analyzerDir);
-            Command.CopyTo(ZipFolder + @"\Bin\SourceAFIS.dll", analyzerDir);
 			if (!Mono)
+            {
+                Command.CopyTo(ZipFolder + @"\Bin\SourceAFIS.dll", analyzerDir);
 	            Command.CopyTo(ZipFolder + @"\Bin\SourceAFIS.Visualization.dll", analyzerDir);
+            }
+            else
+                Command.CopyTo(ZipFolder + @"\Bin\SourceAFIS.Mono.dll", analyzerDir);
             Command.CopyTo(ZipFolder + @"\Bin\SourceAFIS.Tuning.dll", analyzerDir);
             Command.Execute(Path.Combine(analyzerDir, "DatabaseAnalyzer.exe"));
 
