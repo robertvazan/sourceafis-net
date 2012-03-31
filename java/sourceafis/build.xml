@@ -11,6 +11,7 @@
     </path>
     <target name="clean">
         <delete dir="bin"/>
+        <delete dir="doc"/>
     </target>
     <target name="build">
         <mkdir dir="bin/classes"/>

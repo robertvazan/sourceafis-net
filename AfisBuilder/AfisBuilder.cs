@@ -67,7 +67,7 @@ namespace AfisBuilder
 	            Command.ForceDeleteDirectory(@"Sample\bin");
                 Command.Build(@"Sample\Sample.csproj", "Debug");
                 Command.Build(@"DocProject\DocProject.csproj", "Release");
-                Command.BuildAnt("sourceafis", "clean", "jar");
+                Command.BuildAnt("sourceafis", "clean", "jar", "javadoc");
 			}
         }
 
@@ -112,7 +112,9 @@ namespace AfisBuilder
                 File.Copy(@"DocProject\Help\Styles\Presentation.css", prefix + @"Documentation\SourceAFIS\styles\presentation.css");
                 Command.CopyTo(@"DocProject\Help\Styles\TopicDesigner.css", prefix + @"Documentation\SourceAFIS\styles");
 
-	            Command.CopyDirectory("Sample", prefix + "Sample");
+                Command.CopyDirectory(@"java\sourceafis\doc", prefix + @"Documentation\javadoc");
+
+                Command.CopyDirectory("Sample", prefix + "Sample");
 	            Command.DeleteFileIfExists(prefix + @"Sample\Sample.suo");
 	            Command.ForceDeleteDirectory(prefix + @"Sample\obj");
 	            Command.ForceDeleteDirectory(prefix + @"Sample\bin\Release");
