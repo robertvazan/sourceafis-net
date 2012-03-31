@@ -26,7 +26,7 @@ public class AfisEngine
 {
     private int dpiValue = 500;
     private int minMatches = 1;
-    private float threshold = 12;
+    private float threshold = 25;
     private final ParallelMatcher Matcher = new ParallelMatcher();
     
     /**  
@@ -97,7 +97,7 @@ public class AfisEngine
     /**
      * Sets similarity score threshold for making match/non-match decisions.
      * 
-     * Default value is rather arbitrarily set to 12.
+     * Default value is rather arbitrarily set to 25.
      * <p>
      * Matching algorithm produces similarity score which is a measure of
      * similarity between two fingerprints. Applications however need clear
