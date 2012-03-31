@@ -70,13 +70,13 @@ namespace SourceAFIS.Simple
                 }
             }
         }
-        float ThresholdValue = 12;
+        float ThresholdValue = 25;
         /// <summary>
         /// Get/set similarity score threshold.
         /// </summary>
         /// <value>
         /// Similarity score threshold for making match/non-match decisions.
-        /// Default value is rather arbitrarily set to 12.
+        /// Default value is rather arbitrarily set to 25.
         /// </value>
         /// <remarks>
         /// <para>
