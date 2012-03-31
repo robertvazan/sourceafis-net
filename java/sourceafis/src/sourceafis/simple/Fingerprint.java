@@ -29,13 +29,13 @@ import sourceafis.templates.XmlFormat;
 @SuppressWarnings("serial")
 public class Fingerprint implements Cloneable, Serializable
 {
-    static CompactFormat compactFormat = new CompactFormat();
-    static SerializedFormat serializedFormat = new SerializedFormat();
-    static IsoFormat isoFormat = new IsoFormat();
-    static XmlFormat xmlFormat = new XmlFormat();
+    private static final CompactFormat compactFormat = new CompactFormat();
+    private static final SerializedFormat serializedFormat = new SerializedFormat();
+    private static final IsoFormat isoFormat = new IsoFormat();
+    private static final XmlFormat xmlFormat = new XmlFormat();
     private Finger fingerPosition;
-    Template decoded;
     private byte[][] image;
+    Template decoded;
 
     /**
      * Creates empty Fingerprint object. 
