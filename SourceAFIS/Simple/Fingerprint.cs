@@ -178,7 +178,9 @@ namespace SourceAFIS.Simple
             get { return Image != null ? WpfIO.GetBitmapSource(Image) : null; }
             set { Image = value != null ? WpfIO.GetPixels(value) : null; }
         }
-
+#endif
+  
+#if !COMPACT_FRAMEWORK
         /// <summary>
         /// Fingerprint image as <see cref="Bitmap"/> object.
         /// </summary>
