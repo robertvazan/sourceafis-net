@@ -25,9 +25,9 @@ namespace FvcIso
             }
         }
 
-        const double ScoreScaling = 40;
-        const double BendingThreshold = 0.4;
-        const double BendingFactor = 3.5;
+        const double ScoreScaling = 75;
+        const double BendingThreshold = 0.67;
+        const double BendingFactor = 5;
 
         static float FixScore(float score)
         {
