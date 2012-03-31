@@ -59,11 +59,11 @@ namespace AfisBuilder
             }
             else
                 Command.BuildSolution("SourceAFIS.Mono.sln", "Release");
-            Directory.CreateDirectory(Path.Combine("Sample", "dll"));
-            Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", @"Sample\dll");
-            Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.xml", @"Sample\dll");
             if (!Mono)
 			{
+                Directory.CreateDirectory(Path.Combine("Sample", "dll"));
+                Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", @"Sample\dll");
+                Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.xml", @"Sample\dll");
 	            Command.ForceDeleteDirectory(@"Sample\bin");
                 Command.Build(@"Sample\Sample.csproj", "Debug");
                 Command.Build(@"DocProject\DocProject.csproj", "Release");
@@ -80,13 +80,18 @@ namespace AfisBuilder
             string prefix = Command.FixPath(ZipFolder + @"\");
 
             Directory.CreateDirectory(prefix + "Bin");
-            Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", prefix + "Bin");
             if (!Mono)
             {
+                Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", prefix + "Bin");
                 Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.xml", prefix + "Bin");
                 Command.CopyTo(@"SourceAFIS\bin\Release Mobile\SourceAFIS.Mobile.dll", prefix + "Bin");
 	            Command.CopyTo(@"SourceAFIS.Visualization\bin\Release\SourceAFIS.Visualization.dll", prefix + "Bin");
 	            Command.CopyTo(@"SourceAFIS.FingerprintAnalysis\bin\Release\SourceAFIS.FingerprintAnalysis.exe", prefix + "Bin");
+            }
+            else
+            {
+                Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.Mono.dll", prefix + "Bin");
+                Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.Mono.xml", prefix + "Bin");
             }
             Command.CopyTo(@"SourceAFIS.Tuning\bin\Release\SourceAFIS.Tuning.dll", prefix + "Bin");
             Command.CopyTo(@"DatabaseAnalyzer\bin\Release\DatabaseAnalyzer.exe", prefix + "Bin");
