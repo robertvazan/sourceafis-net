@@ -89,6 +89,24 @@ namespace AfisBuilder
             Directory.SetCurrentDirectory(oldFolder);
         }
 
+        public static void UnZip(string zip)
+        {
+            zip = FixPath(zip);
+            string folder = Path.GetDirectoryName(zip);
+            zip = Path.GetFileName(zip);
+            string oldFolder = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(folder);
+            string unpacked = zip.Substring(0, zip.Length - 4);
+            ForceDeleteDirectory(unpacked);
+            if (!Mono)
+                Execute(@"C:\Program Files\7-Zip\7z.exe", "x", zip);
+            else
+                Execute("unzip", zip);
+            if (!Directory.Exists(unpacked))
+                throw new ApplicationException("ZIP file couldn't be unpacked.");
+            Directory.SetCurrentDirectory(oldFolder);
+        }
+
         public static void ZipFiles(string folder, string[] contents)
         {
             folder = FixPath(folder);

@@ -126,6 +126,14 @@ namespace AfisBuilder
 	            Command.DeleteFileIfExists(prefix + @"Sample\bin\Debug\Sample.exe.mdb");
             }
 
+            if (!Mono)
+            {
+                string linuxZip = SolutionFolder + @"\Data\LinuxShare\SourceAFIS-" + Versions.Release;
+                Command.UnZip(linuxZip + ".zip");
+                Command.CopyTo(linuxZip + @"\Bin\SourceAFIS.Mono.dll", prefix + "Bin");
+                Command.CopyTo(linuxZip + @"\Bin\SourceAFIS.Mono.xml", prefix + "Bin");
+            }
+
             Command.Zip(ZipFolder);
         }
 
