@@ -1,6 +1,5 @@
 package sourceafis.simple;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -92,18 +91,18 @@ public enum Finger
      * Little finger on the left hand (10).
      */
     LEFT_LITTLE(10); 
+    
     private final byte value;
+    private static final Map<Byte,Finger> lookup = new HashMap<Byte,Finger>();
+
+    static {
+        for(Finger s : Finger.values())
+             lookup.put(s.toByte(), s);
+    }
 
     Finger(int value) {
 		this.value = (byte) value;
 	}
-    private static final Map<Byte,Finger> lookup 
-    = new HashMap<Byte,Finger>();
-
-    static {
-    for(Finger s : EnumSet.allOf(Finger.class))
-         lookup.put(s.toByte(), s);
-    }
 
     /**
      * Converts enum value to its numeric code.
@@ -112,6 +111,7 @@ public enum Finger
 	public byte toByte() {
 		return value;
 	}
+	
 	/**
 	 * Converts numeric code to the corresponding enum value.
 	 * @param code the numeric code to be converted
@@ -123,5 +123,4 @@ public enum Finger
         	throw new IllegalArgumentException();
         return lookup.get((byte)code);
    }
-
 }

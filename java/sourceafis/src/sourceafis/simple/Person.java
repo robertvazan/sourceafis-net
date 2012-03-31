@@ -26,20 +26,7 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class Person implements Cloneable,Serializable
 {
-    /**  
-      * Application-assigned ID for the <see cref="Person"/>.
-      * <p>
-      * SourceAFIS doesn't use this property. It is provided for applications as an easy means
-      * to link {@link Person} objects back to application-specific data. Applications can store any
-      * integer ID in this field, for example database table key or an array index.
-      * </p>
-      * <p>
-      * Applications that need to attach more detailed information to the person should
-      * inherit from <see cref="Person"/> class and add fields as necessary.
-      * </p>
-      */ 
-    private int Id; // { get; set; }
-
+    private int Id;
     private List<Fingerprint> fingerprints = new ArrayList<Fingerprint>();
 
     /**

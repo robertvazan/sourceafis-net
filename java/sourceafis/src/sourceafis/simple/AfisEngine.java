@@ -24,10 +24,11 @@ import sourceafis.templates.Template;
  */
 public class AfisEngine
 {
-    int dpiValue = 500;
-    int minMatches = 1;
-    float threshold = 12;
-    private ParallelMatcher Matcher = new ParallelMatcher();
+    private int dpiValue = 500;
+    private int minMatches = 1;
+    private float threshold = 12;
+    private final ParallelMatcher Matcher = new ParallelMatcher();
+    
     /**  
      * Create new SourceAFIS engine.
      */
