@@ -803,6 +803,7 @@
       <ComponentRef Id="component_Documentation_SourceAFIS__IS_Simple_Fingerprint_AsBitmap.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__mple_Fingerprint_AsXmlTemplate.htm" />
       <ComponentRef Id="component_Documentation_javadoc_index.html" />
+      <ComponentRef Id="component_startmenu_JavaDocs" />
     </Feature>
   </Product>
 </Wix>
