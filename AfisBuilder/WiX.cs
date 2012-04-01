@@ -107,7 +107,7 @@ namespace AfisBuilder
         {
             const int MaxLength = 70;
             const int EndLength = MaxLength / 2 - 1;
-            string filtered = file.Replace(@"\", "_").Replace("{", "_").Replace("}", "_").Replace("`", "_");
+            string filtered = file.Replace(@"\", "_").Replace("{", "_").Replace("}", "_").Replace("`", "_").Replace("-", "_");
             if (filtered.Length <= MaxLength)
                 return filtered;
             else
