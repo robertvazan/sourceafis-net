@@ -8,6 +8,7 @@
         <pathelement location="bin/test-classes"/>
         <pathelement location="lib/junit.jar"/>
         <pathelement location="lib/commons-codec-1.5/commons-codec-1.5.jar"/>
+        <pathelement location="lib/xmlunit-1.3/lib/xmlunit-1.3.jar"/>
     </path>
     <target name="clean">
         <delete dir="bin"/>
