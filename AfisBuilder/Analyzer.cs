@@ -30,7 +30,7 @@ namespace AfisBuilder
 
         public static void ReadAccuracy()
         {
-            XElement root = XDocument.Load(Path.Combine("Matcher", "Accuracy", "ZeroFAR", "Accuracy.xml")).Root;
+            XElement root = XDocument.Load(Path.Combine("Matcher", "Accuracy", "Standard", "Accuracy.xml")).Root;
             Accuracy = (float)root.Element("AverageError");
         }
 
@@ -50,7 +50,7 @@ namespace AfisBuilder
         public static void ReportStatistics()
         {
             Console.WriteLine("DatabaseAnalyzer results:");
-            Console.WriteLine("    FRR: {0:F2}%", Accuracy * 100);
+            Console.WriteLine("    EER: {0:F2}%", Accuracy * 100);
             Console.WriteLine("    Speed: {0:F0} fp/s", Speed);
             Console.WriteLine("    Extraction time: {0:F0}ms", ExtractionTime * 1000);
             Console.WriteLine("    Template size: {0:F2} KB", TemplateSize / 1024);
