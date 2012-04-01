@@ -21,7 +21,10 @@ namespace AfisBuilder
             XDocument document = XDocument.Load(sourcePath);
             document.Root.Element("test-database").Element("scan").SetValue(DatabasePath);
 			if (Command.Mono)
+            {
 	            document.Root.Element("extractor-benchmark").Element("max-seconds").SetValue(1800);
+                document.Root.Element("test-database").Element("fingers-per-database").SetValue(20);
+            }
             document.Save(targetPath);
         }
 
