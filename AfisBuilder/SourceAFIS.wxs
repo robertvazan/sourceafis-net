@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Name="SourceAFIS" Id="EF99AD8E-CC3D-491F-BF1F-4F998007A918" UpgradeCode="314DD5F0-4709-4378-915F-22526D7919F5" Language="1033" Codepage="1252" Version="1.5.0" Manufacturer="Robert Važan">
+  <Product Name="SourceAFIS" Id="EF99AD8E-CC3D-491F-BF1F-4F998007A918" UpgradeCode="314DD5F0-4709-4378-915F-22526D7919F5" Language="1033" Codepage="1252" Version="1.6.0" Manufacturer="Robert Važan">
     <Package Id="*" Keywords="Installer" Description="SourceAFIS Installer" Comments="SourceAFIS is an open-source fingerprint matcher." InstallerVersion="100" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
     <Media Id="1" Cabinet="SourceAFIS.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" />
     <Property Id="DiskPrompt" Value="SourceAFIS Installation [1]" />
     <Upgrade Id="314DD5F0-4709-4378-915F-22526D7919F5">
-      <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="0.1.0" IncludeMinimum="yes" Maximum="1.5.0" IncludeMaximum="no" />
+      <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="0.1.0" IncludeMinimum="yes" Maximum="1.6.0" IncludeMaximum="no" />
     </Upgrade>
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallInitialize" />
@@ -47,6 +47,12 @@
             </Component>
             <Component Id="component_Bin_sourceafis.jar" Guid="421ca477-4096-4184-bc4c-ade7556831ef">
               <File Id="Bin_sourceafis.jar" Name="sourceafis.jar" DiskId="1" Source="Bin\sourceafis.jar" KeyPath="yes" />
+            </Component>
+            <Component Id="component_Bin_SourceAFIS.Mono.dll" Guid="3d8f66dc-be27-4b83-9ea7-df879bf691cd">
+              <File Id="Bin_SourceAFIS.Mono.dll" Name="SourceAFIS.Mono.dll" DiskId="1" Source="Bin\SourceAFIS.Mono.dll" KeyPath="yes" />
+            </Component>
+            <Component Id="component_Bin_SourceAFIS.Mono.xml" Guid="f3ea92b7-d594-4a9f-854f-f6c944eab1ff">
+              <File Id="Bin_SourceAFIS.Mono.xml" Name="SourceAFIS.Mono.xml" DiskId="1" Source="Bin\SourceAFIS.Mono.xml" KeyPath="yes" />
             </Component>
           </Directory>
           <Directory Id="Documentation" Name="Documentation">
@@ -493,6 +499,51 @@
               <Component Id="component_Documentation_javadoc_index.html" Guid="bc1e1e73-ee72-4ef6-86a8-2d523682c7b8">
                 <File Id="Documentation_javadoc_index.html" Name="index.html" DiskId="1" Source="Documentation\javadoc\index.html" KeyPath="yes" />
               </Component>
+              <Directory Id="Documentation_javadoc_resources" Name="resources">
+                <Component Id="component_Documentation_javadoc_resources_inherit.gif" Guid="f9a0ef85-63a5-4324-84fd-c523a2e00aa0">
+                  <File Id="Documentation_javadoc_resources_inherit.gif" Name="inherit.gif" DiskId="1" Source="Documentation\javadoc\resources\inherit.gif" KeyPath="yes" />
+                </Component>
+              </Directory>
+              <Directory Id="Documentation_javadoc_sourceafis" Name="sourceafis">
+                <Directory Id="Documentation_javadoc_sourceafis_simple" Name="simple">
+                  <Component Id="component_Documentation_javadoc_sourceafis_simple_AfisEngine.html" Guid="447e7773-a559-412f-aeb3-b3d5b06b97fb">
+                    <File Id="Documentation_javadoc_sourceafis_simple_AfisEngine.html" Name="AfisEngine.html" DiskId="1" Source="Documentation\javadoc\sourceafis\simple\AfisEngine.html" KeyPath="yes" />
+                  </Component>
+                  <Component Id="component_Documentation_javadoc_sourceafis_simple_Finger.html" Guid="526150fc-fa52-45ee-b80a-6fc11a85bef5">
+                    <File Id="Documentation_javadoc_sourceafis_simple_Finger.html" Name="Finger.html" DiskId="1" Source="Documentation\javadoc\sourceafis\simple\Finger.html" KeyPath="yes" />
+                  </Component>
+                  <Component Id="component_Documentation_javadoc_sourceafis_simple_Fingerprint.html" Guid="f6fc00a7-5a67-4663-858c-e199442119d8">
+                    <File Id="Documentation_javadoc_sourceafis_simple_Fingerprint.html" Name="Fingerprint.html" DiskId="1" Source="Documentation\javadoc\sourceafis\simple\Fingerprint.html" KeyPath="yes" />
+                  </Component>
+                  <Component Id="component_Documentation_javadoc_sourceafis_simple_package_frame.html" Guid="bfc59a24-b47f-46fb-b1fb-a5ec269cb09b">
+                    <File Id="Documentation_javadoc_sourceafis_simple_package_frame.html" Name="package-frame.html" DiskId="1" Source="Documentation\javadoc\sourceafis\simple\package-frame.html" KeyPath="yes" />
+                  </Component>
+                  <Component Id="component_Documentation_javadoc_sourceafis_simple_package_summary.html" Guid="becb395a-9b4e-4211-92fb-daf11107d763">
+                    <File Id="Documentation_javadoc_sourceafis_simple_package_summary.html" Name="package-summary.html" DiskId="1" Source="Documentation\javadoc\sourceafis\simple\package-summary.html" KeyPath="yes" />
+                  </Component>
+                  <Component Id="component_Documentation_javadoc_sourceafis_simple_Person.html" Guid="351ca47d-1d0b-46bf-a9ec-bd5aba2b8535">
+                    <File Id="Documentation_javadoc_sourceafis_simple_Person.html" Name="Person.html" DiskId="1" Source="Documentation\javadoc\sourceafis\simple\Person.html" KeyPath="yes" />
+                  </Component>
+                </Directory>
+              </Directory>
+              <Component Id="component_Documentation_javadoc_allclasses_frame.html" Guid="dc2a7712-4b0e-47bc-a4fd-bc504c96003c">
+                <File Id="Documentation_javadoc_allclasses_frame.html" Name="allclasses-frame.html" DiskId="1" Source="Documentation\javadoc\allclasses-frame.html" KeyPath="yes" />
+              </Component>
+              <Component Id="component_Documentation_javadoc_allclasses_noframe.html" Guid="eb65b482-3455-45df-9473-03bbd106c815">
+                <File Id="Documentation_javadoc_allclasses_noframe.html" Name="allclasses-noframe.html" DiskId="1" Source="Documentation\javadoc\allclasses-noframe.html" KeyPath="yes" />
+              </Component>
+              <Component Id="component_Documentation_javadoc_constant_values.html" Guid="dfed1afa-d4cd-459c-ba4e-2686552c4b2b">
+                <File Id="Documentation_javadoc_constant_values.html" Name="constant-values.html" DiskId="1" Source="Documentation\javadoc\constant-values.html" KeyPath="yes" />
+              </Component>
+              <Component Id="component_Documentation_javadoc_index_all.html" Guid="f317d9cf-80d8-46f6-a6bf-fc1973aef11a">
+                <File Id="Documentation_javadoc_index_all.html" Name="index-all.html" DiskId="1" Source="Documentation\javadoc\index-all.html" KeyPath="yes" />
+              </Component>
+              <Component Id="component_Documentation_javadoc_package_list" Guid="862210bb-6a8c-4be0-ad91-eea86c2c2856">
+                <File Id="Documentation_javadoc_package_list" Name="package-list" DiskId="1" Source="Documentation\javadoc\package-list" KeyPath="yes" />
+              </Component>
+              <Component Id="component_Documentation_javadoc_stylesheet.css" Guid="bf3e33e7-3424-420f-92ad-eb3bbe75be88">
+                <File Id="Documentation_javadoc_stylesheet.css" Name="stylesheet.css" DiskId="1" Source="Documentation\javadoc\stylesheet.css" KeyPath="yes" />
+              </Component>
             </Directory>
             <Component Id="component_Documentation_license.txt" Guid="1d822ce0-0d24-4da4-9454-347d31a68770">
               <File Id="Documentation_license.txt" Name="license.txt" DiskId="1" Source="Documentation\license.txt" KeyPath="yes" />
@@ -804,6 +855,21 @@
       <ComponentRef Id="component_Documentation_SourceAFIS__mple_Fingerprint_AsXmlTemplate.htm" />
       <ComponentRef Id="component_Documentation_javadoc_index.html" />
       <ComponentRef Id="component_startmenu_JavaDocs" />
+      <ComponentRef Id="component_Bin_SourceAFIS.Mono.dll" />
+      <ComponentRef Id="component_Bin_SourceAFIS.Mono.xml" />
+      <ComponentRef Id="component_Documentation_javadoc_allclasses_frame.html" />
+      <ComponentRef Id="component_Documentation_javadoc_allclasses_noframe.html" />
+      <ComponentRef Id="component_Documentation_javadoc_constant_values.html" />
+      <ComponentRef Id="component_Documentation_javadoc_index_all.html" />
+      <ComponentRef Id="component_Documentation_javadoc_package_list" />
+      <ComponentRef Id="component_Documentation_javadoc_stylesheet.css" />
+      <ComponentRef Id="component_Documentation_javadoc_resources_inherit.gif" />
+      <ComponentRef Id="component_Documentation_javadoc_sourceafis_simple_AfisEngine.html" />
+      <ComponentRef Id="component_Documentation_javadoc_sourceafis_simple_Finger.html" />
+      <ComponentRef Id="component_Documentation_javadoc_sourceafis_simple_Fingerprint.html" />
+      <ComponentRef Id="component_Documentation_javadoc_sourceafis_simple_package_frame.html" />
+      <ComponentRef Id="component_Documentation_javadoc_sourceafis_simple_package_summary.html" />
+      <ComponentRef Id="component_Documentation_javadoc_sourceafis_simple_Person.html" />
     </Feature>
   </Product>
 </Wix>
