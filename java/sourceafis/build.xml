@@ -37,7 +37,7 @@
         <junit fork="yes" printsummary="withOutAndErr" haltonfailure="on">
             <formatter type="xml"/>
 			<batchtest todir="bin/junit">
-				<fileset dir="bin/test-classes"/>
+				<fileset dir="bin/test-classes" includes="**/*Test.class"/>
 			</batchtest>
             <classpath refid="test.classpath"/>
         </junit>
