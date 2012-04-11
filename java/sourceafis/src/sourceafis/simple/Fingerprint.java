@@ -34,7 +34,6 @@ public class Fingerprint implements Cloneable, Serializable
     private static final IsoFormat isoFormat = new IsoFormat();
     private static final XmlFormat xmlFormat = new XmlFormat();
     private Finger fingerPosition;
-    private byte[][] image;
     Template decoded;
 
     /**
@@ -43,7 +42,7 @@ public class Fingerprint implements Cloneable, Serializable
     public Fingerprint() { }
 
     /**
-     * Gets fingerprint image.
+     * Gets fingerprint image (not implemented in java).
      * 
      * This is the raw fingerprint image that was used to
      * {@link AfisEngine#extract extract} the {@link #getTemplate template} or
@@ -59,11 +58,11 @@ public class Fingerprint implements Cloneable, Serializable
      * @see AfisEngine#extract AfisEngine.extract
      */
     public byte[][] getImage() {
-        return image;
+        throw new UnsupportedOperationException("Template extration is not yet implemted in java version of SourceAFIS");
     }
 
     /**
-     * Sets fingerprint image.
+     * Sets fingerprint image (not implemented in java).
      * 
      * Image must be set before call to {@link AfisEngine#extract
      * AfisEngine.extract} in order to generate valid {@link #getTemplate
@@ -87,7 +86,7 @@ public class Fingerprint implements Cloneable, Serializable
      * @see AfisEngine#extract AfisEngine.extract
      */
     public void setImage(byte[][] newImage) {
-        image = newImage;
+        throw new UnsupportedOperationException("Template extration is not yet implemted in java version of SourceAFIS");
     }
     
     /**
@@ -275,11 +274,6 @@ public class Fingerprint implements Cloneable, Serializable
      */
     public Fingerprint clone() {
         Fingerprint fp = new Fingerprint();
-        if (image != null) {
-            fp.image = new byte[image.length][];
-            for (int i = 0; i < image.length; ++i)
-                fp.image[i] = image[i].clone();
-        }
         fp.decoded = decoded != null ? decoded.clone() : null;
         fp.fingerPosition = fingerPosition;
         return fp;
