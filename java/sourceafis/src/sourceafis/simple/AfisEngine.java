@@ -210,9 +210,8 @@ public class AfisEngine
      *            {@link Person} object to use for template extraction
      * @see #setDpi setDpi
      */
-    public synchronized void extract(Person person)
-    {
-    	throw new RuntimeException("Extract not implemted in this java version of SourceAFIS");
+    public synchronized void extract(Person person) {
+        throw new UnsupportedOperationException("Template extration is not yet implemted in java version of SourceAFIS");
     }
 
     /**
