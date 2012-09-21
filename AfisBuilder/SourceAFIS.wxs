@@ -36,9 +36,6 @@
             <Component Id="component_Bin_SourceAFIS.Visualization.dll" Guid="324f7fe8-7833-4f37-9e36-71107a88e411">
               <File Id="Bin_SourceAFIS.Visualization.dll" Name="SourceAFIS.Visualization.dll" DiskId="1" Source="Bin\SourceAFIS.Visualization.dll" KeyPath="yes" />
             </Component>
-            <Component Id="component_Bin_SourceAFIS.Mobile.dll" Guid="e9f7c2b8-0cc2-4817-8720-ec8b9cb724e0">
-              <File Id="Bin_SourceAFIS.Mobile.dll" Name="SourceAFIS.Mobile.dll" DiskId="1" Source="Bin\SourceAFIS.Mobile.dll" KeyPath="yes" />
-            </Component>
             <Component Id="component_Bin_DatabaseAnalyzer.exe.config" Guid="eafd52d3-6fc1-48d1-a117-8a420c73bbbe">
               <File Id="Bin_DatabaseAnalyzer.exe.config" Name="DatabaseAnalyzer.exe.config" DiskId="1" Source="Bin\DatabaseAnalyzer.exe.config" KeyPath="yes" />
             </Component>
@@ -834,7 +831,6 @@
       <ComponentRef Id="component_Documentation_SourceAFIS___P_SourceAFIS_Simple_Person_Id.htm" />
       <ComponentRef Id="component_Bin_SourceAFIS.Tuning.dll" />
       <ComponentRef Id="component_Bin_SourceAFIS.Visualization.dll" />
-      <ComponentRef Id="component_Bin_SourceAFIS.Mobile.dll" />
       <ComponentRef Id="component_Documentation_SourceAFIS___Simple_Person_ctor_1_b024310e.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS__AfisEngine_Identify_2_8250a68f.htm" />
       <ComponentRef Id="component_Documentation_SourceAFIS___SourceAFIS_Simple_Person_ctor.htm2" />
