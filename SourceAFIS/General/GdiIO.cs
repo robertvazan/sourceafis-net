@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
-#if !COMPACT_FRAMEWORK
 using System.Drawing;
 using System.Drawing.Imaging;
 using SystemPixelFormat = System.Drawing.Imaging.PixelFormat;
-#endif
 
 namespace SourceAFIS.General
 {
     public static class GdiIO
     {
-#if !COMPACT_FRAMEWORK
         public static byte[,] GetPixels(Bitmap bmp)
         {
             int width = bmp.Width;
@@ -78,6 +75,5 @@ namespace SourceAFIS.General
                 }
             }
         }
-#endif
     }
 }
