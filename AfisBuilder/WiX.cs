@@ -213,7 +213,6 @@ namespace AfisBuilder
         public static void UpdateVersion(string version)
         {
             Product.SetAttributeValue("Version", version);
-            Product.WixElement("Upgrade").WixElement("UpgradeVersion").SetAttributeValue("Maximum", version);
         }
 
         static XElement WixElement(this XElement parent, string name)

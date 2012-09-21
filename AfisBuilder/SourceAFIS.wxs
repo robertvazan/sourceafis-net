@@ -4,12 +4,7 @@
     <Package Id="*" Keywords="Installer" Description="SourceAFIS Installer" Comments="SourceAFIS is an open-source fingerprint matcher." InstallerVersion="100" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
     <Media Id="1" Cabinet="SourceAFIS.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" />
     <Property Id="DiskPrompt" Value="SourceAFIS Installation [1]" />
-    <Upgrade Id="314DD5F0-4709-4378-915F-22526D7919F5">
-      <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="0.1.0" IncludeMinimum="yes" Maximum="1.6.0" IncludeMaximum="no" />
-    </Upgrade>
-    <InstallExecuteSequence>
-      <RemoveExistingProducts After="InstallInitialize" />
-    </InstallExecuteSequence>
+    <MajorUpgrade DowngradeErrorMessage="Newer version of SourceAFIS is already installed." />
     <PropertyRef Id="NETFRAMEWORK40FULL" />
     <Condition Message="This application requires .NET Framework 4. Please install the .NET Framework then run this installer again."><![CDATA[Installed OR NETFRAMEWORK40FULL]]></Condition>
     <UIRef Id="WixUI_Minimal" />
