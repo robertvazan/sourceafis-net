@@ -47,7 +47,6 @@ namespace AfisBuilder
             if (!Mono)
             {
                 Command.Build(@"SourceAFIS\SourceAFIS.csproj", "Release");
-                Command.Build(@"SourceAFIS\SourceAFIS.Mobile.csproj", "Release Mobile");
                 Command.Build(@"SourceAFIS.Visualization\SourceAFIS.Visualization.csproj", "Release");
                 Command.Build(@"SourceAFIS.Tuning\SourceAFIS.Tuning.csproj", "Release");
                 Command.Build(@"SourceAFIS.Tests\SourceAFIS.Tests.csproj", "Release");
@@ -84,7 +83,6 @@ namespace AfisBuilder
             {
                 Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.dll", prefix + "Bin");
                 Command.CopyTo(@"SourceAFIS\bin\Release\SourceAFIS.xml", prefix + "Bin");
-                Command.CopyTo(@"SourceAFIS\bin\Release Mobile\SourceAFIS.Mobile.dll", prefix + "Bin");
 	            Command.CopyTo(@"SourceAFIS.Visualization\bin\Release\SourceAFIS.Visualization.dll", prefix + "Bin");
 	            Command.CopyTo(@"SourceAFIS.FingerprintAnalysis\bin\Release\SourceAFIS.FingerprintAnalysis.exe", prefix + "Bin");
             }
