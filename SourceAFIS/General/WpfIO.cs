@@ -12,7 +12,7 @@ namespace SourceAFIS.General
 {
     public static class WpfIO
     {
-#if !COMPACT_FRAMEWORK && !MONO
+#if !MONO
         public static BitmapSource GetBitmapSource(byte[,] pixels)
         {
             int width = pixels.GetLength(1);

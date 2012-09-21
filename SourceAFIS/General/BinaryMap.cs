@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-#if !COMPACT_FRAMEWORK
 using System.Threading.Tasks;
-#endif
 
 namespace SourceAFIS.General
 {

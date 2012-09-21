@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-#if !COMPACT_FRAMEWORK
 using System.Drawing;
-#endif
 using System.Xml.Serialization;
 using System.IO;
 #if !MONO
@@ -155,7 +153,7 @@ namespace SourceAFIS.Simple
             }
         }
 
-#if !COMPACT_FRAMEWORK && !MONO
+#if !MONO
         /// <summary>
         /// Fingerprint image as <see cref="BitmapSource"/> object.
         /// </summary>
@@ -179,7 +177,6 @@ namespace SourceAFIS.Simple
         }
 #endif
   
-#if !COMPACT_FRAMEWORK
         /// <summary>
         /// Fingerprint image as <see cref="Bitmap"/> object.
         /// </summary>
@@ -201,7 +198,6 @@ namespace SourceAFIS.Simple
             get { return Image != null ? GdiIO.GetBitmap(Image) : null; }
             set { Image = value != null ? GdiIO.GetPixels(value) : null; }
         }
-#endif
 
         static readonly CompactFormat CompactFormat = new CompactFormat();
         static readonly SerializedFormat SerializedFormat = new SerializedFormat();
@@ -324,12 +320,7 @@ namespace SourceAFIS.Simple
             }
         }
 
-#if !COMPACT_FRAMEWORK
-        internal
-#else
-        public
-#endif
-        Template Decoded;
+        internal Template Decoded;
 
         /// <summary>
         /// Create deep copy of the <see cref="Fingerprint"/>.
