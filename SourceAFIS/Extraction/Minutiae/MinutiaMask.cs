@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using SourceAFIS.Dummy;
 using SourceAFIS.General;
 using SourceAFIS.Meta;
 using SourceAFIS.Templates;

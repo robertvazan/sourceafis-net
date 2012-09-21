@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SourceAFIS.Dummy;
 using SourceAFIS.General;
 using SourceAFIS.Templates;
 

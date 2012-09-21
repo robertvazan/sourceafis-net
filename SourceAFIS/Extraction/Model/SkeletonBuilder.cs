@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Dummy;
 
 namespace SourceAFIS.Extraction.Model
 {

@@ -11,7 +11,6 @@ using System.Windows.Media.Imaging;
 #endif
 using System.Xml.Linq;
 using SourceAFIS.General;
-using SourceAFIS.Dummy;
 using SourceAFIS.Templates;
 
 namespace SourceAFIS.Simple

@@ -4,7 +4,6 @@ using System.Text;
 using System.Reflection;
 using System.Xml.Serialization;
 using SourceAFIS.General;
-using SourceAFIS.Dummy;
 
 namespace SourceAFIS.Meta
 {

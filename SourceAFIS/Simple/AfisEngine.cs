@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 #endif
 using SourceAFIS.General;
-using SourceAFIS.Dummy;
 using SourceAFIS.Extraction;
 using SourceAFIS.Templates;
 using SourceAFIS.Matching;
