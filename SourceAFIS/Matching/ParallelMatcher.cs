@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 #endif
 using SourceAFIS.Meta;
 using SourceAFIS.General;
-using SourceAFIS.Dummy;
 using SourceAFIS.Templates;
 using SourceAFIS.Matching.Minutia;
 

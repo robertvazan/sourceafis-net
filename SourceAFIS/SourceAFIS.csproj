@@ -151,7 +151,6 @@
     <Compile Include="Simple\Person.cs" />
     <Compile Include="General\WpfIO.cs" />
     <Compile Include="General\RectangleC.cs" />
-    <Compile Include="Dummy\Dummy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

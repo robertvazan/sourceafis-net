@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 #endif
 using SourceAFIS.General;
-using SourceAFIS.Dummy;
 
 namespace SourceAFIS.Extraction.Filters
 {

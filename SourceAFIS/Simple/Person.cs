@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 using System.Linq;
-using SourceAFIS.Dummy;
 
 namespace SourceAFIS.Simple
 {

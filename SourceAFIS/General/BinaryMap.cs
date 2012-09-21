@@ -4,7 +4,6 @@ using System.Text;
 #if !COMPACT_FRAMEWORK
 using System.Threading.Tasks;
 #endif
-using SourceAFIS.Dummy;
 
 namespace SourceAFIS.General
 {

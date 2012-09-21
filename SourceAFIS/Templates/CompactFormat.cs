@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Net;
-using SourceAFIS.Dummy;
 using SourceAFIS.General;
 
 namespace SourceAFIS.Templates
