@@ -130,6 +130,19 @@ namespace AfisBuilder
                 throw new ApplicationException("No MSI file was created.");
         }
 
+        public static bool CanSign()
+        {
+            return File.Exists(@"Data\CodeSigningKey.pfx") && File.Exists(@"Data\CodeSigningKeyPassword.txt");
+        }
+
+        public static void SignFile(string path, string description)
+        {
+            var password = File.ReadAllLines(@"Data\CodeSigningKeyPassword.txt")[0];
+            Execute(@"C:\Program Files\Microsoft SDKs\Windows\v6.0\Bin\signtool.exe",
+                "sign", "/v", "/d", @"""" + description + @"""", "/f", @"Data\CodeSigningKey.pfx", "/p", password,
+                "/t", "http://timestamp.globalsign.com/scripts/timestamp.dll", path);
+        }
+
         public static void Execute(string command, params string[] parameters)
         {
             Process process = new Process();
