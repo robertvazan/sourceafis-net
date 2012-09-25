@@ -158,6 +158,9 @@ namespace AfisBuilder
             Directory.SetCurrentDirectory(MsiFolder);
             Command.CompileWiX(wxsVersioned);
             Directory.SetCurrentDirectory(SolutionFolder);
+
+            if (Command.CanSign())
+                Command.SignFile(Path.Combine(MsiFolder, "SourceAFIS-" + Versions.Release + ".msi"), "SourceAFIS");
         }
 
         void AssembleFvcSubmission()

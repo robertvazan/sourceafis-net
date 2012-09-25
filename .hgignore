@@ -24,3 +24,5 @@ java/*/lib
 deps/*
 java/*/doc
 Data/LinuxShare
+Data/CodeSigningKey.pfx
+Data/CodeSigningKeyPassword.txt
