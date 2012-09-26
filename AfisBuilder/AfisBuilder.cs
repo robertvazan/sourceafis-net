@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 
 namespace AfisBuilder
 {
@@ -264,8 +265,22 @@ namespace AfisBuilder
 
         void Upload()
         {
-            if (Mono)
-                File.Copy(ZipFolder + ".zip", "/mnt/WindowsShare/" + Path.GetFileName(ZipFolder) + ".zip", true);
+            if (Mono && File.Exists("Data/WindowsFTP.txt"))
+            {
+                var server = File.ReadAllLines("Data/WindowsFTP.txt")[0];
+                var url = "ftp://sourceafis@" + server + "/" + Path.GetFileName(ZipFolder) + ".zip";
+                var request = FtpWebRequest.Create(url);
+                request.Method = WebRequestMethods.Ftp.UploadFile;
+                var data = File.ReadAllBytes(ZipFolder + ".zip");
+                request.ContentLength = data.Length;
+                var stream = request.GetRequestStream();
+                stream.Write(data, 0, data.Length);
+                stream.Close();
+                var response = request.GetResponse() as FtpWebResponse;
+                if (response.StatusCode != FtpStatusCode.CommandOK)
+                    throw new ApplicationException(response.StatusDescription);
+                response.Close();
+            }
         }
         
         void Cleanup()
