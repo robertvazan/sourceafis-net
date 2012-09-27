@@ -210,7 +210,7 @@ namespace AfisBuilder
 
             string nunit = (from nunitRoot in Directory.GetDirectories(@"C:\Program Files", "NUnit *.*.*")
                             orderby nunitRoot
-                            select Path.Combine(nunitRoot, "bin", "net-2.0", "nunit-console.exe")).Last();
+                            select Path.Combine(nunitRoot, "bin", "nunit-console.exe")).Last();
 
             Command.Execute(nunit, "/labels", "/nodots", "/exclude=Special,Installer,UI,JavaData", "SourceAFIS.Tests.dll");
             Command.Execute(nunit, "/labels", "/nodots", "/include=UI", "SourceAFIS.Tests.dll");
