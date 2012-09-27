@@ -26,3 +26,4 @@ java/*/doc
 Data/LinuxShare
 Data/CodeSigningKey.pfx
 Data/CodeSigningKeyPassword.txt
+Data/WindowsFTP.txt
