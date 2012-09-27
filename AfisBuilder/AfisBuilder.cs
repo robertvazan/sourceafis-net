@@ -268,16 +268,17 @@ namespace AfisBuilder
             if (Mono && File.Exists("Data/WindowsFTP.txt"))
             {
                 var server = File.ReadAllLines("Data/WindowsFTP.txt")[0];
-                var url = "ftp://sourceafis@" + server + "/" + Path.GetFileName(ZipFolder) + ".zip";
+                var url = "ftp://" + server + "/" + Path.GetFileName(ZipFolder) + ".zip";
                 var request = FtpWebRequest.Create(url);
                 request.Method = WebRequestMethods.Ftp.UploadFile;
+                request.Credentials = new NetworkCredential("sourceafis", "");
                 var data = File.ReadAllBytes(ZipFolder + ".zip");
                 request.ContentLength = data.Length;
                 var stream = request.GetRequestStream();
                 stream.Write(data, 0, data.Length);
                 stream.Close();
                 var response = request.GetResponse() as FtpWebResponse;
-                if (response.StatusCode != FtpStatusCode.CommandOK)
+                if (response.StatusCode != FtpStatusCode.CommandOK && response.StatusCode != FtpStatusCode.ClosingControl)
                     throw new ApplicationException(response.StatusDescription);
                 response.Close();
             }
