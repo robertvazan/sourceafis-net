@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Product Name="SourceAFIS" Id="EF99AD8E-CC3D-491F-BF1F-4F998007A918" UpgradeCode="314DD5F0-4709-4378-915F-22526D7919F5" Language="1033" Codepage="1252" Version="1.7.0" Manufacturer="Robert Važan">
     <Package Id="*" Keywords="Installer" Description="SourceAFIS Installer" Comments="SourceAFIS is an open-source fingerprint matcher." InstallerVersion="100" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
-    <MediaTemplate />
+    <MediaTemplate EmbedCab="yes" />
     <MajorUpgrade DowngradeErrorMessage="Newer version of SourceAFIS is already installed." />
     <PropertyRef Id="NETFRAMEWORK40FULL" />
     <Condition Message="This application requires .NET Framework 4. Please install the .NET Framework then run this installer again."><![CDATA[Installed OR NETFRAMEWORK40FULL]]></Condition>
