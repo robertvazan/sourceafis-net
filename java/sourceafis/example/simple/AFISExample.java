@@ -2,7 +2,6 @@ package simple;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import sourceafis.simple.AfisEngine;
 import sourceafis.simple.Fingerprint;
 import sourceafis.simple.Person; 
@@ -40,7 +39,7 @@ public class AFISExample {
 		 
 		/*giving dummy id -1 for probe*/
 		Person probe = getPerson(-1,new byte[][]{p1});
-		List<Person> matches=afis.identify(probe, database);
+		Iterable<Person> matches=afis.identify(probe, database);
 		
 		for(Person match:matches){
 			System.out.println("Matched::"+match.getId());
