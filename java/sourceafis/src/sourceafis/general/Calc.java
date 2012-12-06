@@ -111,8 +111,8 @@ public final class Calc {
 	}
 
 	public static Point Multiply(float scale, Point point) {
-		return new Point(Calc.toInt32(scale * point.X), Calc.toInt32(scale)
-				* point.Y);
+		return new Point(Calc.toInt32(scale * point.X), Calc.toInt32(scale
+				* point.Y));
 	}
 
 	/*
