@@ -5,7 +5,7 @@
 package sourceafis.extraction.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +44,7 @@ public final class RidgeTracer {
 	}
 
 	Map<Point, List<Point>> LinkNeighboringMinutiae(List<Point> minutiae) {
-		Map<Point, List<Point>> linking = new HashMap<Point, List<Point>>();
+		Map<Point, List<Point>> linking = new LinkedHashMap<Point, List<Point>>();
 		for (Point minutiaPos : minutiae) {
 			List<Point> ownLinks = null;
 			for (Point neighborRelative : Neighborhood.CornerNeighbors) {
@@ -71,7 +71,7 @@ public final class RidgeTracer {
 
 	Map<Point, SkeletonBuilderMinutia> ComputeMinutiaCenters(
 			Map<Point, List<Point>> linking, SkeletonBuilder skeleton) {
-		Map<Point, SkeletonBuilderMinutia> centers = new HashMap<Point, SkeletonBuilderMinutia>();
+		Map<Point, SkeletonBuilderMinutia> centers = new LinkedHashMap<Point, SkeletonBuilderMinutia>();
 		for (Point currentPos : linking.keySet()) {
 			List<Point> linkedMinutiae = linking.get(currentPos);
 			Point primaryPos = linkedMinutiae.get(0);
@@ -93,7 +93,7 @@ public final class RidgeTracer {
 
 	void TraceRidges(BinaryMap binary,
 			Map<Point, SkeletonBuilderMinutia> minutiaePoints) {
-		Map<Point, Ridge> leads = new HashMap<Point, Ridge>();
+		Map<Point, Ridge> leads = new LinkedHashMap<Point, Ridge>();
 		for (Point minutiaPoint : minutiaePoints.keySet()) {
 			for (Point startRelative : Neighborhood.CornerNeighbors) {
 				Point start = Calc.Add(minutiaPoint, startRelative);

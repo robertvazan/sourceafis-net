@@ -33,14 +33,14 @@ public final class SkeletonShadow {
 		return binary;
 	}
 
-	public void Draw(SkeletonBuilder skeleton, BinaryMap binary) {
+	public static void Draw(SkeletonBuilder skeleton, BinaryMap binary) {
 		for (SkeletonBuilderMinutia minutia : skeleton.getMinutiae()) {
 			binary.SetBitOne(minutia.getPosition());
 			for (Ridge ridge : minutia.getRidges())
 				if (ridge.getStart().getPosition().Y <= ridge.getEnd()
 						.getPosition().Y)
 					for (Point point : ridge.getPoints())
-						if (point != null) //TODO: ---remove---
+						if (point != null)
 							binary.SetBitOne(point);
 		}
 	}

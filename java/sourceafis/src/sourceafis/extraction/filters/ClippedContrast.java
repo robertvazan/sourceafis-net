@@ -8,8 +8,6 @@ import sourceafis.general.BlockMap;
 import sourceafis.general.Calc;
 import sourceafis.general.DetailLogger;
 import sourceafis.general.Point;
-import sourceafis.general.parallel.Parallel;
-import sourceafis.general.parallel.ParallelForEachDelegate;
 import sourceafis.meta.Parameter;
 
 public final class ClippedContrast {
@@ -21,7 +19,7 @@ public final class ClippedContrast {
 	public byte[][] Compute(final BlockMap blocks, final short[][][] histogram) {
 		final byte[][] result = new byte[blocks.getBlockCount().Height][blocks
 				.getBlockCount().Width];
-		ParallelForEachDelegate<Point> delegate = new ParallelForEachDelegate<Point>() {
+		/*ParallelForEachDelegate<Point> delegate = new ParallelForEachDelegate<Point>() {
 			@Override
 			public Point delegate(Point block) {
 				int area = 0;
@@ -60,6 +58,35 @@ public final class ClippedContrast {
 		};
 
 		Parallel.ForEach(blocks.getAllBlocks(), delegate);
+		*/
+		for (Point block : blocks.getAllBlocks()) {
+			int area = 0;
+			for (int i = 0; i < 256; ++i)
+				area += histogram[block.Y][block.X][i];
+			int clipLimit = Calc.toInt32(area * ClipFraction);
+
+			int accumulator = 0;
+			int lowerBound = 255;
+			for (int i = 0; i < 256; ++i) {
+				accumulator += histogram[block.Y][block.X][i];
+				if (accumulator > clipLimit) {
+					lowerBound = i;
+					break;
+				}
+			}
+
+			accumulator = 0;
+			int upperBound = 0;
+			for (int i = 255; i >= 0; --i) {
+				accumulator += histogram[block.Y][block.X][i];
+				if (accumulator > clipLimit) {
+					upperBound = i;
+					break;
+				}
+			}
+
+			result[block.Y][block.X] = (byte) (upperBound - lowerBound);
+		}
 
 		return result;
 	}

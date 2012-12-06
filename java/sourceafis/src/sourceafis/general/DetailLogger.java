@@ -1,5 +1,7 @@
 package sourceafis.general;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,6 +15,56 @@ import sourceafis.meta.ObjectTree;
 public class DetailLogger {
 	public static final Hook off = new NullHook();
 	private LogData currentLog = new LogData();
+
+	public static void log2D(byte[][] image, String fileName) {
+		PrintWriter file_m = null;
+		try {
+			file_m = new PrintWriter("c:\\Progs\\" + fileName);
+			for (int y = 0; y < image.length; y++) {
+				for (int x = 0; x < image[0].length; x++) {
+					file_m.print((image[y][x] & 0xFF) + ",");
+				}
+				file_m.println();
+			}
+			file_m.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void log3D(short[][][] histogram, String fileName) {
+		try {
+			PrintWriter file_m = new PrintWriter("c:\\Progs\\" + fileName);
+			for (int y = 0; y < histogram.length; y++) {
+				for (int x = 0; x < histogram[0].length; x++) {
+					for (int k = 0; k < histogram[0][0].length; k++) {
+						file_m.print((histogram[y][x][k]) + ",");
+					}
+					file_m.println();
+				}
+				file_m.println();
+			}
+			file_m.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void log(BinaryMap image, String fileName) {
+		PrintWriter file_m = null;
+		try {
+			file_m = new PrintWriter("c:\\Progs\\" + fileName);
+			for (int y = 0; y < image.getHeight(); y++) {
+				for (int x = 0; x < image.getWidth(); x++) {
+					file_m.print(image.GetBit(x, y) + ",");
+				}
+				file_m.println();
+			}
+			file_m.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void attach(ObjectTree tree) {
 		try {

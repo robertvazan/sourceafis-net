@@ -182,24 +182,24 @@ public class RectangleC implements List<Point> {
 
 	public Iterator<Point> getIterator() {
 		return new Iterator<Point>() {
-			private Point point = new Point(getLeft() - 1, getBottom());
+			private Point point = new Point(getLeft(), getBottom());
 
 			@Override
 			public boolean hasNext() {
-				return point.Y < getTop() - 1
-						&& point.X < getRight()
-						&& !(point.Y == getTop() - 2 && point.X == getRight() - 1);
+				return point.Y < getTop() && point.X < getRight();
 			}
 
 			@Override
 			public sourceafis.general.Point next() {
+				Point retVal = new Point(point.X, point.Y);
 				if (point.X >= getRight() - 1) {
 					point.X = getLeft();
 					point.Y++;
 				} else {
 					point.X++;
 				}
-				return new Point(point.X, point.Y);
+				return retVal;
+
 			}
 
 			@Override

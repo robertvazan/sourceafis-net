@@ -54,7 +54,7 @@ public final class SkeletonBuilderMinutia {
 		}
 		SkeletonBuilderMinutia m = (SkeletonBuilderMinutia) other;
 		return this.Valid == m.Valid
-				&& Calc.areEqual(this.AllRidges, m.AllRidges)
+				//&& Calc.areEqual(this.AllRidges, m.AllRidges)
 				&& Calc.areEqual(this.Position, m.Position);
 	}
 }

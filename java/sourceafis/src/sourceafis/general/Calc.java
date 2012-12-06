@@ -95,7 +95,6 @@ public final class Calc {
 	}
 
 	public static Point Difference(Point left, Point right) {
-		//TODO: ---remove---
 		if (left == null)
 			return right;
 		if (right == null)

@@ -20,7 +20,7 @@ public final class LocalHistogram {
 	public short[][][] Analyze(final BlockMap blocks, final byte[][] image) {
 		final short[][][] histogram = new short[blocks.getBlockCount().Height][blocks
 				.getBlockCount().Width][256];
-		ParallelForEachDelegate<Point> delegate = new ParallelForEachDelegate<Point>() {
+		/*ParallelForEachDelegate<Point> delegate = new ParallelForEachDelegate<Point>() {
 			@Override
 			public Point delegate(Point block) {
 				RectangleC area = blocks.getBlockAreas().get(block);
@@ -36,6 +36,13 @@ public final class LocalHistogram {
 			}
 		};
 		Parallel.ForEach(blocks.getAllBlocks(), delegate);
+		*/
+		for (Point block : blocks.getAllBlocks()) {
+			RectangleC area = blocks.getBlockAreas().get(block);
+			for (int y = area.getBottom(); y < area.getTop(); ++y)
+				for (int x = area.getLeft(); x < area.getRight(); ++x)
+					++histogram[block.Y][block.X][image[y][x] & 0xFF];
+		}
 		return histogram;
 	}
 
