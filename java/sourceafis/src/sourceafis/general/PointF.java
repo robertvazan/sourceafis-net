@@ -18,6 +18,10 @@ public class PointF {
 		return new PointF(left.X + right.Width, left.Y + right.Height);
 	}
 
+	public static PointF multiply(float factor, PointF point) {
+		return new PointF(factor * point.X, factor * point.Y);
+	}
+
 	public static java.awt.Point toPoint(PointF point) {
 		java.awt.Point p = new java.awt.Point();
 		p.setLocation(point.X, point.Y);

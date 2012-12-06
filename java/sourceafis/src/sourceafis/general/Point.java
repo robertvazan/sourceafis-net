@@ -12,14 +12,17 @@ public class Point implements Serializable {
 		Y = y;
 	}
 
+	@Override
 	public int hashCode() {
 		//return X + Y;
 		return (new Integer(X)).hashCode() + (new Integer(Y)).hashCode();
 
 	}
 
+	@Override
 	public boolean equals(Object other) {
-		return other instanceof Point && this == (Point) other;
+		return other instanceof Point && this.X == ((Point) other).X
+				&& this.Y == ((Point) other).Y;
 	}
 
 	public static boolean isEqual(Point left, Point right) {
@@ -40,5 +43,10 @@ public class Point implements Serializable {
 
 	public static java.awt.Point toPoint(Point point) {
 		return new java.awt.Point(point.X, point.Y);
+	}
+
+	@Override
+	public String toString() {
+		return "[" + this.Y + ", " + this.X + "]";
 	}
 }
