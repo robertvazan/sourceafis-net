@@ -1,6 +1,11 @@
 package sourceafis.general;
 
-
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 /*
  * 
@@ -90,6 +95,11 @@ public final class Calc {
 	}
 
 	public static Point Difference(Point left, Point right) {
+		//TODO: ---remove---
+		if (left == null)
+			return right;
+		if (right == null)
+			return left;
 		return Point.minus(left, new Size(right));// left - new Size(right);
 	}
 
@@ -99,6 +109,11 @@ public final class Calc {
 
 	public static PointF Multiply(float scale, PointF point) {
 		return new PointF(scale * point.X, scale * point.Y);
+	}
+
+	public static Point Multiply(float scale, Point point) {
+		return new Point(Calc.toInt32(scale * point.X), Calc.toInt32(scale)
+				* point.Y);
 	}
 
 	/*
@@ -126,8 +141,8 @@ public final class Calc {
 	}
 
 	/*
-	 * public static void Swap<T>(ref T first, ref T second) { T tmp = first;
-	 * first = second; second = tmp; }
+	 * public static <T> void Swap(T first, T second) { T tmp = first; first =
+	 * second; second = tmp; }
 	 */
 
 	public static int Compare(int left, int right) {
@@ -228,17 +243,44 @@ public final class Calc {
 	 * List<float> sorted = sequence.OrderBy(item => item).ToList(); return
 	 * sorted[(sorted.Count - 1) / 2]; }
 	 */
-   /*
-	public static void RemoveRange(List list, int start) {
-
-		if (start < list.size())
-			list.subList(start, list.size() - start).clear();
-
-	}*/
+	/*
+	 * public static void RemoveRange(List list, int start) {
+	 * 
+	 * if (start < list.size()) list.subList(start, list.size() -
+	 * start).clear();
+	 * 
+	 * }
+	 */
 	/*
 	 * static public uint ReverseBitsInBytes(uint word) { uint phase1 = (word >>
 	 * 4) & 0x0f0f0f0f | (word << 4) & 0xf0f0f0f0; uint phase2 = (phase1 >> 2) &
 	 * 0x33333333 | (phase1 << 2) & 0xcccccccc; return (phase2 >> 1) &
 	 * 0x55555555 | (phase2 << 1) & 0xaaaaaaaa; }
 	 */
+
+	public static int toInt32(float number) {
+		return new BigDecimal(number,
+				new MathContext(0, RoundingMode.HALF_EVEN)).intValue();
+	}
+
+	public static byte toByte(float number) {
+		return new BigDecimal(number,
+				new MathContext(0, RoundingMode.HALF_EVEN)).byteValue();
+	}
+
+	public static <T> List<T> Shuffle(List<T> input, Random random) {
+		@SuppressWarnings("unchecked")
+		T[] array = (T[]) input.toArray();
+		for (int i = array.length - 1; i > 0; --i) {
+			int r = random.nextInt(i + 1);
+			T tmp = array[i];
+			array[i] = array[r];
+			array[r] = tmp;
+		}
+		return Arrays.asList(array);
+	}
+
+	public static boolean areEqual(Object o1, Object o2) {
+		return (o1 == null && o2 == null) || (o1 != null && o1.equals(o2));
+	}
 }
