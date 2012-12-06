@@ -67,15 +67,15 @@ public final class Ridge {
 	}
 
 	public void setContent(Ridge other) {
-		this.setStart(other.StartMinutia);
+		/*this.setStart(other.StartMinutia);
 		this.setEnd(other.EndMinutia);
 		this.Points = other.Points;
-		this.Reversed = other.Reversed;
-		/*		this.StartMinutia = other.StartMinutia;
+		this.Reversed = other.Reversed;*/
+		this.StartMinutia = other.StartMinutia;
 		this.EndMinutia = other.EndMinutia;
 		this.Points = other.Points;
 		this.Reversed = other.Reversed;
-		*/
+		
 	}
 
 	public void Detach() {
@@ -89,6 +89,6 @@ public final class Ridge {
 			return false;
 		}
 		Ridge ridge = (Ridge) other;
-		return Calc.areEqual(this.Points, ridge.Points);
+		return Calc.areEqual(this.StartMinutia, ridge.StartMinutia) && Calc.areEqual(this.EndMinutia, ridge.EndMinutia);
 	}
 }

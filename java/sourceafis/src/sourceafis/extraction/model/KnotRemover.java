@@ -4,9 +4,7 @@
  */
 package sourceafis.extraction.model;
 
-import sourceafis.extraction.Extractor;
 import sourceafis.general.DetailLogger;
-import sourceafis.general.Point;
 import sourceafis.meta.Nested;
 
 /**
@@ -30,14 +28,14 @@ public class KnotRemover implements ISkeletonFilter {
 
 	@Override
 	public void Filter(SkeletonBuilder skeleton) {
-		for (SkeletonBuilderMinutia minutia : skeleton.getMinutiae()) {
+		/*for (SkeletonBuilderMinutia minutia : skeleton.getMinutiae()) {
 			if (minutia.getRidges().size() == 2
 					&& minutia.getRidges().get(0).getReversed() != minutia
 							.getRidges().get(1)) {
 				Ridge extended = minutia.getRidges().get(0).getReversed();
 				Ridge removed = minutia.getRidges().get(1);
 				if (extended.getPoints().size() < removed.getPoints().size()) {
-					//swap(extended, removed);
+					swap(extended, removed);
 					extended = extended.getReversed();
 					removed = removed.getReversed();
 				}
@@ -47,17 +45,11 @@ public class KnotRemover implements ISkeletonFilter {
 					extended.getPoints().add(point);
 
 				extended.setEnd(removed.getEnd());
-				if (Extractor.checkNullRidgeEnd("BeforeDetach", skeleton)) {
-					System.out.println("before");
-				}
 				cnt++;
 				removed.Detach();
-				if (Extractor.checkNullRidgeEnd("AfterDetach", skeleton)) {
-					System.out.println("after: " + (cnt - 1));
-				}
 			}
-		}
-		Extractor.checkNullRidgeEnd("KnotRemoverIn", skeleton);
+		}*/
+		
 		DotRemover.Filter(skeleton);
 		Logger.log(skeleton);
 	}

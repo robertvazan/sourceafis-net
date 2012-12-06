@@ -29,10 +29,8 @@ import sourceafis.extraction.model.DotRemover;
 import sourceafis.extraction.model.FragmentRemover;
 import sourceafis.extraction.model.GapRemover;
 import sourceafis.extraction.model.PoreRemover;
-import sourceafis.extraction.model.Ridge;
 import sourceafis.extraction.model.RidgeTracer;
 import sourceafis.extraction.model.SkeletonBuilder;
-import sourceafis.extraction.model.SkeletonBuilderMinutia;
 import sourceafis.extraction.model.TailRemover;
 import sourceafis.general.Angle;
 import sourceafis.general.BinaryMap;
@@ -115,7 +113,7 @@ public class Extractor {
 		BinarySmoother.BorderDistance = 17;
 	}
 
-	public TemplateBuilder Extract(final byte[][] image, final int dpi) {
+	public TemplateBuilder Extract(final byte[][] invertedImage, final int dpi) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		System.out.println("Start: " + df.format(new Date()));
 		final TemplateBuilder template = new TemplateBuilder();
@@ -123,15 +121,18 @@ public class Extractor {
 		DpiAdjuster.Adjust(this, dpi, new Action() {
 			@Override
 			public void function() {
-				byte[][] invertedImage = ImageInverter.GetInverted(image);
+				byte[][] image = ImageInverter.GetInverted(invertedImage);
+				DetailLogger.log2D(image, "image_j.csv");
 
 				BlockMap blocks = new BlockMap(new Size(image[0].length,
 						image.length), BlockSize);
 				Logger.log("BlockMap", blocks);
 
 				short[][][] histogram = Histogram.Analyze(blocks, image);
+				DetailLogger.log3D(histogram, "hist_j.csv");
 				short[][][] smoothHistogram = Histogram.SmoothAroundCorners(
 						blocks, histogram);
+				DetailLogger.log3D(smoothHistogram, "smhist_j.csv");
 				BinaryMap mask = Mask.ComputeMask(blocks, histogram);
 				float[][] equalized = Equalizer.Equalize(blocks, image,
 						smoothHistogram, mask);
@@ -146,12 +147,6 @@ public class Extractor {
 				BinaryMap binary = Binarizer.Binarize(smoothed, orthogonal,
 						mask, blocks);
 
-				//TODO: ---remove---
-				eq = equalized;
-				ms = (BinaryMap) mask.clone();
-				or = orientation;
-				sm = smoothed;
-				bm = (BinaryMap) binary.clone();
 				binary.AndNot(BinarySmoother.Filter(binary.GetInverted()));
 				binary.Or(BinarySmoother.Filter(binary));
 				Logger.log("BinarySmoothingResult", binary);
@@ -162,65 +157,6 @@ public class Extractor {
 
 				BinaryMap inverted = binary.GetInverted();
 				inverted.And(pixelMask);
-
-				/*class ParallelProcessSkeletonAction extends RecursiveAction {
-					private static final long serialVersionUID = 1L;
-					String processName;
-					BinaryMap map;
-					SkeletonBuilder result;
-
-					public ParallelProcessSkeletonAction(String processName,
-							BinaryMap map, SkeletonBuilder result) {
-						this.processName = processName;
-						this.map = map;
-						this.result = result;
-					}
-
-					@Override
-					protected void compute() {
-						ProcessSkeleton(processName, map, result);
-					}
-
-				}
-
-				class ParallelProcessInitializerAction extends RecursiveAction {
-					private static final long serialVersionUID = 1L;
-					BinaryMap binary;
-					BinaryMap inverted;
-					SkeletonBuilder ridges;
-					SkeletonBuilder valleys;
-
-					public ParallelProcessInitializerAction(BinaryMap binary,
-							BinaryMap inverted, SkeletonBuilder ridges,
-							SkeletonBuilder valleys) {
-						this.binary = binary;
-						this.inverted = inverted;
-						this.ridges = ridges;
-						this.valleys = valleys;
-					}
-
-					@Override
-					protected void compute() {
-						ParallelProcessSkeletonAction ridgesTask = new ParallelProcessSkeletonAction(
-								"Ridges", binary, ridges);
-						ridgesTask.fork();
-						ParallelProcessSkeletonAction valleysTask = new ParallelProcessSkeletonAction(
-								"Valleys", inverted, valleys);
-						valleysTask.fork();
-
-						ridgesTask.join();
-						valleysTask.join();
-					}
-
-				}
-
-				final SkeletonBuilder ridges = new SkeletonBuilder();
-				final SkeletonBuilder valleys = new SkeletonBuilder();
-
-				ForkJoinPool forkJoinPool = new ForkJoinPool();
-				forkJoinPool.invoke(new ParallelProcessInitializerAction(
-						binary, inverted, ridges, valleys));
-						*/
 
 				SkeletonBuilder ridges = null;
 				SkeletonBuilder valleys = null;
@@ -246,69 +182,20 @@ public class Extractor {
 		return template;
 	}
 
-	SkeletonBuilder ProcessSkeleton(final String name, final BinaryMap binary) {
+	SkeletonBuilder ProcessSkeleton(final String aName, final BinaryMap binary) {
 		SkeletonBuilder skeleton = null;
 		Logger.log("Binarized", binary);
 		BinaryMap thinned = Thinner.Thin(binary);
 
-		//TODO: ---remove---
-		th = (BinaryMap) thinned.clone();
 		skeleton = new SkeletonBuilder();
 		RidgeTracer.Trace(thinned, skeleton);
-		checkNullRidgeEnd("RidgeTracer", skeleton);
 		DotRemover.Filter(skeleton);
-		checkNullRidgeEnd("DotRemover", skeleton);
 		PoreRemover.Filter(skeleton);
-		checkNullRidgeEnd("PoreRemover", skeleton);
 		GapRemover.Filter(skeleton);
-		checkNullRidgeEnd("GapRemover", skeleton);
 		TailRemover.Filter(skeleton);
 		FragmentRemover.Filter(skeleton);
 		BranchMinutiaRemover.Filter(skeleton);
 		return skeleton;
 	}
 
-	public static boolean checkNullRidgeEnd(String process,
-			SkeletonBuilder skeleton) {
-		for (SkeletonBuilderMinutia m : skeleton.getMinutiae()) {
-			for (Ridge r : m.getRidges()) {
-				if (r == null) {
-					System.out.println(process + ": null ridge");
-				} else if (r.getEnd() == null) {
-					System.out.println(process + ": null ridge End");
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	//TODO ---remove---
-	public byte[][] or;
-	public float[][] sm;
-	public float[][] eq;
-	public BinaryMap bm;
-	public BinaryMap th;
-	public BinaryMap ms;
-	/*
-	SkeletonBuilder ProcessSkeleton(final String name, final BinaryMap binary,
-			final SkeletonBuilder skeleton) {
-		DetailLogger.RunInContext(name, new Action() {
-
-			@Override
-			public void function() {
-				Logger.log("Binarized", binary);
-				BinaryMap thinned = Thinner.Thin(binary);
-				RidgeTracer.Trace(thinned, skeleton);
-				DotRemover.Filter(skeleton);
-				PoreRemover.Filter(skeleton);
-				GapRemover.Filter(skeleton);
-				TailRemover.Filter(skeleton);
-				FragmentRemover.Filter(skeleton);
-				BranchMinutiaRemover.Filter(skeleton);
-			}
-		});
-		return skeleton;
-	}
-	 */
 }

@@ -12,7 +12,7 @@ public final class ImageInverter {
 		byte[][] result = new byte[image.length][image[0].length];
 		for (int y = 0; y < image.length; ++y)
 			for (int x = 0; x < image[0].length; ++x)
-				result[y][x] = (byte) (255 - image[y][x]);
+				result[y][x] = (byte) (255 - (image[y][x] & 0xFF));
 		return result;
 	}
 }

@@ -4,7 +4,6 @@
  */
 package sourceafis.extraction.model;
 
-import sourceafis.extraction.Extractor;
 import sourceafis.general.Calc;
 import sourceafis.general.DetailLogger;
 import sourceafis.general.Point;
@@ -56,9 +55,7 @@ public class PoreRemover implements ISkeletonFilter {
 				}
 			}
 		}
-		Extractor.checkNullRidgeEnd("PoreRemoverIn", skeleton);
 		KnotRemover.Filter(skeleton);
-		Extractor.checkNullRidgeEnd("KnotRemover", skeleton);
 		Logger.log(skeleton);
 	}
 }
