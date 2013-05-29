@@ -38,7 +38,7 @@ namespace SourceAFIS.Tuning.Optimization
                         throw new FailedMutationException("Worse accuracy: {0:P2} -> {1:P2}", BestPerformance.AverageError, performance.AverageError);
                     else if (performance.AverageError == BestPerformance.AverageError)
                     {
-                        if (performance.Separation > BestPerformance.Separation)
+                        if (performance.Separation < BestPerformance.Separation)
                             throw new FailedMutationException("Same accuracy, worse separation: {0:F4} -> {1:F4}",
                                 BestPerformance.Separation, performance.Separation);
                         else if (performance.Separation == BestPerformance.Separation)
