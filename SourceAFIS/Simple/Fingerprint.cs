@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
 using System.Xml.Serialization;
 using System.IO;
-#if !MONO
-using System.Windows.Media.Imaging;
-#endif
 using System.Xml.Linq;
 using SourceAFIS.General;
 using SourceAFIS.Templates;
@@ -151,52 +147,6 @@ namespace SourceAFIS.Simple
                     Image = unpacked;
                 }
             }
-        }
-
-#if !MONO
-        /// <summary>
-        /// Fingerprint image as <see cref="BitmapSource"/> object.
-        /// </summary>
-        /// <value>
-        /// Fingerprint image from <see cref="Image"/> property converted to <see cref="BitmapSource"/>
-        /// object or <see langword="null"/> if <see cref="Image"/> is <see langword="null"/>.
-        /// </value>
-        /// <remarks>
-        /// Use this property in WPF applications.
-        /// </remarks>
-        /// <seealso cref="Image"/>
-        /// <seealso cref="AsImageData"/>
-        /// <seealso cref="AsBitmap"/>
-        /// <seealso cref="Template"/>
-        /// <seealso cref="AfisEngine.Extract"/>
-        [XmlIgnore]
-        public BitmapSource AsBitmapSource
-        {
-            get { return Image != null ? WpfIO.GetBitmapSource(Image) : null; }
-            set { Image = value != null ? WpfIO.GetPixels(value) : null; }
-        }
-#endif
-  
-        /// <summary>
-        /// Fingerprint image as <see cref="Bitmap"/> object.
-        /// </summary>
-        /// <value>
-        /// Fingerprint image from <see cref="Image"/> property converted to <see cref="Bitmap"/>
-        /// object or <see langword="null"/> if <see cref="Image"/> is <see langword="null"/>.
-        /// </value>
-        /// <remarks>
-        /// Use this property in WinForms applications.
-        /// </remarks>
-        /// <seealso cref="Image"/>
-        /// <seealso cref="AsImageData"/>
-        /// <seealso cref="AsBitmapSource"/>
-        /// <seealso cref="Template"/>
-        /// <seealso cref="AfisEngine.Extract"/>
-        [XmlIgnore]
-        public Bitmap AsBitmap
-        {
-            get { return Image != null ? GdiIO.GetBitmap(Image) : null; }
-            set { Image = value != null ? GdiIO.GetPixels(value) : null; }
         }
 
         /// <summary>
