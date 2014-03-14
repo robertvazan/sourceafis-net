@@ -81,9 +81,9 @@ namespace SourceAFIS.Extraction
             BinarySmoother.BorderDistance = 17;
         }
 
-        public TemplateBuilder Extract(byte[,] invertedImage, int dpi)
+        public FingerprintTemplate Extract(byte[,] invertedImage, int dpi)
         {
-            TemplateBuilder template = null;
+            FingerprintTemplate template = null;
             DpiAdjuster.Adjust(this, dpi, delegate()
             {
                 byte[,] image = ImageInverter.GetInverted(invertedImage);
@@ -118,13 +118,10 @@ namespace SourceAFIS.Extraction
                     () => { ridges = ProcessSkeleton("Ridges", binary); },
                     () => { valleys = ProcessSkeleton("Valleys", inverted); });
 
-                template = new TemplateBuilder();
-                template.OriginalDpi = dpi;
-                template.OriginalWidth = invertedImage.GetLength(1);
-                template.OriginalHeight = invertedImage.GetLength(0);
+                template = new FingerprintTemplate();
 
-                MinutiaCollector.Collect(ridges, TemplateBuilder.MinutiaType.Ending, template);
-                MinutiaCollector.Collect(valleys, TemplateBuilder.MinutiaType.Bifurcation, template);
+                MinutiaCollector.Collect(ridges, MinutiaType.Ending, template);
+                MinutiaCollector.Collect(valleys, MinutiaType.Bifurcation, template);
                 MinutiaMask.Filter(template, innerMask);
                 StandardDpiScaling.Scale(template);
                 MinutiaCloudRemover.Filter(template);
@@ -132,6 +129,7 @@ namespace SourceAFIS.Extraction
                 MinutiaSorter.Shuffle(template);
                 Logger.Log("FinalTemplate", template);
             });
+            template.BuildEdgeTable();
             return template;
         }
 

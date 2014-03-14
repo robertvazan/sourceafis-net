@@ -16,7 +16,7 @@ namespace SourceAFIS.Extraction.Minutiae
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
-        public void Scale(TemplateBuilder template)
+        public void Scale(FingerprintTemplate template)
         {
             float dpiFactor = 500 / (float)DpiScaling;
             foreach (var minutia in template.Minutiae)

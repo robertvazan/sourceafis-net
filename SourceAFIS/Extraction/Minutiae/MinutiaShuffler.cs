@@ -9,7 +9,7 @@ namespace SourceAFIS.Extraction.Minutiae
 {
     public sealed class MinutiaShuffler
     {
-        public void Shuffle(TemplateBuilder template)
+        public void Shuffle(FingerprintTemplate template)
         {
             int seed = 0;
             foreach (var minutia in template.Minutiae)

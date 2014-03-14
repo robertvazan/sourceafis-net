@@ -93,16 +93,11 @@
     <Compile Include="Matching\Minutia\HashLookup.cs" />
     <Compile Include="Matching\Minutia\IndexedEdge.cs" />
     <Compile Include="Matching\Minutia\PairInfo.cs" />
-    <Compile Include="Templates\CompactFormat.cs" />
-    <Compile Include="Templates\IsoFormat.cs" />
-    <Compile Include="Templates\ITemplateFormat.cs" />
     <Compile Include="Extraction\Minutiae\MinutiaCollector.cs" />
     <Compile Include="Extraction\Minutiae\MinutiaShuffler.cs" />
-    <Compile Include="Templates\SerializedFormat.cs" />
-    <Compile Include="Templates\Template.cs" />
-    <Compile Include="Templates\TemplateBuilder.cs" />
-    <Compile Include="Templates\TemplateFormatBase.cs" />
-    <Compile Include="Templates\XmlFormat.cs" />
+    <Compile Include="Templates\Minutia.cs" />
+    <Compile Include="Templates\MinutiaType.cs" />
+    <Compile Include="Templates\FingerprintTemplate.cs" />
     <Compile Include="General\Angle.cs" />
     <Compile Include="General\AssertException.cs" />
     <Compile Include="General\BinaryMap.cs" />
@@ -135,7 +130,6 @@
     <Compile Include="Matching\Minutia\NeighborEdge.cs" />
     <Compile Include="Matching\Minutia\PairSelector.cs" />
     <Compile Include="Matching\ProbeIndex.cs" />
-    <Compile Include="Matching\Minutia\EdgeTable.cs" />
     <Compile Include="Meta\DpiAdjustedAttribute.cs" />
     <Compile Include="Meta\DpiAdjuster.cs" />
     <Compile Include="Meta\ParameterAttribute.cs" />

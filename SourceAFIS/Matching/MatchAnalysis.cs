@@ -31,7 +31,7 @@ namespace SourceAFIS.Matching
         public int DistanceErrorSum;
         public int AngleErrorSum;
 
-        public void Analyze(MinutiaPairing pairing, EdgeLookup lookup, Template probe, Template candidate)
+        public void Analyze(MinutiaPairing pairing, EdgeLookup lookup, FingerprintTemplate probe, FingerprintTemplate candidate)
         {
             MaxDistanceError = lookup.MaxDistanceError;
             MaxAngleError = lookup.MaxAngleError;
@@ -64,8 +64,8 @@ namespace SourceAFIS.Matching
                 }
             }
 
-            float probeFraction = PairCount / (float)probe.Minutiae.Length;
-            float candidateFraction = PairCount / (float)candidate.Minutiae.Length;
+            float probeFraction = PairCount / (float)probe.Minutiae.Count;
+            float candidateFraction = PairCount / (float)candidate.Minutiae.Count;
             PairFraction = (probeFraction + candidateFraction) / 2;
         }
     }
