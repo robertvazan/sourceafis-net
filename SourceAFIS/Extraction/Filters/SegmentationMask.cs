@@ -2,37 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class SegmentationMask
     {
-        [Nested]
         public ClippedContrast Contrast = new ClippedContrast();
-        [Nested]
         public AbsoluteContrast AbsoluteContrast = new AbsoluteContrast();
-        [Nested]
         public RelativeContrast RelativeContrast = new RelativeContrast();
-        [Nested]
-        public VotingFilter LowContrastMajority = new VotingFilter();
-        [Nested]
-        public VotingFilter BlockErrorFilter = new VotingFilter();
-        [Nested]
-        public VotingFilter InnerMaskFilter = new VotingFilter();
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
-
-        public SegmentationMask()
-        {
-            LowContrastMajority.BorderDistance = 7;
-            LowContrastMajority.Radius = 9;
-            LowContrastMajority.Majority = 0.86f;
-            BlockErrorFilter.BorderDistance = 4;
-            BlockErrorFilter.Majority = 0.7f;
-            InnerMaskFilter.Radius = 7;
-            InnerMaskFilter.BorderDistance = 4;
-        }
+        public VotingFilter LowContrastMajority = new VotingFilter(radius: 9, majority: 0.86f, borderDist: 7);
+        public VotingFilter BlockErrorFilter = new VotingFilter(majority: 0.7f, borderDist: 4);
+        public VotingFilter InnerMaskFilter = new VotingFilter(radius: 7, borderDist: 4);
 
         public BinaryMap ComputeMask(BlockMap blocks, short[, ,] histogram)
         {
@@ -48,7 +28,6 @@ namespace SourceAFIS.Extraction.Filters
             mask.Or(BlockErrorFilter.Filter(mask));
             mask.Or(InnerMaskFilter.Filter(mask));
 
-            Logger.Log(mask);
             return mask;
         }
     }

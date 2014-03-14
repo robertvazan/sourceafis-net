@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class Equalizer
     {
-        [Parameter(Lower = 1, Upper = 10)]
-        public float MaxScaling = 3.99f;
-        [Parameter(Lower = 0.1)]
-        public float MinScaling = 0.25f;
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        const float MaxScaling = 3.99f;
+        const float MinScaling = 0.25f;
 
         const float RangeMin = -1;
         const float RangeMax = 1;
@@ -97,7 +92,6 @@ namespace SourceAFIS.Extraction.Filters
                         }
                 }
             });
-            Logger.Log(result);
             return result;
         }
 

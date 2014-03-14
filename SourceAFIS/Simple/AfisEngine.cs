@@ -231,7 +231,7 @@ namespace SourceAFIS.Simple
                                                   where IsCompatibleFinger(probeFp.Finger, candidateFp.Finger)
                                                   select candidateFp.Decoded).ToList();
 
-                        ParallelMatcher.PreparedProbe probeIndex = Matcher.Prepare(probeFp.Decoded);
+                        ProbeIndex probeIndex = Matcher.Prepare(probeFp.Decoded);
                         float[] scores = Matcher.Match(probeIndex, candidateTemplates);
 
                         lock (collector)
@@ -286,7 +286,7 @@ namespace SourceAFIS.Simple
                         List<int> personsByFingerprint = new List<int>();
                         List<FingerprintTemplate> candidateTemplates = FlattenHierarchy(candidateArray, probeFp.Finger, out personsByFingerprint);
 
-                        ParallelMatcher.PreparedProbe probeIndex = Matcher.Prepare(probeFp.Decoded);
+                        ProbeIndex probeIndex = Matcher.Prepare(probeFp.Decoded);
                         float[] scores = Matcher.Match(probeIndex, candidateTemplates);
 
                         lock (collector)

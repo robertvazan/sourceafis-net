@@ -2,16 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class AbsoluteContrast
     {
-        [Parameter(Upper = 255)]
-        public int Limit = 17;
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        const int Limit = 17;
 
         public BinaryMap DetectLowContrast(byte[,] contrast)
         {
@@ -20,7 +16,6 @@ namespace SourceAFIS.Extraction.Filters
                 for (int x = 0; x < result.Width; ++x)
                     if (contrast[y, x] < Limit)
                         result.SetBitOne(x, y);
-            Logger.Log(result);
             return result;
         }
     }

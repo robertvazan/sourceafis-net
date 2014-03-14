@@ -3,19 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 using SourceAFIS.Templates;
 
 namespace SourceAFIS.Extraction.Minutiae
 {
     public sealed class UniqueMinutiaSorter
     {
-        [Parameter(Lower = 25, Upper = 1000)]
-        public int MaxMinutiae = 100;
-        [Parameter(Upper = 20)]
-        public int NeighborhoodSize = 5;
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        const int MaxMinutiae = 100;
+        const int NeighborhoodSize = 5;
 
         public void Filter(FingerprintTemplate template)
         {
@@ -30,7 +25,6 @@ namespace SourceAFIS.Extraction.Minutiae
                      orderby radiusSq descending
                      select minutia).Take(MaxMinutiae).ToList();
             }
-            Logger.Log(template);
         }
     }
 }

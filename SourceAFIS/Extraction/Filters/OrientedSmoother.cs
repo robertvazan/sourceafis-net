@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class OrientedSmoother
     {
-        public byte AngleOffset;
-        [Nested]
-        public LinesByOrientation Lines = new LinesByOrientation();
+        readonly byte AngleOffset;
+        readonly LinesByOrientation Lines;
 
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        public OrientedSmoother(byte angle = 0, LinesByOrientation lines = null)
+        {
+            AngleOffset = angle;
+            Lines = lines ?? new LinesByOrientation();
+        }
 
         public float[,] Smooth(float[,] input, byte[,] orientation, BinaryMap mask, BlockMap blocks)
         {
@@ -40,7 +42,6 @@ namespace SourceAFIS.Extraction.Filters
                             output[y, x] *= 1f / line.Length;
                 }
             });
-            Logger.Log(output);
             return output;
         }
     }

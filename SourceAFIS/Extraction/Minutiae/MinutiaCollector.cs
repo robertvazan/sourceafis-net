@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 using SourceAFIS.Extraction.Model;
 using SourceAFIS.Templates;
 
@@ -10,14 +9,8 @@ namespace SourceAFIS.Extraction.Minutiae
 {
     public sealed class MinutiaCollector
     {
-        [DpiAdjusted(Min = 2)]
-        [Parameter(Lower = 3, Upper = 50)]
-        public int DirectionSegmentLength = 21;
-        [DpiAdjusted(Min = 0)]
-        [Parameter(Lower = 0, Upper = 20)]
-        public int DirectionSegmentSkip = 1;
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        const int DirectionSegmentLength = 21;
+        const int DirectionSegmentSkip = 1;
 
         byte ComputeDirection(SkeletonBuilder.Ridge ridge)
         {
@@ -49,7 +42,6 @@ namespace SourceAFIS.Extraction.Minutiae
                     template.Minutiae.Add(templateMinutia);
                 }
             }
-            Logger.Log(template);
         }
     }
 }

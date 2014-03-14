@@ -71,7 +71,6 @@
     <Compile Include="Extraction\Filters\ThresholdBinarizer.cs" />
     <Compile Include="Extraction\Filters\VotingFilter.cs" />
     <Compile Include="Extraction\Minutiae\MinutiaCloudRemover.cs" />
-    <Compile Include="Extraction\Minutiae\StandardDpiScaling.cs" />
     <Compile Include="Extraction\Minutiae\UniqueMinutiaSorter.cs" />
     <Compile Include="Extraction\Model\BranchMinutiaRemover.cs" />
     <Compile Include="Extraction\Model\DotRemover.cs" />
@@ -100,7 +99,6 @@
     <Compile Include="General\BlockMap.cs" />
     <Compile Include="General\Calc.cs" />
     <Compile Include="General\CircularArray.cs" />
-    <Compile Include="General\DetailLogger.cs" />
     <Compile Include="General\Neighborhood.cs" />
     <Compile Include="General\Point.cs" />
     <Compile Include="General\PointF.cs" />
@@ -125,15 +123,8 @@
     <Compile Include="Matching\Minutia\NeighborEdge.cs" />
     <Compile Include="Matching\Minutia\PairSelector.cs" />
     <Compile Include="Matching\ProbeIndex.cs" />
-    <Compile Include="Meta\DpiAdjustedAttribute.cs" />
-    <Compile Include="Meta\DpiAdjuster.cs" />
-    <Compile Include="Meta\ParameterAttribute.cs" />
-    <Compile Include="Meta\NestedAttribute.cs" />
-    <Compile Include="Meta\ObjectTree.cs" />
     <Compile Include="General\Range.cs" />
     <Compile Include="General\RangeF.cs" />
-    <Compile Include="Meta\ParameterSet.cs" />
-    <Compile Include="Meta\ParameterValue.cs" />
     <Compile Include="Simple\AfisEngine.cs" />
     <Compile Include="Matching\BestMatchSkipper.cs" />
     <Compile Include="Simple\Finger.cs" />

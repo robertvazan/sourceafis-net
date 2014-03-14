@@ -2,16 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Model
 {
     public sealed class KnotRemover : ISkeletonFilter
     {
-        [Nested]
         public DotRemover DotRemover = new DotRemover();
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
 
         public void Filter(SkeletonBuilder skeleton)
         {
@@ -37,7 +33,6 @@ namespace SourceAFIS.Extraction.Model
                 }
             }
             DotRemover.Filter(skeleton);
-            Logger.Log(skeleton);
         }
     }
 }

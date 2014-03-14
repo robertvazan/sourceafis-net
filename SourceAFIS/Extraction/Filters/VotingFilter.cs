@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class VotingFilter
     {
-        [Parameter(Upper = 10)]
-        public int Radius = 1;
-        [Parameter(Lower = 0.51)]
-        public float Majority = 0.51f;
-        [Parameter(Lower = 0, Upper = 20)]
-        public int BorderDistance = 0;
+        readonly int Radius;
+        readonly float Majority;
+        readonly int BorderDistance;
 
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        public VotingFilter(int radius = 1, float majority = 0.51f, int borderDist = 0)
+        {
+            Radius = radius;
+            Majority = majority;
+            BorderDistance = borderDist;
+        }
 
         public BinaryMap Filter(BinaryMap input)
         {
@@ -42,7 +43,6 @@ namespace SourceAFIS.Extraction.Filters
                         output.SetBitOne(x, y);
                 }
             });
-            Logger.Log(output);
             return output;
         }
     }

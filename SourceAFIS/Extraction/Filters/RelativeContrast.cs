@@ -2,21 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class RelativeContrast
     {
-        [DpiAdjusted]
-        [Parameter(Lower = 10 * 10, Upper = 2000 * 2000)]
-        public int SampleSize = 168568;
-        [Parameter]
-        public float SampleFraction = 0.49f;
-        [Parameter]
-        public float RelativeLimit = 0.34f;
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        const int SampleSize = 168568;
+        const float SampleFraction = 0.49f;
+        const float RelativeLimit = 0.34f;
 
         public BinaryMap DetectLowContrast(byte[,] contrast, BlockMap blocks)
         {
@@ -41,7 +34,6 @@ namespace SourceAFIS.Extraction.Filters
                 for (int x = 0; x < result.Width; ++x)
                     if (contrast[y, x] < limit)
                         result.SetBitOne(x, y);
-            Logger.Log(result);
             return result;
         }
     }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 using SourceAFIS.Extraction.Filters;
 using SourceAFIS.Extraction.Model;
 using SourceAFIS.Extraction.Minutiae;
@@ -13,122 +12,75 @@ namespace SourceAFIS.Extraction
 {
     public sealed class Extractor
     {
-        [DpiAdjusted]
-        [Parameter(Lower = 8, Upper = 32)]
-        public int BlockSize = 15;
+        const int BlockSize = 15;
 
-        public DpiAdjuster DpiAdjuster = new DpiAdjuster();
-        [Nested]
         public LocalHistogram Histogram = new LocalHistogram();
-        [Nested]
         public SegmentationMask Mask = new SegmentationMask();
-        [Nested]
         public Equalizer Equalizer = new Equalizer();
-        [Nested]
         public HillOrientation Orientation = new HillOrientation();
-        [Nested]
-        public OrientedSmoother RidgeSmoother = new OrientedSmoother();
-        [Nested]
-        public OrientedSmoother OrthogonalSmoother = new OrientedSmoother();
-        [Nested]
+        public OrientedSmoother RidgeSmoother = new OrientedSmoother(lines: new LinesByOrientation(step: 1.59f));
+        public OrientedSmoother OrthogonalSmoother = new OrientedSmoother(
+            angle: Angle.PIB, lines: new LinesByOrientation(resolution: 11, radius: 4, step: 1.11f));
         public ThresholdBinarizer Binarizer = new ThresholdBinarizer();
-        [Nested]
-        public VotingFilter BinarySmoother = new VotingFilter();
-        [Nested]
+        public VotingFilter BinarySmoother = new VotingFilter(radius: 2, majority: 0.61f, borderDist: 17);
         public Thinner Thinner = new Thinner();
-        [Nested]
         public CrossRemover CrossRemover = new CrossRemover();
-        [Nested]
         public RidgeTracer RidgeTracer = new RidgeTracer();
-        [Nested]
         public InnerMask InnerMask = new InnerMask();
-        [Nested]
         public MinutiaMask MinutiaMask = new MinutiaMask();
-        [Nested]
         public DotRemover DotRemover = new DotRemover();
-        [Nested]
         public PoreRemover PoreRemover = new PoreRemover();
-        [Nested]
         public GapRemover GapRemover = new GapRemover();
-        [Nested]
         public TailRemover TailRemover = new TailRemover();
-        [Nested]
         public FragmentRemover FragmentRemover = new FragmentRemover();
-        [Nested]
         public BranchMinutiaRemover BranchMinutiaRemover = new BranchMinutiaRemover();
-        [Nested]
         public MinutiaCollector MinutiaCollector = new MinutiaCollector();
-        [Nested]
         public MinutiaShuffler MinutiaSorter = new MinutiaShuffler();
-        [Nested]
-        public StandardDpiScaling StandardDpiScaling = new StandardDpiScaling();
-        [Nested]
         public MinutiaCloudRemover MinutiaCloudRemover = new MinutiaCloudRemover();
-        [Nested]
         public UniqueMinutiaSorter UniqueMinutiaSorter = new UniqueMinutiaSorter();
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
-
-        public Extractor()
-        {
-            RidgeSmoother.Lines.StepFactor = 1.59f;
-            OrthogonalSmoother.AngleOffset = Angle.PIB;
-            OrthogonalSmoother.Lines.Radius = 4;
-            OrthogonalSmoother.Lines.AngularResolution = 11;
-            OrthogonalSmoother.Lines.StepFactor = 1.11f;
-            BinarySmoother.Radius = 2;
-            BinarySmoother.Majority = 0.61f;
-            BinarySmoother.BorderDistance = 17;
-        }
 
         public FingerprintTemplate Extract(byte[,] invertedImage, int dpi)
         {
             FingerprintTemplate template = null;
-            DpiAdjuster.Adjust(this, dpi, delegate()
-            {
-                byte[,] image = ImageInverter.GetInverted(invertedImage);
+            byte[,] image = ImageInverter.GetInverted(invertedImage);
 
-                BlockMap blocks = new BlockMap(new Size(image.GetLength(1), image.GetLength(0)), BlockSize);
-                Logger.Log("BlockMap", blocks);
+            BlockMap blocks = new BlockMap(new Size(image.GetLength(1), image.GetLength(0)), BlockSize);
 
-                short[, ,] histogram = Histogram.Analyze(blocks, image);
-                short[, ,] smoothHistogram = Histogram.SmoothAroundCorners(blocks, histogram);
-                BinaryMap mask = Mask.ComputeMask(blocks, histogram);
-                float[,] equalized = Equalizer.Equalize(blocks, image, smoothHistogram, mask);
+            short[, ,] histogram = Histogram.Analyze(blocks, image);
+            short[, ,] smoothHistogram = Histogram.SmoothAroundCorners(blocks, histogram);
+            BinaryMap mask = Mask.ComputeMask(blocks, histogram);
+            float[,] equalized = Equalizer.Equalize(blocks, image, smoothHistogram, mask);
 
-                byte[,] orientation = Orientation.Detect(equalized, mask, blocks);
-                float[,] smoothed = RidgeSmoother.Smooth(equalized, orientation, mask, blocks);
-                float[,] orthogonal = OrthogonalSmoother.Smooth(smoothed, orientation, mask, blocks);
+            byte[,] orientation = Orientation.Detect(equalized, mask, blocks);
+            float[,] smoothed = RidgeSmoother.Smooth(equalized, orientation, mask, blocks);
+            float[,] orthogonal = OrthogonalSmoother.Smooth(smoothed, orientation, mask, blocks);
 
-                BinaryMap binary = Binarizer.Binarize(smoothed, orthogonal, mask, blocks);
-                binary.AndNot(BinarySmoother.Filter(binary.GetInverted()));
-                binary.Or(BinarySmoother.Filter(binary));
-                Logger.Log("BinarySmoothingResult", binary);
-                CrossRemover.Remove(binary);
+            BinaryMap binary = Binarizer.Binarize(smoothed, orthogonal, mask, blocks);
+            binary.AndNot(BinarySmoother.Filter(binary.GetInverted()));
+            binary.Or(BinarySmoother.Filter(binary));
+            CrossRemover.Remove(binary);
 
-                BinaryMap pixelMask = mask.FillBlocks(blocks);
-                BinaryMap innerMask = InnerMask.Compute(pixelMask);
+            BinaryMap pixelMask = mask.FillBlocks(blocks);
+            BinaryMap innerMask = InnerMask.Compute(pixelMask);
 
-                BinaryMap inverted = binary.GetInverted();
-                inverted.And(pixelMask);
+            BinaryMap inverted = binary.GetInverted();
+            inverted.And(pixelMask);
 
-                SkeletonBuilder ridges = null;
-                SkeletonBuilder valleys = null;
-                Parallel.Invoke(
-                    () => { ridges = ProcessSkeleton("Ridges", binary); },
-                    () => { valleys = ProcessSkeleton("Valleys", inverted); });
+            SkeletonBuilder ridges = null;
+            SkeletonBuilder valleys = null;
+            Parallel.Invoke(
+                () => { ridges = ProcessSkeleton("Ridges", binary); },
+                () => { valleys = ProcessSkeleton("Valleys", inverted); });
 
-                template = new FingerprintTemplate();
+            template = new FingerprintTemplate();
 
-                MinutiaCollector.Collect(ridges, MinutiaType.Ending, template);
-                MinutiaCollector.Collect(valleys, MinutiaType.Bifurcation, template);
-                MinutiaMask.Filter(template, innerMask);
-                StandardDpiScaling.Scale(template);
-                MinutiaCloudRemover.Filter(template);
-                UniqueMinutiaSorter.Filter(template);
-                MinutiaSorter.Shuffle(template);
-                Logger.Log("FinalTemplate", template);
-            });
+            MinutiaCollector.Collect(ridges, MinutiaType.Ending, template);
+            MinutiaCollector.Collect(valleys, MinutiaType.Bifurcation, template);
+            MinutiaMask.Filter(template, innerMask);
+            MinutiaCloudRemover.Filter(template);
+            UniqueMinutiaSorter.Filter(template);
+            MinutiaSorter.Shuffle(template);
+
             template.BuildEdgeTable();
             return template;
         }
@@ -136,19 +88,15 @@ namespace SourceAFIS.Extraction
         SkeletonBuilder ProcessSkeleton(string name, BinaryMap binary)
         {
             SkeletonBuilder skeleton = null;
-            DetailLogger.RunInContext(name, delegate()
-            {
-                Logger.Log("Binarized", binary);
-                BinaryMap thinned = Thinner.Thin(binary);
-                skeleton = new SkeletonBuilder();
-                RidgeTracer.Trace(thinned, skeleton);
-                DotRemover.Filter(skeleton);
-                PoreRemover.Filter(skeleton);
-                GapRemover.Filter(skeleton);
-                TailRemover.Filter(skeleton);
-                FragmentRemover.Filter(skeleton);
-                BranchMinutiaRemover.Filter(skeleton);
-            });
+            BinaryMap thinned = Thinner.Thin(binary);
+            skeleton = new SkeletonBuilder();
+            RidgeTracer.Trace(thinned, skeleton);
+            DotRemover.Filter(skeleton);
+            PoreRemover.Filter(skeleton);
+            GapRemover.Filter(skeleton);
+            TailRemover.Filter(skeleton);
+            FragmentRemover.Filter(skeleton);
+            BranchMinutiaRemover.Filter(skeleton);
             return skeleton;
         }
     }

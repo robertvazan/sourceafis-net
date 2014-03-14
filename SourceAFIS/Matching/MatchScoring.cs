@@ -1,29 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SourceAFIS.Meta;
 using SourceAFIS.General;
 
 namespace SourceAFIS.Matching
 {
     public sealed class MatchScoring
     {
-        [Parameter(Upper = 10, Precision = 3)]
-        public float PairCountFactor = 0.032f;
-        [Parameter(Upper = 100)]
-        public float PairFractionFactor = 8.98f;
-        [Parameter(Upper = 10, Precision = 3)]
-        public float CorrectTypeFactor = 0.629f;
-        [Parameter(Upper = 10, Precision = 3)]
-        public float SupportedCountFactor = 0.193f;
-        [Parameter(Upper = 10, Precision = 3)]
-        public float EdgeCountFactor = 0.265f;
-        [Parameter(Upper = 100)]
-        public float DistanceAccuracyFactor = 9.9f;
-        [Parameter(Upper = 100)]
-        public float AngleAccuracyFactor = 2.79f;
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        const float PairCountFactor = 0.032f;
+        const float PairFractionFactor = 8.98f;
+        const float CorrectTypeFactor = 0.629f;
+        const float SupportedCountFactor = 0.193f;
+        const float EdgeCountFactor = 0.265f;
+        const float DistanceAccuracyFactor = 9.9f;
+        const float AngleAccuracyFactor = 2.79f;
 
         public float Compute(MatchAnalysis analysis)
         {
@@ -42,9 +32,6 @@ namespace SourceAFIS.Matching
                 score += AngleAccuracyFactor * (maxAngleError - analysis.AngleErrorSum) / maxAngleError;
             }
             
-            if (Logger.IsActive)
-                Logger.Log(score);
-
             return score;
         }
     }

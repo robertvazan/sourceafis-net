@@ -2,36 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Model
 {
     public sealed class GapRemover : ISkeletonFilter
     {
-        [DpiAdjusted]
-        [Parameter(Lower = 0, Upper = 20)]
-        public int RuptureSize = 5;
-        [DpiAdjusted]
-        [Parameter(Lower = 0, Upper = 100)]
-        public int GapSize = 20;
-        [Parameter(Upper = Angle.B90)]
-        public byte GapAngle = 32;
-        [DpiAdjusted]
-        [Parameter(Lower = 3, Upper = 40)]
-        public int AngleSampleOffset = 22;
-        [DpiAdjusted]
-        [Parameter(Upper = 100)]
-        public int ToleratedOverlapLength = 2;
-        [DpiAdjusted]
-        [Parameter(Upper = 20)]
-        public int MinEndingLength = 7;
+        const int RuptureSize = 5;
+        const int GapSize = 20;
+        const byte GapAngle = 32;
+        const int AngleSampleOffset = 22;
+        const int ToleratedOverlapLength = 2;
+        const int MinEndingLength = 7;
 
-        [Nested]
         public KnotRemover KnotRemover = new KnotRemover();
-        [Nested]
         public SkeletonShadow SkeletonShadow = new SkeletonShadow();
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
 
         struct Gap
         {
@@ -67,7 +51,6 @@ namespace SourceAFIS.Extraction.Model
             }
 
             KnotRemover.Filter(skeleton);
-            Logger.Log(skeleton);
         }
 
         bool IsWithinLimits(SkeletonBuilder.Minutia end1, SkeletonBuilder.Minutia end2)

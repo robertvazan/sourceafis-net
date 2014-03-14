@@ -13,8 +13,6 @@ namespace SourceAFIS.Matching.Minutia
         PairInfo[] PairList;
         int PairCount;
 
-        public DetailLogger.Hook Logger = DetailLogger.Null;
-
         public int Count { get { return PairCount; } }
         public PairInfo LastAdded { get { return PairList[PairCount - 1]; } }
 
@@ -88,8 +86,6 @@ namespace SourceAFIS.Matching.Minutia
         {
             ++ProbeIndex[probe].SupportingEdges;
         }
-
-        public void Log() { Logger.Log(this); }
 
         public object Clone()
         {

@@ -2,17 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class InnerMask
     {
-        [DpiAdjusted]
-        [Parameter(Lower = 0, Upper = 50)]
-        public int MinBorderDistance = 14;
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        const int MinBorderDistance = 14;
 
         void ShrinkBy(BinaryMap temporary, BinaryMap inner, int amount)
         {
@@ -39,7 +34,6 @@ namespace SourceAFIS.Extraction.Filters
             }
             if (total < MinBorderDistance)
                 ShrinkBy(temporary, inner, MinBorderDistance - total);
-            Logger.Log(inner);
             return inner;
         }
     }
