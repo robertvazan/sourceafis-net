@@ -69,10 +69,6 @@
     <Compile Include="Simple\PersonTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SourceAFIS.Tuning\SourceAFIS.Tuning.csproj">
-      <Project>{7DD4AD3F-2836-4187-A6E7-D271F13F943E}</Project>
-      <Name>SourceAFIS.Tuning</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SourceAFIS\SourceAFIS.csproj">
       <Project>{35075900-98B2-4F73-A8FE-11E0D2182689}</Project>
       <Name>SourceAFIS</Name>
