@@ -7,10 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseAnalyzer", "Databas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocProject", "DocProject\DocProject.csproj", "{2B389531-B0AD-42DC-A778-C4718FC01C5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FvcEnroll", "FvcEnroll\FvcEnroll.csproj", "{8F668190-5EC7-48D6-AE8A-A2E2CAD9F90F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FvcMatch", "FvcMatch\FvcMatch.csproj", "{0511BCD4-F880-4326-B9A6-3C69B21DC32C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AfisBuilder", "AfisBuilder\AfisBuilder.csproj", "{E00C20B7-B464-4F34-9A84-2DA29E6DCD3F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Tuning", "SourceAFIS.Tuning\SourceAFIS.Tuning.csproj", "{7DD4AD3F-2836-4187-A6E7-D271F13F943E}"
@@ -23,8 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csp
 	ProjectSection(ProjectDependencies) = postProject
 		{35075900-98B2-4F73-A8FE-11E0D2182689} = {35075900-98B2-4F73-A8FE-11E0D2182689}
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FvcIso", "FvcIso\FvcIso.csproj", "{2D8B9587-2100-40C6-983F-407DCAAD6F89}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.FingerprintAnalysis", "SourceAFIS.FingerprintAnalysis\SourceAFIS.FingerprintAnalysis.csproj", "{937C3C43-81EA-4757-8356-6C46C64C9F0B}"
 EndProject
@@ -46,14 +40,6 @@ Global
 		{55566F34-65E7-49D0-BA8C-FAD2B161BF5F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2B389531-B0AD-42DC-A778-C4718FC01C5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2B389531-B0AD-42DC-A778-C4718FC01C5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F668190-5EC7-48D6-AE8A-A2E2CAD9F90F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F668190-5EC7-48D6-AE8A-A2E2CAD9F90F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F668190-5EC7-48D6-AE8A-A2E2CAD9F90F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F668190-5EC7-48D6-AE8A-A2E2CAD9F90F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0511BCD4-F880-4326-B9A6-3C69B21DC32C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0511BCD4-F880-4326-B9A6-3C69B21DC32C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0511BCD4-F880-4326-B9A6-3C69B21DC32C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0511BCD4-F880-4326-B9A6-3C69B21DC32C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E00C20B7-B464-4F34-9A84-2DA29E6DCD3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E00C20B7-B464-4F34-9A84-2DA29E6DCD3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E00C20B7-B464-4F34-9A84-2DA29E6DCD3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -74,10 +60,6 @@ Global
 		{C3F07164-A44C-488E-8FEE-258CC7151A6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3F07164-A44C-488E-8FEE-258CC7151A6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3F07164-A44C-488E-8FEE-258CC7151A6B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D8B9587-2100-40C6-983F-407DCAAD6F89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D8B9587-2100-40C6-983F-407DCAAD6F89}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D8B9587-2100-40C6-983F-407DCAAD6F89}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D8B9587-2100-40C6-983F-407DCAAD6F89}.Release|Any CPU.Build.0 = Release|Any CPU
 		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
