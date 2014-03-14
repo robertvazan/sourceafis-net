@@ -39,9 +39,8 @@ namespace SourceAFIS.Extraction
         public MinutiaCloudRemover MinutiaCloudRemover = new MinutiaCloudRemover();
         public UniqueMinutiaSorter UniqueMinutiaSorter = new UniqueMinutiaSorter();
 
-        public FingerprintTemplate Extract(byte[,] invertedImage, int dpi)
+        public void Extract(byte[,] invertedImage, FingerprintTemplate template)
         {
-            FingerprintTemplate template = null;
             byte[,] image = ImageInverter.GetInverted(invertedImage);
 
             BlockMap blocks = new BlockMap(new Size(image.GetLength(1), image.GetLength(0)), BlockSize);
@@ -69,17 +68,12 @@ namespace SourceAFIS.Extraction
             SkeletonBuilder ridges = ProcessSkeleton("Ridges", binary);
             SkeletonBuilder valleys = ProcessSkeleton("Valleys", inverted);
 
-            template = new FingerprintTemplate();
-
             MinutiaCollector.Collect(ridges, MinutiaType.Ending, template);
             MinutiaCollector.Collect(valleys, MinutiaType.Bifurcation, template);
             MinutiaMask.Filter(template, innerMask);
             MinutiaCloudRemover.Filter(template);
             UniqueMinutiaSorter.Filter(template);
             MinutiaSorter.Shuffle(template);
-
-            template.BuildEdgeTable();
-            return template;
         }
 
         SkeletonBuilder ProcessSkeleton(string name, BinaryMap binary)
