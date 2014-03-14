@@ -8,7 +8,7 @@ namespace SourceAFIS.Matching.Minutia
 {
     public sealed class EdgeConstructor
     {
-        public EdgeShape Construct(Template template, int reference, int neighbor)
+        public static EdgeShape Construct(FingerprintTemplate template, int reference, int neighbor)
         {
             PolarPoint polar = Angle.ToPolar(Calc.Difference(template.Minutiae[neighbor].Position, template.Minutiae[reference].Position));
             EdgeShape edge;

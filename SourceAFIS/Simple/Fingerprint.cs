@@ -33,7 +33,7 @@ namespace SourceAFIS.Simple
     /// </remarks>
     /// <seealso cref="Person"/>
     [Serializable]
-    public class Fingerprint : ICloneable
+    public class Fingerprint
     {
         /// <summary>
         /// Creates empty <see cref="Fingerprint"/> object.
@@ -199,11 +199,6 @@ namespace SourceAFIS.Simple
             set { Image = value != null ? GdiIO.GetPixels(value) : null; }
         }
 
-        static readonly CompactFormat CompactFormat = new CompactFormat();
-        static readonly SerializedFormat SerializedFormat = new SerializedFormat();
-        static readonly IsoFormat IsoFormat = new IsoFormat();
-        static readonly XmlFormat XmlFormat = new XmlFormat();
-
         /// <summary>
         /// Fingerprint template.
         /// </summary>
@@ -227,70 +222,10 @@ namespace SourceAFIS.Simple
         /// </remarks>
         /// <seealso cref="Image"/>
         /// <seealso cref="AfisEngine.Extract"/>
-        /// <seealso cref="AsIsoTemplate"/>
-        /// <seealso cref="AsXmlTemplate"/>
-        public byte[] Template
+        public XElement Template
         {
-            get { return Decoded != null ? CompactFormat.Export(SerializedFormat.Import(Decoded)) : null; }
-            set { Decoded = value != null ? SerializedFormat.Export(CompactFormat.Import(value)) : null; }
-        }
-
-        /// <summary>
-        /// Fingerprint template in standard ISO format.
-        /// </summary>
-        /// <value>
-        /// Value of <see cref="Template"/> converted to standard ISO/IEC 19794-2 (2005) format.
-        /// This property is <see langword="null"/> if <see cref="Template"/> is <see langword="null"/>.
-        /// </value>
-        /// <remarks>
-        /// <para>
-        /// Use this property for two-way exchange of fingerprint templates with other biometric
-        /// systems. For general use in SourceAFIS, use <see cref="Template"/> property which
-        /// contains native template that is fine-tuned for best accuracy and performance in SourceAFIS.
-        /// </para>
-        /// <para>
-        /// SourceAFIS contains partial implementation of ISO/IEC 19794-2 (2005) standard.
-        /// Multi-fingerprint ISO templates must be split into individual fingerprints before
-        /// they are used in SourceAFIS. Value of <see cref="Fingerprint.Finger"/> property is not
-        /// automatically stored in the ISO template. It must be decoded separately.
-        /// </para>
-        /// </remarks>
-        /// <seealso cref="Template"/>
-        /// <seealso cref="AsXmlTemplate"/>
-        /// <seealso cref="AfisEngine.Extract"/>
-        [XmlIgnore]
-        public byte[] AsIsoTemplate
-        {
-            get { return Decoded != null ? IsoFormat.Export(SerializedFormat.Import(Decoded)) : null; }
-            set { Decoded = value != null ? SerializedFormat.Export(IsoFormat.Import(value)) : null; }
-        }
-
-        /// <summary>
-        /// Fingerprint template in readable XML format.
-        /// </summary>
-        /// <value>
-        /// Value of <see cref="Template"/> converted to SourceAFIS XML template format.
-        /// This property is <see langword="null"/> if <see cref="Template"/> is <see langword="null"/>.
-        /// </value>
-        /// <remarks>
-        /// <para>
-        /// Use XML template format where clean data format is more important than compact and fast encoding.
-        /// XML templates are suitable for XML-based data exchange, encoding of multiple fingerprints along
-        /// with accompanying data into single XML file, and for debugging and logging purposes.
-        /// </para>
-        /// <para>
-        /// Value of <see cref="Fingerprint.Finger"/> property is not automatically stored in the XML template.
-        /// It must be decoded separately.
-        /// </para>
-        /// </remarks>
-        /// <seealso cref="Template"/>
-        /// <seealso cref="AsIsoTemplate"/>
-        /// <seealso cref="AfisEngine.Extract"/>
-        [XmlIgnore]
-        public XElement AsXmlTemplate
-        {
-            get { return Decoded != null ? XmlFormat.Export(SerializedFormat.Import(Decoded)) : null; }
-            set { Decoded = value != null ? SerializedFormat.Export(XmlFormat.Import(value)) : null; }
+            get { return Decoded != null ? Decoded.ToXml() : null; }
+            set { Decoded = value != null ? new FingerprintTemplate(value) : null; }
         }
 
         Finger FingerPosition;
@@ -320,21 +255,6 @@ namespace SourceAFIS.Simple
             }
         }
 
-        internal Template Decoded;
-
-        /// <summary>
-        /// Create deep copy of the <see cref="Fingerprint"/>.
-        /// </summary>
-        /// <returns>Deep copy of this <see cref="Fingerprint"/>.</returns>
-        public Fingerprint Clone()
-        {
-            Fingerprint clone = new Fingerprint();
-            clone.Image = Image != null ? (byte[,])Image.Clone() : null;
-            clone.Decoded = Decoded != null ? Decoded.Clone() : null;
-            clone.Finger = Finger;
-            return clone;
-        }
-
-        object ICloneable.Clone() { return Clone(); }
+        internal FingerprintTemplate Decoded;
     }
 }

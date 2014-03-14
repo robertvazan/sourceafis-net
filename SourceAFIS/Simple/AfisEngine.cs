@@ -194,10 +194,7 @@ namespace SourceAFIS.Simple
             lock (this)
             {
                 foreach (Fingerprint fp in person.Fingerprints)
-                {
-                    TemplateBuilder builder = Extractor.Extract(fp.Image, Dpi);
-                    fp.Decoded = new SerializedFormat().Export(builder);
-                }
+                    fp.Decoded = Extractor.Extract(fp.Image, Dpi);
             }
         }
 
@@ -287,7 +284,7 @@ namespace SourceAFIS.Simple
                 Parallel.ForEach(probe.Fingerprints, probeFp =>
                     {
                         List<int> personsByFingerprint = new List<int>();
-                        List<Template> candidateTemplates = FlattenHierarchy(candidateArray, probeFp.Finger, out personsByFingerprint);
+                        List<FingerprintTemplate> candidateTemplates = FlattenHierarchy(candidateArray, probeFp.Finger, out personsByFingerprint);
 
                         ParallelMatcher.PreparedProbe probeIndex = Matcher.Prepare(probeFp.Decoded);
                         float[] scores = Matcher.Match(probeIndex, candidateTemplates);
@@ -313,9 +310,9 @@ namespace SourceAFIS.Simple
             return first == second || first == Finger.Any || second == Finger.Any;
         }
 
-        List<Template> FlattenHierarchy(Person[] persons, Finger finger, out List<int> personIndexes)
+        List<FingerprintTemplate> FlattenHierarchy(Person[] persons, Finger finger, out List<int> personIndexes)
         {
-            List<Template> templates = new List<Template>();
+            List<FingerprintTemplate> templates = new List<FingerprintTemplate>();
             personIndexes = new List<int>();
             for (int personIndex = 0; personIndex < persons.Length; ++personIndex)
             {

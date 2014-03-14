@@ -18,19 +18,19 @@ namespace SourceAFIS.Matching.Minutia
         public int Count { get { return PairCount; } }
         public PairInfo LastAdded { get { return PairList[PairCount - 1]; } }
 
-        public void SelectProbe(Template probe)
+        public void SelectProbe(FingerprintTemplate probe)
         {
-            ProbeIndex = new PairInfo[probe.Minutiae.Length];
-            PairList = new PairInfo[probe.Minutiae.Length];
+            ProbeIndex = new PairInfo[probe.Minutiae.Count];
+            PairList = new PairInfo[probe.Minutiae.Count];
             for (int i = 0; i < PairList.Length; ++i)
                 PairList[i] = new PairInfo();
             PairCount = 0;
         }
 
-        public void SelectCandidate(Template candidate)
+        public void SelectCandidate(FingerprintTemplate candidate)
         {
-            if (CandidateIndex == null || CandidateIndex.Length < candidate.Minutiae.Length)
-                CandidateIndex = new PairInfo[candidate.Minutiae.Length];
+            if (CandidateIndex == null || CandidateIndex.Length < candidate.Minutiae.Count)
+                CandidateIndex = new PairInfo[candidate.Minutiae.Count];
             else
             {
                 for (int i = 0; i < CandidateIndex.Length; ++i)

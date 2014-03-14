@@ -17,7 +17,7 @@ namespace SourceAFIS.Extraction.Minutiae
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
-        public void Filter(TemplateBuilder template)
+        public void Filter(FingerprintTemplate template)
         {
             var radiusSq = Calc.Sq(NeighborhoodRadius);
             template.Minutiae = template.Minutiae.Except(

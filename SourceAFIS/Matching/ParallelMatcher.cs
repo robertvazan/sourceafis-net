@@ -45,7 +45,7 @@ namespace SourceAFIS.Matching
                 Matchers.Enqueue(matcher);
         }
 
-        public PreparedProbe Prepare(Template probe)
+        public PreparedProbe Prepare(FingerprintTemplate probe)
         {
             PreparedProbe prepared = new PreparedProbe();
             MinutiaMatcher matcher = DequeueMatcher();
@@ -60,7 +60,7 @@ namespace SourceAFIS.Matching
             return prepared;
         }
 
-        public float[] Match(PreparedProbe probe, IList<Template> candidates)
+        public float[] Match(PreparedProbe probe, IList<FingerprintTemplate> candidates)
         {
             float[] scores = new float[candidates.Count];
             

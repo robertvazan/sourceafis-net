@@ -29,7 +29,7 @@ namespace SourceAFIS.Simple
     /// </remarks>
     /// <seealso cref="Fingerprint"/>
     [Serializable]
-    public class Person : ICloneable
+    public class Person
     {
         /// <summary>
         /// Application-assigned ID for the <see cref="Person"/>.
@@ -85,25 +85,6 @@ namespace SourceAFIS.Simple
         {
             Fingerprints = fingerprints.ToList();
         }
-
-        /// <summary>
-        /// Create deep copy of the <see cref="Person"/>.
-        /// </summary>
-        /// <returns>Deep copy of the <see cref="Person"/>.</returns>
-        /// <remarks>
-        /// This method also clones all <see cref="Fingerprint"/> objects contained
-        /// in this <see cref="Person"/>.
-        /// </remarks>
-        public Person Clone()
-        {
-            Person clone = new Person();
-            clone.Id = Id;
-            foreach (Fingerprint fp in Fingerprints)
-                clone.Fingerprints.Add(fp.Clone());
-            return clone;
-        }
-
-        object ICloneable.Clone() { return Clone(); }
 
         internal void CheckForNulls()
         {

@@ -8,8 +8,7 @@ namespace SourceAFIS.Matching
 {
     public sealed class ProbeIndex
     {
-        public Template Template;
-        public EdgeTable Edges;
+        public FingerprintTemplate Template;
         public EdgeHash EdgeHash;
     }
 }

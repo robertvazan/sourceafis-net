@@ -36,13 +36,13 @@ namespace SourceAFIS.Extraction.Minutiae
             return Angle.AtanB(ridge.Points[first], ridge.Points[last]);
         }
 
-        public void Collect(SkeletonBuilder skeleton, TemplateBuilder.MinutiaType type, TemplateBuilder template)
+        public void Collect(SkeletonBuilder skeleton, MinutiaType type, FingerprintTemplate template)
         {
             foreach (SkeletonBuilder.Minutia skeletonMinutia in skeleton.Minutiae)
             {
                 if (skeletonMinutia.Valid && skeletonMinutia.Ridges.Count == 1)
                 {
-                    TemplateBuilder.Minutia templateMinutia = new TemplateBuilder.Minutia();
+                    Minutia templateMinutia = new Minutia();
                     templateMinutia.Type = type;
                     templateMinutia.Position = skeletonMinutia.Position;
                     templateMinutia.Direction = ComputeDirection(skeletonMinutia.Ridges[0]);

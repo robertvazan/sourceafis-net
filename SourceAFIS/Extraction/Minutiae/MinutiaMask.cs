@@ -16,7 +16,7 @@ namespace SourceAFIS.Extraction.Minutiae
 
         public DetailLogger.Hook Logger = DetailLogger.Null;
 
-        public void Filter(TemplateBuilder template, BinaryMap mask)
+        public void Filter(FingerprintTemplate template, BinaryMap mask)
         {
             template.Minutiae.RemoveAll(minutia =>
             {

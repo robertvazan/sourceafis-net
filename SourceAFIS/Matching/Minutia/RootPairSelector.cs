@@ -20,7 +20,7 @@ namespace SourceAFIS.Matching.Minutia
         HashLookup HashLookup = new HashLookup();
         int LookupCounter;
 
-        public IEnumerable<MinutiaPair> GetRoots(ProbeIndex probeIndex, Template candidateTemplate)
+        public IEnumerable<MinutiaPair> GetRoots(ProbeIndex probeIndex, FingerprintTemplate candidateTemplate)
         {
             LookupCounter = 0;
             HashLookup.Reset(probeIndex.EdgeHash);
@@ -28,17 +28,16 @@ namespace SourceAFIS.Matching.Minutia
                 .Concat(GetFilteredRoots(probeIndex, candidateTemplate, shape => shape.Length < MinEdgeLength));
         }
 
-        public IEnumerable<MinutiaPair> GetFilteredRoots(ProbeIndex probeIndex, Template candidateTemplate, Predicate<EdgeShape> shapeFilter)
+        public IEnumerable<MinutiaPair> GetFilteredRoots(ProbeIndex probeIndex, FingerprintTemplate candidateTemplate, Predicate<EdgeShape> shapeFilter)
         {
             if (LookupCounter >= MaxEdgeLookups)
                 yield break;
-            var edgeConstructor = new EdgeConstructor();
-            for (int step = 1; step < candidateTemplate.Minutiae.Length; ++step)
+            for (int step = 1; step < candidateTemplate.Minutiae.Count; ++step)
                 for (int pass = 0; pass < step + 1; ++pass)
-                    for (int candidateReference = pass; candidateReference < candidateTemplate.Minutiae.Length; candidateReference += step + 1)
+                    for (int candidateReference = pass; candidateReference < candidateTemplate.Minutiae.Count; candidateReference += step + 1)
                     {
-                        int candidateNeighbor = (candidateReference + step) % candidateTemplate.Minutiae.Length;
-                        var candidateEdge = edgeConstructor.Construct(candidateTemplate, candidateReference, candidateNeighbor);
+                        int candidateNeighbor = (candidateReference + step) % candidateTemplate.Minutiae.Count;
+                        var candidateEdge = EdgeConstructor.Construct(candidateTemplate, candidateReference, candidateNeighbor);
                         if (shapeFilter(candidateEdge))
                         {
                             for (var match = HashLookup.Select(candidateEdge); match != null; match = HashLookup.Next())
