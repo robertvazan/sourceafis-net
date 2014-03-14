@@ -27,10 +27,5 @@ namespace SourceAFIS.General
         {
             return new PointF(factor * point.X, factor * point.Y);
         }
-
-        public static implicit operator System.Windows.Point(PointF point)
-        {
-            return new System.Windows.Point(point.X, point.Y);
-        }
     }
 }
