@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
 using SourceAFIS.Extraction.Model;
-using SourceAFIS.Templates;
 
 namespace SourceAFIS.Extraction.Minutiae
 {
@@ -29,13 +28,13 @@ namespace SourceAFIS.Extraction.Minutiae
             return Angle.AtanB(ridge.Points[first], ridge.Points[last]);
         }
 
-        public void Collect(SkeletonBuilder skeleton, MinutiaType type, FingerprintTemplate template)
+        public void Collect(SkeletonBuilder skeleton, FingerprintMinutiaType type, FingerprintTemplate template)
         {
             foreach (SkeletonBuilder.Minutia skeletonMinutia in skeleton.Minutiae)
             {
                 if (skeletonMinutia.Valid && skeletonMinutia.Ridges.Count == 1)
                 {
-                    Minutia templateMinutia = new Minutia();
+                    FingerprintMinutia templateMinutia = new FingerprintMinutia();
                     templateMinutia.Type = type;
                     templateMinutia.Position = skeletonMinutia.Position;
                     templateMinutia.Direction = ComputeDirection(skeletonMinutia.Ridges[0]);

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using SourceAFIS.General;
 
-namespace SourceAFIS.Templates
+namespace SourceAFIS
 {
-    public class Minutia
+    public class FingerprintMinutia
     {
         public Point Position;
         public byte Direction;
-        public MinutiaType Type;
+        public FingerprintMinutiaType Type;
     }
 }

@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Templates;
+using SourceAFIS.Matching.Minutia;
+using SourceAFIS.Matching;
 
-namespace SourceAFIS.Matching.Minutia
+namespace SourceAFIS
 {
     public sealed class FingerprintMatcher
     {
@@ -19,7 +20,7 @@ namespace SourceAFIS.Matching.Minutia
         const int MaxTriedRoots = 70;
         const int MaxTriedTriangles = 7538;
 
-        ProbeIndex Probe;
+        ProbeIndex Probe = new ProbeIndex();
         FingerprintTemplate Candidate;
 
         public FingerprintMatcher(FingerprintTemplate template)
