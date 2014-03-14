@@ -21,7 +21,7 @@ namespace SourceAFIS.Extraction.Filters
         {
             Point[][] lines = Lines.Construct();
             float[,] output = new float[input.GetLength(0), input.GetLength(1)];
-            Parallel.ForEach(blocks.AllBlocks, delegate(Point block)
+            foreach (var block in blocks.AllBlocks)
             {
                 if (mask.GetBit(block))
                 {
@@ -41,7 +41,7 @@ namespace SourceAFIS.Extraction.Filters
                         for (int x = blockArea.Left; x < blockArea.Right; ++x)
                             output[y, x] *= 1f / line.Length;
                 }
-            });
+            }
             return output;
         }
     }

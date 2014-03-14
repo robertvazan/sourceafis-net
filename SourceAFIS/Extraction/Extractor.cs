@@ -66,11 +66,8 @@ namespace SourceAFIS.Extraction
             BinaryMap inverted = binary.GetInverted();
             inverted.And(pixelMask);
 
-            SkeletonBuilder ridges = null;
-            SkeletonBuilder valleys = null;
-            Parallel.Invoke(
-                () => { ridges = ProcessSkeleton("Ridges", binary); },
-                () => { valleys = ProcessSkeleton("Valleys", inverted); });
+            SkeletonBuilder ridges = ProcessSkeleton("Ridges", binary);
+            SkeletonBuilder valleys = ProcessSkeleton("Valleys", inverted);
 
             template = new FingerprintTemplate();
 

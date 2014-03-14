@@ -83,7 +83,7 @@ namespace SourceAFIS.Extraction.Filters
                     border.AndNot(skeleton);
 
                     for (int odd = 0; odd < 2; ++odd)
-                        Parallel.For(1, input.Height - 1, delegate(int y)
+                        for (int y = 1; y < input.Height - 1; ++y)
                         {
                             if (y % 2 == odd)
                                 for (int xw = 0; xw < input.WordWidth; ++xw)
@@ -101,7 +101,7 @@ namespace SourceAFIS.Extraction.Filters
                                                 else
                                                     skeleton.SetBitOne(x, y);
                                             }
-                        });
+                        }
                 }
             }
 

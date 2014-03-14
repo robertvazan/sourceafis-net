@@ -13,7 +13,7 @@ namespace SourceAFIS.Extraction.Filters
         public byte[,] Compute(BlockMap blocks, short[, ,] histogram)
         {
             byte[,] result = new byte[blocks.BlockCount.Height, blocks.BlockCount.Width];
-            Parallel.ForEach(blocks.AllBlocks, delegate(Point block)
+            foreach (var block in blocks.AllBlocks)
             {
                 int area = 0;
                 for (int i = 0; i < 256; ++i)
@@ -45,7 +45,7 @@ namespace SourceAFIS.Extraction.Filters
                 }
 
                 result[block.Y, block.X] = (byte)(upperBound - lowerBound);
-            });
+            }
             return result;
         }
     }

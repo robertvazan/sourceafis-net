@@ -11,7 +11,7 @@ namespace SourceAFIS.Extraction.Filters
         public BinaryMap Binarize(float[,] input, float[,] baseline, BinaryMap mask, BlockMap blocks)
         {
             BinaryMap binarized = new BinaryMap(input.GetLength(1), input.GetLength(0));
-            Parallel.For(0, blocks.AllBlocks.Height, delegate(int blockY)
+            for (int blockY = 0; blockY < blocks.AllBlocks.Height; ++blockY)
             {
                 for (int blockX = 0; blockX < blocks.AllBlocks.Width; ++blockX)
                 {
@@ -24,7 +24,7 @@ namespace SourceAFIS.Extraction.Filters
                                     binarized.SetBitOne(x, y);
                     }
                 }
-            });
+            }
             return binarized;
         }
     }
