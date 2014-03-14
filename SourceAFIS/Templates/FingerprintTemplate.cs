@@ -5,6 +5,7 @@ using System.Linq;
 using SourceAFIS.General;
 using System.Xml.Linq;
 using SourceAFIS.Matching.Minutia;
+using SourceAFIS.Extraction;
 
 namespace SourceAFIS.Templates
 {
@@ -17,6 +18,12 @@ namespace SourceAFIS.Templates
         internal NeighborEdge[][] EdgeTable;
 
         public FingerprintTemplate() { }
+
+        public FingerprintTemplate(byte[,] image)
+        {
+            new Extractor().Extract(image, this);
+            BuildEdgeTable();
+        }
 
         public FingerprintTemplate(XElement xml)
         {
@@ -48,7 +55,7 @@ namespace SourceAFIS.Templates
 
         public override string ToString() { return ToXml().ToString(); }
 
-        internal void BuildEdgeTable()
+        void BuildEdgeTable()
         {
             EdgeTable = new NeighborEdge[Minutiae.Count][];
             var edges = new List<NeighborEdge>();

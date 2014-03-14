@@ -6,7 +6,7 @@ using SourceAFIS.Templates;
 
 namespace SourceAFIS.Matching.Minutia
 {
-    public sealed class MinutiaMatcher
+    public sealed class FingerprintMatcher
     {
         public RootPairSelector RootSelector = new RootPairSelector();
         public MinutiaPairing Pairing = new MinutiaPairing();
@@ -22,16 +22,11 @@ namespace SourceAFIS.Matching.Minutia
         ProbeIndex Probe;
         FingerprintTemplate Candidate;
 
-        public void BuildIndex(FingerprintTemplate probe, ProbeIndex index)
+        public FingerprintMatcher(FingerprintTemplate template)
         {
-            index.Template = probe;
-            index.EdgeHash = new EdgeHash(probe, EdgeLookup);
-        }
-
-        public void SelectProbe(ProbeIndex probe)
-        {
-            Probe = probe;
-            Pairing.SelectProbe(probe.Template);
+            Probe.Template = template;
+            Probe.EdgeHash = new EdgeHash(template, EdgeLookup);
+            Pairing.SelectProbe(Probe.Template);
         }
 
         public float Match(FingerprintTemplate candidate)

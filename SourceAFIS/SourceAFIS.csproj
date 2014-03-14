@@ -110,13 +110,12 @@
     <Compile Include="General\SizeF.cs" />
     <Compile Include="Matching\Minutia\EdgeHash.cs" />
     <Compile Include="Matching\Minutia\EdgeLocation.cs" />
-    <Compile Include="Matching\ParallelMatcher.cs" />
     <Compile Include="Matching\Minutia\EdgeConstructor.cs" />
     <Compile Include="Matching\Minutia\EdgeShape.cs" />
     <Compile Include="Matching\Minutia\EdgeLookup.cs" />
     <Compile Include="Matching\Minutia\RootPairSelector.cs" />
     <Compile Include="Matching\MatchAnalysis.cs" />
-    <Compile Include="Matching\Minutia\MinutiaMatcher.cs" />
+    <Compile Include="Matching\Minutia\FingerprintMatcher.cs" />
     <Compile Include="Matching\MatchScoring.cs" />
     <Compile Include="Matching\Minutia\MinutiaPair.cs" />
     <Compile Include="Matching\Minutia\MinutiaPairing.cs" />
@@ -125,11 +124,7 @@
     <Compile Include="Matching\ProbeIndex.cs" />
     <Compile Include="General\Range.cs" />
     <Compile Include="General\RangeF.cs" />
-    <Compile Include="Simple\AfisEngine.cs" />
     <Compile Include="Matching\BestMatchSkipper.cs" />
-    <Compile Include="Simple\Finger.cs" />
-    <Compile Include="Simple\Fingerprint.cs" />
-    <Compile Include="Simple\Person.cs" />
     <Compile Include="General\RectangleC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
