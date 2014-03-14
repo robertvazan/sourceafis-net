@@ -3,16 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS", "SourceAFIS\SourceAFIS.csproj", "{35075900-98B2-4F73-A8FE-11E0D2182689}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Visualization", "SourceAFIS.Visualization\SourceAFIS.Visualization.csproj", "{5570647C-1F35-4FE7-9E9B-FF193154DD95}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Tests", "SourceAFIS.Tests\SourceAFIS.Tests.csproj", "{21B0CCCA-0239-4C01-BC3D-FF34EE0E3EDB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{C3F07164-A44C-488E-8FEE-258CC7151A6B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{35075900-98B2-4F73-A8FE-11E0D2182689} = {35075900-98B2-4F73-A8FE-11E0D2182689}
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.FingerprintAnalysis", "SourceAFIS.FingerprintAnalysis\SourceAFIS.FingerprintAnalysis.csproj", "{937C3C43-81EA-4757-8356-6C46C64C9F0B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Tests.Runner", "SourceAFIS.Tests.Runner\SourceAFIS.Tests.Runner.csproj", "{89794D67-BD90-4608-BBFA-189411D0368B}"
 EndProject
@@ -26,10 +22,6 @@ Global
 		{35075900-98B2-4F73-A8FE-11E0D2182689}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35075900-98B2-4F73-A8FE-11E0D2182689}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35075900-98B2-4F73-A8FE-11E0D2182689}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5570647C-1F35-4FE7-9E9B-FF193154DD95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5570647C-1F35-4FE7-9E9B-FF193154DD95}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5570647C-1F35-4FE7-9E9B-FF193154DD95}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5570647C-1F35-4FE7-9E9B-FF193154DD95}.Release|Any CPU.Build.0 = Release|Any CPU
 		{21B0CCCA-0239-4C01-BC3D-FF34EE0E3EDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{21B0CCCA-0239-4C01-BC3D-FF34EE0E3EDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21B0CCCA-0239-4C01-BC3D-FF34EE0E3EDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -38,10 +30,6 @@ Global
 		{C3F07164-A44C-488E-8FEE-258CC7151A6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3F07164-A44C-488E-8FEE-258CC7151A6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3F07164-A44C-488E-8FEE-258CC7151A6B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{937C3C43-81EA-4757-8356-6C46C64C9F0B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{89794D67-BD90-4608-BBFA-189411D0368B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{89794D67-BD90-4608-BBFA-189411D0368B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89794D67-BD90-4608-BBFA-189411D0368B}.Release|Any CPU.ActiveCfg = Release|Any CPU
