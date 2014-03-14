@@ -6,9 +6,9 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Filters
 {
-    public sealed class ThresholdBinarizer
+    public static class ThresholdBinarizer
     {
-        public BinaryMap Binarize(float[,] input, float[,] baseline, BinaryMap mask, BlockMap blocks)
+        public static BinaryMap Binarize(float[,] input, float[,] baseline, BinaryMap mask, BlockMap blocks)
         {
             BinaryMap binarized = new BinaryMap(input.GetLength(1), input.GetLength(0));
             for (int blockY = 0; blockY < blocks.AllBlocks.Height; ++blockY)

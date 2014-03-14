@@ -5,7 +5,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Model
 {
-    public sealed class GapRemover : ISkeletonFilter
+    public static class GapRemover
     {
         const int RuptureSize = 5;
         const int GapSize = 20;
@@ -14,16 +14,13 @@ namespace SourceAFIS.Extraction.Model
         const int ToleratedOverlapLength = 2;
         const int MinEndingLength = 7;
 
-        public KnotRemover KnotRemover = new KnotRemover();
-        public SkeletonShadow SkeletonShadow = new SkeletonShadow();
-
         struct Gap
         {
             public SkeletonBuilder.Minutia End1;
             public SkeletonBuilder.Minutia End2;
         }
 
-        public void Filter(SkeletonBuilder skeleton)
+        public static void Filter(SkeletonBuilder skeleton)
         {
             PriorityQueueF<Gap> queue = new PriorityQueueF<Gap>();
             foreach (SkeletonBuilder.Minutia end1 in skeleton.Minutiae)
@@ -53,7 +50,7 @@ namespace SourceAFIS.Extraction.Model
             KnotRemover.Filter(skeleton);
         }
 
-        bool IsWithinLimits(SkeletonBuilder.Minutia end1, SkeletonBuilder.Minutia end2)
+        static bool IsWithinLimits(SkeletonBuilder.Minutia end1, SkeletonBuilder.Minutia end2)
         {
             int distanceSq = Calc.DistanceSq(end1.Position, end2.Position);
             if (distanceSq <= Calc.Sq(RuptureSize))
@@ -71,7 +68,7 @@ namespace SourceAFIS.Extraction.Model
             return true;
         }
 
-        Point GetAngleSample(SkeletonBuilder.Minutia minutia)
+        static Point GetAngleSample(SkeletonBuilder.Minutia minutia)
         {
             SkeletonBuilder.Ridge ridge = minutia.Ridges[0];
             if (AngleSampleOffset < ridge.Points.Count)
@@ -80,7 +77,7 @@ namespace SourceAFIS.Extraction.Model
                 return ridge.End.Position;
         }
 
-        bool IsOverlapping(Point[] line, BinaryMap shadow)
+        static bool IsOverlapping(Point[] line, BinaryMap shadow)
         {
             for (int i = ToleratedOverlapLength; i < line.Length - ToleratedOverlapLength; ++i)
                 if (shadow.GetBit(line[i]))
@@ -88,7 +85,7 @@ namespace SourceAFIS.Extraction.Model
             return false;
         }
 
-        void AddRidge(SkeletonBuilder skeleton, BinaryMap shadow, Gap gap, Point[] line)
+        static void AddRidge(SkeletonBuilder skeleton, BinaryMap shadow, Gap gap, Point[] line)
         {
             SkeletonBuilder.Ridge ridge = new SkeletonBuilder.Ridge();
             foreach (Point point in line)

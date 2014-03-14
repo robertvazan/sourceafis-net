@@ -6,11 +6,11 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Minutiae
 {
-    public sealed class MinutiaMask
+    public static class MinutiaMask
     {
         const float DirectedExtension = 10.06f;
 
-        public void Filter(FingerprintTemplate template, BinaryMap mask)
+        public static void Filter(FingerprintTemplate template, BinaryMap mask)
         {
             template.Minutiae.RemoveAll(minutia =>
             {

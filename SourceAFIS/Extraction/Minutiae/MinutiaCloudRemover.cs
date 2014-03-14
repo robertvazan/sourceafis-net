@@ -6,12 +6,12 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Minutiae
 {
-    public sealed class MinutiaCloudRemover
+    public static class MinutiaCloudRemover
     {
         const int NeighborhoodRadius = 20;
         const int MaxNeighbors = 4;
 
-        public void Filter(FingerprintTemplate template)
+        public static void Filter(FingerprintTemplate template)
         {
             var radiusSq = Calc.Sq(NeighborhoodRadius);
             template.Minutiae = template.Minutiae.Except(

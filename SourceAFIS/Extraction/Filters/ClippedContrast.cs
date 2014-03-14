@@ -6,11 +6,11 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Filters
 {
-    public sealed class ClippedContrast
+    public static class ClippedContrast
     {
         const float ClipFraction = 0.08f;
 
-        public byte[,] Compute(BlockMap blocks, short[, ,] histogram)
+        public static byte[,] Compute(BlockMap blocks, short[, ,] histogram)
         {
             byte[,] result = new byte[blocks.BlockCount.Height, blocks.BlockCount.Width];
             foreach (var block in blocks.AllBlocks)

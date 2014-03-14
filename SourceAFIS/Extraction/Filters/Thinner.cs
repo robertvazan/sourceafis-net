@@ -6,7 +6,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Filters
 {
-    public sealed class Thinner
+    public static class Thinner
     {
         const int MaxIterations = 26;
 
@@ -51,7 +51,7 @@ namespace SourceAFIS.Extraction.Filters
             return false;
         }
 
-        public BinaryMap Thin(BinaryMap input)
+        public static BinaryMap Thin(BinaryMap input)
         {
             BinaryMap intermediate = new BinaryMap(input.Size);
             intermediate.Copy(input, new RectangleC(1, 1, input.Width - 2, input.Height - 2), new Point(1, 1));

@@ -5,13 +5,13 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Filters
 {
-    public sealed class RelativeContrast
+    public static class RelativeContrast
     {
         const int SampleSize = 168568;
         const float SampleFraction = 0.49f;
         const float RelativeLimit = 0.34f;
 
-        public BinaryMap DetectLowContrast(byte[,] contrast, BlockMap blocks)
+        public static BinaryMap DetectLowContrast(byte[,] contrast, BlockMap blocks)
         {
             List<byte> sortedContrast = new List<byte>();
             foreach (byte contrastItem in contrast)

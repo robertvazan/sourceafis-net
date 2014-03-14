@@ -5,11 +5,11 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Filters
 {
-    public sealed class AbsoluteContrast
+    public static class AbsoluteContrast
     {
         const int Limit = 17;
 
-        public BinaryMap DetectLowContrast(byte[,] contrast)
+        public static BinaryMap DetectLowContrast(byte[,] contrast)
         {
             BinaryMap result = new BinaryMap(contrast.GetLength(1), contrast.GetLength(0));
             for (int y = 0; y < result.Height; ++y)

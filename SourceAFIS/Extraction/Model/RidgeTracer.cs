@@ -5,7 +5,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Model
 {
-    public sealed class RidgeTracer
+    public static class RidgeTracer
     {
         static bool[] IsMinutia = ConstructPixelClassifier();
 
@@ -20,7 +20,7 @@ namespace SourceAFIS.Extraction.Model
             return result;
         }
 
-        List<Point> FindMinutiae(BinaryMap binary)
+        static List<Point> FindMinutiae(BinaryMap binary)
         {
             List<Point> result = new List<Point>();
             for (int y = 0; y < binary.Height; ++y)
@@ -30,7 +30,7 @@ namespace SourceAFIS.Extraction.Model
             return result;
         }
 
-        Dictionary<Point, List<Point>> LinkNeighboringMinutiae(List<Point> minutiae)
+        static Dictionary<Point, List<Point>> LinkNeighboringMinutiae(List<Point> minutiae)
         {
             Dictionary<Point, List<Point>> linking = new Dictionary<Point, List<Point>>();
             foreach (Point minutiaPos in minutiae)
@@ -62,7 +62,7 @@ namespace SourceAFIS.Extraction.Model
             return linking;
         }
 
-        Dictionary<Point, SkeletonBuilder.Minutia> ComputeMinutiaCenters(Dictionary<Point, List<Point>> linking, SkeletonBuilder skeleton)
+        static Dictionary<Point, SkeletonBuilder.Minutia> ComputeMinutiaCenters(Dictionary<Point, List<Point>> linking, SkeletonBuilder skeleton)
         {
             Dictionary<Point, SkeletonBuilder.Minutia> centers = new Dictionary<Point, SkeletonBuilder.Minutia>();
             foreach (Point currentPos in linking.Keys)
@@ -84,7 +84,7 @@ namespace SourceAFIS.Extraction.Model
             return centers;
         }
 
-        void TraceRidges(BinaryMap binary, Dictionary<Point, SkeletonBuilder.Minutia> minutiaePoints)
+        static void TraceRidges(BinaryMap binary, Dictionary<Point, SkeletonBuilder.Minutia> minutiaePoints)
         {
             Dictionary<Point, SkeletonBuilder.Ridge> leads = new Dictionary<Point, SkeletonBuilder.Ridge>();
             foreach (Point minutiaPoint in minutiaePoints.Keys)
@@ -124,7 +124,7 @@ namespace SourceAFIS.Extraction.Model
             }
         }
 
-        public void FixLinkingGaps(SkeletonBuilder skeleton)
+        public static void FixLinkingGaps(SkeletonBuilder skeleton)
         {
             foreach (SkeletonBuilder.Minutia minutia in skeleton.Minutiae)
             {
@@ -140,7 +140,7 @@ namespace SourceAFIS.Extraction.Model
             }
         }
 
-        public void Trace(BinaryMap binary, SkeletonBuilder skeleton)
+        public static void Trace(BinaryMap binary, SkeletonBuilder skeleton)
         {
             List<Point> minutiaPoints = FindMinutiae(binary);
             Dictionary<Point, List<Point>> linking = LinkNeighboringMinutiae(minutiaPoints);

@@ -5,14 +5,11 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Model
 {
-    public sealed class TailRemover : ISkeletonFilter
+    public static class TailRemover
     {
         const int MinTailLength = 21;
 
-        public DotRemover DotRemover = new DotRemover();
-        public KnotRemover KnotRemover = new KnotRemover();
-
-        public void Filter(SkeletonBuilder skeleton)
+        public static void Filter(SkeletonBuilder skeleton)
         {
             foreach (SkeletonBuilder.Minutia minutia in skeleton.Minutiae)
             {

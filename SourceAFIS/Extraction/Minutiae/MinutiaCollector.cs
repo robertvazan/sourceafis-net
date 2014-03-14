@@ -6,12 +6,12 @@ using SourceAFIS.Extraction.Model;
 
 namespace SourceAFIS.Extraction.Minutiae
 {
-    public sealed class MinutiaCollector
+    public static class MinutiaCollector
     {
         const int DirectionSegmentLength = 21;
         const int DirectionSegmentSkip = 1;
 
-        byte ComputeDirection(SkeletonBuilder.Ridge ridge)
+        static byte ComputeDirection(SkeletonBuilder.Ridge ridge)
         {
             int first = DirectionSegmentSkip;
             int last = DirectionSegmentSkip + DirectionSegmentLength - 1;
@@ -28,7 +28,7 @@ namespace SourceAFIS.Extraction.Minutiae
             return Angle.AtanB(ridge.Points[first], ridge.Points[last]);
         }
 
-        public void Collect(SkeletonBuilder skeleton, FingerprintMinutiaType type, FingerprintTemplate template)
+        public static void Collect(SkeletonBuilder skeleton, FingerprintMinutiaType type, FingerprintTemplate template)
         {
             foreach (SkeletonBuilder.Minutia skeletonMinutia in skeleton.Minutiae)
             {

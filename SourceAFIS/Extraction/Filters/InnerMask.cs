@@ -5,11 +5,11 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Filters
 {
-    public sealed class InnerMask
+    public static class InnerMask
     {
         const int MinBorderDistance = 14;
 
-        void ShrinkBy(BinaryMap temporary, BinaryMap inner, int amount)
+        static void ShrinkBy(BinaryMap temporary, BinaryMap inner, int amount)
         {
             temporary.Clear();
             temporary.Copy(inner, new RectangleC(amount, 0, inner.Width - amount, inner.Height), new Point(0, 0));
@@ -19,7 +19,7 @@ namespace SourceAFIS.Extraction.Filters
             inner.Copy(temporary);
         }
 
-        public BinaryMap Compute(BinaryMap outer)
+        public static BinaryMap Compute(BinaryMap outer)
         {
             BinaryMap inner = new BinaryMap(outer.Size);
             inner.Copy(outer, new RectangleC(1, 1, outer.Width - 2, outer.Height - 2), new Point(1, 1));

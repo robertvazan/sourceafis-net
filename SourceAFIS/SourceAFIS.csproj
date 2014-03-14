@@ -76,7 +76,6 @@
     <Compile Include="Extraction\Model\DotRemover.cs" />
     <Compile Include="Extraction\Model\FragmentRemover.cs" />
     <Compile Include="Extraction\Model\GapRemover.cs" />
-    <Compile Include="Extraction\Model\ISkeletonFilter.cs" />
     <Compile Include="Extraction\Model\KnotRemover.cs" />
     <Compile Include="Extraction\Minutiae\MinutiaMask.cs" />
     <Compile Include="Extraction\Model\PoreRemover.cs" />
@@ -128,9 +127,7 @@
     <Compile Include="General\RectangleC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Templates\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

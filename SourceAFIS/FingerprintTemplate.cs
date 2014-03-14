@@ -21,7 +21,7 @@ namespace SourceAFIS
 
         public FingerprintTemplate(byte[,] image)
         {
-            new Extractor().Extract(image, this);
+            Extractor.Extract(image, this);
             BuildEdgeTable();
         }
 
