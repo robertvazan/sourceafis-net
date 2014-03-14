@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS", "SourceAFIS\So
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseAnalyzer", "DatabaseAnalyzer\DatabaseAnalyzer.csproj", "{55566F34-65E7-49D0-BA8C-FAD2B161BF5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocProject", "DocProject\DocProject.csproj", "{2B389531-B0AD-42DC-A778-C4718FC01C5E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Tuning", "SourceAFIS.Tuning\SourceAFIS.Tuning.csproj", "{7DD4AD3F-2836-4187-A6E7-D271F13F943E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Visualization", "SourceAFIS.Visualization\SourceAFIS.Visualization.csproj", "{5570647C-1F35-4FE7-9E9B-FF193154DD95}"
@@ -36,8 +34,6 @@ Global
 		{55566F34-65E7-49D0-BA8C-FAD2B161BF5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55566F34-65E7-49D0-BA8C-FAD2B161BF5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55566F34-65E7-49D0-BA8C-FAD2B161BF5F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B389531-B0AD-42DC-A778-C4718FC01C5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B389531-B0AD-42DC-A778-C4718FC01C5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DD4AD3F-2836-4187-A6E7-D271F13F943E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7DD4AD3F-2836-4187-A6E7-D271F13F943E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DD4AD3F-2836-4187-A6E7-D271F13F943E}.Release|Any CPU.ActiveCfg = Release|Any CPU
