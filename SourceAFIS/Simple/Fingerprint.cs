@@ -55,9 +55,7 @@ namespace SourceAFIS.Simple
         /// <para>
         /// The format of this image is a simple raw 2D array of <see langword="byte"/>s. Every byte
         /// represents shade of gray from black (0) to white (255). When indexing the 2D array, Y axis
-        /// goes first, X axis goes second, e.g. <c>Image[y, x]</c>. To convert to/from <see cref="Bitmap"/>
-        /// object, use <see cref="AsBitmap"/> property. To convert to/from <see cref="BitmapSource"/>
-        /// object, use <see cref="AsBitmapSource"/> property.
+        /// goes first, X axis goes second, e.g. <c>Image[y, x]</c>.
         /// </para>
         /// <para>
         /// Accessors of this property do not clone the image. To avoid unwanted sharing of the <see langword="byte"/>
@@ -65,8 +63,6 @@ namespace SourceAFIS.Simple
         /// </para>
         /// </remarks>
         /// <seealso cref="Template"/>
-        /// <seealso cref="AsBitmap"/>
-        /// <seealso cref="AsBitmapSource"/>
         /// <seealso cref="AsImageData"/>
         /// <seealso cref="AfisEngine.Extract"/>
         [XmlIgnore]
@@ -95,8 +91,6 @@ namespace SourceAFIS.Simple
         /// is <see langword="null"/>.
         /// </value>
         /// <seealso cref="Image"/>
-        /// <seealso cref="AsBitmap"/>
-        /// <seealso cref="AsBitmapSource"/>
         /// <seealso cref="Template"/>
         /// <seealso cref="AfisEngine.Extract"/>
         public byte[] AsImageData

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SourceAFIS.Meta;
 using SourceAFIS.General;
 using SourceAFIS.Templates;
 
@@ -9,27 +8,16 @@ namespace SourceAFIS.Matching.Minutia
 {
     public sealed class MinutiaMatcher
     {
-        [Nested]
         public RootPairSelector RootSelector = new RootPairSelector();
-        [Nested]
         public MinutiaPairing Pairing = new MinutiaPairing();
-        [Nested]
         public EdgeConstructor EdgeConstructor = new EdgeConstructor();
-        [Nested]
         public PairSelector PairSelector = new PairSelector();
-        [Nested]
         public MatchAnalysis MatchAnalysis = new MatchAnalysis();
-        [Nested]
         public MatchScoring MatchScoring = new MatchScoring();
-        [Nested]
         public EdgeLookup EdgeLookup = new EdgeLookup();
 
-        [Parameter(Upper = 10000)]
-        public int MaxTriedRoots = 70;
-        [Parameter(Upper = 10000)]
-        public int MaxTriedTriangles = 7538;
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        const int MaxTriedRoots = 70;
+        const int MaxTriedTriangles = 7538;
 
         ProbeIndex Probe;
         FingerprintTemplate Candidate;
@@ -74,15 +62,6 @@ namespace SourceAFIS.Matching.Minutia
                         break;
                 }
             }
-            Logger.Log("Score", bestScore);
-            Logger.Log("BestRootIndex", bestRootIndex);
-            if (bestScore > 0 && Logger.IsActive)
-            {
-                Pairing.Reset(bestRoot);
-                BuildPairing(candidate);
-                Logger.Log("BestRoot", bestRoot);
-                Logger.Log("BestPairing", Pairing);
-            }
             return bestScore;
         }
 
@@ -112,7 +91,6 @@ namespace SourceAFIS.Matching.Minutia
                     break;
                 Pairing.Add(PairSelector.Dequeue());
             }
-            Pairing.Log();
         }
 
         void CollectEdges(FingerprintTemplate candidate)

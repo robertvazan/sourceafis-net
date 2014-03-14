@@ -2,20 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Model
 {
     public sealed class FragmentRemover : ISkeletonFilter
     {
-        [DpiAdjusted]
-        [Parameter(Lower = 3, Upper = 100)]
-        public int MinFragmentLength = 22;
+        const int MinFragmentLength = 22;
 
-        [Nested]
         public DotRemover DotRemover = new DotRemover();
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
 
         public void Filter(SkeletonBuilder skeleton)
         {
@@ -27,7 +21,6 @@ namespace SourceAFIS.Extraction.Model
                         ridge.Detach();
                 }
             DotRemover.Filter(skeleton);
-            Logger.Log(skeleton);
         }
     }
 }

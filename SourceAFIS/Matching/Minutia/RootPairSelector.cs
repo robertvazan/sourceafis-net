@@ -3,19 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 using SourceAFIS.Templates;
 
 namespace SourceAFIS.Matching.Minutia
 {
     public sealed class RootPairSelector
     {
-        [Parameter(Lower = 5, Upper = 300)]
-        public int MinEdgeLength = 58;
-        [Parameter(Lower = 5, Upper = 100000)]
-        public int MaxEdgeLookups = 1633;
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        const int MinEdgeLength = 58;
+        const int MaxEdgeLookups = 1633;
 
         HashLookup HashLookup = new HashLookup();
         int LookupCounter;
@@ -43,8 +38,6 @@ namespace SourceAFIS.Matching.Minutia
                             for (var match = HashLookup.Select(candidateEdge); match != null; match = HashLookup.Next())
                             {
                                 var pair = new MinutiaPair(match.Location.Reference, candidateReference);
-                                if (Logger.IsActive)
-                                    Logger.Log(pair);
                                 yield return pair;
                                 ++LookupCounter;
                                 if (LookupCounter >= MaxEdgeLookups)

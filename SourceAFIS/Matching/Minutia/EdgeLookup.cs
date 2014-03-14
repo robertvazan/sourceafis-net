@@ -1,17 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SourceAFIS.Meta;
 using SourceAFIS.General;
 
 namespace SourceAFIS.Matching.Minutia
 {
     public sealed class EdgeLookup
     {
-        [Parameter(Lower = 1, Upper = 50)]
-        public int MaxDistanceError = 13;
-        [Parameter(Lower = 1, Upper = 63)]
-        public byte MaxAngleError = Angle.FromDegreesB(10);
+        public const int MaxDistanceError = 13;
+        public readonly byte MaxAngleError = Angle.FromDegreesB(10);
 
         public struct LookupResult
         {

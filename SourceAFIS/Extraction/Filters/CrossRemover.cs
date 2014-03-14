@@ -7,8 +7,6 @@ namespace SourceAFIS.Extraction.Filters
 {
     public sealed class CrossRemover
     {
-        public DetailLogger.Hook Logger = DetailLogger.Null;
-
         public void Remove(BinaryMap input)
         {
             BinaryMap sw2ne = new BinaryMap(input.Size);
@@ -40,7 +38,6 @@ namespace SourceAFIS.Extraction.Filters
 
                 input.AndNot(squares);
             }
-            Logger.Log(input);
         }
     }
 }

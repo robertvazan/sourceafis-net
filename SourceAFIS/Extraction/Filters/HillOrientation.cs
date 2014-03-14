@@ -4,26 +4,16 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class HillOrientation
     {
-        [DpiAdjusted]
-        [Parameter(Lower = 0.5, Upper = 4)]
-        public float MinHalfDistance = 2;
-        [DpiAdjusted]
-        [Parameter(Lower = 5, Upper = 13)]
-        public float MaxHalfDistance = 6;
-        [Parameter(Upper = 100)]
-        public int NeighborListSplit = 50;
-        [Parameter(Upper = 100)]
-        public int NeighborsChecked = 20;
-        [Parameter(Upper = 3)]
-        public int SmoothingRadius = 1;
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        const float MinHalfDistance = 2;
+        const float MaxHalfDistance = 6;
+        const int NeighborListSplit = 50;
+        const int NeighborsChecked = 20;
+        const int SmoothingRadius = 1;
 
         struct NeighborInfo
         {
@@ -109,7 +99,6 @@ namespace SourceAFIS.Extraction.Filters
                     }
                 }
             });
-            Logger.Log("Raw", orientation);
             return orientation;
         }
 
@@ -171,7 +160,6 @@ namespace SourceAFIS.Extraction.Filters
             PointF[,] byBlock = SumBlocks(accumulated, blocks, mask);
             PointF[,] smooth = Smooth(byBlock, mask);
             byte[,] angles = ToAngles(smooth, mask);
-            Logger.Log(angles);
             return angles;
         }
     }

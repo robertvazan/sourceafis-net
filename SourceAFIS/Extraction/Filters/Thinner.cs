@@ -3,17 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class Thinner
     {
-        [DpiAdjusted]
-        [Parameter(Lower = 5, Upper = 50)]
-        public int MaxIterations = 26;
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        const int MaxIterations = 26;
 
         static readonly bool[] IsRemovable;
         static readonly bool[] IsEnding;
@@ -110,7 +105,6 @@ namespace SourceAFIS.Extraction.Filters
                 }
             }
 
-            Logger.Log(skeleton);
             return skeleton;
         }
     }

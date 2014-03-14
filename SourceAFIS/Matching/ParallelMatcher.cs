@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
-using SourceAFIS.Meta;
 using SourceAFIS.General;
 using SourceAFIS.Templates;
 using SourceAFIS.Matching.Minutia;
@@ -11,65 +11,19 @@ namespace SourceAFIS.Matching
 {
     public sealed class ParallelMatcher
     {
-        [Nested]
         public MinutiaMatcher MinutiaMatcher = new MinutiaMatcher();
 
-        public class PreparedProbe
+        public ProbeIndex Prepare(FingerprintTemplate probe)
         {
-            public ProbeIndex ProbeIndex = new ProbeIndex();
+            var index = new ProbeIndex();
+            MinutiaMatcher.BuildIndex(probe, index);
+            return index;
         }
 
-        Queue<MinutiaMatcher> Matchers = new Queue<MinutiaMatcher>();
-
-        MinutiaMatcher DequeueMatcher()
+        public float[] Match(ProbeIndex probe, IList<FingerprintTemplate> candidates)
         {
-            MinutiaMatcher matcher = null;
-            lock (Matchers)
-                if (Matchers.Count > 0)
-                    matcher = Matchers.Dequeue();
-            if (matcher == null)
-                matcher = ParameterSet.ClonePrototype(MinutiaMatcher);
-            return matcher;
-        }
-
-        MinutiaMatcher DequeueMatcher(PreparedProbe probe)
-        {
-            MinutiaMatcher matcher = DequeueMatcher();
-            matcher.SelectProbe(probe.ProbeIndex);
-            return matcher;
-        }
-
-        void EnqueueMatcher(MinutiaMatcher matcher)
-        {
-            lock (Matchers)
-                Matchers.Enqueue(matcher);
-        }
-
-        public PreparedProbe Prepare(FingerprintTemplate probe)
-        {
-            PreparedProbe prepared = new PreparedProbe();
-            MinutiaMatcher matcher = DequeueMatcher();
-            try
-            {
-                matcher.BuildIndex(probe, prepared.ProbeIndex);
-            }
-            finally
-            {
-                EnqueueMatcher(matcher);
-            }
-            return prepared;
-        }
-
-        public float[] Match(PreparedProbe probe, IList<FingerprintTemplate> candidates)
-        {
-            float[] scores = new float[candidates.Count];
-            
-            Parallel.For(0, candidates.Count,
-                () => DequeueMatcher(probe),
-                (i, state, matcher) => { scores[i] = matcher.Match(candidates[i]); return matcher; },
-                (matcher) => { EnqueueMatcher(matcher); });
-
-            return scores;
+            MinutiaMatcher.SelectProbe(probe);
+            return candidates.Select(c => MinutiaMatcher.Match(c)).ToArray();
         }
     }
 }

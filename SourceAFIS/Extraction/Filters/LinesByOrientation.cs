@@ -2,19 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class LinesByOrientation
     {
-        [Parameter(Lower = 4, Upper = 128)]
-        public int AngularResolution = 32;
-        [DpiAdjusted]
-        [Parameter(Upper = 50)]
-        public int Radius = 7;
-        [Parameter(Lower = 1.1, Upper = 4)]
-        public float StepFactor = 1.5f;
+        readonly int AngularResolution = 32;
+        readonly int Radius = 7;
+        readonly float StepFactor = 1.5f;
+
+        public LinesByOrientation(int resolution = 32, int radius = 7, float step = 1.5f)
+        {
+            AngularResolution = resolution;
+            Radius = radius;
+            StepFactor = step;
+        }
 
         public Point[][] Construct()
         {

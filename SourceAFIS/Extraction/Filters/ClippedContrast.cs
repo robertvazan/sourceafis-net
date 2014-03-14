@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Filters
 {
     public sealed class ClippedContrast
     {
-        [Parameter(Upper = 0.4)]
-        public float ClipFraction = 0.08f;
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
+        const float ClipFraction = 0.08f;
 
         public byte[,] Compute(BlockMap blocks, short[, ,] histogram)
         {
@@ -50,7 +46,6 @@ namespace SourceAFIS.Extraction.Filters
 
                 result[block.Y, block.X] = (byte)(upperBound - lowerBound);
             });
-            Logger.Log(result);
             return result;
         }
     }

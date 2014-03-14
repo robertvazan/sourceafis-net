@@ -2,20 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Meta;
 
 namespace SourceAFIS.Extraction.Model
 {
     public sealed class PoreRemover : ISkeletonFilter
     {
-        [DpiAdjusted]
-        [Parameter(Lower = 3, Upper = 100)]
-        public int MaxArmLength = 41;
+        const int MaxArmLength = 41;
 
-        [Nested]
         public KnotRemover KnotRemover = new KnotRemover();
-
-        public DetailLogger.Hook Logger = DetailLogger.Null;
 
         public void Filter(SkeletonBuilder skeleton)
         {
@@ -47,7 +41,6 @@ namespace SourceAFIS.Extraction.Model
                 }
             }
             KnotRemover.Filter(skeleton);
-            Logger.Log(skeleton);
         }
     }
 }
