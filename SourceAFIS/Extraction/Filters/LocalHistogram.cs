@@ -6,9 +6,9 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Filters
 {
-    public sealed class LocalHistogram
+    public static class LocalHistogram
     {
-        public short[, ,] Analyze(BlockMap blocks, byte[,] image)
+        public static short[, ,] Analyze(BlockMap blocks, byte[,] image)
         {
             short[, ,] histogram = new short[blocks.BlockCount.Height, blocks.BlockCount.Width, 256];
             foreach (var block in blocks.AllBlocks)
@@ -21,7 +21,7 @@ namespace SourceAFIS.Extraction.Filters
             return histogram;
         }
 
-        public short[, ,] SmoothAroundCorners(BlockMap blocks, short[, ,] input)
+        public static short[, ,] SmoothAroundCorners(BlockMap blocks, short[, ,] input)
         {
             Point[] blocksAround = new Point[] { new Point(0, 0), new Point(-1, 0), new Point(0, -1), new Point(-1, -1) };
             short[, ,] output = new short[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
@@ -40,7 +40,7 @@ namespace SourceAFIS.Extraction.Filters
             return output;
         }
 
-        public short[, ,] Smooth(BlockMap blocks, short[, ,] input)
+        public static short[, ,] Smooth(BlockMap blocks, short[, ,] input)
         {
             short[, ,] output = new short[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
             foreach (var corner in blocks.AllCorners)

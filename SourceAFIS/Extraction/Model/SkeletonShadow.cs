@@ -5,9 +5,9 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Model
 {
-    public sealed class SkeletonShadow
+    public static class SkeletonShadow
     {
-        public Size GetSize(SkeletonBuilder skeleton)
+        public static Size GetSize(SkeletonBuilder skeleton)
         {
             RectangleC rect = new RectangleC(0, 0, 1, 1);
             foreach (SkeletonBuilder.Minutia minutia in skeleton.Minutiae)
@@ -21,14 +21,14 @@ namespace SourceAFIS.Extraction.Model
             return rect.Size;
         }
 
-        public BinaryMap Draw(SkeletonBuilder skeleton)
+        public static BinaryMap Draw(SkeletonBuilder skeleton)
         {
             BinaryMap binary = new BinaryMap(GetSize(skeleton));
             Draw(skeleton, binary);
             return binary;
         }
 
-        public void Draw(SkeletonBuilder skeleton, BinaryMap binary)
+        public static void Draw(SkeletonBuilder skeleton, BinaryMap binary)
         {
             foreach (SkeletonBuilder.Minutia minutia in skeleton.Minutiae)
             {

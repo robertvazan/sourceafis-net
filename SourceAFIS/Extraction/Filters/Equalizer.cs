@@ -6,7 +6,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Filters
 {
-    public sealed class Equalizer
+    public static class Equalizer
     {
         const float MaxScaling = 3.99f;
         const float MinScaling = 0.25f;
@@ -24,7 +24,7 @@ namespace SourceAFIS.Extraction.Filters
                 ToFloatTable[i] = i / 255f;
         }
 
-        float[, ,] ComputeEqualization(BlockMap blocks, short[, ,] histogram, BinaryMap blockMask)
+        static float[, ,] ComputeEqualization(BlockMap blocks, short[, ,] histogram, BinaryMap blockMask)
         {
             float widthMax = RangeSize / 256f * MaxScaling;
             float widthMin = RangeSize / 256f * MinScaling;
@@ -69,7 +69,7 @@ namespace SourceAFIS.Extraction.Filters
             return equalization;
         }
 
-        float[,] PerformEqualization(BlockMap blocks, byte[,] image, float[, ,] equalization, BinaryMap blockMask)
+        static float[,] PerformEqualization(BlockMap blocks, byte[,] image, float[, ,] equalization, BinaryMap blockMask)
         {
             float[,] result = new float[blocks.PixelCount.Height, blocks.PixelCount.Width];
             foreach(var block in blocks.AllBlocks)
@@ -95,7 +95,7 @@ namespace SourceAFIS.Extraction.Filters
             return result;
         }
 
-        public float[,] Equalize(BlockMap blocks, byte[,] image, short[, ,] histogram, BinaryMap blockMask)
+        public static float[,] Equalize(BlockMap blocks, byte[,] image, short[, ,] histogram, BinaryMap blockMask)
         {
             float[, ,] equalization = ComputeEqualization(blocks, histogram, blockMask);
             return PerformEqualization(blocks, image, equalization, blockMask);

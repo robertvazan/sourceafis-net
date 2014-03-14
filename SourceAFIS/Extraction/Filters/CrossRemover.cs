@@ -5,9 +5,9 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Filters
 {
-    public sealed class CrossRemover
+    public static class CrossRemover
     {
-        public void Remove(BinaryMap input)
+        public static void Remove(BinaryMap input)
         {
             BinaryMap sw2ne = new BinaryMap(input.Size);
             BinaryMap se2nw = new BinaryMap(input.Size);

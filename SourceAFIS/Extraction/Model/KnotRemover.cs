@@ -5,11 +5,9 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Model
 {
-    public sealed class KnotRemover : ISkeletonFilter
+    public static class KnotRemover
     {
-        public DotRemover DotRemover = new DotRemover();
-
-        public void Filter(SkeletonBuilder skeleton)
+        public static void Filter(SkeletonBuilder skeleton)
         {
             foreach (SkeletonBuilder.Minutia minutia in skeleton.Minutiae)
             {

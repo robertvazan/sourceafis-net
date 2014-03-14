@@ -6,9 +6,9 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Minutiae
 {
-    public sealed class MinutiaShuffler
+    public static class MinutiaShuffler
     {
-        public void Shuffle(FingerprintTemplate template)
+        public static void Shuffle(FingerprintTemplate template)
         {
             int seed = 0;
             foreach (var minutia in template.Minutiae)

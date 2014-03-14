@@ -6,12 +6,12 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Minutiae
 {
-    public sealed class UniqueMinutiaSorter
+    public static class UniqueMinutiaSorter
     {
         const int MaxMinutiae = 100;
         const int NeighborhoodSize = 5;
 
-        public void Filter(FingerprintTemplate template)
+        public static void Filter(FingerprintTemplate template)
         {
             if (template.Minutiae.Count > MaxMinutiae)
             {

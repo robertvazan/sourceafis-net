@@ -5,13 +5,11 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Model
 {
-    public sealed class PoreRemover : ISkeletonFilter
+    public static class PoreRemover
     {
         const int MaxArmLength = 41;
 
-        public KnotRemover KnotRemover = new KnotRemover();
-
-        public void Filter(SkeletonBuilder skeleton)
+        public static void Filter(SkeletonBuilder skeleton)
         {
             foreach (SkeletonBuilder.Minutia minutia in skeleton.Minutiae)
             {

@@ -7,7 +7,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Extraction.Filters
 {
-    public sealed class HillOrientation
+    public static class HillOrientation
     {
         const float MinHalfDistance = 2;
         const float MaxHalfDistance = 6;
@@ -21,7 +21,7 @@ namespace SourceAFIS.Extraction.Filters
             public PointF Orientation;
         }
 
-        List<List<NeighborInfo>> PrepareNeighbors()
+        static List<List<NeighborInfo>> PrepareNeighbors()
         {
             Random random = new Random(0);
             List<List<NeighborInfo>> allSplits = new List<List<NeighborInfo>>();
@@ -47,7 +47,7 @@ namespace SourceAFIS.Extraction.Filters
             return allSplits;
         }
 
-        Range GetMaskLineRange(BinaryMap mask, int y)
+        static Range GetMaskLineRange(BinaryMap mask, int y)
         {
             int first = -1;
             int last = -1;
@@ -64,7 +64,7 @@ namespace SourceAFIS.Extraction.Filters
                 return new Range();
         }
 
-        PointF[,] AccumulateOrientations(float[,] input, BinaryMap mask, BlockMap blocks)
+        static PointF[,] AccumulateOrientations(float[,] input, BinaryMap mask, BlockMap blocks)
         {
             List<List<NeighborInfo>> neighbors = PrepareNeighbors();
 
@@ -102,7 +102,7 @@ namespace SourceAFIS.Extraction.Filters
             return orientation;
         }
 
-        PointF[,] SumBlocks(PointF[,] orientation, BlockMap blocks, BinaryMap mask)
+        static PointF[,] SumBlocks(PointF[,] orientation, BlockMap blocks, BinaryMap mask)
         {
             PointF[,] sums = new PointF[blocks.BlockCount.Height, blocks.BlockCount.Width];
             foreach (var block in blocks.AllBlocks)
@@ -120,7 +120,7 @@ namespace SourceAFIS.Extraction.Filters
             return sums;
         }
 
-        PointF[,] Smooth(PointF[,] orientation, BinaryMap mask)
+        static PointF[,] Smooth(PointF[,] orientation, BinaryMap mask)
         {
             PointF[,] smoothed = new PointF[mask.Height, mask.Width];
             for (int y = 0; y < mask.Height; ++y)
@@ -140,7 +140,7 @@ namespace SourceAFIS.Extraction.Filters
             return smoothed;
         }
 
-        byte[,] ToAngles(PointF[,] vectors, BinaryMap mask)
+        static byte[,] ToAngles(PointF[,] vectors, BinaryMap mask)
         {
             byte[,] angles = new byte[mask.Height, mask.Width];
             for (int y = 0; y < mask.Height; ++y)
@@ -150,7 +150,7 @@ namespace SourceAFIS.Extraction.Filters
             return angles;
         }
 
-        public byte[,] Detect(float[,] image, BinaryMap mask, BlockMap blocks)
+        public static byte[,] Detect(float[,] image, BinaryMap mask, BlockMap blocks)
         {
             PointF[,] accumulated = AccumulateOrientations(image, mask, blocks);
             PointF[,] byBlock = SumBlocks(accumulated, blocks, mask);
