@@ -160,30 +160,23 @@ namespace SourceAFIS.General
 
         delegate void CombineFunction(uint[] target, uint[] source);
 
-        class CombineLocals
-        {
-            public uint[] Vector;
-            public uint[] SrcVector;
-        }
-
         void Combine(BinaryMap source, RectangleC area, Point at, CombineFunction function)
         {
             int shift = (int)((uint)area.X & WordMask) - (int)((uint)at.X & WordMask);
             int vectorSize = (area.Width >> WordShift) + 2;
-            Parallel.For(0, area.Height,
-                () => new CombineLocals { Vector = new uint[vectorSize], SrcVector = new uint[vectorSize] },
-                delegate(int y, ParallelLoopState state, CombineLocals locals)
-                {
-                    LoadLine(locals.Vector, new Point(at.X, at.Y + y), area.Width);
-                    source.LoadLine(locals.SrcVector, new Point(area.X, area.Y + y), area.Width);
-                    if (shift >= 0)
-                        ShiftLeft(locals.SrcVector, shift);
-                    else
-                        ShiftRight(locals.SrcVector, -shift);
-                    function(locals.Vector, locals.SrcVector);
-                    SaveLine(locals.Vector, new Point(at.X, at.Y + y), area.Width);
-                    return locals;
-                }, locals => { });
+            var destination = new uint[vectorSize];
+            var copy = new uint[vectorSize];
+            for (int y = 0; y < area.Height; ++y)
+            {
+                LoadLine(destination, new Point(at.X, at.Y + y), area.Width);
+                source.LoadLine(copy, new Point(area.X, area.Y + y), area.Width);
+                if (shift >= 0)
+                    ShiftLeft(copy, shift);
+                else
+                    ShiftRight(copy, -shift);
+                function(destination, copy);
+                SaveLine(destination, new Point(at.X, at.Y + y), area.Width);
+            }
         }
 
         public void Copy(BinaryMap source)
@@ -194,18 +187,16 @@ namespace SourceAFIS.General
         public void Copy(BinaryMap source, RectangleC area, Point at)
         {
             int shift = (int)((uint)area.X & WordMask) - (int)((uint)at.X & WordMask);
-            Parallel.For(0, area.Height,
-                () => new uint[(area.Width >> WordShift) + 2],
-                delegate(int y, ParallelLoopState state, uint[] vector)
-                {
-                    source.LoadLine(vector, new Point(area.X, area.Y + y), area.Width);
-                    if (shift >= 0)
-                        ShiftLeft(vector, shift);
-                    else
-                        ShiftRight(vector, -shift);
-                    SaveLine(vector, new Point(at.X, at.Y + y), area.Width);
-                    return vector;
-                }, vector => { });
+            var vector = new uint[(area.Width >> WordShift) + 2];
+            for (int y = 0; y < area.Height; ++y)
+            {
+                source.LoadLine(vector, new Point(area.X, area.Y + y), area.Width);
+                if (shift >= 0)
+                    ShiftLeft(vector, shift);
+                else
+                    ShiftRight(vector, -shift);
+                SaveLine(vector, new Point(at.X, at.Y + y), area.Width);
+            }
         }
 
         public void Or(BinaryMap source)
@@ -338,24 +329,22 @@ namespace SourceAFIS.General
         public BinaryMap FillBlocks(BlockMap blocks)
         {
             BinaryMap result = new BinaryMap(blocks.PixelCount);
-            Parallel.For(0, blocks.BlockCount.Height, delegate(int blockY)
+            for (int blockY = 0; blockY < blocks.BlockCount.Height; ++blockY)
             {
                 for (int blockX = 0; blockX < blocks.BlockCount.Width; ++blockX)
                     if (GetBit(blockX, blockY))
                         result.Fill(blocks.BlockAreas[blockY, blockX]);
-            });
+            }
             return result;
         }
 
         public BinaryMap FillCornerAreas(BlockMap blocks)
         {
             BinaryMap result = new BinaryMap(blocks.PixelCount);
-            Parallel.For(0, blocks.CornerCount.Height, delegate(int cornerY)
-            {
+            for (int cornerY = 0; cornerY < blocks.CornerCount.Height; ++cornerY)
                 for (int cornerX = 0; cornerX < blocks.CornerCount.Width; ++cornerX)
                     if (GetBit(cornerX, cornerY))
                         result.Fill(blocks.CornerAreas[cornerY, cornerX]);
-            });
             return result;
         }
     }

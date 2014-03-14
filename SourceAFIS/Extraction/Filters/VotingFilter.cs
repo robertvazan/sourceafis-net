@@ -24,7 +24,7 @@ namespace SourceAFIS.Extraction.Filters
             RectangleC rect = new RectangleC(new Point(BorderDistance, BorderDistance),
                 new Size(input.Width - 2 * BorderDistance, input.Height - 2 * BorderDistance));
             BinaryMap output = new BinaryMap(input.Size);
-            Parallel.For(rect.RangeY.Begin, rect.RangeY.End, delegate(int y)
+            for (int y = rect.RangeY.Begin; y < rect.RangeY.End; ++y)
             {
                 for (int x = rect.Left; x < rect.Right; ++x)
                 {
@@ -42,7 +42,7 @@ namespace SourceAFIS.Extraction.Filters
                     if (ones * voteWeight >= Majority)
                         output.SetBitOne(x, y);
                 }
-            });
+            }
             return output;
         }
     }

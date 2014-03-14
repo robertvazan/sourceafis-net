@@ -38,7 +38,7 @@ namespace SourceAFIS.Extraction.Filters
             }
 
             float[, ,] equalization = new float[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
-            Parallel.ForEach(blocks.AllCorners, delegate(Point corner)
+            foreach(var corner in blocks.AllCorners)
             {
                 if (blockMask.GetBitSafe(corner.X, corner.Y, false)
                     || blockMask.GetBitSafe(corner.X - 1, corner.Y, false)
@@ -65,14 +65,14 @@ namespace SourceAFIS.Extraction.Filters
                         equalization[corner.Y, corner.X, i] = limited;
                     }
                 }
-            });
+            }
             return equalization;
         }
 
         float[,] PerformEqualization(BlockMap blocks, byte[,] image, float[, ,] equalization, BinaryMap blockMask)
         {
             float[,] result = new float[blocks.PixelCount.Height, blocks.PixelCount.Width];
-            Parallel.ForEach(blocks.AllBlocks, delegate(Point block)
+            foreach(var block in blocks.AllBlocks)
             {
                 if (blockMask.GetBit(block))
                 {
@@ -91,7 +91,7 @@ namespace SourceAFIS.Extraction.Filters
                             result[y, x] = Calc.Interpolate(topLeft, topRight, bottomLeft, bottomRight, fraction);
                         }
                 }
-            });
+            }
             return result;
         }
 

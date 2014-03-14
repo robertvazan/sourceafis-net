@@ -69,7 +69,7 @@ namespace SourceAFIS.Extraction.Filters
             List<List<NeighborInfo>> neighbors = PrepareNeighbors();
 
             PointF[,] orientation = new PointF[input.GetLength(0), input.GetLength(1)];
-            Parallel.For(0, mask.Height, delegate(int blockY)
+            for (int blockY = 0; blockY < mask.Height; ++blockY)
             {
                 Range validMaskRange = GetMaskLineRange(mask, blockY);
                 if (validMaskRange.Length > 0)
@@ -98,14 +98,14 @@ namespace SourceAFIS.Extraction.Filters
                         }
                     }
                 }
-            });
+            }
             return orientation;
         }
 
         PointF[,] SumBlocks(PointF[,] orientation, BlockMap blocks, BinaryMap mask)
         {
             PointF[,] sums = new PointF[blocks.BlockCount.Height, blocks.BlockCount.Width];
-            Parallel.ForEach(blocks.AllBlocks, delegate(Point block)
+            foreach (var block in blocks.AllBlocks)
             {
                 if (mask.GetBit(block))
                 {
@@ -116,15 +116,14 @@ namespace SourceAFIS.Extraction.Filters
                             sum = Calc.Add(sum, orientation[y, x]);
                     sums[block.Y, block.X] = sum;
                 }
-            });
+            }
             return sums;
         }
 
         PointF[,] Smooth(PointF[,] orientation, BinaryMap mask)
         {
             PointF[,] smoothed = new PointF[mask.Height, mask.Width];
-            Parallel.For(0, mask.Height, delegate(int y)
-            {
+            for (int y = 0; y < mask.Height; ++y)
                 for (int x = 0; x < mask.Width; ++x)
                     if (mask.GetBit(x, y))
                     {
@@ -138,19 +137,16 @@ namespace SourceAFIS.Extraction.Filters
                                     sum = Calc.Add(sum, orientation[ny, nx]);
                         smoothed[y, x] = sum;
                     }
-            });
             return smoothed;
         }
 
         byte[,] ToAngles(PointF[,] vectors, BinaryMap mask)
         {
             byte[,] angles = new byte[mask.Height, mask.Width];
-            Parallel.For(0, mask.Height, delegate(int y)
-            {
+            for (int y = 0; y < mask.Height; ++y)
                 for (int x = 0; x < mask.Width; ++x)
                     if (mask.GetBit(x, y))
                         angles[y, x] = Angle.ToByte(Angle.Atan(vectors[y, x]));
-            });
             return angles;
         }
 
