@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using SourceAFIS.General;
-using SourceAFIS.Templates;
 
 namespace SourceAFIS.Matching.Minutia
 {

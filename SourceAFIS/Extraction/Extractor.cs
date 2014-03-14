@@ -6,7 +6,6 @@ using SourceAFIS.General;
 using SourceAFIS.Extraction.Filters;
 using SourceAFIS.Extraction.Model;
 using SourceAFIS.Extraction.Minutiae;
-using SourceAFIS.Templates;
 
 namespace SourceAFIS.Extraction
 {
@@ -68,8 +67,8 @@ namespace SourceAFIS.Extraction
             SkeletonBuilder ridges = ProcessSkeleton("Ridges", binary);
             SkeletonBuilder valleys = ProcessSkeleton("Valleys", inverted);
 
-            MinutiaCollector.Collect(ridges, MinutiaType.Ending, template);
-            MinutiaCollector.Collect(valleys, MinutiaType.Bifurcation, template);
+            MinutiaCollector.Collect(ridges, FingerprintMinutiaType.Ending, template);
+            MinutiaCollector.Collect(valleys, FingerprintMinutiaType.Bifurcation, template);
             MinutiaMask.Filter(template, innerMask);
             MinutiaCloudRemover.Filter(template);
             UniqueMinutiaSorter.Filter(template);

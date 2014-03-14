@@ -7,14 +7,14 @@ using System.Xml.Linq;
 using SourceAFIS.Matching.Minutia;
 using SourceAFIS.Extraction;
 
-namespace SourceAFIS.Templates
+namespace SourceAFIS
 {
     public sealed class FingerprintTemplate
     {
         const int MaxDistance = 490;
         const int MaxNeighbors = 9;
 
-        public List<Minutia> Minutiae = new List<Minutia>();
+        public List<FingerprintMinutia> Minutiae = new List<FingerprintMinutia>();
         internal NeighborEdge[][] EdgeTable;
 
         public FingerprintTemplate() { }
@@ -28,14 +28,14 @@ namespace SourceAFIS.Templates
         public FingerprintTemplate(XElement xml)
         {
             Minutiae = (from minutia in xml.Elements("Minutia")
-                        select new Minutia()
+                        select new FingerprintMinutia()
                         {
                             Position = new Point(
                                 (int)minutia.Attribute("X"),
                                 (int)minutia.Attribute("Y")),
                             Direction = (byte)(uint)minutia.Attribute("Direction"),
-                            Type = (MinutiaType)Enum.Parse(
-                                typeof(MinutiaType),
+                            Type = (FingerprintMinutiaType)Enum.Parse(
+                                typeof(FingerprintMinutiaType),
                                 (string)minutia.Attribute("Type"),
                                 false)
                         }).ToList();
