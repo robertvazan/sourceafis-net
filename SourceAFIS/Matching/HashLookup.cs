@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SourceAFIS.Matching.Minutia
+namespace SourceAFIS.Matching
 {
     public sealed class HashLookup
     {
-        EdgeLookup EdgeLookup;
         Dictionary<int, object> Hash;
         EdgeShape CurrentCandidate;
         List<IndexedEdge> CurrentList;
         int CurrentOffset;
 
-        public void Reset(EdgeHash hash)
+        public HashLookup(EdgeHash hash)
         {
-            EdgeLookup = hash.EdgeLookup;
             Hash = hash.Hash;
         }
 

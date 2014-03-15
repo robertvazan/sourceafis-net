@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SourceAFIS.Matching.Minutia
+namespace SourceAFIS.Matching
 {
     public struct NeighborEdge
     {

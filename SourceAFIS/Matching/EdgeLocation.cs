@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SourceAFIS.Matching.Minutia
+namespace SourceAFIS.Matching
 {
     public struct EdgeLocation
     {

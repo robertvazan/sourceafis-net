@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
 
-namespace SourceAFIS.Matching.Minutia
+namespace SourceAFIS.Matching
 {
     public sealed class EdgeLookup
     {
         public const int MaxDistanceError = 13;
-        public readonly byte MaxAngleError = Angle.FromDegreesB(10);
+        public static readonly byte MaxAngleError = Angle.FromDegreesB(10);
 
         public struct LookupResult
         {
@@ -16,12 +16,10 @@ namespace SourceAFIS.Matching.Minutia
             public short Distance;
         }
 
-        List<LookupResult> ReturnList = new List<LookupResult>();
-
-        public List<LookupResult> FindMatchingPairs(NeighborEdge[] probeStar, NeighborEdge[] candidateStar)
+        public static void FindMatchingPairs(NeighborEdge[] probeStar, NeighborEdge[] candidateStar, List<LookupResult> results)
         {
             byte complementaryAngleError = Angle.Complementary(MaxAngleError);
-            ReturnList.Clear();
+            results.Clear();
             Range range = new Range();
 
             for (int candidateIndex = 0; candidateIndex < candidateStar.Length; ++candidateIndex)
@@ -43,7 +41,7 @@ namespace SourceAFIS.Matching.Minutia
                     {
                         byte neighborDiff = Angle.Difference(probeEdge.Edge.NeighborAngle, candidateEdge.Edge.NeighborAngle);
                         if (neighborDiff <= MaxAngleError || neighborDiff >= complementaryAngleError)
-                            ReturnList.Add(new LookupResult()
+                            results.Add(new LookupResult()
                             {
                                 Pair = new MinutiaPair(probeEdge.Neighbor, candidateEdge.Neighbor),
                                 Distance = candidateEdge.Edge.Length
@@ -51,11 +49,9 @@ namespace SourceAFIS.Matching.Minutia
                     }
                 }
             }
-
-            return ReturnList;
         }
 
-        public bool MatchingEdges(EdgeShape probe, EdgeShape candidate)
+        public static bool MatchingEdges(EdgeShape probe, EdgeShape candidate)
         {
             int lengthDelta = probe.Length - candidate.Length;
             if (lengthDelta >= -MaxDistanceError && lengthDelta <= MaxDistanceError)
@@ -72,12 +68,12 @@ namespace SourceAFIS.Matching.Minutia
             return false;
         }
 
-        public int ComputeHash(EdgeShape edge)
+        public static int ComputeHash(EdgeShape edge)
         {
             return (edge.ReferenceAngle / MaxAngleError << 24) + (edge.NeighborAngle / MaxAngleError << 16) + edge.Length / MaxDistanceError;
         }
 
-        public IEnumerable<int> HashCoverage(EdgeShape edge)
+        public static IEnumerable<int> HashCoverage(EdgeShape edge)
         {
             int minLengthBin = (edge.Length - MaxDistanceError) / MaxDistanceError;
             int maxLengthBin = (edge.Length + MaxDistanceError) / MaxDistanceError;

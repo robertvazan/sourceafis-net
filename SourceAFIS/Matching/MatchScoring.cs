@@ -5,7 +5,7 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Matching
 {
-    public sealed class MatchScoring
+    public static class MatchScoring
     {
         const float PairCountFactor = 0.032f;
         const float PairFractionFactor = 8.98f;
@@ -15,7 +15,7 @@ namespace SourceAFIS.Matching
         const float DistanceAccuracyFactor = 9.9f;
         const float AngleAccuracyFactor = 2.79f;
 
-        public float Compute(MatchAnalysis analysis)
+        public static float Compute(MatchAnalysis analysis)
         {
             float score = 0;
             
@@ -26,9 +26,9 @@ namespace SourceAFIS.Matching
             score += EdgeCountFactor * analysis.EdgeCount;
             if (analysis.PairCount >= 2)
             {
-                var maxDistanceError = analysis.MaxDistanceError * (analysis.PairCount - 1);
+                var maxDistanceError = EdgeLookup.MaxDistanceError * (analysis.PairCount - 1);
                 score += DistanceAccuracyFactor * (maxDistanceError - analysis.DistanceErrorSum) / maxDistanceError;
-                var maxAngleError = analysis.MaxAngleError * (analysis.PairCount - 1) * 2;
+                var maxAngleError = EdgeLookup.MaxAngleError * (analysis.PairCount - 1) * 2;
                 score += AngleAccuracyFactor * (maxAngleError - analysis.AngleErrorSum) / maxAngleError;
             }
             

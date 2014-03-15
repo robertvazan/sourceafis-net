@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
 
-namespace SourceAFIS.Matching.Minutia
+namespace SourceAFIS.Matching
 {
-    public sealed class EdgeConstructor
+    public static class EdgeConstructor
     {
         public static EdgeShape Construct(FingerprintTemplate template, int reference, int neighbor)
         {
