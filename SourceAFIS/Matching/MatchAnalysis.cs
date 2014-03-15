@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Matching.Minutia;
 
 namespace SourceAFIS.Matching
 {
@@ -12,11 +11,6 @@ namespace SourceAFIS.Matching
         const float DistanceErrorFlatness = 0.69f;
         const float AngleErrorFlatness = 0.27f;
 
-        public EdgeConstructor EdgeConstructor = new EdgeConstructor();
-
-        public int MaxDistanceError;
-        public byte MaxAngleError;
-        
         public int PairCount;
         public int CorrectTypeCount;
         public int SupportedCount;
@@ -25,12 +19,10 @@ namespace SourceAFIS.Matching
         public int DistanceErrorSum;
         public int AngleErrorSum;
 
-        public void Analyze(MinutiaPairing pairing, EdgeLookup lookup, FingerprintTemplate probe, FingerprintTemplate candidate)
+        public void Analyze(MinutiaPairing pairing, FingerprintTemplate probe, FingerprintTemplate candidate)
         {
-            MaxDistanceError = EdgeLookup.MaxDistanceError;
-            MaxAngleError = lookup.MaxAngleError;
-            var innerDistanceRadius = Convert.ToInt32(DistanceErrorFlatness * MaxDistanceError);
-            var innerAngleRadius = Convert.ToInt32(AngleErrorFlatness * MaxAngleError);
+            var innerDistanceRadius = Convert.ToInt32(DistanceErrorFlatness * EdgeLookup.MaxDistanceError);
+            var innerAngleRadius = Convert.ToInt32(AngleErrorFlatness * EdgeLookup.MaxAngleError);
 
             PairCount = pairing.Count;
 

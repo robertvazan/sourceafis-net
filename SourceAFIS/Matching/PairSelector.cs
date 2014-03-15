@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
 
-namespace SourceAFIS.Matching.Minutia
+namespace SourceAFIS.Matching
 {
     public sealed class PairSelector
     {

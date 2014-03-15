@@ -2,32 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SourceAFIS.General;
-using SourceAFIS.Matching.Minutia;
 using SourceAFIS.Matching;
 
 namespace SourceAFIS
 {
     public sealed class FingerprintMatcher
     {
-        public RootPairSelector RootSelector = new RootPairSelector();
         public MinutiaPairing Pairing = new MinutiaPairing();
-        public EdgeConstructor EdgeConstructor = new EdgeConstructor();
         public PairSelector PairSelector = new PairSelector();
         public MatchAnalysis MatchAnalysis = new MatchAnalysis();
-        public MatchScoring MatchScoring = new MatchScoring();
-        public EdgeLookup EdgeLookup = new EdgeLookup();
 
         const int MaxTriedRoots = 70;
         const int MaxTriedTriangles = 7538;
 
-        ProbeIndex Probe = new ProbeIndex();
+        internal FingerprintTemplate Template;
+        internal EdgeHash EdgeHash;
         FingerprintTemplate Candidate;
+        List<EdgeLookup.LookupResult> EdgeMatches = new List<EdgeLookup.LookupResult>();
 
         public FingerprintMatcher(FingerprintTemplate template)
         {
-            Probe.Template = template;
-            Probe.EdgeHash = new EdgeHash(template, EdgeLookup);
-            Pairing.SelectProbe(Probe.Template);
+            Template = template;
+            EdgeHash = new EdgeHash(template);
+            Pairing.SelectProbe(Template);
         }
 
         public float Match(FingerprintTemplate candidate)
@@ -39,7 +36,7 @@ namespace SourceAFIS
             float bestScore = 0;
             MinutiaPair bestRoot = new MinutiaPair();
             int bestRootIndex = -1;
-            foreach (MinutiaPair root in RootSelector.GetRoots(Probe, candidate))
+            foreach (MinutiaPair root in RootPairSelector.GetRoots(this, candidate))
             {
                 float score = TryRoot(root, candidate);
                 if (score > bestScore)
@@ -73,7 +70,7 @@ namespace SourceAFIS
             Pairing.Reset(root);
             BuildPairing(candidate);
 
-            MatchAnalysis.Analyze(Pairing, EdgeLookup, Probe.Template, candidate);
+            MatchAnalysis.Analyze(Pairing, Template, candidate);
             return MatchScoring.Compute(MatchAnalysis);
         }
 
@@ -92,10 +89,10 @@ namespace SourceAFIS
         void CollectEdges(FingerprintTemplate candidate)
         {
             var reference = Pairing.LastAdded.Pair;
-            var probeNeighbors = Probe.Template.EdgeTable[reference.Probe];
+            var probeNeighbors = Template.EdgeTable[reference.Probe];
             var candidateNeigbors = Candidate.EdgeTable[reference.Candidate];
-            var matches = EdgeLookup.FindMatchingPairs(probeNeighbors, candidateNeigbors);
-            foreach (var match in matches)
+            EdgeLookup.FindMatchingPairs(probeNeighbors, candidateNeigbors, EdgeMatches);
+            foreach (var match in EdgeMatches)
             {
                 var neighbor = match.Pair;
                 if (!Pairing.IsCandidatePaired(neighbor.Candidate) && !Pairing.IsProbePaired(neighbor.Probe))
