@@ -22,7 +22,7 @@ namespace SourceAFIS
 
             var histogram = ComputeHistogram(blocks, image);
             var smoothHistogram = ComputeSmoothedHistogram(blocks, histogram);
-            BinaryMap mask = ComputeMask(blocks, histogram);
+            BitImage mask = ComputeMask(blocks, histogram);
             double[,] equalized = Equalize(blocks, image, smoothHistogram, mask);
 
             byte[,] orientation = ComputeOrientationMap(equalized, mask, blocks);
@@ -30,15 +30,15 @@ namespace SourceAFIS
             double[,] orthogonal = SmoothByOrientation(smoothed, orientation, mask, blocks, Angle.PIB,
                 ConstructOrientedLines(resolution: 11, radius: 4, step: 1.11));
 
-            BinaryMap binary = Binarize(smoothed, orthogonal, mask, blocks);
+            BitImage binary = Binarize(smoothed, orthogonal, mask, blocks);
             binary.AndNot(FilterBinarized(binary.GetInverted()));
             binary.Or(FilterBinarized(binary));
             RemoveCrosses(binary);
 
-            BinaryMap pixelMask = mask.FillBlocks(blocks);
-            BinaryMap innerMask = ComputeInnerMask(pixelMask);
+            BitImage pixelMask = mask.FillBlocks(blocks);
+            BitImage innerMask = ComputeInnerMask(pixelMask);
 
-            BinaryMap inverted = binary.GetInverted();
+            BitImage inverted = binary.GetInverted();
             inverted.And(pixelMask);
 
             FingerprintSkeleton ridges = new FingerprintSkeleton(binary);
@@ -120,11 +120,11 @@ namespace SourceAFIS
             return output;
         }
 
-        static BinaryMap ComputeMask(BlockMap blocks, int[, ,] histogram)
+        static BitImage ComputeMask(BlockMap blocks, int[, ,] histogram)
         {
             byte[,] contrast = ComputeClippedContrast(blocks, histogram);
 
-            BinaryMap mask = new BinaryMap(ComputeAbsoluteContrast(contrast));
+            BitImage mask = new BitImage(ComputeAbsoluteContrast(contrast));
             mask.Or(ComputeRelativeContrast(contrast, blocks));
             mask.Or(ApplyVotingFilter(mask, radius: 9, majority: 0.86, borderDist: 7));
 
@@ -137,8 +137,8 @@ namespace SourceAFIS
             return mask;
         }
 
-        static BinaryMap FilterBlockErrors(BinaryMap input) { return ApplyVotingFilter(input, majority: 0.7, borderDist: 4); }
-        static BinaryMap FilterBinarized(BinaryMap input) { return ApplyVotingFilter(input, radius: 2, majority: 0.61, borderDist: 17); }
+        static BitImage FilterBlockErrors(BitImage input) { return ApplyVotingFilter(input, majority: 0.7, borderDist: 4); }
+        static BitImage FilterBinarized(BitImage input) { return ApplyVotingFilter(input, radius: 2, majority: 0.61, borderDist: 17); }
 
         static byte[,] ComputeClippedContrast(BlockMap blocks, int[, ,] histogram)
         {
@@ -181,10 +181,10 @@ namespace SourceAFIS
             return result;
         }
 
-        static BinaryMap ComputeAbsoluteContrast(byte[,] contrast)
+        static BitImage ComputeAbsoluteContrast(byte[,] contrast)
         {
             const int limit = 17;
-            BinaryMap result = new BinaryMap(contrast.GetLength(1), contrast.GetLength(0));
+            BitImage result = new BitImage(contrast.GetLength(1), contrast.GetLength(0));
             for (int y = 0; y < result.Height; ++y)
                 for (int x = 0; x < result.Width; ++x)
                     if (contrast[y, x] < limit)
@@ -192,7 +192,7 @@ namespace SourceAFIS
             return result;
         }
 
-        static BinaryMap ComputeRelativeContrast(byte[,] contrast, BlockMap blocks)
+        static BitImage ComputeRelativeContrast(byte[,] contrast, BlockMap blocks)
         {
             const int sampleSize = 168568;
             const double sampleFraction = 0.49;
@@ -214,7 +214,7 @@ namespace SourceAFIS
             averageContrast /= consideredBlocks;
             byte limit = Convert.ToByte(averageContrast * relativeLimit);
 
-            BinaryMap result = new BinaryMap(blocks.BlockCount.Width, blocks.BlockCount.Height);
+            BitImage result = new BitImage(blocks.BlockCount.Width, blocks.BlockCount.Height);
             for (int y = 0; y < result.Height; ++y)
                 for (int x = 0; x < result.Width; ++x)
                     if (contrast[y, x] < limit)
@@ -222,11 +222,11 @@ namespace SourceAFIS
             return result;
         }
 
-        static BinaryMap ApplyVotingFilter(BinaryMap input, int radius = 1, double majority = 0.51, int borderDist = 0)
+        static BitImage ApplyVotingFilter(BitImage input, int radius = 1, double majority = 0.51, int borderDist = 0)
         {
             RectangleC rect = new RectangleC(new Point(borderDist, borderDist),
                 new Size(input.Width - 2 * borderDist, input.Height - 2 * borderDist));
-            BinaryMap output = new BinaryMap(input.Size);
+            BitImage output = new BitImage(input.Size);
             for (int y = rect.RangeY.Begin; y < rect.RangeY.End; ++y)
             {
                 for (int x = rect.Left; x < rect.Right; ++x)
@@ -249,7 +249,7 @@ namespace SourceAFIS
             return output;
         }
 
-        static double[,] Equalize(BlockMap blocks, byte[,] image, int[, ,] histogram, BinaryMap blockMask)
+        static double[,] Equalize(BlockMap blocks, byte[,] image, int[, ,] histogram, BitImage blockMask)
         {
             const double maxScaling = 3.99;
             const double minScaling = 0.25;
@@ -325,7 +325,7 @@ namespace SourceAFIS
             return result;
         }
 
-        static byte[,] ComputeOrientationMap(double[,] image, BinaryMap mask, BlockMap blocks)
+        static byte[,] ComputeOrientationMap(double[,] image, BitImage mask, BlockMap blocks)
         {
             PointF[,] accumulated = ComputePixelwiseOrientation(image, mask, blocks);
             PointF[,] byBlock = AverageBlockOrientations(accumulated, blocks, mask);
@@ -339,7 +339,7 @@ namespace SourceAFIS
             public PointF OrientationVector;
         }
 
-        static PointF[,] ComputePixelwiseOrientation(double[,] input, BinaryMap mask, BlockMap blocks)
+        static PointF[,] ComputePixelwiseOrientation(double[,] input, BitImage mask, BlockMap blocks)
         {
             List<List<ConsideredOrientation>> neighbors = GetTestedOrientations();
 
@@ -408,7 +408,7 @@ namespace SourceAFIS
             return allSplits;
         }
 
-        static Range GetMaskLineRange(BinaryMap mask, int y)
+        static Range GetMaskLineRange(BitImage mask, int y)
         {
             int first = -1;
             int last = -1;
@@ -425,7 +425,7 @@ namespace SourceAFIS
                 return new Range();
         }
 
-        static PointF[,] AverageBlockOrientations(PointF[,] orientation, BlockMap blocks, BinaryMap mask)
+        static PointF[,] AverageBlockOrientations(PointF[,] orientation, BlockMap blocks, BitImage mask)
         {
             PointF[,] sums = new PointF[blocks.BlockCount.Height, blocks.BlockCount.Width];
             foreach (var block in blocks.AllBlocks)
@@ -443,7 +443,7 @@ namespace SourceAFIS
             return sums;
         }
 
-        static PointF[,] SmoothOutOrientationMap(PointF[,] orientation, BinaryMap mask)
+        static PointF[,] SmoothOutOrientationMap(PointF[,] orientation, BitImage mask)
         {
             const int radius = 1;
             PointF[,] smoothed = new PointF[mask.Height, mask.Width];
@@ -464,7 +464,7 @@ namespace SourceAFIS
             return smoothed;
         }
 
-        static byte[,] ConvertOrientationVectorsToAngles(PointF[,] vectors, BinaryMap mask)
+        static byte[,] ConvertOrientationVectorsToAngles(PointF[,] vectors, BitImage mask)
         {
             byte[,] angles = new byte[mask.Height, mask.Width];
             for (int y = 0; y < mask.Height; ++y)
@@ -497,7 +497,7 @@ namespace SourceAFIS
             return result;
         }
 
-        static double[,] SmoothByOrientation(double[,] input, byte[,] orientation, BinaryMap mask, BlockMap blocks, byte angle, Point[][] lines)
+        static double[,] SmoothByOrientation(double[,] input, byte[,] orientation, BitImage mask, BlockMap blocks, byte angle, Point[][] lines)
         {
             double[,] output = new double[input.GetLength(0), input.GetLength(1)];
             foreach (var block in blocks.AllBlocks)
@@ -524,9 +524,9 @@ namespace SourceAFIS
             return output;
         }
 
-        static BinaryMap Binarize(double[,] input, double[,] baseline, BinaryMap mask, BlockMap blocks)
+        static BitImage Binarize(double[,] input, double[,] baseline, BitImage mask, BlockMap blocks)
         {
-            BinaryMap binarized = new BinaryMap(input.GetLength(1), input.GetLength(0));
+            BitImage binarized = new BitImage(input.GetLength(1), input.GetLength(0));
             for (int blockY = 0; blockY < blocks.AllBlocks.Height; ++blockY)
             {
                 for (int blockX = 0; blockX < blocks.AllBlocks.Width; ++blockX)
@@ -544,12 +544,12 @@ namespace SourceAFIS
             return binarized;
         }
 
-        static void RemoveCrosses(BinaryMap input)
+        static void RemoveCrosses(BitImage input)
         {
-            BinaryMap sw2ne = new BinaryMap(input.Size);
-            BinaryMap se2nw = new BinaryMap(input.Size);
-            BinaryMap positions = new BinaryMap(input.Size);
-            BinaryMap squares = new BinaryMap(input.Size);
+            BitImage sw2ne = new BitImage(input.Size);
+            BitImage se2nw = new BitImage(input.Size);
+            BitImage positions = new BitImage(input.Size);
+            BitImage squares = new BitImage(input.Size);
 
             while (true)
             {
@@ -577,12 +577,12 @@ namespace SourceAFIS
             }
         }
 
-        static BinaryMap ComputeInnerMask(BinaryMap outer)
+        static BitImage ComputeInnerMask(BitImage outer)
         {
             const int minBorderDistance = 14;
-            BinaryMap inner = new BinaryMap(outer.Size);
+            BitImage inner = new BitImage(outer.Size);
             inner.Copy(outer, new RectangleC(1, 1, outer.Width - 2, outer.Height - 2), new Point(1, 1));
-            BinaryMap temporary = new BinaryMap(outer.Size);
+            BitImage temporary = new BitImage(outer.Size);
             if (minBorderDistance >= 1)
                 ShrinkMask(temporary, inner, 1);
             int total = 1;
@@ -596,7 +596,7 @@ namespace SourceAFIS
             return inner;
         }
 
-        static void ShrinkMask(BinaryMap temporary, BinaryMap inner, int amount)
+        static void ShrinkMask(BitImage temporary, BitImage inner, int amount)
         {
             temporary.Clear();
             temporary.Copy(inner, new RectangleC(amount, 0, inner.Width - amount, inner.Height), new Point(0, 0));
@@ -621,7 +621,7 @@ namespace SourceAFIS
             }
         }
 
-        void ApplyMask(BinaryMap mask)
+        void ApplyMask(BitImage mask)
         {
             const double directedExtension = 10.06;
             Minutiae.RemoveAll(minutia =>

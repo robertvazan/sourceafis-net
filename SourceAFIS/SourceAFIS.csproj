@@ -65,7 +65,7 @@
     <Compile Include="FingerprintMinutiaType.cs" />
     <Compile Include="FingerprintTemplate.cs" />
     <Compile Include="General\Angle.cs" />
-    <Compile Include="General\BinaryMap.cs" />
+    <Compile Include="General\BitImage.cs" />
     <Compile Include="General\BlockMap.cs" />
     <Compile Include="General\Calc.cs" />
     <Compile Include="General\CircularArray.cs" />
