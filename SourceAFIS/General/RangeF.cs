@@ -24,7 +24,7 @@ namespace SourceAFIS.General
 
         public double Interpolate(double fraction)
         {
-            return Calc.Interpolate(Begin, End, fraction);
+            return MathEx.Interpolate(Begin, End, fraction);
         }
     }
 }

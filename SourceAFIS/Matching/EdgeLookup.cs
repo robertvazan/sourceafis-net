@@ -77,7 +77,7 @@ namespace SourceAFIS.Matching
         {
             int minLengthBin = (edge.Length - MaxDistanceError) / MaxDistanceError;
             int maxLengthBin = (edge.Length + MaxDistanceError) / MaxDistanceError;
-            int angleBins = Calc.DivRoundUp(256, MaxAngleError);
+            int angleBins = MathEx.DivRoundUp(256, MaxAngleError);
             int minReferenceBin = Angle.Difference(edge.ReferenceAngle, MaxAngleError) / MaxAngleError;
             int maxReferenceBin = Angle.Add(edge.ReferenceAngle, MaxAngleError) / MaxAngleError;
             int endReferenceBin = (maxReferenceBin + 1) % angleBins;

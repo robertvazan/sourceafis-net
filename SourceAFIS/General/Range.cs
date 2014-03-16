@@ -25,7 +25,7 @@ namespace SourceAFIS.General
 
         public int Interpolate(int index, int count)
         {
-            return Calc.Interpolate(index, count, Length) + Begin;
+            return MathEx.Interpolate(index, count, Length) + Begin;
         }
     }
 }

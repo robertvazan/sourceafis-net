@@ -99,7 +99,7 @@ namespace SourceAFIS.General
 
         public static double Atan(Point center, Point point)
         {
-            return Atan(Calc.Difference(point, center));
+            return Atan(MathEx.Difference(point, center));
         }
 
         public static byte AtanB(Point center, Point point)
@@ -216,7 +216,7 @@ namespace SourceAFIS.General
             public byte Angle;
         }
 
-        static PolarPointB[,] PolarCache;
+        static readonly PolarPointB[,] PolarCache = CreatePolarCache();
 
         static PolarPointB[,] CreatePolarCache()
         {
@@ -224,7 +224,7 @@ namespace SourceAFIS.General
             for (int y = 0; y < PolarCacheRadius; ++y)
                 for (int x = 0; x < PolarCacheRadius; ++x)
                 {
-                    cache[y, x].Distance = Convert.ToInt16(Math.Round(Math.Sqrt(Calc.Sq(x) + Calc.Sq(y))));
+                    cache[y, x].Distance = Convert.ToInt16(Math.Round(Math.Sqrt(MathEx.Sq(x) + MathEx.Sq(y))));
                     if (y > 0 || x > 0)
                         cache[y, x].Angle = Angle.AtanB(new Point(x, y));
                     else
@@ -235,9 +235,6 @@ namespace SourceAFIS.General
 
         public static PolarPoint ToPolar(Point point)
         {
-            if (PolarCache == null)
-                PolarCache = CreatePolarCache();
-            
             int quadrant = 0;
             int x = point.X;
             int y = point.Y;
@@ -257,7 +254,7 @@ namespace SourceAFIS.General
                 quadrant += 64;
             }
 
-            int shift = Calc.HighestBit((uint)(x | y) >> PolarCacheBits);
+            int shift = MathEx.HighestBit((uint)(x | y) >> PolarCacheBits);
 
             PolarPointB polarB = PolarCache[y >> shift, x >> shift];
             return new PolarPoint(polarB.Distance << shift, (byte)(polarB.Angle + quadrant));

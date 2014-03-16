@@ -109,7 +109,7 @@ namespace SourceAFIS
             {
                 foreach (Point relative in blocksAround)
                 {
-                    var block = Calc.Add(corner, relative);
+                    var block = MathEx.Add(corner, relative);
                     if (blocks.AllBlocks.Contains(block))
                     {
                         for (int i = 0; i < 256; ++i)
@@ -204,7 +204,7 @@ namespace SourceAFIS
             sortedContrast.Sort();
             sortedContrast.Reverse();
 
-            int pixelsPerBlock = Calc.GetArea(blocks.PixelCount) / blocks.AllBlocks.TotalArea;
+            int pixelsPerBlock = MathEx.GetArea(blocks.PixelCount) / blocks.AllBlocks.TotalArea;
             int sampleCount = Math.Min(sortedContrast.Count, sampleSize / pixelsPerBlock);
             int consideredBlocks = Math.Max(Convert.ToInt32(sampleCount * sampleFraction), 1);
 
@@ -318,7 +318,7 @@ namespace SourceAFIS
                             double topRight = cornerMapping[block.Y + 1, block.X + 1, pixel];
 
                             var fraction = area.GetFraction(new Point(x, y));
-                            result[y, x] = Calc.Interpolate(topLeft, topRight, bottomLeft, bottomRight, fraction);
+                            result[y, x] = MathEx.Interpolate(topLeft, topRight, bottomLeft, bottomRight, fraction);
                         }
                 }
             }
@@ -367,7 +367,7 @@ namespace SourceAFIS
                                     double after = input[y + neighbor.CheckLocation.Y, x + neighbor.CheckLocation.X];
                                     double strength = at - Math.Max(before, after);
                                     if (strength > 0)
-                                        orientation[y, x] = Calc.Add(orientation[y, x], Calc.Multiply(strength, neighbor.OrientationVector));
+                                        orientation[y, x] = MathEx.Add(orientation[y, x], MathEx.Multiply(strength, neighbor.OrientationVector));
                                 }
                             }
                         }
@@ -395,14 +395,14 @@ namespace SourceAFIS
                     do
                     {
                         double angle = Angle.FromFraction(random.NextDouble() * 0.5);
-                        double distance = Calc.InterpolateExponential(minHalfDistance, maxHalfDistance, random.NextDouble());
-                        orientation.CheckLocation = Calc.Round(Calc.Multiply(distance, Angle.ToVector(angle)));
+                        double distance = MathEx.InterpolateExponential(minHalfDistance, maxHalfDistance, random.NextDouble());
+                        orientation.CheckLocation = MathEx.Round(MathEx.Multiply(distance, Angle.ToVector(angle)));
                     } while (orientation.CheckLocation == new Point() || orientation.CheckLocation.Y < 0);
                     orientation.OrientationVector = Angle.ToVector(Angle.Add(Angle.ToOrientation(Angle.Atan(orientation.CheckLocation)), Math.PI));
                     if (!orientations.Any(info => info.CheckLocation == orientation.CheckLocation))
                         orientations.Add(orientation);
                 }
-                orientations.Sort((left, right) => Calc.CompareYX(left.CheckLocation, right.CheckLocation));
+                orientations.Sort((left, right) => MathEx.CompareYX(left.CheckLocation, right.CheckLocation));
                 allSplits.Add(orientations);
             }
             return allSplits;
@@ -436,7 +436,7 @@ namespace SourceAFIS
                     RectangleC area = blocks.BlockAreas[block];
                     for (int y = area.Bottom; y < area.Top; ++y)
                         for (int x = area.Left; x < area.Right; ++x)
-                            sum = Calc.Add(sum, orientation[y, x]);
+                            sum = MathEx.Add(sum, orientation[y, x]);
                     sums[block.Y, block.X] = sum;
                 }
             }
@@ -458,7 +458,7 @@ namespace SourceAFIS
                         for (int ny = neighbors.Bottom; ny < neighbors.Top; ++ny)
                             for (int nx = neighbors.Left; nx < neighbors.Right; ++nx)
                                 if (mask.GetBit(nx, ny))
-                                    sum = Calc.Add(sum, orientation[ny, nx]);
+                                    sum = MathEx.Add(sum, orientation[ny, nx]);
                         smoothed[y, x] = sum;
                     }
             return smoothed;
@@ -484,14 +484,14 @@ namespace SourceAFIS
                 PointF direction = Angle.ToVector(Angle.ByBucketCenter(orientationIndex, 2 * resolution));
                 for (double r = radius; r >= 0.5; r /= step)
                 {
-                    Point point = Calc.Round(Calc.Multiply(r, direction));
+                    Point point = MathEx.Round(MathEx.Multiply(r, direction));
                     if (!line.Contains(point))
                     {
                         line.Add(point);
-                        line.Add(Calc.Negate(point));
+                        line.Add(MathEx.Negate(point));
                     }
                 }
-                line.Sort(Calc.CompareYX);
+                line.Sort(MathEx.CompareYX);
                 result[orientationIndex] = line.ToArray();
             }
             return result;
@@ -510,7 +510,7 @@ namespace SourceAFIS
                         RectangleC target = blocks.BlockAreas[block];
                         RectangleC source = target.GetShifted(linePoint);
                         source.Clip(new RectangleC(blocks.PixelCount));
-                        target = source.GetShifted(Calc.Negate(linePoint));
+                        target = source.GetShifted(MathEx.Negate(linePoint));
                         for (int y = target.Bottom; y < target.Top; ++y)
                             for (int x = target.Left; x < target.Right; ++x)
                                 output[y, x] += input[y + linePoint.Y, x + linePoint.X];
@@ -626,7 +626,7 @@ namespace SourceAFIS
             const double directedExtension = 10.06;
             Minutiae.RemoveAll(minutia =>
             {
-                var arrow = Calc.Round(-directedExtension * Angle.ToVector(minutia.Direction));
+                var arrow = MathEx.Round(-directedExtension * Angle.ToVector(minutia.Direction));
                 return !mask.GetBitSafe((Point)minutia.Position + new Size(arrow), false);
             });
         }
@@ -635,10 +635,10 @@ namespace SourceAFIS
         {
             const int radius = 20;
             const int maxNeighbors = 4;
-            var radiusSq = Calc.Sq(radius);
+            var radiusSq = MathEx.Sq(radius);
             Minutiae = Minutiae.Except(
                 (from minutia in Minutiae
-                 where Minutiae.Count(neighbor => Calc.DistanceSq(neighbor.Position, minutia.Position) <= radiusSq) - 1 > maxNeighbors
+                 where Minutiae.Count(neighbor => MathEx.DistanceSq(neighbor.Position, minutia.Position) <= radiusSq) - 1 > maxNeighbors
                  select minutia).ToList()).ToList();
         }
 
@@ -651,7 +651,7 @@ namespace SourceAFIS
                 Minutiae =
                     (from minutia in Minutiae
                      let radiusSq = (from neighbor in Minutiae
-                                     let distanceSq = Calc.DistanceSq(minutia.Position, neighbor.Position)
+                                     let distanceSq = MathEx.DistanceSq(minutia.Position, neighbor.Position)
                                      orderby distanceSq
                                      select distanceSq).Skip(neighborhoodSize).First()
                      orderby radiusSq descending
@@ -664,7 +664,7 @@ namespace SourceAFIS
             int seed = 0;
             foreach (var minutia in Minutiae)
                 seed += minutia.Direction + minutia.Position.X + minutia.Position.Y + (int)minutia.Type;
-            Minutiae = Calc.Shuffle(Minutiae, new Random(seed)).ToList();
+            Minutiae = MathEx.Shuffle(Minutiae, new Random(seed)).ToList();
         }
 
         void BuildEdgeTable()
@@ -679,17 +679,17 @@ namespace SourceAFIS
             for (int reference = 0; reference < EdgeTable.Length; ++reference)
             {
                 Point referencePosition = Minutiae[reference].Position;
-                int sqMaxDistance = Calc.Sq(maxDistance);
+                int sqMaxDistance = MathEx.Sq(maxDistance);
                 if (Minutiae.Count - 1 > maxNeighbors)
                 {
                     for (int neighbor = 0; neighbor < Minutiae.Count; ++neighbor)
-                        allSqDistances[neighbor] = Calc.DistanceSq(referencePosition, Minutiae[neighbor].Position);
+                        allSqDistances[neighbor] = MathEx.DistanceSq(referencePosition, Minutiae[neighbor].Position);
                     Array.Sort(allSqDistances);
                     sqMaxDistance = allSqDistances[maxNeighbors];
                 }
                 for (int neighbor = 0; neighbor < Minutiae.Count; ++neighbor)
                 {
-                    if (neighbor != reference && Calc.DistanceSq(referencePosition, Minutiae[neighbor].Position) <= sqMaxDistance)
+                    if (neighbor != reference && MathEx.DistanceSq(referencePosition, Minutiae[neighbor].Position) <= sqMaxDistance)
                     {
                         NeighborEdge record = new NeighborEdge();
                         record.Edge = EdgeConstructor.Construct(this, reference, neighbor);
@@ -710,10 +710,10 @@ namespace SourceAFIS
         {
             public int Compare(NeighborEdge left, NeighborEdge right)
             {
-                int result = Calc.Compare(left.Edge.Length, right.Edge.Length);
+                int result = MathEx.Compare(left.Edge.Length, right.Edge.Length);
                 if (result != 0)
                     return result;
-                return Calc.Compare(left.Neighbor, right.Neighbor);
+                return MathEx.Compare(left.Neighbor, right.Neighbor);
             }
 
             public static NeighborEdgeComparer Instance = new NeighborEdgeComparer();
