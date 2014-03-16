@@ -6,8 +6,7 @@ namespace SourceAFIS.General
 {
     public static class Angle
     {
-        public const double PI = (double)Math.PI;
-        public const double PI2 = (double)(2 * Math.PI);
+        public const double PI2 = 2 * Math.PI;
         public const byte PIB = 128;
 
         public const byte B180 = PIB;
@@ -39,7 +38,7 @@ namespace SourceAFIS.General
 
         public static PointF ToVector(double angle)
         {
-            return new PointF((double)Math.Cos(angle), (double)Math.Sin(angle));
+            return new PointF(Math.Cos(angle), Math.Sin(angle));
         }
 
         public static PointF ToVector(byte angle)
@@ -49,10 +48,10 @@ namespace SourceAFIS.General
 
         public static double ToOrientation(double direction)
         {
-            if (direction < PI)
+            if (direction < Math.PI)
                 return 2 * direction;
             else
-                return 2 * (direction - PI);
+                return 2 * (direction - Math.PI);
         }
 
         public static byte ToOrientation(byte direction)
@@ -80,7 +79,7 @@ namespace SourceAFIS.General
             double result = Math.Atan2(y, x);
             if (result < 0)
                 result += 2 * Math.PI;
-            return (double)result;
+            return result;
         }
 
         public static double Atan(PointF point)
@@ -114,7 +113,7 @@ namespace SourceAFIS.General
         {
             double[] result = new double[256];
             for (int i = 0; i < 256; ++i)
-                result[i] = (double)Math.Sin(ToFloat((byte)i));
+                result[i] = Math.Sin(ToFloat((byte)i));
             return result;
         }
 
@@ -129,7 +128,7 @@ namespace SourceAFIS.General
         {
             double[] result = new double[256];
             for (int i = 0; i < 256; ++i)
-                result[i] = (double)Math.Cos(ToFloat((byte)i));
+                result[i] = Math.Cos(ToFloat((byte)i));
             return result;
         }
 
@@ -140,17 +139,17 @@ namespace SourceAFIS.General
 
         public static double ByBucketBottom(int bucket, int resolution)
         {
-            return FromFraction((double)bucket / (double)resolution);
+            return FromFraction(bucket / (double)resolution);
         }
 
         public static double ByBucketTop(int bucket, int resolution)
         {
-            return FromFraction((double)(bucket + 1) / (double)resolution);
+            return FromFraction((bucket + 1) / (double)resolution);
         }
 
         public static double ByBucketCenter(int bucket, int resolution)
         {
-            return FromFraction((double)(2 * bucket + 1) / (double)(2 * resolution));
+            return FromFraction((2 * bucket + 1) / (double)(2 * resolution));
         }
 
         public static int Quantize(double angle, int resolution)
