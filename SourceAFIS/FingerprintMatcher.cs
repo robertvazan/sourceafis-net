@@ -34,7 +34,7 @@ namespace SourceAFIS
             int rootIndex = 0;
             int triangleIndex = 0;
             double bestScore = 0;
-            foreach (MinutiaPair root in RootPairSelector.GetRoots(this, candidate))
+            foreach (MinutiaPair root in GetRoots())
             {
                 double score = TryRoot(root, candidate);
                 if (score > bestScore)
@@ -50,6 +50,41 @@ namespace SourceAFIS
                 }
             }
             return bestScore;
+        }
+
+        IEnumerable<MinutiaPair> GetRoots()
+        {
+            const int minEdgeLength = 58;
+            const int maxEdgeLookups = 1633;
+
+            var hash = new HashLookup(EdgeHash);
+            int counter = 0;
+            var filters = new Predicate<EdgeShape>[]
+            {
+                shape => shape.Length >= minEdgeLength,
+                shape => shape.Length < minEdgeLength
+            };
+            foreach (var shapeFilter in filters)
+            {
+                for (int step = 1; step < Candidate.Minutiae.Count; ++step)
+                    for (int pass = 0; pass < step + 1; ++pass)
+                        for (int candidateReference = pass; candidateReference < Candidate.Minutiae.Count; candidateReference += step + 1)
+                        {
+                            int candidateNeighbor = (candidateReference + step) % Candidate.Minutiae.Count;
+                            var candidateEdge = new EdgeShape(Candidate, candidateReference, candidateNeighbor);
+                            if (shapeFilter(candidateEdge))
+                            {
+                                for (var match = hash.Select(candidateEdge); match != null; match = hash.Next())
+                                {
+                                    var pair = new MinutiaPair(match.Location.Reference, candidateReference);
+                                    yield return pair;
+                                    ++counter;
+                                    if (counter >= maxEdgeLookups)
+                                        yield break;
+                                }
+                            }
+                        }
+            }
         }
 
         double TryRoot(MinutiaPair root, FingerprintTemplate candidate)
