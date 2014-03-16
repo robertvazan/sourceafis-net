@@ -40,7 +40,7 @@ namespace SourceAFIS
             bool[] result = new bool[256];
             for (uint mask = 0; mask < 256; ++mask)
             {
-                int count = Calc.CountBits(mask);
+                int count = MathEx.CountBits(mask);
                 result[mask] = (count == 1 || count > 2);
             }
             return result;
@@ -54,7 +54,7 @@ namespace SourceAFIS
                 List<Point> ownLinks = null;
                 foreach (Point neighborRelative in Neighborhood.CornerNeighbors)
                 {
-                    Point neighborPos = Calc.Add(minutiaPos, neighborRelative);
+                    Point neighborPos = MathEx.Add(minutiaPos, neighborRelative);
                     if (linking.ContainsKey(neighborPos))
                     {
                         List<Point> neighborLinks = linking[neighborPos];
@@ -89,7 +89,7 @@ namespace SourceAFIS
                 {
                     Point sum = new Point();
                     foreach (Point linkedPos in linkedMinutiae)
-                        sum = Calc.Add(sum, linkedPos);
+                        sum = MathEx.Add(sum, linkedPos);
                     Point center = new Point(sum.X / linkedMinutiae.Count, sum.Y / linkedMinutiae.Count);
                     SkeletonMinutia minutia = new SkeletonMinutia(center);
                     AddMinutia(minutia);
@@ -107,7 +107,7 @@ namespace SourceAFIS
             {
                 foreach (Point startRelative in Neighborhood.CornerNeighbors)
                 {
-                    Point start = Calc.Add(minutiaPoint, startRelative);
+                    Point start = MathEx.Add(minutiaPoint, startRelative);
                     if (thinned.GetBitSafe(start, false) && !minutiaePoints.ContainsKey(start) && !leads.ContainsKey(start))
                     {
                         SkeletonRidge ridge = new SkeletonRidge();
@@ -120,7 +120,7 @@ namespace SourceAFIS
                             Point next = new Point();
                             foreach (Point nextRelative in Neighborhood.CornerNeighbors)
                             {
-                                next = Calc.Add(current, nextRelative);
+                                next = MathEx.Add(current, nextRelative);
                                 if (thinned.GetBitSafe(next, false) && next != previous)
                                     break;
                             }
@@ -147,7 +147,7 @@ namespace SourceAFIS
                 {
                     if (ridge.Points[0] != minutia.Position)
                     {
-                        Point[] filling = Calc.ConstructLine(ridge.Points[0], minutia.Position);
+                        Point[] filling = MathEx.ConstructLine(ridge.Points[0], minutia.Position);
                         for (int i = 1; i < filling.Length; ++i)
                             ridge.Reversed.Points.Add(filling[i]);
                     }
@@ -237,7 +237,7 @@ namespace SourceAFIS
                 bool BC = (mask & 64) != 0;
                 bool BR = (mask & 128) != 0;
 
-                int count = Calc.CountBits(mask);
+                int count = MathEx.CountBits(mask);
 
                 bool diagonal = !TC && !CL && TL || !CL && !BC && BL || !BC && !CR && BR || !CR && !TC && TR;
                 bool horizontal = !TC && !BC && (TR || CR || BR) && (TL || CL || BL);
@@ -256,9 +256,9 @@ namespace SourceAFIS
         {
             foreach (Point relativeNeighbor in Neighborhood.CornerNeighbors)
             {
-                Point neighbor = Calc.Add(ending, relativeNeighbor);
+                Point neighbor = MathEx.Add(ending, relativeNeighbor);
                 if (binary.GetBit(neighbor))
-                    return Calc.CountBits(binary.GetNeighborhood(neighbor)) > 2;
+                    return MathEx.CountBits(binary.GetNeighborhood(neighbor)) > 2;
             }
             return false;
         }
@@ -295,7 +295,7 @@ namespace SourceAFIS
                                 SkeletonRidge merged = new SkeletonRidge();
                                 merged.Start = minutia;
                                 merged.End = end;
-                                foreach (Point point in Calc.ConstructLine(minutia.Position, end.Position))
+                                foreach (Point point in MathEx.ConstructLine(minutia.Position, end.Position))
                                     merged.Points.Add(point);
                             }
                             break;
@@ -325,7 +325,7 @@ namespace SourceAFIS
                             Gap gap;
                             gap.End1 = end1;
                             gap.End2 = end2;
-                            queue.Enqueue(Calc.DistanceSq(end1.Position, end2.Position), gap);
+                            queue.Enqueue(MathEx.DistanceSq(end1.Position, end2.Position), gap);
                         }
 
             BitImage shadow = GetShadow();
@@ -334,7 +334,7 @@ namespace SourceAFIS
                 Gap gap = queue.Dequeue();
                 if (gap.End1.Ridges.Count == 1 && gap.End2.Ridges.Count == 1)
                 {
-                    Point[] line = Calc.ConstructLine(gap.End1.Position, gap.End2.Position);
+                    Point[] line = MathEx.ConstructLine(gap.End1.Position, gap.End2.Position);
                     if (!IsRidgeOverlapping(line, shadow))
                         AddGapRidge(shadow, gap, line);
                 }
@@ -349,10 +349,10 @@ namespace SourceAFIS
             const int gapSize = 20;
             const byte gapAngle = 32;
 
-            int distanceSq = Calc.DistanceSq(end1.Position, end2.Position);
-            if (distanceSq <= Calc.Sq(ruptureSize))
+            int distanceSq = MathEx.DistanceSq(end1.Position, end2.Position);
+            if (distanceSq <= MathEx.Sq(ruptureSize))
                 return true;
-            if (distanceSq > Calc.Sq(gapSize))
+            if (distanceSq > MathEx.Sq(gapSize))
                 return false;
 
             byte gapDirection = Angle.AtanB(end1.Position, end2.Position);
@@ -431,7 +431,7 @@ namespace SourceAFIS
                     SkeletonRidge removed = minutia.Ridges[1];
                     if (extended.Points.Count < removed.Points.Count)
                     {
-                        Calc.Swap(ref extended, ref removed);
+                        MathEx.Swap(ref extended, ref removed);
                         extended = extended.Reversed;
                         removed = removed.Reversed;
                     }

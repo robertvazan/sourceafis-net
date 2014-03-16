@@ -48,8 +48,8 @@ namespace SourceAFIS.General
         {
             PixelCount = pixelSize;
             BlockCount = new Size(
-                Calc.DivRoundUp(PixelCount.Width, maxBlockSize),
-                Calc.DivRoundUp(PixelCount.Height, maxBlockSize));
+                MathEx.DivRoundUp(PixelCount.Width, maxBlockSize),
+                MathEx.DivRoundUp(PixelCount.Height, maxBlockSize));
             CornerCount = BlockToCornerCount(BlockCount);
 
             AllBlocks = new RectangleC(BlockCount);

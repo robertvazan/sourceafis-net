@@ -93,7 +93,7 @@ namespace SourceAFIS.General
 
         public void Shift(Point relative)
         {
-            Point = Calc.Add(Point, relative);
+            Point = MathEx.Add(Point, relative);
         }
 
         public RectangleC GetShifted(Point relative)

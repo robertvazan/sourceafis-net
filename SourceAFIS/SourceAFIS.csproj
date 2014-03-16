@@ -67,7 +67,7 @@
     <Compile Include="General\Angle.cs" />
     <Compile Include="General\BitImage.cs" />
     <Compile Include="General\BlockMap.cs" />
-    <Compile Include="General\Calc.cs" />
+    <Compile Include="General\MathEx.cs" />
     <Compile Include="General\CircularArray.cs" />
     <Compile Include="General\Neighborhood.cs" />
     <Compile Include="General\Point.cs" />

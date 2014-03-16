@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SourceAFIS.General
 {
-    public static class Calc
+    public static class MathEx
     {
         public static int DivRoundUp(int input, int divider)
         {
