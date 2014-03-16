@@ -9,11 +9,6 @@ namespace SourceAFIS.Matching
     {
         PriorityQueueF<EdgePair> Queue = new PriorityQueueF<EdgePair>();
 
-        public void Clear()
-        {
-            Queue.Clear();
-        }
-
         public void Enqueue(EdgePair pair, double distance)
         {
             Queue.Enqueue(distance, pair);

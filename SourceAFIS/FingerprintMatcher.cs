@@ -8,8 +8,8 @@ namespace SourceAFIS
 {
     public sealed class FingerprintMatcher
     {
-        public MinutiaPairing Pairing = new MinutiaPairing();
-        public PairSelector PairSelector = new PairSelector();
+        public MinutiaPairing Pairing;
+        public PairSelector PairSelector;
         public MatchAnalysis MatchAnalysis = new MatchAnalysis();
 
         public const int MaxDistanceError = 13;
@@ -21,33 +21,25 @@ namespace SourceAFIS
         internal FingerprintTemplate Template;
         internal EdgeHash EdgeHash;
         FingerprintTemplate Candidate;
-        List<EdgeLookup.LookupResult> EdgeMatches = new List<EdgeLookup.LookupResult>();
 
         public FingerprintMatcher(FingerprintTemplate template)
         {
             Template = template;
             EdgeHash = new EdgeHash(template);
-            Pairing.SelectProbe(Template);
         }
 
         public double Match(FingerprintTemplate candidate)
         {
-            PrepareCandidate(candidate);
+            Candidate = candidate;
 
             int rootIndex = 0;
             int triangleIndex = 0;
             double bestScore = 0;
-            MinutiaPair bestRoot = new MinutiaPair();
-            int bestRootIndex = -1;
             foreach (MinutiaPair root in RootPairSelector.GetRoots(this, candidate))
             {
                 double score = TryRoot(root, candidate);
                 if (score > bestScore)
-                {
                     bestScore = score;
-                    bestRoot = root;
-                    bestRootIndex = rootIndex;
-                }
                 ++rootIndex;
                 if (rootIndex >= MaxTriedRoots)
                     break;
@@ -61,16 +53,10 @@ namespace SourceAFIS
             return bestScore;
         }
 
-        void PrepareCandidate(FingerprintTemplate candidate)
-        {
-            Pairing.SelectCandidate(candidate);
-            PairSelector.Clear();
-            Candidate = candidate;
-        }
-
         double TryRoot(MinutiaPair root, FingerprintTemplate candidate)
         {
-            Pairing.ResetPairing(root);
+            Pairing = new MinutiaPairing(Template, candidate, root, Pairing);
+            PairSelector = new PairSelector();
             BuildPairing(candidate);
 
             MatchAnalysis.Analyze(Pairing, Template, candidate);
@@ -94,8 +80,8 @@ namespace SourceAFIS
             var reference = Pairing.LastPair.Pair;
             var probeNeighbors = Template.EdgeTable[reference.Probe];
             var candidateNeigbors = Candidate.EdgeTable[reference.Candidate];
-            EdgeLookup.FindMatchingPairs(probeNeighbors, candidateNeigbors, EdgeMatches);
-            foreach (var match in EdgeMatches)
+            var matches = EdgeLookup.FindMatchingPairs(probeNeighbors, candidateNeigbors);
+            foreach (var match in matches)
             {
                 var neighbor = match.Pair;
                 if (!Pairing.IsCandidatePaired(neighbor.Candidate) && !Pairing.IsProbePaired(neighbor.Probe))
