@@ -27,7 +27,7 @@ namespace SourceAFIS.Matching
                         for (int candidateReference = pass; candidateReference < candidate.Minutiae.Count; candidateReference += step + 1)
                         {
                             int candidateNeighbor = (candidateReference + step) % candidate.Minutiae.Count;
-                            var candidateEdge = EdgeConstructor.Construct(candidate, candidateReference, candidateNeighbor);
+                            var candidateEdge = new EdgeShape(candidate, candidateReference, candidateNeighbor);
                             if (shapeFilter(candidateEdge))
                             {
                                 for (var match = hash.Select(candidateEdge); match != null; match = hash.Next())

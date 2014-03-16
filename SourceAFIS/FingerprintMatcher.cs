@@ -12,6 +12,9 @@ namespace SourceAFIS
         public PairSelector PairSelector = new PairSelector();
         public MatchAnalysis MatchAnalysis = new MatchAnalysis();
 
+        public const int MaxDistanceError = 13;
+        public static readonly byte MaxAngleError = Angle.FromDegreesB(10);
+
         const int MaxTriedRoots = 70;
         const int MaxTriedTriangles = 7538;
 

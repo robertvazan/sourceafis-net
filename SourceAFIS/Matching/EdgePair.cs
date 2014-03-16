@@ -7,8 +7,8 @@ namespace SourceAFIS.Matching
 {
     public struct EdgePair
     {
-        public MinutiaPair Reference;
-        public MinutiaPair Neighbor;
+        public readonly MinutiaPair Reference;
+        public readonly MinutiaPair Neighbor;
 
         public EdgePair(MinutiaPair reference, MinutiaPair neighbor)
         {

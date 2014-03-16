@@ -17,7 +17,7 @@ namespace SourceAFIS.Matching
                     {
                         var edge = new IndexedEdge()
                         {
-                            Shape = EdgeConstructor.Construct(template, referenceMinutia, neighborMinutia),
+                            Shape = new EdgeShape(template, referenceMinutia, neighborMinutia),
                             Location = new EdgeLocation(referenceMinutia, neighborMinutia)
                         };
                         foreach (var hash in EdgeLookup.HashCoverage(edge.Shape))
