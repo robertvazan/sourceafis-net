@@ -692,7 +692,7 @@ namespace SourceAFIS
                     if (neighbor != reference && (referencePosition - Minutiae[neighbor].Position).SqLength <= sqMaxDistance)
                     {
                         NeighborEdge record = new NeighborEdge();
-                        record.Edge = EdgeConstructor.Construct(this, reference, neighbor);
+                        record.Edge = new EdgeShape(this, reference, neighbor);
                         record.Neighbor = neighbor;
                         edges.Add(record);
                     }

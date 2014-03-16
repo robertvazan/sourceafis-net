@@ -26,9 +26,9 @@ namespace SourceAFIS.Matching
             score += EdgeCountFactor * analysis.EdgeCount;
             if (analysis.PairCount >= 2)
             {
-                var maxDistanceError = EdgeLookup.MaxDistanceError * (analysis.PairCount - 1);
+                var maxDistanceError = FingerprintMatcher.MaxDistanceError * (analysis.PairCount - 1);
                 score += DistanceAccuracyFactor * (maxDistanceError - analysis.DistanceErrorSum) / maxDistanceError;
-                var maxAngleError = EdgeLookup.MaxAngleError * (analysis.PairCount - 1) * 2;
+                var maxAngleError = FingerprintMatcher.MaxAngleError * (analysis.PairCount - 1) * 2;
                 score += AngleAccuracyFactor * (maxAngleError - analysis.AngleErrorSum) / maxAngleError;
             }
             

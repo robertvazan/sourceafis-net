@@ -21,8 +21,8 @@ namespace SourceAFIS.Matching
 
         public void Analyze(MinutiaPairing pairing, FingerprintTemplate probe, FingerprintTemplate candidate)
         {
-            var innerDistanceRadius = Convert.ToInt32(DistanceErrorFlatness * EdgeLookup.MaxDistanceError);
-            var innerAngleRadius = Convert.ToInt32(AngleErrorFlatness * EdgeLookup.MaxAngleError);
+            var innerDistanceRadius = Convert.ToInt32(DistanceErrorFlatness * FingerprintMatcher.MaxDistanceError);
+            var innerAngleRadius = Convert.ToInt32(AngleErrorFlatness * FingerprintMatcher.MaxAngleError);
 
             PairCount = pairing.Count;
 
@@ -42,8 +42,8 @@ namespace SourceAFIS.Matching
                     ++CorrectTypeCount;
                 if (i > 0)
                 {
-                    var probeEdge = EdgeConstructor.Construct(probe, pair.Reference.Probe, pair.Pair.Probe);
-                    var candidateEdge = EdgeConstructor.Construct(candidate, pair.Reference.Candidate, pair.Pair.Candidate);
+                    var probeEdge = new EdgeShape(probe, pair.Reference.Probe, pair.Pair.Probe);
+                    var candidateEdge = new EdgeShape(candidate, pair.Reference.Candidate, pair.Pair.Candidate);
                     DistanceErrorSum += Math.Abs(probeEdge.Length - candidateEdge.Length);
                     AngleErrorSum += Math.Max(innerDistanceRadius, Angle.Distance(probeEdge.ReferenceAngle, candidateEdge.ReferenceAngle));
                     AngleErrorSum += Math.Max(innerAngleRadius, Angle.Distance(probeEdge.NeighborAngle, candidateEdge.NeighborAngle));
