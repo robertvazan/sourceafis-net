@@ -13,7 +13,7 @@ namespace SourceAFIS.Matching
         public struct LookupResult
         {
             public MinutiaPair Pair;
-            public short Distance;
+            public int Distance;
         }
 
         public static void FindMatchingPairs(NeighborEdge[] probeStar, NeighborEdge[] candidateStar, List<LookupResult> results)

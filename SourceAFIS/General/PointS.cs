@@ -7,13 +7,13 @@ namespace SourceAFIS.General
     [Serializable]
     public struct PointS
     {
-        public short X;
-        public short Y;
+        public int X;
+        public int Y;
 
         public PointS(Point point)
         {
-            X = (short)point.X;
-            Y = (short)point.Y;
+            X = (int)point.X;
+            Y = (int)point.Y;
         }
 
         public Point ToPoint()

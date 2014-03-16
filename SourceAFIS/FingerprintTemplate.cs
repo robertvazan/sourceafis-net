@@ -88,9 +88,9 @@ namespace SourceAFIS
             return result;
         }
         
-        static short[, ,] ComputeHistogram(BlockMap blocks, byte[,] image)
+        static int[, ,] ComputeHistogram(BlockMap blocks, byte[,] image)
         {
-            var histogram = new short[blocks.BlockCount.Height, blocks.BlockCount.Width, 256];
+            var histogram = new int[blocks.BlockCount.Height, blocks.BlockCount.Width, 256];
             foreach (var block in blocks.AllBlocks)
             {
                 var area = blocks.BlockAreas[block];
@@ -101,10 +101,10 @@ namespace SourceAFIS
             return histogram;
         }
 
-        static short[, ,] ComputeSmoothedHistogram(BlockMap blocks, short[, ,] input)
+        static int[, ,] ComputeSmoothedHistogram(BlockMap blocks, int[, ,] input)
         {
             var blocksAround = new Point[] { new Point(0, 0), new Point(-1, 0), new Point(0, -1), new Point(-1, -1) };
-            var output = new short[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
+            var output = new int[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
             foreach (var corner in blocks.AllCorners)
             {
                 foreach (Point relative in blocksAround)
@@ -120,7 +120,7 @@ namespace SourceAFIS
             return output;
         }
 
-        static BinaryMap ComputeMask(BlockMap blocks, short[, ,] histogram)
+        static BinaryMap ComputeMask(BlockMap blocks, int[, ,] histogram)
         {
             byte[,] contrast = ComputeClippedContrast(blocks, histogram);
 
@@ -140,7 +140,7 @@ namespace SourceAFIS
         static BinaryMap FilterBlockErrors(BinaryMap input) { return ApplyVotingFilter(input, majority: 0.7, borderDist: 4); }
         static BinaryMap FilterBinarized(BinaryMap input) { return ApplyVotingFilter(input, radius: 2, majority: 0.61, borderDist: 17); }
 
-        static byte[,] ComputeClippedContrast(BlockMap blocks, short[, ,] histogram)
+        static byte[,] ComputeClippedContrast(BlockMap blocks, int[, ,] histogram)
         {
             const double clipFraction = 0.08;
 
@@ -249,7 +249,7 @@ namespace SourceAFIS
             return output;
         }
 
-        static double[,] Equalize(BlockMap blocks, byte[,] image, short[, ,] histogram, BinaryMap blockMask)
+        static double[,] Equalize(BlockMap blocks, byte[,] image, int[, ,] histogram, BinaryMap blockMask)
         {
             const double maxScaling = 3.99;
             const double minScaling = 0.25;

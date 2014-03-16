@@ -7,13 +7,13 @@ namespace SourceAFIS.Matching
 {
     public struct EdgeLocation
     {
-        public short Reference;
-        public short Neighbor;
+        public int Reference;
+        public int Neighbor;
 
         public EdgeLocation(int reference, int neighbor)
         {
-            Reference = (short)reference;
-            Neighbor = (short)neighbor;
+            Reference = (int)reference;
+            Neighbor = (int)neighbor;
         }
     }
 }

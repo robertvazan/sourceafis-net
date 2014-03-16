@@ -6,7 +6,7 @@ namespace SourceAFIS.Matching
 {
     public struct EdgeShape
     {
-        public short Length;
+        public int Length;
         public byte ReferenceAngle;
         public byte NeighborAngle;
     }
