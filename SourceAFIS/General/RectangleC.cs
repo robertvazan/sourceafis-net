@@ -19,7 +19,7 @@ namespace SourceAFIS.General
         public int Top { get { return Y + Height; } set { Height = value - Y; } }
 
         public Point Point { get { return new Point(Left, Bottom); } set { X = value.X; Y = value.Y; } }
-        public Size Size { get { return new Size(Width, Height); } set { Width = value.Width; Height = value.Height; } }
+        public Point Size { get { return new Point(Width, Height); } set { Width = value.X; Height = value.Y; } }
         
         public Range RangeX { get { return new Range(Left, Right); } }
         public Range RangeY { get { return new Range(Bottom, Top); } }
@@ -35,12 +35,12 @@ namespace SourceAFIS.General
             Height = other.Height;
         }
 
-        public RectangleC(Point at, Size size)
+        public RectangleC(Point at, Point size)
         {
             X = at.X;
             Y = at.Y;
-            Width = size.Width;
-            Height = size.Height;
+            Width = size.X;
+            Height = size.Y;
         }
 
         public RectangleC(int x, int y, int width, int height)
@@ -51,20 +51,23 @@ namespace SourceAFIS.General
             Height = height;
         }
 
-        public RectangleC(Point begin, Point end)
+        public static RectangleC Between(Point begin, Point end)
         {
-            X = begin.X;
-            Y = begin.Y;
-            Width = end.X - begin.X;
-            Height = end.Y - begin.Y;
+            return new RectangleC()
+            {
+                X = begin.X,
+                Y = begin.Y,
+                Width = end.X - begin.X,
+                Height = end.Y - begin.Y
+            };
         }
 
-        public RectangleC(Size size)
+        public RectangleC(Point size)
         {
             X = 0;
             Y = 0;
-            Width = size.Width;
-            Height = size.Height;
+            Width = size.X;
+            Height = size.Y;
         }
 
         public RectangleC(int width, int height)
@@ -93,7 +96,7 @@ namespace SourceAFIS.General
 
         public void Shift(Point relative)
         {
-            Point = MathEx.Add(Point, relative);
+            Point += relative;
         }
 
         public RectangleC GetShifted(Point relative)

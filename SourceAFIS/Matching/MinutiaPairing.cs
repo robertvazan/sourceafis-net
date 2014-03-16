@@ -5,19 +5,19 @@ using SourceAFIS.General;
 
 namespace SourceAFIS.Matching
 {
-    public sealed class MinutiaPairing : ICloneable
+    public sealed class MinutiaPairing
     {
-        PairInfo[] CandidateIndex;
-        PairInfo[] ProbeIndex;
+        PairInfo[] PairsByCandidate;
+        PairInfo[] PairsByProbe;
         PairInfo[] PairList;
         int PairCount;
 
         public int Count { get { return PairCount; } }
-        public PairInfo LastAdded { get { return PairList[PairCount - 1]; } }
+        public PairInfo LastPair { get { return PairList[PairCount - 1]; } }
 
         public void SelectProbe(FingerprintTemplate probe)
         {
-            ProbeIndex = new PairInfo[probe.Minutiae.Count];
+            PairsByProbe = new PairInfo[probe.Minutiae.Count];
             PairList = new PairInfo[probe.Minutiae.Count];
             for (int i = 0; i < PairList.Length; ++i)
                 PairList[i] = new PairInfo();
@@ -26,31 +26,31 @@ namespace SourceAFIS.Matching
 
         public void SelectCandidate(FingerprintTemplate candidate)
         {
-            if (CandidateIndex == null || CandidateIndex.Length < candidate.Minutiae.Count)
-                CandidateIndex = new PairInfo[candidate.Minutiae.Count];
+            if (PairsByCandidate == null || PairsByCandidate.Length < candidate.Minutiae.Count)
+                PairsByCandidate = new PairInfo[candidate.Minutiae.Count];
             else
             {
-                for (int i = 0; i < CandidateIndex.Length; ++i)
-                    CandidateIndex[i] = null;
+                for (int i = 0; i < PairsByCandidate.Length; ++i)
+                    PairsByCandidate[i] = null;
             }
         }
 
-        public void Reset(MinutiaPair root)
+        public void ResetPairing(MinutiaPair root)
         {
             for (int i = 0; i < PairCount; ++i)
             {
-                CandidateIndex[PairList[i].Pair.Candidate] = null;
-                ProbeIndex[PairList[i].Pair.Probe] = null;
+                PairsByCandidate[PairList[i].Pair.Candidate] = null;
+                PairsByProbe[PairList[i].Pair.Probe] = null;
                 PairList[i].SupportingEdges = 0;
             }
-            CandidateIndex[root.Candidate] = ProbeIndex[root.Probe] = PairList[0];
+            PairsByCandidate[root.Candidate] = PairsByProbe[root.Probe] = PairList[0];
             PairList[0].Pair = root;
             PairCount = 1;
         }
 
-        public void Add(EdgePair edge)
+        public void AddPair(EdgePair edge)
         {
-            CandidateIndex[edge.Neighbor.Candidate] = ProbeIndex[edge.Neighbor.Probe] = PairList[PairCount];
+            PairsByCandidate[edge.Neighbor.Candidate] = PairsByProbe[edge.Neighbor.Probe] = PairList[PairCount];
             PairList[PairCount].Pair = edge.Neighbor;
             PairList[PairCount].Reference = edge.Reference;
             ++PairCount;
@@ -58,22 +58,22 @@ namespace SourceAFIS.Matching
 
         public PairInfo GetByCandidate(int candidate)
         {
-            return CandidateIndex[candidate];
+            return PairsByCandidate[candidate];
         }
 
         public PairInfo GetByProbe(int probe)
         {
-            return ProbeIndex[probe];
+            return PairsByProbe[probe];
         }
 
         public bool IsProbePaired(int probe)
         {
-            return ProbeIndex[probe] != null;
+            return PairsByProbe[probe] != null;
         }
 
         public bool IsCandidatePaired(int candidate)
         {
-            return CandidateIndex[candidate] != null;
+            return PairsByCandidate[candidate] != null;
         }
 
         public PairInfo GetPair(int index)
@@ -83,17 +83,7 @@ namespace SourceAFIS.Matching
 
         public void AddSupportByProbe(int probe)
         {
-            ++ProbeIndex[probe].SupportingEdges;
-        }
-
-        public object Clone()
-        {
-            MinutiaPairing clone = new MinutiaPairing();
-            clone.ProbeIndex = (PairInfo[])ProbeIndex.Clone();
-            clone.CandidateIndex = (PairInfo[])CandidateIndex.Clone();
-            clone.PairList = (PairInfo[])PairList.CloneItems();
-            clone.PairCount = PairCount;
-            return clone;
+            ++PairsByProbe[probe].SupportingEdges;
         }
     }
 }

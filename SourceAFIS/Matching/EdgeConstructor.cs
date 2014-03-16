@@ -9,7 +9,7 @@ namespace SourceAFIS.Matching
     {
         public static EdgeShape Construct(FingerprintTemplate template, int reference, int neighbor)
         {
-            PolarPoint polar = Angle.ToPolar(MathEx.Difference(template.Minutiae[neighbor].Position, template.Minutiae[reference].Position));
+            PolarPoint polar = Angle.ToPolar(template.Minutiae[neighbor].Position - template.Minutiae[reference].Position);
             EdgeShape edge;
             edge.Length = polar.Distance;
             edge.ReferenceAngle = Angle.Difference(template.Minutiae[reference].Direction, polar.Angle);

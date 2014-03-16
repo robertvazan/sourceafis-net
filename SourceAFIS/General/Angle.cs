@@ -99,7 +99,7 @@ namespace SourceAFIS.General
 
         public static double Atan(Point center, Point point)
         {
-            return Atan(MathEx.Difference(point, center));
+            return Atan(point - center);
         }
 
         public static byte AtanB(Point center, Point point)

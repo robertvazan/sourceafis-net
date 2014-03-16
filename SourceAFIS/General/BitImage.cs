@@ -10,7 +10,7 @@ namespace SourceAFIS.General
         public readonly int WordWidth;
         public readonly int Width;
         public readonly int Height;
-        public Size Size { get { return new Size(Width, Height); } }
+        public Point Size { get { return new Point(Width, Height); } }
         public RectangleC Rect { get { return new RectangleC(Size); } }
 
         public const int WordShift = 5;
@@ -28,8 +28,8 @@ namespace SourceAFIS.General
             Map = new uint[height, WordWidth];
         }
 
-        public BitImage(Size size)
-            : this(size.Width, size.Height)
+        public BitImage(Point size)
+            : this(size.X, size.Y)
         {
         }
 
@@ -324,9 +324,9 @@ namespace SourceAFIS.General
         public BitImage FillBlocks(BlockMap blocks)
         {
             BitImage result = new BitImage(blocks.PixelCount);
-            for (int blockY = 0; blockY < blocks.BlockCount.Height; ++blockY)
+            for (int blockY = 0; blockY < blocks.BlockCount.Y; ++blockY)
             {
-                for (int blockX = 0; blockX < blocks.BlockCount.Width; ++blockX)
+                for (int blockX = 0; blockX < blocks.BlockCount.X; ++blockX)
                     if (GetBit(blockX, blockY))
                         result.Fill(blocks.BlockAreas[blockY, blockX]);
             }
@@ -336,8 +336,8 @@ namespace SourceAFIS.General
         public BitImage FillCornerAreas(BlockMap blocks)
         {
             BitImage result = new BitImage(blocks.PixelCount);
-            for (int cornerY = 0; cornerY < blocks.CornerCount.Height; ++cornerY)
-                for (int cornerX = 0; cornerX < blocks.CornerCount.Width; ++cornerX)
+            for (int cornerY = 0; cornerY < blocks.CornerCount.Y; ++cornerY)
+                for (int cornerX = 0; cornerX < blocks.CornerCount.X; ++cornerX)
                     if (GetBit(cornerX, cornerY))
                         result.Fill(blocks.CornerAreas[cornerY, cornerX]);
             return result;
