@@ -9,7 +9,6 @@ namespace SourceAFIS
     public sealed class FingerprintMatcher
     {
         public MinutiaPairing Pairing;
-        public PairSelector PairSelector;
 
         public const int MaxDistanceError = 13;
         public static readonly byte MaxAngleError = Angle.FromDegreesB(10);
@@ -20,6 +19,7 @@ namespace SourceAFIS
         internal FingerprintTemplate Template;
         Dictionary<int, List<IndexedEdge>> EdgeHash = new Dictionary<int, List<IndexedEdge>>();
         FingerprintTemplate Candidate;
+        PriorityQueueF<EdgePair> PairQueue;
 
         public FingerprintMatcher(FingerprintTemplate template)
         {
@@ -162,7 +162,7 @@ namespace SourceAFIS
         double TryRoot(MinutiaPair root, FingerprintTemplate candidate)
         {
             Pairing = new MinutiaPairing(Template, candidate, root, Pairing);
-            PairSelector = new PairSelector();
+            PairQueue = new PriorityQueueF<EdgePair>();
             BuildPairing(candidate);
             return ComputeScore();
         }
@@ -172,10 +172,24 @@ namespace SourceAFIS
             while (true)
             {
                 CollectEdges(candidate);
-                PairSelector.SkipPaired(Pairing);
-                if (PairSelector.Count == 0)
+                SkipPaired();
+                if (PairQueue.Count == 0)
                     break;
-                Pairing.AddPair(PairSelector.Dequeue());
+                Pairing.AddPair(PairQueue.Dequeue());
+            }
+        }
+
+        void SkipPaired()
+        {
+            while (PairQueue.Count > 0 && (Pairing.IsProbePaired(PairQueue.Peek().Neighbor.Probe)
+                || Pairing.IsCandidatePaired(PairQueue.Peek().Neighbor.Candidate)))
+            {
+                EdgePair edge = PairQueue.Dequeue();
+                if (Pairing.IsProbePaired(edge.Neighbor.Probe) && Pairing.GetByProbe(edge.Neighbor.Probe).Pair.Candidate == edge.Neighbor.Candidate)
+                {
+                    Pairing.AddSupportByProbe(edge.Reference.Probe);
+                    Pairing.AddSupportByProbe(edge.Neighbor.Probe);
+                }
             }
         }
 
@@ -189,7 +203,7 @@ namespace SourceAFIS
             {
                 var neighbor = match.Pair;
                 if (!Pairing.IsCandidatePaired(neighbor.Candidate) && !Pairing.IsProbePaired(neighbor.Probe))
-                    PairSelector.Enqueue(new EdgePair(reference, neighbor), match.Distance);
+                    PairQueue.Enqueue(match.Distance, new EdgePair(reference, neighbor));
                 else if (Pairing.IsProbePaired(neighbor.Probe) && Pairing.GetByProbe(neighbor.Probe).Pair.Candidate == neighbor.Candidate)
                 {
                     Pairing.AddSupportByProbe(reference.Probe);
@@ -242,53 +256,53 @@ namespace SourceAFIS
 
         double ComputeScore()
         {
-            const int MinSupportingEdges = 1;
-            const double DistanceErrorFlatness = 0.69;
-            const double AngleErrorFlatness = 0.27;
+            const int minSupportingEdges = 1;
+            const double distanceErrorFlatness = 0.69;
+            const double angleErrorFlatness = 0.27;
 
-            const double PairCountFactor = 0.032;
-            const double PairFractionFactor = 8.98;
-            const double CorrectTypeFactor = 0.629;
-            const double SupportedCountFactor = 0.193;
-            const double EdgeCountFactor = 0.265;
-            const double DistanceAccuracyFactor = 9.9;
-            const double AngleAccuracyFactor = 2.79;
+            const double pairCountFactor = 0.032;
+            const double pairFractionFactor = 8.98;
+            const double correctTypeFactor = 0.629;
+            const double supportedCountFactor = 0.193;
+            const double edgeCountFactor = 0.265;
+            const double distanceAccuracyFactor = 9.9;
+            const double angleAccuracyFactor = 2.79;
 
-            double score = PairCountFactor * Pairing.Count;
-            score += PairFractionFactor * (Pairing.Count / (double)Template.Minutiae.Count + Pairing.Count / (double)Candidate.Minutiae.Count) / 2;
+            double score = pairCountFactor * Pairing.Count;
+            score += pairFractionFactor * (Pairing.Count / (double)Template.Minutiae.Count + Pairing.Count / (double)Candidate.Minutiae.Count) / 2;
 
             for (int i = 0; i < Pairing.Count; ++i)
             {
                 PairInfo pair = Pairing.GetPair(i);
-                if (pair.SupportingEdges >= MinSupportingEdges)
-                    score += SupportedCountFactor;
-                score += EdgeCountFactor * (pair.SupportingEdges + 1);
+                if (pair.SupportingEdges >= minSupportingEdges)
+                    score += supportedCountFactor;
+                score += edgeCountFactor * (pair.SupportingEdges + 1);
                 if (Template.Minutiae[pair.Pair.Probe].Type == Candidate.Minutiae[pair.Pair.Candidate].Type)
-                    score += CorrectTypeFactor;
+                    score += correctTypeFactor;
             }
 
-            var innerDistanceRadius = Convert.ToInt32(DistanceErrorFlatness * FingerprintMatcher.MaxDistanceError);
-            var innerAngleRadius = Convert.ToInt32(AngleErrorFlatness * FingerprintMatcher.MaxAngleError);
+            var innerDistanceRadius = Convert.ToInt32(distanceErrorFlatness * FingerprintMatcher.MaxDistanceError);
+            var innerAngleRadius = Convert.ToInt32(angleErrorFlatness * FingerprintMatcher.MaxAngleError);
 
-            var DistanceErrorSum = 0;
-            var AngleErrorSum = 0;
+            var distanceErrorSum = 0;
+            var angleErrorSum = 0;
 
             for (int i = 1; i < Pairing.Count; ++i)
             {
                 PairInfo pair = Pairing.GetPair(i);
                 var probeEdge = new EdgeShape(Template, pair.Reference.Probe, pair.Pair.Probe);
                 var candidateEdge = new EdgeShape(Candidate, pair.Reference.Candidate, pair.Pair.Candidate);
-                DistanceErrorSum += Math.Abs(probeEdge.Length - candidateEdge.Length);
-                AngleErrorSum += Math.Max(innerDistanceRadius, Angle.Distance(probeEdge.ReferenceAngle, candidateEdge.ReferenceAngle));
-                AngleErrorSum += Math.Max(innerAngleRadius, Angle.Distance(probeEdge.NeighborAngle, candidateEdge.NeighborAngle));
+                distanceErrorSum += Math.Abs(probeEdge.Length - candidateEdge.Length);
+                angleErrorSum += Math.Max(innerDistanceRadius, Angle.Distance(probeEdge.ReferenceAngle, candidateEdge.ReferenceAngle));
+                angleErrorSum += Math.Max(innerAngleRadius, Angle.Distance(probeEdge.NeighborAngle, candidateEdge.NeighborAngle));
             }
 
             if (Pairing.Count >= 2)
             {
                 var maxDistanceError = FingerprintMatcher.MaxDistanceError * (Pairing.Count - 1);
-                score += DistanceAccuracyFactor * (maxDistanceError - DistanceErrorSum) / maxDistanceError;
+                score += distanceAccuracyFactor * (maxDistanceError - distanceErrorSum) / maxDistanceError;
                 var maxAngleError = FingerprintMatcher.MaxAngleError * (Pairing.Count - 1) * 2;
-                score += AngleAccuracyFactor * (maxAngleError - AngleErrorSum) / maxAngleError;
+                score += angleAccuracyFactor * (maxAngleError - angleErrorSum) / maxAngleError;
             }
 
             return score;
