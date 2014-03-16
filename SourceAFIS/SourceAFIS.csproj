@@ -58,8 +58,6 @@
     <Compile Include="SkeletonMinutia.cs" />
     <Compile Include="SkeletonRidge.cs" />
     <Compile Include="Matching\EdgePair.cs" />
-    <Compile Include="Matching\HashLookup.cs" />
-    <Compile Include="Matching\IndexedEdge.cs" />
     <Compile Include="Matching\PairInfo.cs" />
     <Compile Include="FingerprintMinutia.cs" />
     <Compile Include="FingerprintMinutiaType.cs" />
@@ -75,10 +73,8 @@
     <Compile Include="General\PolarPoint.cs" />
     <Compile Include="General\PriorityQueueF.cs" />
     <Compile Include="General\ReversedList.cs" />
-    <Compile Include="Matching\EdgeHash.cs" />
     <Compile Include="Matching\EdgeLocation.cs" />
     <Compile Include="Matching\EdgeShape.cs" />
-    <Compile Include="Matching\EdgeLookup.cs" />
     <Compile Include="FingerprintMatcher.cs" />
     <Compile Include="Matching\MinutiaPair.cs" />
     <Compile Include="Matching\MinutiaPairing.cs" />
