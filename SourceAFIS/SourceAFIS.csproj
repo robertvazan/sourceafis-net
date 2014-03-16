@@ -79,7 +79,6 @@
     <Compile Include="Matching\EdgeLocation.cs" />
     <Compile Include="Matching\EdgeShape.cs" />
     <Compile Include="Matching\EdgeLookup.cs" />
-    <Compile Include="Matching\RootPairSelector.cs" />
     <Compile Include="FingerprintMatcher.cs" />
     <Compile Include="Matching\MinutiaPair.cs" />
     <Compile Include="Matching\MinutiaPairing.cs" />
