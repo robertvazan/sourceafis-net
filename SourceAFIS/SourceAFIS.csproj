@@ -79,7 +79,6 @@
     <Compile Include="Matching\MinutiaPair.cs" />
     <Compile Include="Matching\MinutiaPairing.cs" />
     <Compile Include="Matching\NeighborEdge.cs" />
-    <Compile Include="Matching\PairSelector.cs" />
     <Compile Include="General\Range.cs" />
     <Compile Include="General\RangeF.cs" />
     <Compile Include="General\Rectangle.cs" />
