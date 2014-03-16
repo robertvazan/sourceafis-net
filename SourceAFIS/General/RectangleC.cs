@@ -88,7 +88,7 @@ namespace SourceAFIS.General
         public PointF GetFraction(Point absolute)
         {
             Point relative = GetRelative(absolute);
-            return new PointF(relative.X / (float)Width, relative.Y / (float)Height);
+            return new PointF(relative.X / (double)Width, relative.Y / (double)Height);
         }
 
         public void Shift(Point relative)

@@ -6,8 +6,8 @@ namespace SourceAFIS.General
 {
     public static class Angle
     {
-        public const float PI = (float)Math.PI;
-        public const float PI2 = (float)(2 * Math.PI);
+        public const double PI = (double)Math.PI;
+        public const double PI2 = (double)(2 * Math.PI);
         public const byte PIB = 128;
 
         public const byte B180 = PIB;
@@ -17,29 +17,29 @@ namespace SourceAFIS.General
         public const byte B30 = B180 / 6;
         public const byte B15 = B180 / 12;
 
-        public static float FromFraction(float fraction)
+        public static double FromFraction(double fraction)
         {
             return fraction * PI2;
         }
 
-        public static float ToFraction(float radians)
+        public static double ToFraction(double radians)
         {
             return radians / PI2;
         }
 
-        public static byte ToByte(float angle)
+        public static byte ToByte(double angle)
         {
             return (byte)Quantize(angle, 256);
         }
 
-        public static float ToFloat(byte angle)
+        public static double ToFloat(byte angle)
         {
             return ByBucketCenter(angle, 256);
         }
 
-        public static PointF ToVector(float angle)
+        public static PointF ToVector(double angle)
         {
-            return new PointF((float)Math.Cos(angle), (float)Math.Sin(angle));
+            return new PointF((double)Math.Cos(angle), (double)Math.Sin(angle));
         }
 
         public static PointF ToVector(byte angle)
@@ -47,7 +47,7 @@ namespace SourceAFIS.General
             return new PointF(Cos(angle), Sin(angle));
         }
 
-        public static float ToOrientation(float direction)
+        public static double ToOrientation(double direction)
         {
             if (direction < PI)
                 return 2 * direction;
@@ -75,20 +75,20 @@ namespace SourceAFIS.General
             return (angle * 360 + 128) / 256;
         }
 
-        public static float Atan(double x, double y)
+        public static double Atan(double x, double y)
         {
             double result = Math.Atan2(y, x);
             if (result < 0)
                 result += 2 * Math.PI;
-            return (float)result;
+            return (double)result;
         }
 
-        public static float Atan(PointF point)
+        public static double Atan(PointF point)
         {
             return Atan(point.X, point.Y);
         }
 
-        public static float Atan(Point point)
+        public static double Atan(Point point)
         {
             return Atan(point.X, point.Y);
         }
@@ -98,7 +98,7 @@ namespace SourceAFIS.General
             return ToByte(Atan(point));
         }
 
-        public static float Atan(Point center, Point point)
+        public static double Atan(Point center, Point point)
         {
             return Atan(Calc.Difference(point, center));
         }
@@ -108,52 +108,52 @@ namespace SourceAFIS.General
             return ToByte(Atan(center, point));
         }
 
-        static float[] PrecomputedSin = PrecomputeSin();
+        static double[] PrecomputedSin = PrecomputeSin();
 
-        static float[] PrecomputeSin()
+        static double[] PrecomputeSin()
         {
-            float[] result = new float[256];
+            double[] result = new double[256];
             for (int i = 0; i < 256; ++i)
-                result[i] = (float)Math.Sin(ToFloat((byte)i));
+                result[i] = (double)Math.Sin(ToFloat((byte)i));
             return result;
         }
 
-        public static float Sin(byte angle)
+        public static double Sin(byte angle)
         {
             return PrecomputedSin[angle];
         }
 
-        static float[] PrecomputedCos = PrecomputeCos();
+        static double[] PrecomputedCos = PrecomputeCos();
 
-        static float[] PrecomputeCos()
+        static double[] PrecomputeCos()
         {
-            float[] result = new float[256];
+            double[] result = new double[256];
             for (int i = 0; i < 256; ++i)
-                result[i] = (float)Math.Cos(ToFloat((byte)i));
+                result[i] = (double)Math.Cos(ToFloat((byte)i));
             return result;
         }
 
-        public static float Cos(byte angle)
+        public static double Cos(byte angle)
         {
             return PrecomputedCos[angle];
         }
 
-        public static float ByBucketBottom(int bucket, int resolution)
+        public static double ByBucketBottom(int bucket, int resolution)
         {
-            return FromFraction((float)bucket / (float)resolution);
+            return FromFraction((double)bucket / (double)resolution);
         }
 
-        public static float ByBucketTop(int bucket, int resolution)
+        public static double ByBucketTop(int bucket, int resolution)
         {
-            return FromFraction((float)(bucket + 1) / (float)resolution);
+            return FromFraction((double)(bucket + 1) / (double)resolution);
         }
 
-        public static float ByBucketCenter(int bucket, int resolution)
+        public static double ByBucketCenter(int bucket, int resolution)
         {
-            return FromFraction((float)(2 * bucket + 1) / (float)(2 * resolution));
+            return FromFraction((double)(2 * bucket + 1) / (double)(2 * resolution));
         }
 
-        public static int Quantize(float angle, int resolution)
+        public static int Quantize(double angle, int resolution)
         {
             int result = (int)(ToFraction(angle) * resolution);
             if (result < 0)
@@ -169,9 +169,9 @@ namespace SourceAFIS.General
             return (int)angle * resolution / 256;
         }
 
-        public static float Add(float angle1, float angle2)
+        public static double Add(double angle1, double angle2)
         {
-            float result = angle1 + angle2;
+            double result = angle1 + angle2;
             if (result < PI2)
                 return result;
             else

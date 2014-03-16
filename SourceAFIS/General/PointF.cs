@@ -4,10 +4,10 @@ namespace SourceAFIS.General
 {
     public struct PointF
     {
-        public float X;
-        public float Y;
+        public double X;
+        public double Y;
 
-        public PointF(float x, float y)
+        public PointF(double x, double y)
         {
             X = x;
             Y = y;
@@ -23,7 +23,7 @@ namespace SourceAFIS.General
             return new PointF(left.X + right.Width, left.Y + right.Height);
         }
 
-        public static PointF operator *(float factor, PointF point)
+        public static PointF operator *(double factor, PointF point)
         {
             return new PointF(factor * point.X, factor * point.Y);
         }

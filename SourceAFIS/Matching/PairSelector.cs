@@ -14,7 +14,7 @@ namespace SourceAFIS.Matching
             Queue.Clear();
         }
 
-        public void Enqueue(EdgePair pair, float distance)
+        public void Enqueue(EdgePair pair, double distance)
         {
             Queue.Enqueue(distance, pair);
         }

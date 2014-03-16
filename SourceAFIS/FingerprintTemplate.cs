@@ -23,12 +23,12 @@ namespace SourceAFIS
             var histogram = ComputeHistogram(blocks, image);
             var smoothHistogram = ComputeSmoothedHistogram(blocks, histogram);
             BinaryMap mask = ComputeMask(blocks, histogram);
-            float[,] equalized = Equalize(blocks, image, smoothHistogram, mask);
+            double[,] equalized = Equalize(blocks, image, smoothHistogram, mask);
 
             byte[,] orientation = ComputeOrientationMap(equalized, mask, blocks);
-            float[,] smoothed = SmoothByOrientation(equalized, orientation, mask, blocks, 0, ConstructOrientedLines(step: 1.59f));
-            float[,] orthogonal = SmoothByOrientation(smoothed, orientation, mask, blocks, Angle.PIB,
-                ConstructOrientedLines(resolution: 11, radius: 4, step: 1.11f));
+            double[,] smoothed = SmoothByOrientation(equalized, orientation, mask, blocks, 0, ConstructOrientedLines(step: 1.59));
+            double[,] orthogonal = SmoothByOrientation(smoothed, orientation, mask, blocks, Angle.PIB,
+                ConstructOrientedLines(resolution: 11, radius: 4, step: 1.11));
 
             BinaryMap binary = Binarize(smoothed, orthogonal, mask, blocks);
             binary.AndNot(FilterBinarized(binary.GetInverted()));
@@ -126,7 +126,7 @@ namespace SourceAFIS
 
             BinaryMap mask = new BinaryMap(ComputeAbsoluteContrast(contrast));
             mask.Or(ComputeRelativeContrast(contrast, blocks));
-            mask.Or(ApplyVotingFilter(mask, radius: 9, majority: 0.86f, borderDist: 7));
+            mask.Or(ApplyVotingFilter(mask, radius: 9, majority: 0.86, borderDist: 7));
 
             mask.Or(FilterBlockErrors(mask));
             mask.Invert();
@@ -137,12 +137,12 @@ namespace SourceAFIS
             return mask;
         }
 
-        static BinaryMap FilterBlockErrors(BinaryMap input) { return ApplyVotingFilter(input, majority: 0.7f, borderDist: 4); }
-        static BinaryMap FilterBinarized(BinaryMap input) { return ApplyVotingFilter(input, radius: 2, majority: 0.61f, borderDist: 17); }
+        static BinaryMap FilterBlockErrors(BinaryMap input) { return ApplyVotingFilter(input, majority: 0.7, borderDist: 4); }
+        static BinaryMap FilterBinarized(BinaryMap input) { return ApplyVotingFilter(input, radius: 2, majority: 0.61, borderDist: 17); }
 
         static byte[,] ComputeClippedContrast(BlockMap blocks, short[, ,] histogram)
         {
-            const float clipFraction = 0.08f;
+            const double clipFraction = 0.08;
 
             byte[,] result = new byte[blocks.BlockCount.Height, blocks.BlockCount.Width];
             foreach (var block in blocks.AllBlocks)
@@ -195,8 +195,8 @@ namespace SourceAFIS
         static BinaryMap ComputeRelativeContrast(byte[,] contrast, BlockMap blocks)
         {
             const int sampleSize = 168568;
-            const float sampleFraction = 0.49f;
-            const float relativeLimit = 0.34f;
+            const double sampleFraction = 0.49;
+            const double relativeLimit = 0.34;
 
             List<byte> sortedContrast = new List<byte>();
             foreach (byte contrastItem in contrast)
@@ -222,7 +222,7 @@ namespace SourceAFIS
             return result;
         }
 
-        static BinaryMap ApplyVotingFilter(BinaryMap input, int radius = 1, float majority = 0.51f, int borderDist = 0)
+        static BinaryMap ApplyVotingFilter(BinaryMap input, int radius = 1, double majority = 0.51, int borderDist = 0)
         {
             RectangleC rect = new RectangleC(new Point(borderDist, borderDist),
                 new Size(input.Width - 2 * borderDist, input.Height - 2 * borderDist));
@@ -249,29 +249,29 @@ namespace SourceAFIS
             return output;
         }
 
-        static float[,] Equalize(BlockMap blocks, byte[,] image, short[, ,] histogram, BinaryMap blockMask)
+        static double[,] Equalize(BlockMap blocks, byte[,] image, short[, ,] histogram, BinaryMap blockMask)
         {
-            const float maxScaling = 3.99f;
-            const float minScaling = 0.25f;
+            const double maxScaling = 3.99;
+            const double minScaling = 0.25;
 
-            const float rangeMin = -1;
-            const float rangeMax = 1;
-            const float rangeSize = rangeMax - rangeMin;
+            const double rangeMin = -1;
+            const double rangeMax = 1;
+            const double rangeSize = rangeMax - rangeMin;
 
-            const float widthMax = rangeSize / 256f * maxScaling;
-            const float widthMin = rangeSize / 256f * minScaling;
+            const double widthMax = rangeSize / 256 * maxScaling;
+            const double widthMin = rangeSize / 256 * minScaling;
 
-            var limitedMin = new float[256];
-            var limitedMax = new float[256];
-            var toFloatTable = new float[256];
+            var limitedMin = new double[256];
+            var limitedMax = new double[256];
+            var toFloatTable = new double[256];
             for (int i = 0; i < 256; ++i)
             {
                 limitedMin[i] = Math.Max(i * widthMin + rangeMin, rangeMax - (255 - i) * widthMax);
                 limitedMax[i] = Math.Min(i * widthMax + rangeMin, rangeMax - (255 - i) * widthMin);
-                toFloatTable[i] = i / 255f;
+                toFloatTable[i] = i / 255;
             }
 
-            var cornerMapping = new float[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
+            var cornerMapping = new double[blocks.CornerCount.Height, blocks.CornerCount.Width, 256];
             foreach (var corner in blocks.AllCorners)
             {
                 if (blockMask.GetBitSafe(corner.X, corner.Y, false)
@@ -282,16 +282,16 @@ namespace SourceAFIS
                     int area = 0;
                     for (int i = 0; i < 256; ++i)
                         area += histogram[corner.Y, corner.X, i];
-                    float widthWeigth = rangeSize / area;
+                    double widthWeigth = rangeSize / area;
 
-                    float top = rangeMin;
+                    double top = rangeMin;
                     for (int i = 0; i < 256; ++i)
                     {
-                        float width = histogram[corner.Y, corner.X, i] * widthWeigth;
-                        float equalized = top + toFloatTable[i] * width;
+                        double width = histogram[corner.Y, corner.X, i] * widthWeigth;
+                        double equalized = top + toFloatTable[i] * width;
                         top += width;
 
-                        float limited = equalized;
+                        double limited = equalized;
                         if (limited < limitedMin[i])
                             limited = limitedMin[i];
                         if (limited > limitedMax[i])
@@ -301,7 +301,7 @@ namespace SourceAFIS
                 }
             }
 
-            var result = new float[blocks.PixelCount.Height, blocks.PixelCount.Width];
+            var result = new double[blocks.PixelCount.Height, blocks.PixelCount.Width];
             foreach (var block in blocks.AllBlocks)
             {
                 if (blockMask.GetBit(block))
@@ -312,10 +312,10 @@ namespace SourceAFIS
                         {
                             byte pixel = image[y, x];
 
-                            float bottomLeft = cornerMapping[block.Y, block.X, pixel];
-                            float bottomRight = cornerMapping[block.Y, block.X + 1, pixel];
-                            float topLeft = cornerMapping[block.Y + 1, block.X, pixel];
-                            float topRight = cornerMapping[block.Y + 1, block.X + 1, pixel];
+                            double bottomLeft = cornerMapping[block.Y, block.X, pixel];
+                            double bottomRight = cornerMapping[block.Y, block.X + 1, pixel];
+                            double topLeft = cornerMapping[block.Y + 1, block.X, pixel];
+                            double topRight = cornerMapping[block.Y + 1, block.X + 1, pixel];
 
                             var fraction = area.GetFraction(new Point(x, y));
                             result[y, x] = Calc.Interpolate(topLeft, topRight, bottomLeft, bottomRight, fraction);
@@ -325,7 +325,7 @@ namespace SourceAFIS
             return result;
         }
 
-        static byte[,] ComputeOrientationMap(float[,] image, BinaryMap mask, BlockMap blocks)
+        static byte[,] ComputeOrientationMap(double[,] image, BinaryMap mask, BlockMap blocks)
         {
             PointF[,] accumulated = ComputePixelwiseOrientation(image, mask, blocks);
             PointF[,] byBlock = AverageBlockOrientations(accumulated, blocks, mask);
@@ -339,7 +339,7 @@ namespace SourceAFIS
             public PointF OrientationVector;
         }
 
-        static PointF[,] ComputePixelwiseOrientation(float[,] input, BinaryMap mask, BlockMap blocks)
+        static PointF[,] ComputePixelwiseOrientation(double[,] input, BinaryMap mask, BlockMap blocks)
         {
             List<List<ConsideredOrientation>> neighbors = GetTestedOrientations();
 
@@ -362,10 +362,10 @@ namespace SourceAFIS
                                     Math.Min(input.GetLength(1) - radius, validXRange.End));
                                 for (int x = xRange.Begin; x < xRange.End; ++x)
                                 {
-                                    float before = input[y - neighbor.CheckLocation.Y, x - neighbor.CheckLocation.X];
-                                    float at = input[y, x];
-                                    float after = input[y + neighbor.CheckLocation.Y, x + neighbor.CheckLocation.X];
-                                    float strength = at - Math.Max(before, after);
+                                    double before = input[y - neighbor.CheckLocation.Y, x - neighbor.CheckLocation.X];
+                                    double at = input[y, x];
+                                    double after = input[y + neighbor.CheckLocation.Y, x + neighbor.CheckLocation.X];
+                                    double strength = at - Math.Max(before, after);
                                     if (strength > 0)
                                         orientation[y, x] = Calc.Add(orientation[y, x], Calc.Multiply(strength, neighbor.OrientationVector));
                                 }
@@ -379,8 +379,8 @@ namespace SourceAFIS
 
         static List<List<ConsideredOrientation>> GetTestedOrientations()
         {
-            const float minHalfDistance = 2;
-            const float maxHalfDistance = 6;
+            const double minHalfDistance = 2;
+            const double maxHalfDistance = 6;
             const int orientationListSplit = 50;
             const int orientationsChecked = 20;
 
@@ -394,8 +394,8 @@ namespace SourceAFIS
                     ConsideredOrientation orientation = new ConsideredOrientation();
                     do
                     {
-                        float angle = Angle.FromFraction((float)random.NextDouble() * 0.5f);
-                        float distance = Calc.InterpolateExponential(minHalfDistance, maxHalfDistance, (float)random.NextDouble());
+                        double angle = Angle.FromFraction((double)random.NextDouble() * 0.5);
+                        double distance = Calc.InterpolateExponential(minHalfDistance, maxHalfDistance, (double)random.NextDouble());
                         orientation.CheckLocation = Calc.Round(Calc.Multiply(distance, Angle.ToVector(angle)));
                     } while (orientation.CheckLocation == new Point() || orientation.CheckLocation.Y < 0);
                     orientation.OrientationVector = Angle.ToVector(Angle.Add(Angle.ToOrientation(Angle.Atan(orientation.CheckLocation)), Angle.PI));
@@ -474,7 +474,7 @@ namespace SourceAFIS
             return angles;
         }
 
-        Point[][] ConstructOrientedLines(int resolution = 32, int radius = 7, float step = 1.5f)
+        Point[][] ConstructOrientedLines(int resolution = 32, int radius = 7, double step = 1.5)
         {
             Point[][] result = new Point[resolution][];
             for (int orientationIndex = 0; orientationIndex < resolution; ++orientationIndex)
@@ -482,7 +482,7 @@ namespace SourceAFIS
                 List<Point> line = new List<Point>();
                 line.Add(new Point());
                 PointF direction = Angle.ToVector(Angle.ByBucketCenter(orientationIndex, 2 * resolution));
-                for (float r = radius; r >= 0.5f; r /= step)
+                for (double r = radius; r >= 0.5; r /= step)
                 {
                     Point point = Calc.Round(Calc.Multiply(r, direction));
                     if (!line.Contains(point))
@@ -497,9 +497,9 @@ namespace SourceAFIS
             return result;
         }
 
-        static float[,] SmoothByOrientation(float[,] input, byte[,] orientation, BinaryMap mask, BlockMap blocks, byte angle, Point[][] lines)
+        static double[,] SmoothByOrientation(double[,] input, byte[,] orientation, BinaryMap mask, BlockMap blocks, byte angle, Point[][] lines)
         {
-            float[,] output = new float[input.GetLength(0), input.GetLength(1)];
+            double[,] output = new double[input.GetLength(0), input.GetLength(1)];
             foreach (var block in blocks.AllBlocks)
             {
                 if (mask.GetBit(block))
@@ -518,13 +518,13 @@ namespace SourceAFIS
                     RectangleC blockArea = blocks.BlockAreas[block];
                     for (int y = blockArea.Bottom; y < blockArea.Top; ++y)
                         for (int x = blockArea.Left; x < blockArea.Right; ++x)
-                            output[y, x] *= 1f / line.Length;
+                            output[y, x] *= 1 / line.Length;
                 }
             }
             return output;
         }
 
-        static BinaryMap Binarize(float[,] input, float[,] baseline, BinaryMap mask, BlockMap blocks)
+        static BinaryMap Binarize(double[,] input, double[,] baseline, BinaryMap mask, BlockMap blocks)
         {
             BinaryMap binarized = new BinaryMap(input.GetLength(1), input.GetLength(0));
             for (int blockY = 0; blockY < blocks.AllBlocks.Height; ++blockY)
@@ -623,7 +623,7 @@ namespace SourceAFIS
 
         void ApplyMask(BinaryMap mask)
         {
-            const float directedExtension = 10.06f;
+            const double directedExtension = 10.06;
             Minutiae.RemoveAll(minutia =>
             {
                 var arrow = Calc.Round(-directedExtension * Angle.ToVector(minutia.Direction));

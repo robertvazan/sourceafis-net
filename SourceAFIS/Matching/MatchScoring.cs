@@ -7,17 +7,17 @@ namespace SourceAFIS.Matching
 {
     public static class MatchScoring
     {
-        const float PairCountFactor = 0.032f;
-        const float PairFractionFactor = 8.98f;
-        const float CorrectTypeFactor = 0.629f;
-        const float SupportedCountFactor = 0.193f;
-        const float EdgeCountFactor = 0.265f;
-        const float DistanceAccuracyFactor = 9.9f;
-        const float AngleAccuracyFactor = 2.79f;
+        const double PairCountFactor = 0.032;
+        const double PairFractionFactor = 8.98;
+        const double CorrectTypeFactor = 0.629;
+        const double SupportedCountFactor = 0.193;
+        const double EdgeCountFactor = 0.265;
+        const double DistanceAccuracyFactor = 9.9;
+        const double AngleAccuracyFactor = 2.79;
 
-        public static float Compute(MatchAnalysis analysis)
+        public static double Compute(MatchAnalysis analysis)
         {
-            float score = 0;
+            double score = 0;
             
             score += PairCountFactor * analysis.PairCount;
             score += CorrectTypeFactor * analysis.CorrectTypeCount;

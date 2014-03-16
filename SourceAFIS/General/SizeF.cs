@@ -4,10 +4,10 @@ namespace SourceAFIS.General
 {
     public struct SizeF
     {
-        public float Width;
-        public float Height;
+        public double Width;
+        public double Height;
 
-        public SizeF(float width, float height)
+        public SizeF(double width, double height)
         {
             Width = width;
             Height = height;

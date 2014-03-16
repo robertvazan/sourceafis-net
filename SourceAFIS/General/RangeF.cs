@@ -6,23 +6,23 @@ namespace SourceAFIS.General
 {
     public struct RangeF
     {
-        public float Begin;
-        public float End;
+        public double Begin;
+        public double End;
 
-        public float Length { get { return End - Begin; } }
+        public double Length { get { return End - Begin; } }
 
-        public RangeF(float begin, float end)
+        public RangeF(double begin, double end)
         {
             Begin = begin;
             End = end;
         }
 
-        public float GetFraction(float value)
+        public double GetFraction(double value)
         {
             return (value - Begin) / Length;
         }
 
-        public float Interpolate(float fraction)
+        public double Interpolate(double fraction)
         {
             return Calc.Interpolate(Begin, End, fraction);
         }

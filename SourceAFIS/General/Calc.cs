@@ -67,20 +67,20 @@ namespace SourceAFIS.General
             return value * value;
         }
 
-        public static float Sq(float value)
+        public static double Sq(double value)
         {
             return value * value;
         }
 
-        public static float Interpolate(float value0, float value1, float fraction)
+        public static double Interpolate(double value0, double value1, double fraction)
         {
             return value0 + fraction * (value1 - value0);
         }
 
-        public static float Interpolate(float topLeft, float topRight, float bottomLeft, float bottomRight, PointF fraction)
+        public static double Interpolate(double topLeft, double topRight, double bottomLeft, double bottomRight, PointF fraction)
         {
-            float left = Interpolate(bottomLeft, topLeft, fraction.Y);
-            float right = Interpolate(bottomRight, topRight, fraction.Y);
+            double left = Interpolate(bottomLeft, topLeft, fraction.Y);
+            double right = Interpolate(bottomRight, topRight, fraction.Y);
             return Interpolate(left, right, fraction.X);
         }
 
@@ -89,9 +89,9 @@ namespace SourceAFIS.General
             return (index * range + count / 2) / count;
         }
 
-        public static float InterpolateExponential(float value0, float value1, float fraction)
+        public static double InterpolateExponential(double value0, double value1, double fraction)
         {
-            return (float)Math.Pow(value1 / value0, fraction) * value0;
+            return (double)Math.Pow(value1 / value0, fraction) * value0;
         }
 
         public static Point Add(Point left, Point right)
@@ -114,7 +114,7 @@ namespace SourceAFIS.General
             return new Point(-point.X, -point.Y);
         }
 
-        public static PointF Multiply(float scale, PointF point)
+        public static PointF Multiply(double scale, PointF point)
         {
             return new PointF(scale * point.X, scale * point.Y);
         }
@@ -124,7 +124,7 @@ namespace SourceAFIS.General
             return new Point(Convert.ToInt32(point.X), Convert.ToInt32(point.Y));
         }
 
-        public static float DistanceSq(PointF point)
+        public static double DistanceSq(PointF point)
         {
             return Sq(point.X) + Sq(point.Y);
         }
@@ -160,7 +160,7 @@ namespace SourceAFIS.General
             return 0;
         }
 
-        public static int Compare(float left, float right)
+        public static int Compare(double left, double right)
         {
             if (left < right)
                 return -1;
@@ -192,12 +192,12 @@ namespace SourceAFIS.General
                 if (relative.X > 0)
                 {
                     for (int i = 0; i <= relative.X; ++i)
-                        result[i] = new Point(from.X + i, from.Y + Convert.ToInt32(i * (relative.Y / (float)relative.X)));
+                        result[i] = new Point(from.X + i, from.Y + Convert.ToInt32(i * (relative.Y / (double)relative.X)));
                 }
                 else if (relative.X < 0)
                 {
                     for (int i = 0; i <= -relative.X; ++i)
-                        result[i] = new Point(from.X - i, from.Y - Convert.ToInt32(i * (relative.Y / (float)relative.X)));
+                        result[i] = new Point(from.X - i, from.Y - Convert.ToInt32(i * (relative.Y / (double)relative.X)));
                 }
                 else
                     result[0] = from;
@@ -208,12 +208,12 @@ namespace SourceAFIS.General
                 if (relative.Y > 0)
                 {
                     for (int i = 0; i <= relative.Y; ++i)
-                        result[i] = new Point(from.X + Convert.ToInt32(i * (relative.X / (float)relative.Y)), from.Y + i);
+                        result[i] = new Point(from.X + Convert.ToInt32(i * (relative.X / (double)relative.Y)), from.Y + i);
                 }
                 else if (relative.Y < 0)
                 {
                     for (int i = 0; i <= -relative.Y; ++i)
-                        result[i] = new Point(from.X - Convert.ToInt32(i * (relative.X / (float)relative.Y)), from.Y - i);
+                        result[i] = new Point(from.X - Convert.ToInt32(i * (relative.X / (double)relative.Y)), from.Y - i);
                 }
                 else
                     result[0] = from;
@@ -253,9 +253,9 @@ namespace SourceAFIS.General
             return outer.Length >= inner.Length && outer.Substring(0, inner.Length) == inner;
         }
 
-        public static float Median(this IEnumerable<float> sequence)
+        public static double Median(this IEnumerable<double> sequence)
         {
-            List<float> sorted = sequence.OrderBy(item => item).ToList();
+            List<double> sorted = sequence.OrderBy(item => item).ToList();
             return sorted[(sorted.Count - 1) / 2];
         }
 

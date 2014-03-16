@@ -8,13 +8,13 @@ namespace SourceAFIS.Matching
     public sealed class MatchAnalysis
     {
         const int MinSupportingEdges = 1;
-        const float DistanceErrorFlatness = 0.69f;
-        const float AngleErrorFlatness = 0.27f;
+        const double DistanceErrorFlatness = 0.69;
+        const double AngleErrorFlatness = 0.27;
 
         public int PairCount;
         public int CorrectTypeCount;
         public int SupportedCount;
-        public float PairFraction;
+        public double PairFraction;
         public int EdgeCount;
         public int DistanceErrorSum;
         public int AngleErrorSum;
@@ -50,8 +50,8 @@ namespace SourceAFIS.Matching
                 }
             }
 
-            float probeFraction = PairCount / (float)probe.Minutiae.Count;
-            float candidateFraction = PairCount / (float)candidate.Minutiae.Count;
+            double probeFraction = PairCount / (double)probe.Minutiae.Count;
+            double candidateFraction = PairCount / (double)candidate.Minutiae.Count;
             PairFraction = (probeFraction + candidateFraction) / 2;
         }
     }
