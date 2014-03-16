@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
-using SourceAFIS.General;
+using SourceAFIS.Utils;
 
 namespace SourceAFIS
 {
-    public sealed class FingerprintSkeleton
+    class FingerprintSkeleton
     {
         public Point Size;
         public List<SkeletonMinutia> Minutiae = new List<SkeletonMinutia>();

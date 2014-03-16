@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Utils
 {
-    public struct Range
+    struct Range
     {
         public Range(int begin, int end)
         {

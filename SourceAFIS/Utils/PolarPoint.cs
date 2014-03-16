@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Utils
 {
-    public struct PolarPoint
+    struct PolarPoint
     {
         public int Distance;
         public byte Angle;

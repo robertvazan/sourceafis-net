@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Utils
 {
-    public sealed class ReversedList<T> : IList<T>
+    class ReversedList<T> : IList<T>
     {
         IList<T> Inner;
 

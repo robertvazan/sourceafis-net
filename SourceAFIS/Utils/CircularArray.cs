@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Utils
 {
-    public sealed class CircularArray<T> : IList<T>
+    class CircularArray<T> : IList<T>
     {
         T[] Inner;
         int First;

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Utils
 {
-    public static class Neighborhood
+    static class Neighborhood
     {
         public static readonly Point[] EdgeNeighbors = new Point[] {
             new Point(0, -1),

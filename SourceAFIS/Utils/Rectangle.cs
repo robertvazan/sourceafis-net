@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Utils
 {
-    public struct Rectangle : IList<Point>
+    struct Rectangle : IList<Point>
     {
         public int X;
         public int Y;

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SourceAFIS.General;
+using SourceAFIS.Utils;
 using System.Collections.ObjectModel;
 
 namespace SourceAFIS
 {
-    public class SkeletonMinutia
+    class SkeletonMinutia
     {
         public bool IsConsidered = true;
         public readonly Point Position;

@@ -60,23 +60,23 @@
     <Compile Include="FingerprintMinutia.cs" />
     <Compile Include="FingerprintMinutiaType.cs" />
     <Compile Include="FingerprintTemplate.cs" />
-    <Compile Include="General\Angle.cs" />
-    <Compile Include="General\BitImage.cs" />
-    <Compile Include="General\BlockMap.cs" />
-    <Compile Include="General\MathEx.cs" />
-    <Compile Include="General\CircularArray.cs" />
-    <Compile Include="General\Neighborhood.cs" />
-    <Compile Include="General\Point.cs" />
-    <Compile Include="General\PointF.cs" />
-    <Compile Include="General\PolarPoint.cs" />
-    <Compile Include="General\PriorityQueueF.cs" />
-    <Compile Include="General\ReversedList.cs" />
+    <Compile Include="Utils\Angle.cs" />
+    <Compile Include="Utils\BitImage.cs" />
+    <Compile Include="Utils\BlockMap.cs" />
+    <Compile Include="Utils\MathEx.cs" />
+    <Compile Include="Utils\CircularArray.cs" />
+    <Compile Include="Utils\Neighborhood.cs" />
+    <Compile Include="Utils\Point.cs" />
+    <Compile Include="Utils\PointF.cs" />
+    <Compile Include="Utils\PolarPoint.cs" />
+    <Compile Include="Utils\PriorityQueueF.cs" />
+    <Compile Include="Utils\ReversedList.cs" />
     <Compile Include="EdgeShape.cs" />
     <Compile Include="FingerprintMatcher.cs" />
     <Compile Include="NeighborEdge.cs" />
-    <Compile Include="General\Range.cs" />
-    <Compile Include="General\RangeF.cs" />
-    <Compile Include="General\Rectangle.cs" />
+    <Compile Include="Utils\Range.cs" />
+    <Compile Include="Utils\RangeF.cs" />
+    <Compile Include="Utils\Rectangle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

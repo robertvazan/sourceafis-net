@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SourceAFIS.General;
+using SourceAFIS.Utils;
 
 namespace SourceAFIS
 {
-    public struct EdgeShape
+    struct EdgeShape
     {
         public readonly int Length;
         public readonly byte ReferenceAngle;

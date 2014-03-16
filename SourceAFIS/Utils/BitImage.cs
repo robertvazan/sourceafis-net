@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Utils
 {
-    public sealed class BitImage
+    class BitImage
     {
         public readonly int WordWidth;
         public readonly int Width;
