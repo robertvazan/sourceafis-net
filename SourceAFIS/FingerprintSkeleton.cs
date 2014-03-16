@@ -12,7 +12,7 @@ namespace SourceAFIS
         public Size Size;
         public List<SkeletonMinutia> Minutiae = new List<SkeletonMinutia>();
 
-        public FingerprintSkeleton(BinaryMap binary)
+        public FingerprintSkeleton(BitImage binary)
         {
             Size = binary.Size;
             var thinned = Thin(binary);
@@ -24,7 +24,7 @@ namespace SourceAFIS
             Filter();
         }
 
-        static List<Point> FindMinutiae(BinaryMap thinned)
+        static List<Point> FindMinutiae(BitImage thinned)
         {
             bool[] isMinutia = GetMinutiaMasks();
             List<Point> result = new List<Point>();
@@ -100,7 +100,7 @@ namespace SourceAFIS
             return centers;
         }
 
-        static void TraceRidges(BinaryMap thinned, Dictionary<Point, SkeletonMinutia> minutiaePoints)
+        static void TraceRidges(BitImage thinned, Dictionary<Point, SkeletonMinutia> minutiaePoints)
         {
             Dictionary<Point, SkeletonRidge> leads = new Dictionary<Point, SkeletonRidge>();
             foreach (Point minutiaPoint in minutiaePoints.Keys)
@@ -162,16 +162,16 @@ namespace SourceAFIS
             Removable
         }
 
-        static BinaryMap Thin(BinaryMap input)
+        static BitImage Thin(BitImage input)
         {
             const int maxIterations = 26;
 
             var neighborhoodTypes = GetNeighborhoodTypes();
-            BinaryMap intermediate = new BinaryMap(input.Size);
+            BitImage intermediate = new BitImage(input.Size);
             intermediate.Copy(input, new RectangleC(1, 1, input.Width - 2, input.Height - 2), new Point(1, 1));
 
-            BinaryMap border = new BinaryMap(input.Size);
-            BinaryMap thinned = new BinaryMap(input.Size);
+            BitImage border = new BitImage(input.Size);
+            BitImage thinned = new BitImage(input.Size);
             bool removedAnything = true;
             for (int i = 0; i < maxIterations && removedAnything; ++i)
             {
@@ -202,7 +202,7 @@ namespace SourceAFIS
                             if (y % 2 == odd)
                                 for (int xw = 0; xw < input.WordWidth; ++xw)
                                     if (border.IsWordNonZero(xw, y))
-                                        for (int x = xw << BinaryMap.WordShift; x < (xw << BinaryMap.WordShift) + BinaryMap.WordSize; ++x)
+                                        for (int x = xw << BitImage.WordShift; x < (xw << BitImage.WordShift) + BitImage.WordSize; ++x)
                                             if (x > 0 && x < input.Width - 1 && border.GetBit(x, y))
                                             {
                                                 uint neighbors = intermediate.GetNeighborhood(x, y);
@@ -252,7 +252,7 @@ namespace SourceAFIS
             return types;
         }
 
-        static bool IsFalseEnding(BinaryMap binary, Point ending)
+        static bool IsFalseEnding(BitImage binary, Point ending)
         {
             foreach (Point relativeNeighbor in Neighborhood.CornerNeighbors)
             {
@@ -328,7 +328,7 @@ namespace SourceAFIS
                             queue.Enqueue(Calc.DistanceSq(end1.Position, end2.Position), gap);
                         }
 
-            BinaryMap shadow = GetShadow();
+            BitImage shadow = GetShadow();
             while (queue.Count > 0)
             {
                 Gap gap = queue.Dequeue();
@@ -375,7 +375,7 @@ namespace SourceAFIS
                 return ridge.End.Position;
         }
 
-        static bool IsRidgeOverlapping(Point[] line, BinaryMap shadow)
+        static bool IsRidgeOverlapping(Point[] line, BitImage shadow)
         {
             const int toleratedOverlapLength = 2;
             for (int i = toleratedOverlapLength; i < line.Length - toleratedOverlapLength; ++i)
@@ -384,7 +384,7 @@ namespace SourceAFIS
             return false;
         }
 
-        static void AddGapRidge(BinaryMap shadow, Gap gap, Point[] line)
+        static void AddGapRidge(BitImage shadow, Gap gap, Point[] line)
         {
             SkeletonRidge ridge = new SkeletonRidge();
             foreach (Point point in line)
@@ -474,9 +474,9 @@ namespace SourceAFIS
             Minutiae.Remove(minutia);
         }
 
-        BinaryMap GetShadow()
+        BitImage GetShadow()
         {
-            BinaryMap shadow = new BinaryMap(Size);
+            BitImage shadow = new BitImage(Size);
             foreach (SkeletonMinutia minutia in Minutiae)
             {
                 shadow.SetBitOne(minutia.Position);

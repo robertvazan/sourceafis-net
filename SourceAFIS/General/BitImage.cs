@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SourceAFIS.General
 {
-    public sealed class BinaryMap : ICloneable
+    public sealed class BitImage
     {
         public readonly int WordWidth;
         public readonly int Width;
@@ -20,7 +20,7 @@ namespace SourceAFIS.General
 
         readonly uint[,] Map;
 
-        public BinaryMap(int width, int height)
+        public BitImage(int width, int height)
         {
             Width = width;
             Height = height;
@@ -28,12 +28,12 @@ namespace SourceAFIS.General
             Map = new uint[height, WordWidth];
         }
 
-        public BinaryMap(Size size)
+        public BitImage(Size size)
             : this(size.Width, size.Height)
         {
         }
 
-        public BinaryMap(BinaryMap other)
+        public BitImage(BitImage other)
         {
             Width = other.Width;
             Height = other.Height;
@@ -42,11 +42,6 @@ namespace SourceAFIS.General
             for (int y = 0; y < Map.GetLength(0); ++y)
                 for (int x = 0; x < Map.GetLength(1); ++x)
                     Map[y, x] = other.Map[y, x];
-        }
-
-        public object Clone()
-        {
-            return new BinaryMap(this);
         }
 
         public bool IsWordNonZero(int xw, int y) { return Map[y, xw] != 0; }
@@ -93,9 +88,9 @@ namespace SourceAFIS.General
                     Map[y, Map.GetLength(1) - 1] &= ~0u >> (WordSize - (int)((uint)Width & WordMask));
         }
 
-        public BinaryMap GetInverted()
+        public BitImage GetInverted()
         {
-            BinaryMap result = new BinaryMap(Size);
+            BitImage result = new BitImage(Size);
             for (int y = 0; y < Map.GetLength(0); ++y)
                 for (int x = 0; x < Map.GetLength(1); ++x)
                     result.Map[y, x] = ~Map[y, x];
@@ -160,7 +155,7 @@ namespace SourceAFIS.General
 
         delegate void CombineFunction(uint[] target, uint[] source);
 
-        void Combine(BinaryMap source, RectangleC area, Point at, CombineFunction function)
+        void Combine(BitImage source, RectangleC area, Point at, CombineFunction function)
         {
             int shift = (int)((uint)area.X & WordMask) - (int)((uint)at.X & WordMask);
             int vectorSize = (area.Width >> WordShift) + 2;
@@ -179,12 +174,12 @@ namespace SourceAFIS.General
             }
         }
 
-        public void Copy(BinaryMap source)
+        public void Copy(BitImage source)
         {
             Copy(source, Rect, new Point());
         }
 
-        public void Copy(BinaryMap source, RectangleC area, Point at)
+        public void Copy(BitImage source, RectangleC area, Point at)
         {
             int shift = (int)((uint)area.X & WordMask) - (int)((uint)at.X & WordMask);
             var vector = new uint[(area.Width >> WordShift) + 2];
@@ -199,12 +194,12 @@ namespace SourceAFIS.General
             }
         }
 
-        public void Or(BinaryMap source)
+        public void Or(BitImage source)
         {
             Or(source, Rect, new Point());
         }
 
-        public void Or(BinaryMap source, RectangleC area, Point at)
+        public void Or(BitImage source, RectangleC area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -213,12 +208,12 @@ namespace SourceAFIS.General
             });
         }
 
-        public void And(BinaryMap source)
+        public void And(BitImage source)
         {
             And(source, Rect, new Point());
         }
 
-        public void And(BinaryMap source, RectangleC area, Point at)
+        public void And(BitImage source, RectangleC area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -227,12 +222,12 @@ namespace SourceAFIS.General
             });
         }
 
-        public void Xor(BinaryMap source)
+        public void Xor(BitImage source)
         {
             Xor(source, Rect, new Point());
         }
 
-        public void Xor(BinaryMap source, RectangleC area, Point at)
+        public void Xor(BitImage source, RectangleC area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -241,12 +236,12 @@ namespace SourceAFIS.General
             });
         }
 
-        public void OrNot(BinaryMap source)
+        public void OrNot(BitImage source)
         {
             OrNot(source, Rect, new Point());
         }
 
-        public void OrNot(BinaryMap source, RectangleC area, Point at)
+        public void OrNot(BitImage source, RectangleC area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -255,12 +250,12 @@ namespace SourceAFIS.General
             });
         }
 
-        public void AndNot(BinaryMap source)
+        public void AndNot(BitImage source)
         {
             AndNot(source, Rect, new Point());
         }
 
-        public void AndNot(BinaryMap source, RectangleC area, Point at)
+        public void AndNot(BitImage source, RectangleC area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -326,9 +321,9 @@ namespace SourceAFIS.General
             }
         }
 
-        public BinaryMap FillBlocks(BlockMap blocks)
+        public BitImage FillBlocks(BlockMap blocks)
         {
-            BinaryMap result = new BinaryMap(blocks.PixelCount);
+            BitImage result = new BitImage(blocks.PixelCount);
             for (int blockY = 0; blockY < blocks.BlockCount.Height; ++blockY)
             {
                 for (int blockX = 0; blockX < blocks.BlockCount.Width; ++blockX)
@@ -338,9 +333,9 @@ namespace SourceAFIS.General
             return result;
         }
 
-        public BinaryMap FillCornerAreas(BlockMap blocks)
+        public BitImage FillCornerAreas(BlockMap blocks)
         {
-            BinaryMap result = new BinaryMap(blocks.PixelCount);
+            BitImage result = new BitImage(blocks.PixelCount);
             for (int cornerY = 0; cornerY < blocks.CornerCount.Height; ++cornerY)
                 for (int cornerX = 0; cornerX < blocks.CornerCount.Width; ++cornerX)
                     if (GetBit(cornerX, cornerY))
