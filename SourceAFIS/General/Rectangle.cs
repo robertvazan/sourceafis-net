@@ -5,8 +5,7 @@ using System.Text;
 
 namespace SourceAFIS.General
 {
-    // coordinates in mathematically correct Cartesian plane, Y axis points upwards
-    public struct RectangleC : IList<Point>
+    public struct Rectangle : IList<Point>
     {
         public int X;
         public int Y;
@@ -27,7 +26,7 @@ namespace SourceAFIS.General
         public Point Center { get { return new Point((Right + Left) / 2, (Bottom + Top) / 2); } }
         public int TotalArea { get { return Width * Height; } }
 
-        public RectangleC(RectangleC other)
+        public Rectangle(Rectangle other)
         {
             X = other.X;
             Y = other.Y;
@@ -35,7 +34,7 @@ namespace SourceAFIS.General
             Height = other.Height;
         }
 
-        public RectangleC(Point at, Point size)
+        public Rectangle(Point at, Point size)
         {
             X = at.X;
             Y = at.Y;
@@ -43,7 +42,7 @@ namespace SourceAFIS.General
             Height = size.Y;
         }
 
-        public RectangleC(int x, int y, int width, int height)
+        public Rectangle(int x, int y, int width, int height)
         {
             X = x;
             Y = y;
@@ -51,9 +50,9 @@ namespace SourceAFIS.General
             Height = height;
         }
 
-        public static RectangleC Between(Point begin, Point end)
+        public static Rectangle Between(Point begin, Point end)
         {
-            return new RectangleC()
+            return new Rectangle()
             {
                 X = begin.X,
                 Y = begin.Y,
@@ -62,7 +61,7 @@ namespace SourceAFIS.General
             };
         }
 
-        public RectangleC(Point size)
+        public Rectangle(Point size)
         {
             X = 0;
             Y = 0;
@@ -70,7 +69,7 @@ namespace SourceAFIS.General
             Height = size.Y;
         }
 
-        public RectangleC(int width, int height)
+        public Rectangle(int width, int height)
         {
             X = 0;
             Y = 0;
@@ -99,14 +98,14 @@ namespace SourceAFIS.General
             Point += relative;
         }
 
-        public RectangleC GetShifted(Point relative)
+        public Rectangle GetShifted(Point relative)
         {
-            RectangleC result = new RectangleC(this);
+            Rectangle result = new Rectangle(this);
             result.Shift(relative);
             return result;
         }
 
-        public void Clip(RectangleC other)
+        public void Clip(Rectangle other)
         {
             if (Left < other.Left)
                 Left = other.Left;

@@ -90,7 +90,7 @@
     <Compile Include="Matching\PairSelector.cs" />
     <Compile Include="General\Range.cs" />
     <Compile Include="General\RangeF.cs" />
-    <Compile Include="General\RectangleC.cs" />
+    <Compile Include="General\Rectangle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

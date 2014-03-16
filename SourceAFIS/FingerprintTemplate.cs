@@ -224,14 +224,14 @@ namespace SourceAFIS
 
         static BitImage ApplyVotingFilter(BitImage input, int radius = 1, double majority = 0.51, int borderDist = 0)
         {
-            RectangleC rect = new RectangleC(new Point(borderDist, borderDist),
+            Rectangle rect = new Rectangle(new Point(borderDist, borderDist),
                 new Point(input.Width - 2 * borderDist, input.Height - 2 * borderDist));
             BitImage output = new BitImage(input.Size);
             for (int y = rect.RangeY.Begin; y < rect.RangeY.End; ++y)
             {
                 for (int x = rect.Left; x < rect.Right; ++x)
                 {
-                    RectangleC neighborhood = RectangleC.Between(
+                    Rectangle neighborhood = Rectangle.Between(
                         new Point(Math.Max(x - radius, 0), Math.Max(y - radius, 0)),
                         new Point(Math.Min(x + radius + 1, output.Width), Math.Min(y + radius + 1, output.Height)));
 
@@ -433,7 +433,7 @@ namespace SourceAFIS
                 if (mask.GetBit(block))
                 {
                     PointF sum = new PointF();
-                    RectangleC area = blocks.BlockAreas[block];
+                    Rectangle area = blocks.BlockAreas[block];
                     for (int y = area.Bottom; y < area.Top; ++y)
                         for (int x = area.Left; x < area.Right; ++x)
                             sum += orientation[y, x];
@@ -451,7 +451,7 @@ namespace SourceAFIS
                 for (int x = 0; x < mask.Width; ++x)
                     if (mask.GetBit(x, y))
                     {
-                        RectangleC neighbors = RectangleC.Between(
+                        Rectangle neighbors = Rectangle.Between(
                             new Point(Math.Max(0, x - radius), Math.Max(0, y - radius)),
                             new Point(Math.Min(mask.Width, x + radius + 1), Math.Min(mask.Height, y + radius + 1)));
                         PointF sum = new PointF();
@@ -507,15 +507,15 @@ namespace SourceAFIS
                     Point[] line = lines[Angle.Quantize(Angle.Add(orientation[block.Y, block.X], angle), lines.Length)];
                     foreach (Point linePoint in line)
                     {
-                        RectangleC target = blocks.BlockAreas[block];
-                        RectangleC source = target.GetShifted(linePoint);
-                        source.Clip(new RectangleC(blocks.PixelCount));
+                        Rectangle target = blocks.BlockAreas[block];
+                        Rectangle source = target.GetShifted(linePoint);
+                        source.Clip(new Rectangle(blocks.PixelCount));
                         target = source.GetShifted(-linePoint);
                         for (int y = target.Bottom; y < target.Top; ++y)
                             for (int x = target.Left; x < target.Right; ++x)
                                 output[y, x] += input[y + linePoint.Y, x + linePoint.X];
                     }
-                    RectangleC blockArea = blocks.BlockAreas[block];
+                    Rectangle blockArea = blocks.BlockAreas[block];
                     for (int y = blockArea.Bottom; y < blockArea.Top; ++y)
                         for (int x = blockArea.Left; x < blockArea.Right; ++x)
                             output[y, x] *= 1 / line.Length;
@@ -533,7 +533,7 @@ namespace SourceAFIS
                 {
                     if (mask.GetBit(blockX, blockY))
                     {
-                        RectangleC rect = blocks.BlockAreas[blockY, blockX];
+                        Rectangle rect = blocks.BlockAreas[blockY, blockX];
                         for (int y = rect.Bottom; y < rect.Top; ++y)
                             for (int x = rect.Left; x < rect.Right; ++x)
                                 if (input[y, x] - baseline[y, x] > 0)
@@ -553,15 +553,15 @@ namespace SourceAFIS
 
             while (true)
             {
-                sw2ne.Copy(input, new RectangleC(0, 0, input.Width - 1, input.Height - 1), new Point());
-                sw2ne.And(input, new RectangleC(1, 1, input.Width - 1, input.Height - 1), new Point());
-                sw2ne.AndNot(input, new RectangleC(0, 1, input.Width - 1, input.Height - 1), new Point());
-                sw2ne.AndNot(input, new RectangleC(1, 0, input.Width - 1, input.Height - 1), new Point());
+                sw2ne.Copy(input, new Rectangle(0, 0, input.Width - 1, input.Height - 1), new Point());
+                sw2ne.And(input, new Rectangle(1, 1, input.Width - 1, input.Height - 1), new Point());
+                sw2ne.AndNot(input, new Rectangle(0, 1, input.Width - 1, input.Height - 1), new Point());
+                sw2ne.AndNot(input, new Rectangle(1, 0, input.Width - 1, input.Height - 1), new Point());
 
-                se2nw.Copy(input, new RectangleC(0, 1, input.Width - 1, input.Height - 1), new Point());
-                se2nw.And(input, new RectangleC(1, 0, input.Width - 1, input.Height - 1), new Point());
-                se2nw.AndNot(input, new RectangleC(0, 0, input.Width - 1, input.Height - 1), new Point());
-                se2nw.AndNot(input, new RectangleC(1, 1, input.Width - 1, input.Height - 1), new Point());
+                se2nw.Copy(input, new Rectangle(0, 1, input.Width - 1, input.Height - 1), new Point());
+                se2nw.And(input, new Rectangle(1, 0, input.Width - 1, input.Height - 1), new Point());
+                se2nw.AndNot(input, new Rectangle(0, 0, input.Width - 1, input.Height - 1), new Point());
+                se2nw.AndNot(input, new Rectangle(1, 1, input.Width - 1, input.Height - 1), new Point());
 
                 positions.Copy(sw2ne);
                 positions.Or(se2nw);
@@ -569,9 +569,9 @@ namespace SourceAFIS
                     break;
 
                 squares.Copy(positions);
-                squares.Or(positions, new RectangleC(0, 0, positions.Width - 1, positions.Height - 1), new Point(1, 0));
-                squares.Or(positions, new RectangleC(0, 0, positions.Width - 1, positions.Height - 1), new Point(0, 1));
-                squares.Or(positions, new RectangleC(0, 0, positions.Width - 1, positions.Height - 1), new Point(1, 1));
+                squares.Or(positions, new Rectangle(0, 0, positions.Width - 1, positions.Height - 1), new Point(1, 0));
+                squares.Or(positions, new Rectangle(0, 0, positions.Width - 1, positions.Height - 1), new Point(0, 1));
+                squares.Or(positions, new Rectangle(0, 0, positions.Width - 1, positions.Height - 1), new Point(1, 1));
 
                 input.AndNot(squares);
             }
@@ -581,7 +581,7 @@ namespace SourceAFIS
         {
             const int minBorderDistance = 14;
             BitImage inner = new BitImage(outer.Size);
-            inner.Copy(outer, new RectangleC(1, 1, outer.Width - 2, outer.Height - 2), new Point(1, 1));
+            inner.Copy(outer, new Rectangle(1, 1, outer.Width - 2, outer.Height - 2), new Point(1, 1));
             BitImage temporary = new BitImage(outer.Size);
             if (minBorderDistance >= 1)
                 ShrinkMask(temporary, inner, 1);
@@ -599,10 +599,10 @@ namespace SourceAFIS
         static void ShrinkMask(BitImage temporary, BitImage inner, int amount)
         {
             temporary.Clear();
-            temporary.Copy(inner, new RectangleC(amount, 0, inner.Width - amount, inner.Height), new Point(0, 0));
-            temporary.And(inner, new RectangleC(0, 0, inner.Width - amount, inner.Height), new Point(amount, 0));
-            temporary.And(inner, new RectangleC(0, amount, inner.Width, inner.Height - amount), new Point(0, 0));
-            temporary.And(inner, new RectangleC(0, 0, inner.Width, inner.Height - amount), new Point(0, amount));
+            temporary.Copy(inner, new Rectangle(amount, 0, inner.Width - amount, inner.Height), new Point(0, 0));
+            temporary.And(inner, new Rectangle(0, 0, inner.Width - amount, inner.Height), new Point(amount, 0));
+            temporary.And(inner, new Rectangle(0, amount, inner.Width, inner.Height - amount), new Point(0, 0));
+            temporary.And(inner, new Rectangle(0, 0, inner.Width, inner.Height - amount), new Point(0, amount));
             inner.Copy(temporary);
         }
 

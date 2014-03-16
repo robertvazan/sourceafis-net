@@ -168,7 +168,7 @@ namespace SourceAFIS
 
             var neighborhoodTypes = GetNeighborhoodTypes();
             BitImage intermediate = new BitImage(input.Size);
-            intermediate.Copy(input, new RectangleC(1, 1, input.Width - 2, input.Height - 2), new Point(1, 1));
+            intermediate.Copy(input, new Rectangle(1, 1, input.Width - 2, input.Height - 2), new Point(1, 1));
 
             BitImage border = new BitImage(input.Size);
             BitImage thinned = new BitImage(input.Size);
@@ -182,16 +182,16 @@ namespace SourceAFIS
                     switch (j)
                     {
                         case 0:
-                            border.AndNot(intermediate, new RectangleC(1, 0, border.Width - 1, border.Height), new Point(0, 0));
+                            border.AndNot(intermediate, new Rectangle(1, 0, border.Width - 1, border.Height), new Point(0, 0));
                             break;
                         case 1:
-                            border.AndNot(intermediate, new RectangleC(0, 0, border.Width - 1, border.Height), new Point(1, 0));
+                            border.AndNot(intermediate, new Rectangle(0, 0, border.Width - 1, border.Height), new Point(1, 0));
                             break;
                         case 2:
-                            border.AndNot(intermediate, new RectangleC(0, 1, border.Width, border.Height - 1), new Point(0, 0));
+                            border.AndNot(intermediate, new Rectangle(0, 1, border.Width, border.Height - 1), new Point(0, 0));
                             break;
                         case 3:
-                            border.AndNot(intermediate, new RectangleC(0, 0, border.Width, border.Height - 1), new Point(0, 1));
+                            border.AndNot(intermediate, new Rectangle(0, 0, border.Width, border.Height - 1), new Point(0, 1));
                             break;
                     }
                     border.AndNot(thinned);
