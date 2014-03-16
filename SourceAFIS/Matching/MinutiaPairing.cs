@@ -15,33 +15,29 @@ namespace SourceAFIS.Matching
         public int Count { get { return PairCount; } }
         public PairInfo LastPair { get { return PairList[PairCount - 1]; } }
 
-        public void SelectProbe(FingerprintTemplate probe)
+        public MinutiaPairing(FingerprintTemplate probe, FingerprintTemplate candidate, MinutiaPair root, MinutiaPairing recycled)
         {
-            PairsByProbe = new PairInfo[probe.Minutiae.Count];
-            PairList = new PairInfo[probe.Minutiae.Count];
-            for (int i = 0; i < PairList.Length; ++i)
-                PairList[i] = new PairInfo();
-            PairCount = 0;
-        }
-
-        public void SelectCandidate(FingerprintTemplate candidate)
-        {
-            if (PairsByCandidate == null || PairsByCandidate.Length < candidate.Minutiae.Count)
-                PairsByCandidate = new PairInfo[candidate.Minutiae.Count];
+            PairsByProbe = recycled != null ? recycled.PairsByProbe : new PairInfo[probe.Minutiae.Count];
+            PairsByCandidate = recycled != null && recycled.PairsByCandidate.Length >= candidate.Minutiae.Count
+                ? recycled.PairsByCandidate : new PairInfo[candidate.Minutiae.Count];
+            if (recycled != null && recycled.PairsByCandidate.Length >= candidate.Minutiae.Count)
+            {
+                PairsByProbe = recycled.PairsByProbe;
+                PairsByCandidate = recycled.PairsByCandidate;
+                PairList = recycled.PairList;
+                for (int i = 0; i < recycled.PairCount; ++i)
+                {
+                    PairsByProbe[PairList[i].Pair.Probe] = null;
+                    PairsByCandidate[PairList[i].Pair.Candidate] = null;
+                }
+            }
             else
             {
-                for (int i = 0; i < PairsByCandidate.Length; ++i)
-                    PairsByCandidate[i] = null;
-            }
-        }
-
-        public void ResetPairing(MinutiaPair root)
-        {
-            for (int i = 0; i < PairCount; ++i)
-            {
-                PairsByCandidate[PairList[i].Pair.Candidate] = null;
-                PairsByProbe[PairList[i].Pair.Probe] = null;
-                PairList[i].SupportingEdges = 0;
+                PairsByProbe = new PairInfo[probe.Minutiae.Count];
+                PairsByCandidate = new PairInfo[candidate.Minutiae.Count];
+                PairList = new PairInfo[probe.Minutiae.Count];
+                for (int i = 0; i < PairList.Length; ++i)
+                    PairList[i] = new PairInfo();
             }
             PairsByCandidate[root.Candidate] = PairsByProbe[root.Probe] = PairList[0];
             PairList[0].Pair = root;

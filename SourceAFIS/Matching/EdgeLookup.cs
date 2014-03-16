@@ -13,10 +13,10 @@ namespace SourceAFIS.Matching
             public int Distance;
         }
 
-        public static void FindMatchingPairs(NeighborEdge[] probeStar, NeighborEdge[] candidateStar, List<LookupResult> results)
+        public static List<LookupResult> FindMatchingPairs(NeighborEdge[] probeStar, NeighborEdge[] candidateStar)
         {
             byte complementaryAngleError = Angle.Complementary(FingerprintMatcher.MaxAngleError);
-            results.Clear();
+            var results = new List<LookupResult>();
             Range range = new Range();
 
             for (int candidateIndex = 0; candidateIndex < candidateStar.Length; ++candidateIndex)
@@ -46,6 +46,7 @@ namespace SourceAFIS.Matching
                     }
                 }
             }
+            return results;
         }
 
         public static bool MatchingEdges(EdgeShape probe, EdgeShape candidate)
