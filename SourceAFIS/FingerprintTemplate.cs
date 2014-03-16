@@ -5,8 +5,6 @@ using System.Linq;
 using SourceAFIS.General;
 using System.Xml.Linq;
 using SourceAFIS.Matching;
-using SourceAFIS.Extraction;
-using SourceAFIS.Extraction.Minutiae;
 
 namespace SourceAFIS
 {
@@ -48,10 +46,10 @@ namespace SourceAFIS
 
             CollectMinutiae(ridges, FingerprintMinutiaType.Ending);
             CollectMinutiae(valleys, FingerprintMinutiaType.Bifurcation);
-            MinutiaMask.Filter(this, innerMask);
-            MinutiaCloudRemover.Filter(this);
-            UniqueMinutiaSorter.Filter(this);
-            MinutiaShuffler.Shuffle(this);
+            ApplyMask(innerMask);
+            RemoveMinutiaClouds();
+            LimitTemplateSize();
+            ShuffleMinutiae();
 
             BuildEdgeTable();
         }
@@ -621,6 +619,52 @@ namespace SourceAFIS
                     Minutiae.Add(templateMinutia);
                 }
             }
+        }
+
+        void ApplyMask(BinaryMap mask)
+        {
+            const float directedExtension = 10.06f;
+            Minutiae.RemoveAll(minutia =>
+            {
+                var arrow = Calc.Round(-directedExtension * Angle.ToVector(minutia.Direction));
+                return !mask.GetBitSafe((Point)minutia.Position + new Size(arrow), false);
+            });
+        }
+
+        void RemoveMinutiaClouds()
+        {
+            const int radius = 20;
+            const int maxNeighbors = 4;
+            var radiusSq = Calc.Sq(radius);
+            Minutiae = Minutiae.Except(
+                (from minutia in Minutiae
+                 where Minutiae.Count(neighbor => Calc.DistanceSq(neighbor.Position, minutia.Position) <= radiusSq) - 1 > maxNeighbors
+                 select minutia).ToList()).ToList();
+        }
+
+        void LimitTemplateSize()
+        {
+            const int maxMinutiae = 100;
+            const int neighborhoodSize = 5;
+            if (Minutiae.Count > maxMinutiae)
+            {
+                Minutiae =
+                    (from minutia in Minutiae
+                     let radiusSq = (from neighbor in Minutiae
+                                     let distanceSq = Calc.DistanceSq(minutia.Position, neighbor.Position)
+                                     orderby distanceSq
+                                     select distanceSq).Skip(neighborhoodSize).First()
+                     orderby radiusSq descending
+                     select minutia).Take(maxMinutiae).ToList();
+            }
+        }
+
+        void ShuffleMinutiae()
+        {
+            int seed = 0;
+            foreach (var minutia in Minutiae)
+                seed += minutia.Direction + minutia.Position.X + minutia.Position.Y + (int)minutia.Type;
+            Minutiae = Calc.Shuffle(Minutiae, new Random(seed)).ToList();
         }
 
         void BuildEdgeTable()
