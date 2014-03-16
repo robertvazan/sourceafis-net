@@ -30,15 +30,15 @@ namespace SourceAFIS.General
                 Corners = corners;
             }
 
-            public RectangleC this[int y, int x] { get { return RectangleC.Between(Corners[y, x], Corners[y + 1, x + 1]); } }
-            public RectangleC this[Point at] { get { return RectangleC.Between(Corners[at], Corners[at.Y + 1, at.X + 1]); } }
+            public Rectangle this[int y, int x] { get { return Rectangle.Between(Corners[y, x], Corners[y + 1, x + 1]); } }
+            public Rectangle this[Point at] { get { return Rectangle.Between(Corners[at], Corners[at.Y + 1, at.X + 1]); } }
         }
 
         public readonly Point PixelCount;
         public readonly Point BlockCount;
         public readonly Point CornerCount;
-        public readonly RectangleC AllBlocks;
-        public readonly RectangleC AllCorners;
+        public readonly Rectangle AllBlocks;
+        public readonly Rectangle AllCorners;
         public readonly PointGrid Corners;
         public readonly RectangleGrid BlockAreas;
         public readonly PointGrid BlockCenters;
@@ -52,8 +52,8 @@ namespace SourceAFIS.General
                 MathEx.DivRoundUp(PixelCount.Y, maxBlockSize));
             CornerCount = BlockToCornerCount(BlockCount);
 
-            AllBlocks = new RectangleC(BlockCount);
-            AllCorners = new RectangleC(CornerCount);
+            AllBlocks = new Rectangle(BlockCount);
+            AllCorners = new Rectangle(CornerCount);
 
             Corners = InitCorners();
             BlockAreas = new RectangleGrid(Corners);

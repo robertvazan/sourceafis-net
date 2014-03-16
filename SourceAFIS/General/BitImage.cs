@@ -11,7 +11,7 @@ namespace SourceAFIS.General
         public readonly int Width;
         public readonly int Height;
         public Point Size { get { return new Point(Width, Height); } }
-        public RectangleC Rect { get { return new RectangleC(Size); } }
+        public Rectangle Rect { get { return new Rectangle(Size); } }
 
         public const int WordShift = 5;
         public const uint WordMask = 31;
@@ -155,7 +155,7 @@ namespace SourceAFIS.General
 
         delegate void CombineFunction(uint[] target, uint[] source);
 
-        void Combine(BitImage source, RectangleC area, Point at, CombineFunction function)
+        void Combine(BitImage source, Rectangle area, Point at, CombineFunction function)
         {
             int shift = (int)((uint)area.X & WordMask) - (int)((uint)at.X & WordMask);
             int vectorSize = (area.Width >> WordShift) + 2;
@@ -179,7 +179,7 @@ namespace SourceAFIS.General
             Copy(source, Rect, new Point());
         }
 
-        public void Copy(BitImage source, RectangleC area, Point at)
+        public void Copy(BitImage source, Rectangle area, Point at)
         {
             int shift = (int)((uint)area.X & WordMask) - (int)((uint)at.X & WordMask);
             var vector = new uint[(area.Width >> WordShift) + 2];
@@ -199,7 +199,7 @@ namespace SourceAFIS.General
             Or(source, Rect, new Point());
         }
 
-        public void Or(BitImage source, RectangleC area, Point at)
+        public void Or(BitImage source, Rectangle area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -213,7 +213,7 @@ namespace SourceAFIS.General
             And(source, Rect, new Point());
         }
 
-        public void And(BitImage source, RectangleC area, Point at)
+        public void And(BitImage source, Rectangle area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -227,7 +227,7 @@ namespace SourceAFIS.General
             Xor(source, Rect, new Point());
         }
 
-        public void Xor(BitImage source, RectangleC area, Point at)
+        public void Xor(BitImage source, Rectangle area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -241,7 +241,7 @@ namespace SourceAFIS.General
             OrNot(source, Rect, new Point());
         }
 
-        public void OrNot(BitImage source, RectangleC area, Point at)
+        public void OrNot(BitImage source, Rectangle area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -255,7 +255,7 @@ namespace SourceAFIS.General
             AndNot(source, Rect, new Point());
         }
 
-        public void AndNot(BitImage source, RectangleC area, Point at)
+        public void AndNot(BitImage source, Rectangle area, Point at)
         {
             Combine(source, area, at, delegate(uint[] target, uint[] srcVector)
             {
@@ -300,7 +300,7 @@ namespace SourceAFIS.General
             }
         }
 
-        public void Fill(RectangleC rect)
+        public void Fill(Rectangle rect)
         {
             if (rect.Width > 0)
             {
