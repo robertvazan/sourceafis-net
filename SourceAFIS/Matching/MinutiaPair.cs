@@ -6,13 +6,13 @@ namespace SourceAFIS.Matching
 {
     public struct MinutiaPair
     {
-        public short Probe;
-        public short Candidate;
+        public int Probe;
+        public int Candidate;
 
         public MinutiaPair(int probe, int candidate)
         {
-            Probe = (short)probe;
-            Candidate = (short)candidate;
+            Probe = (int)probe;
+            Candidate = (int)candidate;
         }
     }
 }

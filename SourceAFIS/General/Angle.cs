@@ -213,7 +213,7 @@ namespace SourceAFIS.General
 
         struct PolarPointB
         {
-            public short Distance;
+            public int Distance;
             public byte Angle;
         }
 
