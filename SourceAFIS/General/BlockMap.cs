@@ -11,10 +11,10 @@ namespace SourceAFIS.General
             public readonly int[] AllX;
             public readonly int[] AllY;
 
-            public PointGrid(Size size)
+            public PointGrid(Point size)
             {
-                AllX = new int[size.Width];
-                AllY = new int[size.Height];
+                AllX = new int[size.X];
+                AllY = new int[size.Y];
             }
 
             public Point this[int y, int x] { get { return new Point(AllX[x], AllY[y]); } }
@@ -30,13 +30,13 @@ namespace SourceAFIS.General
                 Corners = corners;
             }
 
-            public RectangleC this[int y, int x] { get { return new RectangleC(Corners[y, x], Corners[y + 1, x + 1]); } }
-            public RectangleC this[Point at] { get { return new RectangleC(Corners[at], Corners[at.Y + 1, at.X + 1]); } }
+            public RectangleC this[int y, int x] { get { return RectangleC.Between(Corners[y, x], Corners[y + 1, x + 1]); } }
+            public RectangleC this[Point at] { get { return RectangleC.Between(Corners[at], Corners[at.Y + 1, at.X + 1]); } }
         }
 
-        public readonly Size PixelCount;
-        public readonly Size BlockCount;
-        public readonly Size CornerCount;
+        public readonly Point PixelCount;
+        public readonly Point BlockCount;
+        public readonly Point CornerCount;
         public readonly RectangleC AllBlocks;
         public readonly RectangleC AllCorners;
         public readonly PointGrid Corners;
@@ -44,12 +44,12 @@ namespace SourceAFIS.General
         public readonly PointGrid BlockCenters;
         public readonly RectangleGrid CornerAreas;
 
-        public BlockMap(Size pixelSize, int maxBlockSize)
+        public BlockMap(Point pixelSize, int maxBlockSize)
         {
             PixelCount = pixelSize;
-            BlockCount = new Size(
-                MathEx.DivRoundUp(PixelCount.Width, maxBlockSize),
-                MathEx.DivRoundUp(PixelCount.Height, maxBlockSize));
+            BlockCount = new Point(
+                MathEx.DivRoundUp(PixelCount.X, maxBlockSize),
+                MathEx.DivRoundUp(PixelCount.Y, maxBlockSize));
             CornerCount = BlockToCornerCount(BlockCount);
 
             AllBlocks = new RectangleC(BlockCount);
@@ -61,49 +61,49 @@ namespace SourceAFIS.General
             CornerAreas = InitCornerAreas();
         }
 
-        static Size BlockToCornerCount(Size BlockCount)
+        static Point BlockToCornerCount(Point BlockCount)
         {
-            return new Size(BlockCount.Width + 1, BlockCount.Height + 1);
+            return new Point(BlockCount.X + 1, BlockCount.Y + 1);
         }
 
-        static Size CornerToBlockCount(Size CornerCount)
+        static Point CornerToBlockCount(Point CornerCount)
         {
-            return new Size(CornerCount.Width - 1, CornerCount.Height - 1);
+            return new Point(CornerCount.X - 1, CornerCount.Y - 1);
         }
 
         PointGrid InitCorners()
         {
             PointGrid grid = new PointGrid(CornerCount);
-            for (int y = 0; y < CornerCount.Height; ++y)
-                grid.AllY[y] = y * PixelCount.Height / BlockCount.Height;
-            for (int x = 0; x < CornerCount.Width; ++x)
-                grid.AllX[x] = x * PixelCount.Width / BlockCount.Width;
+            for (int y = 0; y < CornerCount.Y; ++y)
+                grid.AllY[y] = y * PixelCount.Y / BlockCount.Y;
+            for (int x = 0; x < CornerCount.X; ++x)
+                grid.AllX[x] = x * PixelCount.X / BlockCount.X;
             return grid;
         }
 
         PointGrid InitBlockCenters()
         {
             PointGrid grid = new PointGrid(BlockCount);
-            for (int y = 0; y < BlockCount.Height; ++y)
+            for (int y = 0; y < BlockCount.Y; ++y)
                 grid.AllY[y] = BlockAreas[y, 0].Center.Y;
-            for (int x = 0; x < BlockCount.Width; ++x)
+            for (int x = 0; x < BlockCount.X; ++x)
                 grid.AllX[x] = BlockAreas[0, x].Center.X;
             return grid;
         }
 
         RectangleGrid InitCornerAreas()
         {
-            PointGrid grid = new PointGrid(new Size(CornerCount.Width + 1, CornerCount.Height + 1));
+            PointGrid grid = new PointGrid(new Point(CornerCount.X + 1, CornerCount.Y + 1));
             
             grid.AllY[0] = 0;
-            for (int y = 0; y < BlockCount.Height; ++y)
+            for (int y = 0; y < BlockCount.Y; ++y)
                 grid.AllY[y + 1] = BlockCenters[y, 0].Y;
-            grid.AllY[BlockCount.Height] = PixelCount.Height;
+            grid.AllY[BlockCount.Y] = PixelCount.Y;
 
             grid.AllX[0] = 0;
-            for (int x = 0; x < BlockCount.Width; ++x)
+            for (int x = 0; x < BlockCount.X; ++x)
                 grid.AllX[x + 1] = BlockCenters[0, x].X;
-            grid.AllX[BlockCount.Width] = PixelCount.Width;
+            grid.AllX[BlockCount.X] = PixelCount.X;
 
             return new RectangleGrid(grid);
         }

@@ -75,8 +75,6 @@
     <Compile Include="General\PolarPoint.cs" />
     <Compile Include="General\PriorityQueueF.cs" />
     <Compile Include="General\ReversedList.cs" />
-    <Compile Include="General\Size.cs" />
-    <Compile Include="General\SizeF.cs" />
     <Compile Include="Matching\EdgeHash.cs" />
     <Compile Include="Matching\EdgeLocation.cs" />
     <Compile Include="Matching\EdgeConstructor.cs" />

@@ -13,14 +13,19 @@ namespace SourceAFIS.General
             Y = y;
         }
 
+        public Point Round()
+        {
+            return new Point(Convert.ToInt32(X), Convert.ToInt32(Y));
+        }
+
         public static implicit operator PointF(Point point)
         {
             return new PointF(point.X, point.Y);
         }
 
-        public static PointF operator +(PointF left, SizeF right)
+        public static PointF operator +(PointF left, PointF right)
         {
-            return new PointF(left.X + right.Width, left.Y + right.Height);
+            return new PointF(left.X + right.X, left.Y + right.Y);
         }
 
         public static PointF operator *(double factor, PointF point)

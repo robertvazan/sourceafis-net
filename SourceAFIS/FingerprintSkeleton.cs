@@ -9,7 +9,7 @@ namespace SourceAFIS
 {
     public sealed class FingerprintSkeleton
     {
-        public Size Size;
+        public Point Size;
         public List<SkeletonMinutia> Minutiae = new List<SkeletonMinutia>();
 
         public FingerprintSkeleton(BitImage binary)
@@ -54,7 +54,7 @@ namespace SourceAFIS
                 List<Point> ownLinks = null;
                 foreach (Point neighborRelative in Neighborhood.CornerNeighbors)
                 {
-                    Point neighborPos = MathEx.Add(minutiaPos, neighborRelative);
+                    Point neighborPos = minutiaPos + neighborRelative;
                     if (linking.ContainsKey(neighborPos))
                     {
                         List<Point> neighborLinks = linking[neighborPos];
@@ -89,7 +89,7 @@ namespace SourceAFIS
                 {
                     Point sum = new Point();
                     foreach (Point linkedPos in linkedMinutiae)
-                        sum = MathEx.Add(sum, linkedPos);
+                        sum += linkedPos;
                     Point center = new Point(sum.X / linkedMinutiae.Count, sum.Y / linkedMinutiae.Count);
                     SkeletonMinutia minutia = new SkeletonMinutia(center);
                     AddMinutia(minutia);
@@ -107,7 +107,7 @@ namespace SourceAFIS
             {
                 foreach (Point startRelative in Neighborhood.CornerNeighbors)
                 {
-                    Point start = MathEx.Add(minutiaPoint, startRelative);
+                    Point start = minutiaPoint + startRelative;
                     if (thinned.GetBitSafe(start, false) && !minutiaePoints.ContainsKey(start) && !leads.ContainsKey(start))
                     {
                         SkeletonRidge ridge = new SkeletonRidge();
@@ -120,7 +120,7 @@ namespace SourceAFIS
                             Point next = new Point();
                             foreach (Point nextRelative in Neighborhood.CornerNeighbors)
                             {
-                                next = MathEx.Add(current, nextRelative);
+                                next = current + nextRelative;
                                 if (thinned.GetBitSafe(next, false) && next != previous)
                                     break;
                             }
@@ -256,7 +256,7 @@ namespace SourceAFIS
         {
             foreach (Point relativeNeighbor in Neighborhood.CornerNeighbors)
             {
-                Point neighbor = MathEx.Add(ending, relativeNeighbor);
+                Point neighbor = ending + relativeNeighbor;
                 if (binary.GetBit(neighbor))
                     return MathEx.CountBits(binary.GetNeighborhood(neighbor)) > 2;
             }
@@ -325,7 +325,7 @@ namespace SourceAFIS
                             Gap gap;
                             gap.End1 = end1;
                             gap.End2 = end2;
-                            queue.Enqueue(MathEx.DistanceSq(end1.Position, end2.Position), gap);
+                            queue.Enqueue((end1.Position - end2.Position).SqLength, gap);
                         }
 
             BitImage shadow = GetShadow();
@@ -349,7 +349,7 @@ namespace SourceAFIS
             const int gapSize = 20;
             const byte gapAngle = 32;
 
-            int distanceSq = MathEx.DistanceSq(end1.Position, end2.Position);
+            int distanceSq = (end1.Position - end2.Position).SqLength;
             if (distanceSq <= MathEx.Sq(ruptureSize))
                 return true;
             if (distanceSq > MathEx.Sq(gapSize))

@@ -13,17 +13,6 @@ namespace SourceAFIS.General
             return (input + divider - 1) / divider;
         }
 
-        public static int CountBits(int value)
-        {
-            int count = 0;
-            while (value != 0)
-            {
-                ++count;
-                value &= value - 1;
-            }
-            return count;
-        }
-
         public static int CountBits(uint value)
         {
             int count = 0;
@@ -94,56 +83,6 @@ namespace SourceAFIS.General
             return Math.Pow(value1 / value0, fraction) * value0;
         }
 
-        public static Point Add(Point left, Point right)
-        {
-            return left + new Size(right);
-        }
-
-        public static PointF Add(PointF left, PointF right)
-        {
-            return left + new SizeF(right);
-        }
-
-        public static Point Difference(Point left, Point right)
-        {
-            return left - new Size(right);
-        }
-
-        public static Point Negate(Point point)
-        {
-            return new Point(-point.X, -point.Y);
-        }
-
-        public static PointF Multiply(double scale, PointF point)
-        {
-            return new PointF(scale * point.X, scale * point.Y);
-        }
-
-        public static Point Round(PointF point)
-        {
-            return new Point(Convert.ToInt32(point.X), Convert.ToInt32(point.Y));
-        }
-
-        public static double DistanceSq(PointF point)
-        {
-            return Sq(point.X) + Sq(point.Y);
-        }
-
-        public static int DistanceSq(Point point)
-        {
-            return Sq(point.X) + Sq(point.Y);
-        }
-
-        public static int DistanceSq(Point left, Point right)
-        {
-            return DistanceSq(Difference(left, right));
-        }
-
-        public static int GetArea(Size size)
-        {
-            return size.Width * size.Height;
-        }
-
         public static void Swap<T>(ref T first, ref T second)
         {
             T tmp = first;
@@ -185,7 +124,7 @@ namespace SourceAFIS.General
         public static Point[] ConstructLine(Point from, Point to)
         {
             Point[] result;
-            Point relative = Difference(to, from);
+            Point relative = to - from;
             if (Math.Abs(relative.X) >= Math.Abs(relative.Y))
             {
                 result = new Point[Math.Abs(relative.X) + 1];
@@ -219,57 +158,6 @@ namespace SourceAFIS.General
                     result[0] = from;
             }
             return result;
-        }
-
-        public static object ShallowClone(this object root)
-        {
-            object clone = root.GetType().GetConstructor(new Type[0]).Invoke(new object[0]);
-            foreach (FieldInfo fieldInfo in root.GetType().GetFields())
-                fieldInfo.SetValue(clone, fieldInfo.GetValue(root));
-            return clone;
-        }
-
-        public static IEnumerable<T> CloneItems<T>(this IEnumerable<T> sequence)
-            where T : class, ICloneable
-        {
-            return from item in sequence
-                   select item.Clone() as T;
-        }
-
-        public static List<T> CloneItems<T>(this List<T> sequence)
-            where T : class, ICloneable
-        {
-            return (sequence as IEnumerable<T>).CloneItems().ToList();
-        }
-
-        public static T[] CloneItems<T>(this T[] sequence)
-            where T : class, ICloneable
-        {
-            return (sequence as IEnumerable<T>).CloneItems().ToArray();
-        }
-
-        public static bool BeginsWith(this string outer, string inner)
-        {
-            return outer.Length >= inner.Length && outer.Substring(0, inner.Length) == inner;
-        }
-
-        public static double Median(this IEnumerable<double> sequence)
-        {
-            List<double> sorted = sequence.OrderBy(item => item).ToList();
-            return sorted[(sorted.Count - 1) / 2];
-        }
-
-        public static void RemoveRange<T>(this List<T> list, int start)
-        {
-            if (start < list.Count)
-                list.RemoveRange(start, list.Count - start);
-        }
-
-        static public uint ReverseBitsInBytes(uint word)
-        {
-            uint phase1 = (word >> 4) & 0x0f0f0f0f | (word << 4) & 0xf0f0f0f0;
-            uint phase2 = (phase1 >> 2) & 0x33333333 | (phase1 << 2) & 0xcccccccc;
-            return (phase2 >> 1) & 0x55555555 | (phase2 << 1) & 0xaaaaaaaa;
         }
 
         public static IEnumerable<T> Shuffle<T>(IEnumerable<T> input, Random random)

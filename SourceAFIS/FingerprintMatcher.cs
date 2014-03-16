@@ -67,7 +67,7 @@ namespace SourceAFIS
 
         double TryRoot(MinutiaPair root, FingerprintTemplate candidate)
         {
-            Pairing.Reset(root);
+            Pairing.ResetPairing(root);
             BuildPairing(candidate);
 
             MatchAnalysis.Analyze(Pairing, Template, candidate);
@@ -82,13 +82,13 @@ namespace SourceAFIS
                 PairSelector.SkipPaired(Pairing);
                 if (PairSelector.Count == 0)
                     break;
-                Pairing.Add(PairSelector.Dequeue());
+                Pairing.AddPair(PairSelector.Dequeue());
             }
         }
 
         void CollectEdges(FingerprintTemplate candidate)
         {
-            var reference = Pairing.LastAdded.Pair;
+            var reference = Pairing.LastPair.Pair;
             var probeNeighbors = Template.EdgeTable[reference.Probe];
             var candidateNeigbors = Candidate.EdgeTable[reference.Candidate];
             EdgeLookup.FindMatchingPairs(probeNeighbors, candidateNeigbors, EdgeMatches);
