@@ -394,11 +394,11 @@ namespace SourceAFIS
                     ConsideredOrientation orientation = new ConsideredOrientation();
                     do
                     {
-                        double angle = Angle.FromFraction((double)random.NextDouble() * 0.5);
-                        double distance = Calc.InterpolateExponential(minHalfDistance, maxHalfDistance, (double)random.NextDouble());
+                        double angle = Angle.FromFraction(random.NextDouble() * 0.5);
+                        double distance = Calc.InterpolateExponential(minHalfDistance, maxHalfDistance, random.NextDouble());
                         orientation.CheckLocation = Calc.Round(Calc.Multiply(distance, Angle.ToVector(angle)));
                     } while (orientation.CheckLocation == new Point() || orientation.CheckLocation.Y < 0);
-                    orientation.OrientationVector = Angle.ToVector(Angle.Add(Angle.ToOrientation(Angle.Atan(orientation.CheckLocation)), Angle.PI));
+                    orientation.OrientationVector = Angle.ToVector(Angle.Add(Angle.ToOrientation(Angle.Atan(orientation.CheckLocation)), Math.PI));
                     if (!orientations.Any(info => info.CheckLocation == orientation.CheckLocation))
                         orientations.Add(orientation);
                 }

@@ -91,7 +91,7 @@ namespace SourceAFIS.General
 
         public static double InterpolateExponential(double value0, double value1, double fraction)
         {
-            return (double)Math.Pow(value1 / value0, fraction) * value0;
+            return Math.Pow(value1 / value0, fraction) * value0;
         }
 
         public static Point Add(Point left, Point right)

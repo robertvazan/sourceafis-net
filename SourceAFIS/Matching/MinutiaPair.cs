@@ -11,8 +11,8 @@ namespace SourceAFIS.Matching
 
         public MinutiaPair(int probe, int candidate)
         {
-            Probe = (int)probe;
-            Candidate = (int)candidate;
+            Probe = probe;
+            Candidate = candidate;
         }
     }
 }

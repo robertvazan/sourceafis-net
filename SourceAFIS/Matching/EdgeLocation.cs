@@ -12,8 +12,8 @@ namespace SourceAFIS.Matching
 
         public EdgeLocation(int reference, int neighbor)
         {
-            Reference = (int)reference;
-            Neighbor = (int)neighbor;
+            Reference = reference;
+            Neighbor = neighbor;
         }
     }
 }
