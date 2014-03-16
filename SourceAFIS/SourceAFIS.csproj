@@ -54,26 +54,16 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extraction\ConsideredOrientation.cs" />
-    <Compile Include="Extraction\Filters\Thinner.cs" />
     <Compile Include="Extraction\Minutiae\MinutiaCloudRemover.cs" />
     <Compile Include="Extraction\Minutiae\UniqueMinutiaSorter.cs" />
-    <Compile Include="Extraction\Model\BranchMinutiaRemover.cs" />
-    <Compile Include="Extraction\Model\DotRemover.cs" />
-    <Compile Include="Extraction\Model\FragmentRemover.cs" />
-    <Compile Include="Extraction\Model\GapRemover.cs" />
-    <Compile Include="Extraction\Model\KnotRemover.cs" />
     <Compile Include="Extraction\Minutiae\MinutiaMask.cs" />
-    <Compile Include="Extraction\Model\PoreRemover.cs" />
-    <Compile Include="Extraction\Model\RidgeTracer.cs" />
-    <Compile Include="Extraction\Model\SkeletonBuilder.cs" />
-    <Compile Include="Extraction\Model\SkeletonShadow.cs" />
-    <Compile Include="Extraction\Model\TailRemover.cs" />
+    <Compile Include="FingerprintSkeleton.cs" />
+    <Compile Include="SkeletonMinutia.cs" />
+    <Compile Include="SkeletonRidge.cs" />
     <Compile Include="Matching\EdgePair.cs" />
     <Compile Include="Matching\HashLookup.cs" />
     <Compile Include="Matching\IndexedEdge.cs" />
     <Compile Include="Matching\PairInfo.cs" />
-    <Compile Include="Extraction\Minutiae\MinutiaCollector.cs" />
     <Compile Include="Extraction\Minutiae\MinutiaShuffler.cs" />
     <Compile Include="FingerprintMinutia.cs" />
     <Compile Include="FingerprintMinutiaType.cs" />

@@ -6,8 +6,6 @@ using SourceAFIS.General;
 using System.Xml.Linq;
 using SourceAFIS.Matching;
 using SourceAFIS.Extraction;
-using SourceAFIS.Extraction.Filters;
-using SourceAFIS.Extraction.Model;
 using SourceAFIS.Extraction.Minutiae;
 
 namespace SourceAFIS
@@ -45,11 +43,11 @@ namespace SourceAFIS
             BinaryMap inverted = binary.GetInverted();
             inverted.And(pixelMask);
 
-            SkeletonBuilder ridges = ProcessSkeleton(binary);
-            SkeletonBuilder valleys = ProcessSkeleton(inverted);
+            FingerprintSkeleton ridges = new FingerprintSkeleton(binary);
+            FingerprintSkeleton valleys = new FingerprintSkeleton(inverted);
 
-            MinutiaCollector.Collect(ridges, FingerprintMinutiaType.Ending, this);
-            MinutiaCollector.Collect(valleys, FingerprintMinutiaType.Bifurcation, this);
+            CollectMinutiae(ridges, FingerprintMinutiaType.Ending);
+            CollectMinutiae(valleys, FingerprintMinutiaType.Bifurcation);
             MinutiaMask.Filter(this, innerMask);
             MinutiaCloudRemover.Filter(this);
             UniqueMinutiaSorter.Filter(this);
@@ -82,21 +80,6 @@ namespace SourceAFIS
         }
 
         public override string ToString() { return ToXml().ToString(); }
-
-        static SkeletonBuilder ProcessSkeleton(BinaryMap binary)
-        {
-            SkeletonBuilder skeleton = null;
-            BinaryMap thinned = Thinner.Thin(binary);
-            skeleton = new SkeletonBuilder();
-            RidgeTracer.Trace(thinned, skeleton);
-            DotRemover.Filter(skeleton);
-            PoreRemover.Filter(skeleton);
-            GapRemover.Filter(skeleton);
-            TailRemover.Filter(skeleton);
-            FragmentRemover.Filter(skeleton);
-            BranchMinutiaRemover.Filter(skeleton);
-            return skeleton;
-        }
 
         static byte[,] InvertInput(byte[,] image)
         {
@@ -350,6 +333,12 @@ namespace SourceAFIS
             PointF[,] byBlock = AverageBlockOrientations(accumulated, blocks, mask);
             PointF[,] smooth = SmoothOutOrientationMap(byBlock, mask);
             return ConvertOrientationVectorsToAngles(smooth, mask);
+        }
+
+        class ConsideredOrientation
+        {
+            public Point CheckLocation;
+            public PointF OrientationVector;
         }
 
         static PointF[,] ComputePixelwiseOrientation(float[,] input, BinaryMap mask, BlockMap blocks)
@@ -617,6 +606,21 @@ namespace SourceAFIS
             temporary.And(inner, new RectangleC(0, amount, inner.Width, inner.Height - amount), new Point(0, 0));
             temporary.And(inner, new RectangleC(0, 0, inner.Width, inner.Height - amount), new Point(0, amount));
             inner.Copy(temporary);
+        }
+
+        void CollectMinutiae(FingerprintSkeleton skeleton, FingerprintMinutiaType type)
+        {
+            foreach (SkeletonMinutia skeletonMinutia in skeleton.Minutiae)
+            {
+                if (skeletonMinutia.IsConsidered && skeletonMinutia.Ridges.Count == 1)
+                {
+                    FingerprintMinutia templateMinutia = new FingerprintMinutia();
+                    templateMinutia.Type = type;
+                    templateMinutia.Position = skeletonMinutia.Position;
+                    templateMinutia.Direction = skeletonMinutia.Ridges[0].ComputeDirection();
+                    Minutiae.Add(templateMinutia);
+                }
+            }
         }
 
         void BuildEdgeTable()
