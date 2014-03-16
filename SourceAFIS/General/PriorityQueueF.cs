@@ -8,7 +8,7 @@ namespace SourceAFIS.General
     {
         struct Item
         {
-            public float Key;
+            public double Key;
             public V Value;
         }
 
@@ -47,7 +47,7 @@ namespace SourceAFIS.General
             }
         }
 
-        public void Enqueue(float key, V value)
+        public void Enqueue(double key, V value)
         {
             if (ItemCount + 1 >= Heap.Length)
                 Enlarge();

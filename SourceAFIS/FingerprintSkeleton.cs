@@ -124,7 +124,6 @@ namespace SourceAFIS
                                 if (thinned.GetBitSafe(next, false) && next != previous)
                                     break;
                             }
-                            AssertException.Check(next != new Point());
                             previous = current;
                             current = next;
                             ridge.Points.Add(current);

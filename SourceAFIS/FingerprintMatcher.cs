@@ -27,18 +27,18 @@ namespace SourceAFIS
             Pairing.SelectProbe(Template);
         }
 
-        public float Match(FingerprintTemplate candidate)
+        public double Match(FingerprintTemplate candidate)
         {
             PrepareCandidate(candidate);
 
             int rootIndex = 0;
             int triangleIndex = 0;
-            float bestScore = 0;
+            double bestScore = 0;
             MinutiaPair bestRoot = new MinutiaPair();
             int bestRootIndex = -1;
             foreach (MinutiaPair root in RootPairSelector.GetRoots(this, candidate))
             {
-                float score = TryRoot(root, candidate);
+                double score = TryRoot(root, candidate);
                 if (score > bestScore)
                 {
                     bestScore = score;
@@ -65,7 +65,7 @@ namespace SourceAFIS
             Candidate = candidate;
         }
 
-        float TryRoot(MinutiaPair root, FingerprintTemplate candidate)
+        double TryRoot(MinutiaPair root, FingerprintTemplate candidate)
         {
             Pairing.Reset(root);
             BuildPairing(candidate);
