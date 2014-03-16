@@ -1,22 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SourceAFIS.General;
+using SourceAFIS.Utils;
 
 namespace SourceAFIS
 {
-    public sealed class FingerprintMatcher
+    public class FingerprintMatcher
     {
         const int MaxDistanceError = 13;
         static readonly byte MaxAngleError = Angle.FromDegreesB(10);
 
-        public struct MinutiaPair
+        struct MinutiaPair
         {
             public int Probe;
             public int Candidate;
         }
 
-        public struct EdgePair
+        struct EdgePair
         {
             public MinutiaPair Reference;
             public MinutiaPair Neighbor;
@@ -29,7 +29,7 @@ namespace SourceAFIS
             public int SupportingEdges;
         }
 
-        internal FingerprintTemplate Template;
+        FingerprintTemplate Template;
         Dictionary<int, List<IndexedEdge>> EdgeHash = new Dictionary<int, List<IndexedEdge>>();
         FingerprintTemplate Candidate;
         PriorityQueueF<EdgePair> PairQueue;
@@ -267,7 +267,7 @@ namespace SourceAFIS
             }
         }
 
-        public struct MatchingPair
+        struct MatchingPair
         {
             public MinutiaPair Pair;
             public int Distance;

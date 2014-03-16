@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Utils
 {
-    public sealed class BlockMap
+    class BlockMap
     {
-        public sealed class PointGrid
+        public class PointGrid
         {
             public readonly int[] AllX;
             public readonly int[] AllY;
@@ -21,7 +21,7 @@ namespace SourceAFIS.General
             public Point this[Point at] { get { return new Point(AllX[at.X], AllY[at.Y]); } }
         }
 
-        public sealed class RectangleGrid
+        public class RectangleGrid
         {
             readonly PointGrid Corners;
 

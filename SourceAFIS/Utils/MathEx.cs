@@ -4,9 +4,9 @@ using System.Text;
 using System.Reflection;
 using System.Linq;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Utils
 {
-    public static class MathEx
+    static class MathEx
     {
         public static int DivRoundUp(int input, int divider)
         {

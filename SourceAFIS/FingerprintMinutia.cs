@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SourceAFIS.General;
+using SourceAFIS.Utils;
 
 namespace SourceAFIS
 {
-    public class FingerprintMinutia
+    class FingerprintMinutia
     {
         public Point Position;
         public byte Direction;

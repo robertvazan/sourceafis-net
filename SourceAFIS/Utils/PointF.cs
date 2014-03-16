@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Utils
 {
-    public struct PointF
+    struct PointF
     {
         public double X;
         public double Y;

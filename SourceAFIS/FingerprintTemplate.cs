@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using SourceAFIS.General;
+using SourceAFIS.Utils;
 using System.Xml.Linq;
 
 namespace SourceAFIS
 {
-    public sealed class FingerprintTemplate
+    public class FingerprintTemplate
     {
-        public List<FingerprintMinutia> Minutiae = new List<FingerprintMinutia>();
+        internal List<FingerprintMinutia> Minutiae = new List<FingerprintMinutia>();
         internal NeighborEdge[][] EdgeTable;
 
         public FingerprintTemplate(byte[,] image)

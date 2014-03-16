@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SourceAFIS.General;
+using SourceAFIS.Utils;
 
 namespace SourceAFIS
 {
-    public class SkeletonRidge
+    class SkeletonRidge
     {
         public readonly IList<Point> Points;
         SkeletonMinutia StartMinutia;

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Utils
 {
-    public static class Angle
+    static class Angle
     {
         public const double PI2 = 2 * Math.PI;
         public const byte PIB = 128;

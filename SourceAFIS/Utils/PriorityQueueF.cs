@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SourceAFIS.General
+namespace SourceAFIS.Utils
 {
-    public sealed class PriorityQueueF<V> where V : new()
+    class PriorityQueueF<V> where V : new()
     {
         struct Item
         {
