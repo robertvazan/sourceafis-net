@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SourceAFIS.Utils
 {
-    struct Rectangle : IList<Point>
+    struct Rectangle : IEnumerable<Point>
     {
         public int X;
         public int Y;
@@ -141,16 +141,5 @@ namespace SourceAFIS.Utils
         {
             return ((IEnumerable<Point>)this).GetEnumerator();
         }
-
-        int IList<Point>.IndexOf(Point point) { throw new NotImplementedException(); }
-        void IList<Point>.Insert(int at, Point point) { throw new NotSupportedException(); }
-        void IList<Point>.RemoveAt(int at) { throw new NotSupportedException(); }
-        void ICollection<Point>.Add(Point point) { throw new NotSupportedException(); }
-        bool ICollection<Point>.Remove(Point point) { throw new NotSupportedException(); }
-        void ICollection<Point>.Clear() { throw new NotSupportedException(); }
-        void ICollection<Point>.CopyTo(Point[] array, int count) { throw new NotImplementedException(); }
-        bool ICollection<Point>.IsReadOnly { get { return true; } }
-        int ICollection<Point>.Count { get { return TotalArea; } }
-        Point IList<Point>.this[int at] { get { return new Point(at % Width, at / Width); } set { throw new NotSupportedException(); } }
     }
 }
