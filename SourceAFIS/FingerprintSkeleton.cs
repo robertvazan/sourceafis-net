@@ -30,7 +30,7 @@ namespace SourceAFIS
             foreach (var at in Size)
             {
                 int count = 0;
-                foreach (var relative in Neighborhood.CornerNeighbors)
+                foreach (var relative in Point.CornerNeighbors)
                     if ((at + relative).Get(thinned, false))
                         ++count;
                 if (count == 1 || count > 2)
@@ -45,7 +45,7 @@ namespace SourceAFIS
             foreach (Point minutiaPos in minutiae)
             {
                 List<Point> ownLinks = null;
-                foreach (Point neighborRelative in Neighborhood.CornerNeighbors)
+                foreach (Point neighborRelative in Point.CornerNeighbors)
                 {
                     Point neighborPos = minutiaPos + neighborRelative;
                     if (linking.ContainsKey(neighborPos))
@@ -98,7 +98,7 @@ namespace SourceAFIS
             Dictionary<Point, SkeletonRidge> leads = new Dictionary<Point, SkeletonRidge>();
             foreach (Point minutiaPoint in minutiaePoints.Keys)
             {
-                foreach (Point startRelative in Neighborhood.CornerNeighbors)
+                foreach (Point startRelative in Point.CornerNeighbors)
                 {
                     Point start = minutiaPoint + startRelative;
                     if (start.Get(thinned, false) && !minutiaePoints.ContainsKey(start) && !leads.ContainsKey(start))
@@ -111,7 +111,7 @@ namespace SourceAFIS
                         do
                         {
                             Point next = new Point();
-                            foreach (Point nextRelative in Neighborhood.CornerNeighbors)
+                            foreach (Point nextRelative in Point.CornerNeighbors)
                             {
                                 next = current + nextRelative;
                                 if (next.Get(thinned, false) && next != previous)
@@ -230,13 +230,13 @@ namespace SourceAFIS
 
         static bool IsFalseEnding(bool[,] binary, Point ending)
         {
-            foreach (Point relativeNeighbor in Neighborhood.CornerNeighbors)
+            foreach (Point relativeNeighbor in Point.CornerNeighbors)
             {
                 Point neighbor = ending + relativeNeighbor;
                 if (neighbor.Get(binary))
                 {
                     int count = 0;
-                    foreach (var relative2 in Neighborhood.CornerNeighbors)
+                    foreach (var relative2 in Point.CornerNeighbors)
                         if ((neighbor + relative2).Get(binary, false))
                             ++count;
                     return count > 2;

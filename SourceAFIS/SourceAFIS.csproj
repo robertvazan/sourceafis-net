@@ -64,7 +64,6 @@
     <Compile Include="Utils\BlockMap.cs" />
     <Compile Include="Utils\MathEx.cs" />
     <Compile Include="Utils\CircularArray.cs" />
-    <Compile Include="Utils\Neighborhood.cs" />
     <Compile Include="Utils\Point.cs" />
     <Compile Include="Utils\PointF.cs" />
     <Compile Include="Utils\PolarPoint.cs" />
