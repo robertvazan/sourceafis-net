@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SourceAFIS
 {
-    struct NeighborEdge
+    class NeighborEdge
     {
         public EdgeShape Edge;
         public int Neighbor;
