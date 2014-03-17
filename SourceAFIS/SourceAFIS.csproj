@@ -72,7 +72,6 @@
     <Compile Include="FingerprintMatcher.cs" />
     <Compile Include="NeighborEdge.cs" />
     <Compile Include="Utils\Range.cs" />
-    <Compile Include="Utils\RangeF.cs" />
     <Compile Include="Utils\Rectangle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
