@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SourceAFIS.Utils
 {
-    class Rectangle : IEnumerable<Point>
+    struct Rectangle : IEnumerable<Point>
     {
         public int X;
         public int Y;
