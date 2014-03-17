@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SourceAFIS.Utils
 {
-    struct Rectangle : IEnumerable<Point>
+    class Rectangle : IEnumerable<Point>
     {
         public int X;
         public int Y;
@@ -52,13 +52,7 @@ namespace SourceAFIS.Utils
 
         public static Rectangle Between(Point begin, Point end)
         {
-            return new Rectangle()
-            {
-                X = begin.X,
-                Y = begin.Y,
-                Width = end.X - begin.X,
-                Height = end.Y - begin.Y
-            };
+            return new Rectangle(begin.X, begin.Y, end.X - begin.X, end.Y - begin.Y);
         }
 
         public Rectangle(Point size)

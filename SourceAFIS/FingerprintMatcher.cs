@@ -16,7 +16,7 @@ namespace SourceAFIS
             public int Candidate;
         }
 
-        struct EdgePair
+        class EdgePair
         {
             public MinutiaPair Reference;
             public MinutiaPair Neighbor;
@@ -32,7 +32,7 @@ namespace SourceAFIS
         FingerprintTemplate Template;
         Dictionary<int, List<IndexedEdge>> EdgeHash = new Dictionary<int, List<IndexedEdge>>();
         FingerprintTemplate Candidate;
-        PriorityQueueF<EdgePair> PairQueue;
+        PriorityQueueF<EdgePair> PairQueue = new PriorityQueueF<EdgePair>();
 
         PairInfo[] PairsByCandidate;
         PairInfo[] PairsByProbe;
@@ -63,7 +63,7 @@ namespace SourceAFIS
             double bestScore = 0;
             foreach (MinutiaPair root in GetRoots())
             {
-                double score = TryRoot(root, candidate);
+                double score = TryRoot(root);
                 if (score > bestScore)
                     bestScore = score;
                 ++rootIndex;
@@ -192,11 +192,10 @@ namespace SourceAFIS
             return false;
         }
 
-        double TryRoot(MinutiaPair root, FingerprintTemplate candidate)
+        double TryRoot(MinutiaPair root)
         {
             CreateRootPairing(root);
-            PairQueue = new PriorityQueueF<EdgePair>();
-            BuildPairing(candidate);
+            BuildPairing();
             return ComputeScore();
         }
 
@@ -214,11 +213,11 @@ namespace SourceAFIS
             PairCount = 1;
         }
 
-        void BuildPairing(FingerprintTemplate candidate)
+        void BuildPairing()
         {
             while (true)
             {
-                CollectEdges(candidate);
+                CollectEdges();
                 SkipPaired();
                 if (PairQueue.Count == 0)
                     break;
@@ -248,7 +247,7 @@ namespace SourceAFIS
             }
         }
 
-        void CollectEdges(FingerprintTemplate candidate)
+        void CollectEdges()
         {
             var reference = LastPair.Pair;
             var probeNeighbors = Template.EdgeTable[reference.Probe];
