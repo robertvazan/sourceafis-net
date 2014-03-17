@@ -12,10 +12,12 @@ namespace SourceAFIS
         internal List<FingerprintMinutia> Minutiae = new List<FingerprintMinutia>();
         internal NeighborEdge[][] EdgeTable;
 
-        public FingerprintTemplate(byte[,] image)
+        public FingerprintTemplate(byte[,] image, int dpi = 500)
         {
             const int blockSize = 15;
 
+            if (dpi != 500)
+                image = ScaleImage(image, dpi);
             image = InvertInput(image);
             var blocks = new BlockMap(new Point(image.GetLength(1), image.GetLength(0)), blockSize);
 
@@ -74,6 +76,48 @@ namespace SourceAFIS
         }
 
         public override string ToString() { return ToXml().ToString(); }
+
+        static byte[,] ScaleImage(byte[,] input, int dpi)
+        {
+            var size = Point.SizeOf(input);
+            return ScaleImage(input, Convert.ToInt32(500.0 / dpi * size.X), Convert.ToInt32(500.0 / dpi * size.Y));
+        }
+
+        static byte[,] ScaleImage(byte[,] input, int newX, int newY)
+        {
+            var oldSize = Point.SizeOf(input);
+            var output = new byte[newY, newX];
+            double scaleX = newX / (double)oldSize.X;
+            double scaleY = newY / (double)oldSize.Y;
+            double descaleX = 1 / scaleX;
+            double descaleY = 1 / scaleY;
+            for (int y = 0; y < newY; ++y)
+            {
+                double y1 = y * descaleY;
+                double y2 = y1 + descaleY;
+                int y1i = (int)y1;
+                int y2i = (int)Math.Ceiling(y2);
+                for (int x = 0; x < newX; ++x)
+                {
+                    double x1 = x * descaleX;
+                    double x2 = x1 + descaleX;
+                    int x1i = (int)x1;
+                    int x2i = (int)Math.Ceiling(x2);
+                    double sum = 0;
+                    for (int oy = y1i; oy < y2i; ++oy)
+                    {
+                        var ry = Math.Min(oy + 1, y2) - Math.Max(oy, y1);
+                        for (int ox = x1i; ox < x2i; ++ox)
+                        {
+                            var rx = Math.Min(ox + 1, x2) - Math.Max(ox, x1);
+                            sum += rx * ry * input[oy, ox];
+                        }
+                    }
+                    output[y, x] = Convert.ToByte(sum * (scaleX * scaleY));
+                }
+            }
+            return output;
+        }
 
         static byte[,] InvertInput(byte[,] image)
         {
