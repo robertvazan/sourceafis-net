@@ -12,9 +12,9 @@ namespace SourceAFIS
         public Point Size;
         public List<SkeletonMinutia> Minutiae = new List<SkeletonMinutia>();
 
-        public FingerprintSkeleton(BitImage binary)
+        public FingerprintSkeleton(bool[,] binary)
         {
-            Size = binary.Size;
+            Size = Point.SizeOf(binary);
             var thinned = Thin(binary);
             var minutiaPoints = FindMinutiae(thinned);
             var linking = LinkNeighboringMinutiae(minutiaPoints);
@@ -24,24 +24,17 @@ namespace SourceAFIS
             Filter();
         }
 
-        static List<Point> FindMinutiae(BitImage thinned)
+        List<Point> FindMinutiae(bool[,] thinned)
         {
-            bool[] isMinutia = GetMinutiaMasks();
             List<Point> result = new List<Point>();
-            for (int y = 0; y < thinned.Height; ++y)
-                for (int x = 0; x < thinned.Width; ++x)
-                    if (thinned.GetBit(x, y) && isMinutia[thinned.GetNeighborhood(x, y)])
-                        result.Add(new Point(x, y));
-            return result;
-        }
-
-        static bool[] GetMinutiaMasks()
-        {
-            bool[] result = new bool[256];
-            for (uint mask = 0; mask < 256; ++mask)
+            foreach (var at in Size)
             {
-                int count = MathEx.CountBits(mask);
-                result[mask] = (count == 1 || count > 2);
+                int count = 0;
+                foreach (var relative in Neighborhood.CornerNeighbors)
+                    if ((at + relative).Get(thinned, false))
+                        ++count;
+                if (count == 1 || count > 2)
+                    result.Add(at);
             }
             return result;
         }
@@ -100,7 +93,7 @@ namespace SourceAFIS
             return centers;
         }
 
-        static void TraceRidges(BitImage thinned, Dictionary<Point, SkeletonMinutia> minutiaePoints)
+        static void TraceRidges(bool[,] thinned, Dictionary<Point, SkeletonMinutia> minutiaePoints)
         {
             Dictionary<Point, SkeletonRidge> leads = new Dictionary<Point, SkeletonRidge>();
             foreach (Point minutiaPoint in minutiaePoints.Keys)
@@ -108,7 +101,7 @@ namespace SourceAFIS
                 foreach (Point startRelative in Neighborhood.CornerNeighbors)
                 {
                     Point start = minutiaPoint + startRelative;
-                    if (thinned.GetBitSafe(start, false) && !minutiaePoints.ContainsKey(start) && !leads.ContainsKey(start))
+                    if (start.Get(thinned, false) && !minutiaePoints.ContainsKey(start) && !leads.ContainsKey(start))
                     {
                         SkeletonRidge ridge = new SkeletonRidge();
                         ridge.Points.Add(minutiaPoint);
@@ -121,7 +114,7 @@ namespace SourceAFIS
                             foreach (Point nextRelative in Neighborhood.CornerNeighbors)
                             {
                                 next = current + nextRelative;
-                                if (thinned.GetBitSafe(next, false) && next != previous)
+                                if (next.Get(thinned, false) && next != previous)
                                     break;
                             }
                             previous = current;
@@ -157,67 +150,50 @@ namespace SourceAFIS
 
         enum NeighborhoodType
         {
-            Ignored,
+            Skeleton,
             Ending,
             Removable
         }
 
-        static BitImage Thin(BitImage input)
+        bool[,] Thin(bool[,] input)
         {
             const int maxIterations = 26;
 
             var neighborhoodTypes = GetNeighborhoodTypes();
-            BitImage intermediate = new BitImage(input.Size);
-            intermediate.Copy(input, new Rectangle(1, 1, input.Width - 2, input.Height - 2), new Point(1, 1));
+            var partial = Size.Allocate<bool>();
+            for (int y = 1; y < Size.Y - 1; ++y)
+                for (int x = 1; x < Size.X - 1; ++x)
+                    partial[y, x] = input[y, x];
 
-            BitImage border = new BitImage(input.Size);
-            BitImage thinned = new BitImage(input.Size);
+            var thinned = Size.Allocate<bool>();
             bool removedAnything = true;
             for (int i = 0; i < maxIterations && removedAnything; ++i)
             {
                 removedAnything = false;
-                for (int j = 0; j < 4; ++j)
-                {
-                    border.Copy(intermediate);
-                    switch (j)
-                    {
-                        case 0:
-                            border.AndNot(intermediate, new Rectangle(1, 0, border.Width - 1, border.Height), new Point(0, 0));
-                            break;
-                        case 1:
-                            border.AndNot(intermediate, new Rectangle(0, 0, border.Width - 1, border.Height), new Point(1, 0));
-                            break;
-                        case 2:
-                            border.AndNot(intermediate, new Rectangle(0, 1, border.Width, border.Height - 1), new Point(0, 0));
-                            break;
-                        case 3:
-                            border.AndNot(intermediate, new Rectangle(0, 0, border.Width, border.Height - 1), new Point(0, 1));
-                            break;
-                    }
-                    border.AndNot(thinned);
-
-                    for (int odd = 0; odd < 2; ++odd)
-                        for (int y = 1; y < input.Height - 1; ++y)
-                        {
-                            if (y % 2 == odd)
-                                for (int xw = 0; xw < input.WordWidth; ++xw)
-                                    if (border.IsWordNonZero(xw, y))
-                                        for (int x = xw << BitImage.WordShift; x < (xw << BitImage.WordShift) + BitImage.WordSize; ++x)
-                                            if (x > 0 && x < input.Width - 1 && border.GetBit(x, y))
-                                            {
-                                                uint neighbors = intermediate.GetNeighborhood(x, y);
-                                                if (neighborhoodTypes[neighbors] == NeighborhoodType.Removable
-                                                    || neighborhoodTypes[neighbors] == NeighborhoodType.Ending
-                                                    && IsFalseEnding(intermediate, new Point(x, y)))
-                                                {
-                                                    removedAnything = true;
-                                                    intermediate.SetBitZero(x, y);
-                                                }
-                                                else
-                                                    thinned.SetBitOne(x, y);
-                                            }
-                        }
-                }
+                for (int evenY = 0; evenY < 2; ++evenY)
+                    for (int evenX = 0; evenX < 2; ++evenX)
+                        for (int y = 1 + evenY; y < Size.Y - 1; y += 2)
+                            for (int x = 1 + evenX; x < Size.X - 1; x += 2)
+                                if (partial[y, x] && !thinned[y, x] && !(partial[y - 1, x] && partial[y + 1, x] && partial[y, x - 1] && partial[y, x + 1]))
+                                {
+                                    uint neighbors = (partial[y + 1, x + 1] ? 128u : 0u)
+                                        | (partial[y + 1, x] ? 64u : 0u)
+                                        | (partial[y + 1, x - 1] ? 32u : 0u)
+                                        | (partial[y, x + 1] ? 16u : 0u)
+                                        | (partial[y, x - 1] ? 8u : 0u)
+                                        | (partial[y - 1, x + 1] ? 4u : 0u)
+                                        | (partial[y - 1, x] ? 2u : 0u)
+                                        | (partial[y - 1, x - 1] ? 1u : 0u);
+                                    if (neighborhoodTypes[neighbors] == NeighborhoodType.Removable
+                                        || neighborhoodTypes[neighbors] == NeighborhoodType.Ending
+                                        && IsFalseEnding(partial, new Point(x, y)))
+                                    {
+                                        removedAnything = true;
+                                        partial[y, x] = false;
+                                    }
+                                    else
+                                        thinned[y, x] = true;
+                                }
             }
 
             return thinned;
@@ -252,13 +228,19 @@ namespace SourceAFIS
             return types;
         }
 
-        static bool IsFalseEnding(BitImage binary, Point ending)
+        static bool IsFalseEnding(bool[,] binary, Point ending)
         {
             foreach (Point relativeNeighbor in Neighborhood.CornerNeighbors)
             {
                 Point neighbor = ending + relativeNeighbor;
-                if (binary.GetBit(neighbor))
-                    return MathEx.CountBits(binary.GetNeighborhood(neighbor)) > 2;
+                if (neighbor.Get(binary))
+                {
+                    int count = 0;
+                    foreach (var relative2 in Neighborhood.CornerNeighbors)
+                        if ((neighbor + relative2).Get(binary, false))
+                            ++count;
+                    return count > 2;
+                }
             }
             return false;
         }
@@ -328,7 +310,7 @@ namespace SourceAFIS
                             queue.Enqueue((end1.Position - end2.Position).SqLength, gap);
                         }
 
-            BitImage shadow = GetShadow();
+            var shadow = GetShadow();
             while (queue.Count > 0)
             {
                 Gap gap = queue.Dequeue();
@@ -375,16 +357,16 @@ namespace SourceAFIS
                 return ridge.End.Position;
         }
 
-        static bool IsRidgeOverlapping(Point[] line, BitImage shadow)
+        static bool IsRidgeOverlapping(Point[] line, bool[,] shadow)
         {
             const int toleratedOverlapLength = 2;
             for (int i = toleratedOverlapLength; i < line.Length - toleratedOverlapLength; ++i)
-                if (shadow.GetBit(line[i]))
+                if (line[i].Get(shadow))
                     return true;
             return false;
         }
 
-        static void AddGapRidge(BitImage shadow, Gap gap, Point[] line)
+        static void AddGapRidge(bool[,] shadow, Gap gap, Point[] line)
         {
             SkeletonRidge ridge = new SkeletonRidge();
             foreach (Point point in line)
@@ -392,7 +374,7 @@ namespace SourceAFIS
             ridge.Start = gap.End1;
             ridge.End = gap.End2;
             foreach (Point point in line)
-                shadow.SetBitOne(point);
+                point.Set(shadow, true);
         }
 
         void RemoveTails()
@@ -474,16 +456,16 @@ namespace SourceAFIS
             Minutiae.Remove(minutia);
         }
 
-        BitImage GetShadow()
+        bool[,] GetShadow()
         {
-            BitImage shadow = new BitImage(Size);
+            var shadow = Size.Allocate<bool>();
             foreach (SkeletonMinutia minutia in Minutiae)
             {
-                shadow.SetBitOne(minutia.Position);
+                minutia.Position.Set(shadow, true);
                 foreach (SkeletonRidge ridge in minutia.Ridges)
                     if (ridge.Start.Position.Y <= ridge.End.Position.Y)
                         foreach (Point point in ridge.Points)
-                            shadow.SetBitOne(point);
+                            point.Set(shadow, true);
             }
             return shadow;
         }

@@ -61,7 +61,6 @@
     <Compile Include="FingerprintMinutiaType.cs" />
     <Compile Include="FingerprintTemplate.cs" />
     <Compile Include="Utils\Angle.cs" />
-    <Compile Include="Utils\BitImage.cs" />
     <Compile Include="Utils\BlockMap.cs" />
     <Compile Include="Utils\MathEx.cs" />
     <Compile Include="Utils\CircularArray.cs" />

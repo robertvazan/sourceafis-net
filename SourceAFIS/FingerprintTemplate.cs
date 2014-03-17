@@ -21,7 +21,7 @@ namespace SourceAFIS
 
             var histogram = ComputeHistogram(blocks, image);
             var smoothHistogram = ComputeSmoothedHistogram(blocks, histogram);
-            BitImage mask = ComputeMask(blocks, histogram);
+            var mask = ComputeMask(blocks, histogram);
             double[,] equalized = Equalize(blocks, image, smoothHistogram, mask);
 
             byte[,] orientation = ComputeOrientationMap(equalized, mask, blocks);
@@ -29,16 +29,13 @@ namespace SourceAFIS
             double[,] orthogonal = SmoothByOrientation(smoothed, orientation, mask, blocks, Angle.PIB,
                 ConstructOrientedLines(resolution: 11, radius: 4, step: 1.11));
 
-            BitImage binary = Binarize(smoothed, orthogonal, mask, blocks);
-            binary.AndNot(FilterBinarized(binary.GetInverted()));
-            binary.Or(FilterBinarized(binary));
-            RemoveCrosses(binary);
+            var binary = Binarize(smoothed, orthogonal, mask, blocks);
+            CleanupBinarized(binary);
 
-            BitImage pixelMask = mask.FillBlocks(blocks);
-            BitImage innerMask = ComputeInnerMask(pixelMask);
+            var pixelMask = FillBlocks(mask, blocks);
+            var innerMask = ComputeInnerMask(pixelMask);
 
-            BitImage inverted = binary.GetInverted();
-            inverted.And(pixelMask);
+            var inverted = Invert(binary, pixelMask);
 
             FingerprintSkeleton ridges = new FingerprintSkeleton(binary);
             FingerprintSkeleton valleys = new FingerprintSkeleton(inverted);
@@ -119,25 +116,71 @@ namespace SourceAFIS
             return output;
         }
 
-        static BitImage ComputeMask(BlockMap blocks, int[, ,] histogram)
+        static void CleanupBinarized(bool[,] binary)
+        {
+            var size = Point.SizeOf(binary);
+            var islands = FilterBinarized(InvertMask(binary));
+            var holes = FilterBinarized(binary);
+            for (int y = 0; y < size.Y; ++y)
+                for (int x = 0; x < size.X; ++x)
+                    binary[y, x] = binary[y, x] && !islands[y, x] || holes[y, x];
+            RemoveCrosses(binary);
+        }
+
+        static bool[,] ComputeMask(BlockMap blocks, int[, ,] histogram)
         {
             byte[,] contrast = ComputeClippedContrast(blocks, histogram);
-
-            BitImage mask = new BitImage(ComputeAbsoluteContrast(contrast));
-            mask.Or(ComputeRelativeContrast(contrast, blocks));
-            mask.Or(ApplyVotingFilter(mask, radius: 9, majority: 0.86, borderDist: 7));
-
-            mask.Or(FilterBlockErrors(mask));
-            mask.Invert();
-            mask.Or(FilterBlockErrors(mask));
-            mask.Or(FilterBlockErrors(mask));
-            mask.Or(ApplyVotingFilter(mask, radius: 7, borderDist: 4));
-
+            var mask = ComputeAbsoluteContrast(contrast);
+            MergeMask(mask, ComputeRelativeContrast(contrast, blocks));
+            MergeMask(mask, ApplyVotingFilter(mask, radius: 9, majority: 0.86, borderDist: 7));
+            MergeMask(mask, FilterBlockErrors(mask));
+            mask = InvertMask(mask);
+            MergeMask(mask, FilterBlockErrors(mask));
+            MergeMask(mask, FilterBlockErrors(mask));
+            MergeMask(mask, ApplyVotingFilter(mask, radius: 7, borderDist: 4));
             return mask;
         }
 
-        static BitImage FilterBlockErrors(BitImage input) { return ApplyVotingFilter(input, majority: 0.7, borderDist: 4); }
-        static BitImage FilterBinarized(BitImage input) { return ApplyVotingFilter(input, radius: 2, majority: 0.61, borderDist: 17); }
+        static bool[,] FilterBlockErrors(bool[,] input) { return ApplyVotingFilter(input, majority: 0.7, borderDist: 4); }
+        static bool[,] FilterBinarized(bool[,] input) { return ApplyVotingFilter(input, radius: 2, majority: 0.61, borderDist: 17); }
+
+        static void MergeMask(bool[,] mask, bool[,] merged)
+        {
+            var size = Point.SizeOf(mask);
+            for (int y = 0; y < size.Y; ++y)
+                for (int x = 0; x < size.X; ++x)
+                    mask[y, x] |= merged[y, x];
+        }
+
+        static bool[,] InvertMask(bool[,] mask)
+        {
+            var size = Point.SizeOf(mask);
+            var inverted = size.Allocate<bool>();
+            for (int y = 0; y < size.Y; ++y)
+                for (int x = 0; x < size.X; ++x)
+                    inverted[y, x] = !mask[y, x];
+            return inverted;
+        }
+
+        static bool[,] Invert(bool[,] binary, bool[,] mask)
+        {
+            var size = Point.SizeOf(binary);
+            var inverted = size.Allocate<bool>();
+            for (int y = 0; y < size.Y; ++y)
+                for (int x = 0; x < size.X; ++x)
+                    inverted[y, x] = !binary[y, x] && mask[y, x];
+            return inverted;
+        }
+
+        static bool[,] FillBlocks(bool[,] mask, BlockMap blocks)
+        {
+            bool[,] pixelized = blocks.PixelCount.Allocate<bool>();
+            foreach (var block in blocks.AllBlocks)
+                if (block.Get(mask))
+                    foreach (var pixel in blocks.BlockAreas[block])
+                        pixel.Set(pixelized, true);
+            return pixelized;
+        }
 
         static byte[,] ComputeClippedContrast(BlockMap blocks, int[, ,] histogram)
         {
@@ -180,18 +223,19 @@ namespace SourceAFIS
             return result;
         }
 
-        static BitImage ComputeAbsoluteContrast(byte[,] contrast)
+        static bool[,] ComputeAbsoluteContrast(byte[,] contrast)
         {
             const int limit = 17;
-            BitImage result = new BitImage(contrast.GetLength(1), contrast.GetLength(0));
-            for (int y = 0; y < result.Height; ++y)
-                for (int x = 0; x < result.Width; ++x)
+            var size = Point.SizeOf(contrast);
+            bool[,] result = size.Allocate<bool>();
+            for (int y = 0; y < size.Y; ++y)
+                for (int x = 0; x < size.X; ++x)
                     if (contrast[y, x] < limit)
-                        result.SetBitOne(x, y);
+                        result[y, x] = true;
             return result;
         }
 
-        static BitImage ComputeRelativeContrast(byte[,] contrast, BlockMap blocks)
+        static bool[,] ComputeRelativeContrast(byte[,] contrast, BlockMap blocks)
         {
             const int sampleSize = 168568;
             const double sampleFraction = 0.49;
@@ -213,42 +257,43 @@ namespace SourceAFIS
             averageContrast /= consideredBlocks;
             byte limit = Convert.ToByte(averageContrast * relativeLimit);
 
-            BitImage result = new BitImage(blocks.BlockCount.X, blocks.BlockCount.Y);
-            for (int y = 0; y < result.Height; ++y)
-                for (int x = 0; x < result.Width; ++x)
+            var result = blocks.BlockCount.Allocate<bool>();
+            for (int y = 0; y < blocks.BlockCount.Y; ++y)
+                for (int x = 0; x < blocks.BlockCount.X; ++x)
                     if (contrast[y, x] < limit)
-                        result.SetBitOne(x, y);
+                        result[y, x] = true;
             return result;
         }
 
-        static BitImage ApplyVotingFilter(BitImage input, int radius = 1, double majority = 0.51, int borderDist = 0)
+        static bool[,] ApplyVotingFilter(bool[,] input, int radius = 1, double majority = 0.51, int borderDist = 0)
         {
+            var size = Point.SizeOf(input);
             Rectangle rect = new Rectangle(new Point(borderDist, borderDist),
-                new Point(input.Width - 2 * borderDist, input.Height - 2 * borderDist));
-            BitImage output = new BitImage(input.Size);
+                new Point(size.X - 2 * borderDist, size.Y - 2 * borderDist));
+            var output = size.Allocate<bool>();
             for (int y = rect.RangeY.Begin; y < rect.RangeY.End; ++y)
             {
                 for (int x = rect.Left; x < rect.Right; ++x)
                 {
                     Rectangle neighborhood = Rectangle.Between(
                         new Point(Math.Max(x - radius, 0), Math.Max(y - radius, 0)),
-                        new Point(Math.Min(x + radius + 1, output.Width), Math.Min(y + radius + 1, output.Height)));
+                        new Point(Math.Min(x + radius + 1, size.X), Math.Min(y + radius + 1, size.Y)));
 
                     int ones = 0;
                     for (int ny = neighborhood.Bottom; ny < neighborhood.Top; ++ny)
                         for (int nx = neighborhood.Left; nx < neighborhood.Right; ++nx)
-                            if (input.GetBit(nx, ny))
+                            if (input[ny, nx])
                                 ++ones;
 
                     double voteWeight = 1.0 / neighborhood.TotalArea;
                     if (ones * voteWeight >= majority)
-                        output.SetBitOne(x, y);
+                        output[y, x] = true;
                 }
             }
             return output;
         }
 
-        static double[,] Equalize(BlockMap blocks, byte[,] image, int[, ,] histogram, BitImage blockMask)
+        static double[,] Equalize(BlockMap blocks, byte[,] image, int[, ,] histogram, bool[,] blockMask)
         {
             const double maxScaling = 3.99;
             const double minScaling = 0.25;
@@ -273,10 +318,10 @@ namespace SourceAFIS
             var cornerMapping = new double[blocks.CornerCount.Y, blocks.CornerCount.X, 256];
             foreach (var corner in blocks.AllCorners)
             {
-                if (blockMask.GetBitSafe(corner.X, corner.Y, false)
-                    || blockMask.GetBitSafe(corner.X - 1, corner.Y, false)
-                    || blockMask.GetBitSafe(corner.X, corner.Y - 1, false)
-                    || blockMask.GetBitSafe(corner.X - 1, corner.Y - 1, false))
+                if (corner.Get(blockMask, false)
+                    || new Point(corner.X - 1, corner.Y).Get(blockMask, false)
+                    || new Point(corner.X, corner.Y - 1).Get(blockMask, false)
+                    || new Point(corner.X - 1, corner.Y - 1).Get(blockMask, false))
                 {
                     int area = 0;
                     for (int i = 0; i < 256; ++i)
@@ -303,7 +348,7 @@ namespace SourceAFIS
             var result = new double[blocks.PixelCount.Y, blocks.PixelCount.X];
             foreach (var block in blocks.AllBlocks)
             {
-                if (blockMask.GetBit(block))
+                if (block.Get(blockMask))
                 {
                     var area = blocks.BlockAreas[block];
                     for (int y = area.Bottom; y < area.Top; ++y)
@@ -324,7 +369,7 @@ namespace SourceAFIS
             return result;
         }
 
-        static byte[,] ComputeOrientationMap(double[,] image, BitImage mask, BlockMap blocks)
+        static byte[,] ComputeOrientationMap(double[,] image, bool[,] mask, BlockMap blocks)
         {
             PointF[,] accumulated = ComputePixelwiseOrientation(image, mask, blocks);
             PointF[,] byBlock = AverageBlockOrientations(accumulated, blocks, mask);
@@ -338,12 +383,12 @@ namespace SourceAFIS
             public PointF OrientationVector;
         }
 
-        static PointF[,] ComputePixelwiseOrientation(double[,] input, BitImage mask, BlockMap blocks)
+        static PointF[,] ComputePixelwiseOrientation(double[,] input, bool[,] mask, BlockMap blocks)
         {
             List<List<ConsideredOrientation>> neighbors = GetTestedOrientations();
 
             PointF[,] orientation = new PointF[input.GetLength(0), input.GetLength(1)];
-            for (int blockY = 0; blockY < mask.Height; ++blockY)
+            for (int blockY = 0; blockY < blocks.BlockCount.Y; ++blockY)
             {
                 Range validMaskRange = GetMaskLineRange(mask, blockY);
                 if (validMaskRange.Length > 0)
@@ -407,12 +452,12 @@ namespace SourceAFIS
             return allSplits;
         }
 
-        static Range GetMaskLineRange(BitImage mask, int y)
+        static Range GetMaskLineRange(bool[,] mask, int y)
         {
             int first = -1;
             int last = -1;
-            for (int x = 0; x < mask.Width; ++x)
-                if (mask.GetBit(x, y))
+            for (int x = 0; x < mask.GetLength(1); ++x)
+                if (mask[y, x])
                 {
                     last = x;
                     if (first < 0)
@@ -424,12 +469,12 @@ namespace SourceAFIS
                 return new Range();
         }
 
-        static PointF[,] AverageBlockOrientations(PointF[,] orientation, BlockMap blocks, BitImage mask)
+        static PointF[,] AverageBlockOrientations(PointF[,] orientation, BlockMap blocks, bool[,] mask)
         {
             PointF[,] sums = new PointF[blocks.BlockCount.Y, blocks.BlockCount.X];
             foreach (var block in blocks.AllBlocks)
             {
-                if (mask.GetBit(block))
+                if (block.Get(mask))
                 {
                     PointF sum = new PointF();
                     Rectangle area = blocks.BlockAreas[block];
@@ -442,33 +487,35 @@ namespace SourceAFIS
             return sums;
         }
 
-        static PointF[,] SmoothOutOrientationMap(PointF[,] orientation, BitImage mask)
+        static PointF[,] SmoothOutOrientationMap(PointF[,] orientation, bool[,] mask)
         {
             const int radius = 1;
-            PointF[,] smoothed = new PointF[mask.Height, mask.Width];
-            for (int y = 0; y < mask.Height; ++y)
-                for (int x = 0; x < mask.Width; ++x)
-                    if (mask.GetBit(x, y))
+            var size = Point.SizeOf(mask);
+            PointF[,] smoothed = size.Allocate<PointF>();
+            for (int y = 0; y < size.Y; ++y)
+                for (int x = 0; x < size.X; ++x)
+                    if (mask[y, x])
                     {
                         Rectangle neighbors = Rectangle.Between(
                             new Point(Math.Max(0, x - radius), Math.Max(0, y - radius)),
-                            new Point(Math.Min(mask.Width, x + radius + 1), Math.Min(mask.Height, y + radius + 1)));
+                            new Point(Math.Min(size.X, x + radius + 1), Math.Min(size.Y, y + radius + 1)));
                         PointF sum = new PointF();
                         for (int ny = neighbors.Bottom; ny < neighbors.Top; ++ny)
                             for (int nx = neighbors.Left; nx < neighbors.Right; ++nx)
-                                if (mask.GetBit(nx, ny))
+                                if (mask[ny, nx])
                                     sum += orientation[ny, nx];
                         smoothed[y, x] = sum;
                     }
             return smoothed;
         }
 
-        static byte[,] ConvertOrientationVectorsToAngles(PointF[,] vectors, BitImage mask)
+        static byte[,] ConvertOrientationVectorsToAngles(PointF[,] vectors, bool[,] mask)
         {
-            byte[,] angles = new byte[mask.Height, mask.Width];
-            for (int y = 0; y < mask.Height; ++y)
-                for (int x = 0; x < mask.Width; ++x)
-                    if (mask.GetBit(x, y))
+            var size = Point.SizeOf(mask);
+            byte[,] angles = size.Allocate<byte>();
+            for (int y = 0; y < size.Y; ++y)
+                for (int x = 0; x < size.X; ++x)
+                    if (mask[y, x])
                         angles[y, x] = Angle.ToByte(Angle.Atan(vectors[y, x]));
             return angles;
         }
@@ -496,12 +543,12 @@ namespace SourceAFIS
             return result;
         }
 
-        static double[,] SmoothByOrientation(double[,] input, byte[,] orientation, BitImage mask, BlockMap blocks, byte angle, Point[][] lines)
+        static double[,] SmoothByOrientation(double[,] input, byte[,] orientation, bool[,] mask, BlockMap blocks, byte angle, Point[][] lines)
         {
             double[,] output = new double[input.GetLength(0), input.GetLength(1)];
             foreach (var block in blocks.AllBlocks)
             {
-                if (mask.GetBit(block))
+                if (block.Get(mask))
                 {
                     Point[] line = lines[Angle.Quantize(Angle.Add(orientation[block.Y, block.X], angle), lines.Length)];
                     foreach (Point linePoint in line)
@@ -523,86 +570,76 @@ namespace SourceAFIS
             return output;
         }
 
-        static BitImage Binarize(double[,] input, double[,] baseline, BitImage mask, BlockMap blocks)
+        static bool[,] Binarize(double[,] input, double[,] baseline, bool[,] mask, BlockMap blocks)
         {
-            BitImage binarized = new BitImage(input.GetLength(1), input.GetLength(0));
+            var size = Point.SizeOf(input);
+            var binarized = size.Allocate<bool>();
             for (int blockY = 0; blockY < blocks.AllBlocks.Height; ++blockY)
             {
                 for (int blockX = 0; blockX < blocks.AllBlocks.Width; ++blockX)
                 {
-                    if (mask.GetBit(blockX, blockY))
+                    if (mask[blockY, blockX])
                     {
                         Rectangle rect = blocks.BlockAreas[blockY, blockX];
                         for (int y = rect.Bottom; y < rect.Top; ++y)
                             for (int x = rect.Left; x < rect.Right; ++x)
                                 if (input[y, x] - baseline[y, x] > 0)
-                                    binarized.SetBitOne(x, y);
+                                    binarized[y, x] = true;
                     }
                 }
             }
             return binarized;
         }
 
-        static void RemoveCrosses(BitImage input)
+        static void RemoveCrosses(bool[,] input)
         {
-            BitImage sw2ne = new BitImage(input.Size);
-            BitImage se2nw = new BitImage(input.Size);
-            BitImage positions = new BitImage(input.Size);
-            BitImage squares = new BitImage(input.Size);
-
-            while (true)
+            var size = Point.SizeOf(input);
+            bool any = true;
+            while (any)
             {
-                sw2ne.Copy(input, new Rectangle(0, 0, input.Width - 1, input.Height - 1), new Point());
-                sw2ne.And(input, new Rectangle(1, 1, input.Width - 1, input.Height - 1), new Point());
-                sw2ne.AndNot(input, new Rectangle(0, 1, input.Width - 1, input.Height - 1), new Point());
-                sw2ne.AndNot(input, new Rectangle(1, 0, input.Width - 1, input.Height - 1), new Point());
-
-                se2nw.Copy(input, new Rectangle(0, 1, input.Width - 1, input.Height - 1), new Point());
-                se2nw.And(input, new Rectangle(1, 0, input.Width - 1, input.Height - 1), new Point());
-                se2nw.AndNot(input, new Rectangle(0, 0, input.Width - 1, input.Height - 1), new Point());
-                se2nw.AndNot(input, new Rectangle(1, 1, input.Width - 1, input.Height - 1), new Point());
-
-                positions.Copy(sw2ne);
-                positions.Or(se2nw);
-                if (positions.IsEmpty())
-                    break;
-
-                squares.Copy(positions);
-                squares.Or(positions, new Rectangle(0, 0, positions.Width - 1, positions.Height - 1), new Point(1, 0));
-                squares.Or(positions, new Rectangle(0, 0, positions.Width - 1, positions.Height - 1), new Point(0, 1));
-                squares.Or(positions, new Rectangle(0, 0, positions.Width - 1, positions.Height - 1), new Point(1, 1));
-
-                input.AndNot(squares);
+                any = false;
+                for (int y = 0; y < size.Y - 1; ++y)
+                    for (int x = 0; x < size.X - 1; ++x)
+                        if (input[y, x] && input[y + 1, x + 1] && !input[y + 1, x] && !input[y, x + 1] || input[y + 1, x] && input[y, x + 1] && !input[y, x] && !input[y + 1, x + 1])
+                        {
+                            input[y, x] = false;
+                            input[y + 1, x] = false;
+                            input[y, x + 1] = false;
+                            input[y + 1, x + 1] = false;
+                            any = true;
+                        }
             }
         }
 
-        static BitImage ComputeInnerMask(BitImage outer)
+        static bool[,] ComputeInnerMask(bool[,] outer)
         {
             const int minBorderDistance = 14;
-            BitImage inner = new BitImage(outer.Size);
-            inner.Copy(outer, new Rectangle(1, 1, outer.Width - 2, outer.Height - 2), new Point(1, 1));
-            BitImage temporary = new BitImage(outer.Size);
+            var size = Point.SizeOf(outer);
+            var inner = size.Allocate<bool>();
+            for (int y = 1; y < size.Y - 1; ++y)
+                for (int x = 1; x < size.X - 1; ++x)
+                    inner[y, x] = outer[y, x];
             if (minBorderDistance >= 1)
-                ShrinkMask(temporary, inner, 1);
+                inner = ShrinkMask(inner, 1);
             int total = 1;
             for (int step = 1; total + step <= minBorderDistance; step *= 2)
             {
-                ShrinkMask(temporary, inner, step);
+                inner = ShrinkMask(inner, step);
                 total += step;
             }
             if (total < minBorderDistance)
-                ShrinkMask(temporary, inner, minBorderDistance - total);
+                inner = ShrinkMask(inner, minBorderDistance - total);
             return inner;
         }
 
-        static void ShrinkMask(BitImage temporary, BitImage inner, int amount)
+        static bool[,] ShrinkMask(bool[,] mask, int amount)
         {
-            temporary.Clear();
-            temporary.Copy(inner, new Rectangle(amount, 0, inner.Width - amount, inner.Height), new Point(0, 0));
-            temporary.And(inner, new Rectangle(0, 0, inner.Width - amount, inner.Height), new Point(amount, 0));
-            temporary.And(inner, new Rectangle(0, amount, inner.Width, inner.Height - amount), new Point(0, 0));
-            temporary.And(inner, new Rectangle(0, 0, inner.Width, inner.Height - amount), new Point(0, amount));
-            inner.Copy(temporary);
+            var size = Point.SizeOf(mask);
+            var shrunk = size.Allocate<bool>();
+            for (int y = amount; y < size.Y - amount; ++y)
+                for (int x = amount; x < size.X - amount; ++x)
+                    shrunk[y, x] = mask[y - amount, x] && mask[y + amount, x] && mask[y, x - amount] && mask[y, x + amount];
+            return shrunk;
         }
 
         void CollectMinutiae(FingerprintSkeleton skeleton, FingerprintMinutiaType type)
@@ -620,13 +657,13 @@ namespace SourceAFIS
             }
         }
 
-        void ApplyMask(BitImage mask)
+        void ApplyMask(bool[,] mask)
         {
             const double directedExtension = 10.06;
             Minutiae.RemoveAll(minutia =>
             {
                 var arrow = (-directedExtension * Angle.ToVector(minutia.Direction)).Round();
-                return !mask.GetBitSafe((Point)minutia.Position + arrow, false);
+                return !(minutia.Position + arrow).Get(mask, false);
             });
         }
 
