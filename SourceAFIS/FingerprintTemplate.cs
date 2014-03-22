@@ -608,7 +608,7 @@ namespace SourceAFIS
                     Rectangle blockArea = blocks.BlockAreas[block];
                     for (int y = blockArea.Bottom; y < blockArea.Top; ++y)
                         for (int x = blockArea.Left; x < blockArea.Right; ++x)
-                            output[y, x] *= 1 / line.Length;
+							output[y, x] *= 1.0 / line.Length;
                 }
             }
             return output;
