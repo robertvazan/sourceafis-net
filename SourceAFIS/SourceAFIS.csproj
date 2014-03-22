@@ -11,8 +11,6 @@
     <RootNamespace>SourceAFIS</RootNamespace>
     <AssemblyName>SourceAFIS</AssemblyName>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -31,7 +29,6 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\SourceAFIS.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
-    <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,13 +39,10 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\SourceAFIS.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
-    <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
