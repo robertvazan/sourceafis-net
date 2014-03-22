@@ -28,14 +28,15 @@ namespace SourceAFIS
         {
             List<Point> result = new List<Point>();
             foreach (var at in Size)
-            {
-                int count = 0;
-                foreach (var relative in Point.CornerNeighbors)
-                    if ((at + relative).Get(thinned, false))
-                        ++count;
-                if (count == 1 || count > 2)
-                    result.Add(at);
-            }
+				if (at.Get(thinned))
+	            {
+	                int count = 0;
+	                foreach (var relative in Point.CornerNeighbors)
+	                    if ((at + relative).Get(thinned, false))
+	                        ++count;
+	                if (count == 1 || count > 2)
+	                    result.Add(at);
+	            }
             return result;
         }
 

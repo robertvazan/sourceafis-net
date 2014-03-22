@@ -15,8 +15,6 @@ namespace SourceAFIS.Tests
         {
             var db = Path.Combine("FVC2000", "DB1_B");
             var images = Path.Combine(TestUtils.ImagePath, db);
-            new FingerprintTemplate(TestUtils.LoadImage(Path.Combine(images, "101_1.tif")));
-            return;
             var templates = Path.Combine(TestUtils.TemplatePath, db);
             Directory.CreateDirectory(templates);
             foreach (var file in Directory.GetFiles(images))
