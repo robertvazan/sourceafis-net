@@ -205,6 +205,7 @@ namespace SourceAFIS
                 PairsByCandidate = new PairInfo[Candidate.Minutiae.Count];
             for (int i = 0; i < PairCount; ++i)
             {
+				PairList[i].SupportingEdges = 0;
                 PairsByProbe[PairList[i].Pair.Probe] = null;
                 PairsByCandidate[PairList[i].Pair.Candidate] = null;
             }
