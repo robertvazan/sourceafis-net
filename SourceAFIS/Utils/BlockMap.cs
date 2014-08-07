@@ -98,12 +98,12 @@ namespace SourceAFIS.Utils
             grid.AllY[0] = 0;
             for (int y = 0; y < BlockCount.Y; ++y)
                 grid.AllY[y + 1] = BlockCenters[y, 0].Y;
-            grid.AllY[BlockCount.Y] = PixelCount.Y;
+            grid.AllY[BlockCount.Y + 1] = PixelCount.Y;
 
             grid.AllX[0] = 0;
             for (int x = 0; x < BlockCount.X; ++x)
                 grid.AllX[x + 1] = BlockCenters[0, x].X;
-            grid.AllX[BlockCount.X] = PixelCount.X;
+            grid.AllX[BlockCount.X + 1] = PixelCount.X;
 
             return new RectangleGrid(grid);
         }
