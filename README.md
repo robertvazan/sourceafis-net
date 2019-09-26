@@ -10,7 +10,7 @@ or consider [sponsoring](https://sourceafis.machinezoo.com/custom) development o
 
 * Documentation: [Home](https://sourceafis.machinezoo.com/), [Tutorial](https://sourceafis.machinezoo.com/net), [API Reference](https://sourceafis.machinezoo.com/documentation/html/N_SourceAFIS_Simple.htm)
 * Download: see [Tutorial](https://sourceafis.machinezoo.com/net)
-* Sources: [GitHub](https://github.com/robertvazan/sourceafis-net), [Bitbucket](https://bitbucket.org/robertvazan/sourceafis-net/src)
+* Sources: [GitHub](https://github.com/robertvazan/sourceafis-net), [Bitbucket](https://bitbucket.org/robertvazan/sourceafis-net)
 * Issues: [GitHub](https://github.com/robertvazan/sourceafis-net/issues), [Bitbucket](https://bitbucket.org/robertvazan/sourceafis-net/issues)
 * License: [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
