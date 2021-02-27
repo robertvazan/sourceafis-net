@@ -5,9 +5,9 @@ using System.Text;
 
 namespace SourceAFIS
 {
-    class NeighborEdge
-    {
-        public EdgeShape Edge;
-        public int Neighbor;
-    }
+	class NeighborEdge
+	{
+		public EdgeShape Edge;
+		public int Neighbor;
+	}
 }

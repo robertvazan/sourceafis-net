@@ -7,10 +7,10 @@ using SourceAFIS.Utils;
 
 namespace SourceAFIS
 {
-    class FingerprintMinutia
-    {
-        public Point Position;
-        public byte Direction;
-        public FingerprintMinutiaType Type;
-    }
+	class FingerprintMinutia
+	{
+		public Point Position;
+		public byte Direction;
+		public FingerprintMinutiaType Type;
+	}
 }

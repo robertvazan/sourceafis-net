@@ -6,9 +6,9 @@ using System.Text;
 
 namespace SourceAFIS
 {
-    enum FingerprintMinutiaType : byte
-    {
-        Ending = 0,
-        Bifurcation = 1
-    }
+	enum FingerprintMinutiaType : byte
+	{
+		Ending = 0,
+		Bifurcation = 1
+	}
 }
