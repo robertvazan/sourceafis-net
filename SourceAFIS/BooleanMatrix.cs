@@ -53,8 +53,6 @@ namespace SourceAFIS
 			for (int i = 0; i < Cells.Length; ++i)
 				Cells[i] |= other.Cells[i];
 		}
-		int Offset(int x, int y) {
-			return y * Width + x;
-		}
+		int Offset(int x, int y) { return y * Width + x; }
 	}
 }
