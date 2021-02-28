@@ -2,253 +2,104 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
-namespace SourceAFIS.Utils
+namespace SourceAFIS
 {
-	class CircularArray<T> : IList<T>
+	class CircularArray<T>
 	{
-		T[] Inner;
-		int First;
-		int ItemCount;
-		int HeadCount { get { return Math.Min(ItemCount, Inner.Length - First); } }
-		int TailCount { get { return Math.Max(0, First + ItemCount - Inner.Length); } }
+		T[] Array;
+		int Head;
+		public int Size;
 
-		public CircularArray()
+		public T this[int index]
 		{
-			Inner = new T[16];
+			get
+			{
+				ValidateItemIndex(index);
+				return Array[Location(index)];
+			}
+			set
+			{
+				ValidateItemIndex(index);
+				Array[Location(index)] = value;
+			}
 		}
 
-		void CheckIndex(int index)
+		public CircularArray(int capacity)
 		{
-			if (index < 0 || index >= ItemCount)
+			Inner = new T[capacity];
+		}
+
+		void ValidateItemIndex(int index)
+		{
+			if (index < 0 || index >= Size)
 				throw new ArgumentOutOfRangeException();
 		}
-
-		int GetRealIndex(int index)
+		void ValidateCursorIndex(int index)
 		{
-			return index < HeadCount ? First + index : index - HeadCount;
+			if (index < 0 || index > Size)
+				throw new ArgumentOutOfRangeException();
 		}
-
-		void IncFirst()
-		{
-			++First;
-			if (First >= Inner.Length)
-				First -= Inner.Length;
-		}
-
-		void DecFirst()
-		{
-			--First;
-			if (First < 0)
-				First += Inner.Length;
-		}
-
+		int Location(int index) { return Head + index < Array.length ? Head + index : Head + index - Array.length; }
 		void Enlarge()
 		{
-			T[] enlarged = new T[2 * Inner.Length];
-			for (int i = 0; i < ItemCount; ++i)
-				enlarged[i] = Inner[GetRealIndex(i)];
-			Inner = enlarged;
-			First = 0;
+			T[] enlarged = new T[2 * Array.Length];
+			for (int i = 0; i < Size; ++i)
+				enlarged[i] = Array[Location(i)];
+			Array = enlarged;
+			Head = 0;
 		}
-
 		void Move(int from, int to, int length)
 		{
 			if (from < to)
 			{
 				for (int i = length - 1; i >= 0; --i)
-					Inner[GetRealIndex(to + i)] = Inner[GetRealIndex(from + i)];
+					this[to + i] = this[from + i];
 			}
-			else
+			else if (from > to)
 			{
 				for (int i = 0; i < length; ++i)
-					Inner[GetRealIndex(to + i)] = Inner[GetRealIndex(from + i)];
+					this[to + i] = this[from + i];
 			}
 		}
-
-		void MoveForward(int from, int length)
-		{
-			Move(from, from + 1, length);
-		}
-
-		void MoveBackward(int from, int length)
-		{
-			Move(from, from - 1, length);
-		}
-
-		void InsertSpaceForward(int index)
-		{
-			++ItemCount;
-			MoveForward(index, ItemCount - index - 1);
-		}
-
-		void InsertSpaceBackward(int index)
-		{
-			DecFirst();
-			++ItemCount;
-			MoveBackward(1, index + 1);
-		}
-
-		void InsertSpace(int index)
-		{
-			if (ItemCount >= Inner.Length)
+		public void Insert(int index, int amount) {
+			ValidateCursorIndex(index);
+			if (amount < 0)
+				throw new ArgumentOutOfRangeException();
+			while (size + amount > Array.Length)
 				Enlarge();
-			if (index >= ItemCount / 2)
-				InsertSpaceForward(index);
-			else
-				InsertSpaceBackward(index);
-		}
-
-		void RemoveSpaceForward(int index)
-		{
-			MoveBackward(index + 1, ItemCount - index - 1);
-			--ItemCount;
-		}
-
-		void RemoveSpaceBackward(int index)
-		{
-			MoveForward(0, index);
-			IncFirst();
-			--ItemCount;
-		}
-
-		void RemoveSpace(int index)
-		{
-			if (index >= ItemCount / 2)
-				RemoveSpaceForward(index);
-			else
-				RemoveSpaceBackward(index);
-		}
-
-		public int IndexOf(T item)
-		{
-			int index = Array.IndexOf<T>(Inner, item, First, Math.Min(ItemCount, Inner.Length - First));
-			if (index >= 0)
-				return index - First;
-			else if (First + ItemCount > Inner.Length)
-				return Array.IndexOf<T>(Inner, item, 0, First + ItemCount - Inner.Length);
-			else
-				return -1;
-		}
-
-		public void Insert(int index, T item)
-		{
-			CheckIndex(index);
-			if (index > 0)
-			{
-				InsertSpace(index);
-				Inner[GetRealIndex(index)] = item;
+			if (2 * index >= Size) {
+				Size += amount;
+				Move(index, index + amount, Size - amount - index);
+			} else {
+				Head -= amount;
+				Size += amount;
+				if (Head < 0)
+					Head += Array.Length;
+				Move(amount, 0, index);
 			}
-			else
-			{
-				if (ItemCount >= Inner.Length)
-					Enlarge();
-				DecFirst();
-				++ItemCount;
-				Inner[GetRealIndex(0)] = item;
+			for (int i = 0; i < amount; ++i)
+				this[index + i] = null;
+		}
+		public void Remove(int index, int amount) {
+			ValidateCursorIndex(index);
+			if (amount < 0)
+				throw new ArgumentOutOfRangeException();
+			ValidateCursorIndex(index + amount);
+			if (2 * index >= Size - amount) {
+				Move(index + amount, index, Size - amount - index);
+				for (int i = 0; i < amount; ++i)
+					this[size - i - 1] = null;
+				Size -= amount;
+			} else {
+				Move(0, amount, index);
+				for (int i = 0; i < amount; ++i)
+					this[i] = null;
+				Head += amount;
+				Size -= amount;
+				if (Head >= Array.Length)
+					head -= Array.Length;
 			}
-		}
-
-		public void RemoveAt(int index)
-		{
-			if (index == 0)
-			{
-				IncFirst();
-				--ItemCount;
-			}
-			else if (index == ItemCount - 1)
-				--ItemCount;
-			else
-			{
-				CheckIndex(index);
-				RemoveSpace(index);
-			}
-		}
-
-		public T this[int index]
-		{
-			get { CheckIndex(index); return Inner[GetRealIndex(index)]; }
-			set { CheckIndex(index); Inner[GetRealIndex(index)] = value; }
-		}
-
-		public void Add(T item)
-		{
-			if (ItemCount >= Inner.Length)
-				Enlarge();
-			++ItemCount;
-			Inner[GetRealIndex(ItemCount - 1)] = item;
-		}
-
-		public void Clear()
-		{
-			First = 0;
-			ItemCount = 0;
-		}
-
-		public bool Contains(T item)
-		{
-			return Array.IndexOf<T>(Inner, item, First, HeadCount) >= 0
-				|| Array.IndexOf<T>(Inner, item, 0, TailCount) >= 0;
-		}
-
-		public void CopyTo(T[] array, int at)
-		{
-			Array.Copy(Inner, First, array, at, HeadCount);
-			Array.Copy(Inner, 0, array, at + HeadCount, TailCount);
-		}
-
-		public bool Remove(T item)
-		{
-			int index = IndexOf(item);
-			if (index >= 0)
-			{
-				RemoveAt(index);
-				return true;
-			}
-			else
-				return false;
-		}
-
-		public int Count { get { return ItemCount; } }
-
-		public bool IsReadOnly { get { return false; } }
-
-		class Enumerator : IEnumerator<T>
-		{
-			CircularArray<T> Array;
-			int Index;
-
-			public Enumerator(CircularArray<T> array)
-			{
-				Array = array;
-				Index = -1;
-			}
-
-			public T Current { get { return Array[Index]; } }
-			object IEnumerator.Current { get { return Array[Index]; } }
-			public void Dispose() { }
-			public bool MoveNext()
-			{
-				if (Index < Array.ItemCount)
-				{
-					++Index;
-					return Index < Array.ItemCount;
-				}
-				else
-					return false;
-			}
-			public void Reset() { Index = -1; }
-		}
-
-		IEnumerator<T> IEnumerable<T>.GetEnumerator()
-		{
-			return new Enumerator(this);
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return new Enumerator(this);
 		}
 	}
 }

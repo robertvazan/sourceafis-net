@@ -1,66 +1,64 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
-using System.Collections.Generic;
-using System.Text;
-using SourceAFIS.Utils;
 
 namespace SourceAFIS
 {
-	struct EdgeShape
+	class EdgeShape
 	{
-		public readonly int Length;
-		public readonly byte ReferenceAngle;
-		public readonly byte NeighborAngle;
-
 		const int PolarCacheBits = 8;
-		const uint PolarCacheRadius = 1u << PolarCacheBits;
-		const uint PolarCacheMask = PolarCacheRadius - 1;
+		const int PolarCacheRadius = 1 << PolarCacheBits;
 
-		static readonly int[,] PolarDistance = new int[PolarCacheRadius, PolarCacheRadius];
-		static readonly byte[,] PolarAngle = new byte[PolarCacheRadius, PolarCacheRadius];
+		static readonly int[] PolarDistanceCache = new int[Integers.Sq(PolarCacheRadius)];
+		static readonly double[] PolarAngleCache = new double[Integers.Sq(PolarCacheRadius)];
+
+		public readonly int Length;
+		public readonly double ReferenceAngle;
+		public readonly double NeighborAngle;
 
 		static EdgeShape()
 		{
 			for (int y = 0; y < PolarCacheRadius; ++y)
+			{
 				for (int x = 0; x < PolarCacheRadius; ++x)
 				{
-					PolarDistance[y, x] = Convert.ToInt16(Math.Round(Math.Sqrt(MathEx.Sq(x) + MathEx.Sq(y))));
+					PolarDistanceCache[y * PolarCacheRadius + x] = (int)Doubles.Round(Math.Sqrt(Doubles.Sq(x) + Doubles.Sq(y)));
 					if (y > 0 || x > 0)
-						PolarAngle[y, x] = Angle.AtanB(new Point(x, y));
+						PolarAngleCache[y * PolarCacheRadius + x] = Angle.Atan(x, y);
 					else
-						PolarAngle[y, x] = 0;
+						PolarAngleCache[y * PolarCacheRadius + x] = 0;
 				}
+			}
 		}
 
-		public EdgeShape(FingerprintTemplate template, int reference, int neighbor)
+		public EdgeShape(int length, double referenceAngle, double neighborAngle)
 		{
-			var vector = template.Minutiae[neighbor].Position - template.Minutiae[reference].Position;
-			int quadrant = 0;
+			Length = length;
+			ReferenceAngle = referenceAngle;
+			NeighborAngle = neighborAngle;
+		}
+		public EdgeShape(ImmutableMinutia reference, ImmutableMinutia neighbor)
+		{
+			IntPoint vector = neighbor.Position - reference.Position;
+			double quadrant = 0;
 			int x = vector.X;
 			int y = vector.Y;
-
-			if (y < 0)
-			{
+			if (y < 0) {
 				x = -x;
 				y = -y;
-				quadrant = 128;
+				quadrant = Math.PI;
 			}
-
-			if (x < 0)
-			{
+			if (x < 0) {
 				int tmp = -x;
 				x = y;
 				y = tmp;
-				quadrant += 64;
+				quadrant += DoubleAngle.HalfPi;
 			}
-
-			int shift = MathEx.HighestBit((uint)(x | y) >> PolarCacheBits);
-
-			Length = PolarDistance[y >> shift, x >> shift] << shift;
-
-			var angle = (byte)(PolarAngle[y >> shift, x >> shift] + quadrant);
-			ReferenceAngle = Angle.Difference(template.Minutiae[reference].Direction, angle);
-			NeighborAngle = Angle.Difference(template.Minutiae[neighbor].Direction, Angle.Opposite(angle));
+			int shift = 32 - Integers.LeadingZeros(((uint)x | (uint)y) >> PolarCacheBits);
+			int offset = (y >> shift) * PolarCacheRadius + (x >> shift);
+			Length = PolarDistanceCache[offset] << shift;
+			double angle = PolarAngleCache[offset] + quadrant;
+			ReferenceAngle = DoubleAngle.Difference(reference.Direction, angle);
+			NeighborAngle = DoubleAngle.Difference(neighbor.Direction, DoubleAngle.Opposite(angle));
 		}
 	}
 }

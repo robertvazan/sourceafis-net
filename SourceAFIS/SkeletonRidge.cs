@@ -1,19 +1,15 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SourceAFIS.Utils;
 
 namespace SourceAFIS
 {
 	class SkeletonRidge
 	{
-		public readonly IList<Point> Points;
+		public readonly SkeletonRidge Reversed;
+		public readonly IList<IntPoint> Points;
 		SkeletonMinutia StartMinutia;
 		SkeletonMinutia EndMinutia;
-
-		public readonly SkeletonRidge Reversed;
 		
 		public SkeletonMinutia Start
 		{
@@ -35,7 +31,6 @@ namespace SourceAFIS
 				}
 			}
 		}
-
 		public SkeletonMinutia End
 		{
 			get { return EndMinutia; }
@@ -51,14 +46,13 @@ namespace SourceAFIS
 
 		public SkeletonRidge()
 		{
-			Points = new CircularArray<Point>();
+			Points = new CircularArray<IntPoint>();
 			Reversed = new SkeletonRidge(this);
 		}
-
 		SkeletonRidge(SkeletonRidge reversed)
 		{
 			Reversed = reversed;
-			Points = new ReversedList<Point>(reversed.Points);
+			Points = new ReversedList<IntPoint>(reversed.Points);
 		}
 
 		public void Detach()
@@ -66,15 +60,10 @@ namespace SourceAFIS
 			Start = null;
 			End = null;
 		}
-
-		public byte ComputeDirection()
+		public double Direction()
 		{
-			const int segmentLength = 21;
-			const int segmentSkip = 1;
-
-			int first = segmentSkip;
-			int last = segmentSkip + segmentLength - 1;
-
+			int first = Parameters.RidgeDirectionSkip;
+			int last = Parameters.RidgeDirectionSkip + Parameters.RidgeDirectionSample - 1;
 			if (last >= Points.Count)
 			{
 				int shift = last - Points.Count + 1;
@@ -83,8 +72,7 @@ namespace SourceAFIS
 			}
 			if (first < 0)
 				first = 0;
-
-			return Angle.AtanB(Points[first], Points[last]);
+			return DoubleAngle.Atan(Points[first], Points[last]);
 		}
 	}
 }
