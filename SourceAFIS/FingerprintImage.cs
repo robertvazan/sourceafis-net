@@ -14,7 +14,7 @@ namespace SourceAFIS
 			Dpi = options.Dpi;
 		}
 
-		public static FingerprintImage Grayscale(int width, int height, byte[] pixels, FingerprintImageOptions options)
+		public static FingerprintImage Grayscale(int width, int height, byte[] pixels, FingerprintImageOptions options = null)
 		{
 			if (pixels == null)
 				throw new ArgumentNullException(nameof(pixels));
@@ -24,8 +24,7 @@ namespace SourceAFIS
 			for (int y = 0; y < height; ++y)
 				for (int x = 0; x < width; ++x)
 					matrix[x, y] = 1 - pixels[y * width + x] / 255.0;
-			return new FingerprintImage(matrix, options);
+			return new FingerprintImage(matrix, options ?? new FingerprintImageOptions());
 		}
-		public static FingerprintImage Grayscale(int width, int height, byte[] pixels) { return Grayscale(width, height, pixels, new FingerprintImageOptions()); }
 	}
 }
