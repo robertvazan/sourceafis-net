@@ -9,7 +9,17 @@ namespace SourceAFIS
 		public static int RoundUpDiv(int dividend, int divisor) { return (dividend + divisor - 1) / divisor; }
 		// https://stackoverflow.com/questions/10439242/count-leading-zeroes-in-an-int32
 		// Modified to ignore the sign bit.
-		// .NET Core 3 has BitOperations.LeadingZeroCount()
+		// .NET Core 3 has BitOperations.PopCount() and BitOperations.LeadingZeroCount().
+		public static int PopulationCount(int sx)
+		{
+			uint x = (uint)sx;
+			x -= ((x >> 1) & 0x55555555);
+			x = (((x >> 2) & 0x33333333) + (x & 0x33333333));
+			x = (((x >> 4) + x) & 0x0f0f0f0f);
+			x += (x >> 8);
+			x += (x >> 16);
+			return (x & 0x0000003f);
+		}
 		public static int LeadingZeros(int sx)
 		{
 			const int numIntBits = sizeof(int) * 8; //compile time constant

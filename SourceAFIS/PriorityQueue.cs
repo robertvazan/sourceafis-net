@@ -17,6 +17,7 @@ namespace SourceAFIS
 			Comparer = comparer;
 			Heap = new T[1];
 		}
+		public PriorityQueue() : this(Comparer<T>.Default) { }
 
 		public void Clear()
 		{
