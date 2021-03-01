@@ -6,7 +6,18 @@ namespace SourceAFIS
 {
 	public class FingerprintMatcher
 	{
-		static Dictionary<int, List<IndexedEdge>> BuildEdgeHash(ImmutableTemplate template)
+		internal readonly FingerprintTemplate Template;
+		internal readonly Dictionary<int, List<IndexedEdge>> EdgeHash;
+
+		public FingerprintMatcher(FingerprintTemplate probe)
+		{
+			if (probe == null)
+				throw new ArgumentNullException(nameof(probe));
+			Template = probe;
+			EdgeHash = BuildEdgeHash(probe);
+		}
+
+		static Dictionary<int, List<IndexedEdge>> BuildEdgeHash(FingerprintTemplate template)
 		{
 			var map = new Dictionary<int, List<IndexedEdge>>();
 			for (int reference = 0; reference < template.Minutiae.Length; ++reference)
@@ -41,6 +52,15 @@ namespace SourceAFIS
 					for (int neighborBin = minNeighborBin; neighborBin != endNeighborBin; neighborBin = (neighborBin + 1) % angleBins)
 						coverage.Add((referenceBin << 24) + (neighborBin << 16) + lengthBin);
 			return coverage;
+		}
+		public double match(FingerprintTemplate candidate)
+		{
+			if (candidate == null)
+				throw new ArgumentNullException(nameof(candidate));
+			var thread = MatcherThread.Current;
+			thread.SelectMatcher(this);
+			thread.SelectCandidate(candidate);
+			return thread.Match();
 		}
 	}
 }

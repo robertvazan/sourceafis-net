@@ -1,25 +1,28 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SourceAFIS
 {
-	class ImmutableTemplate
+	public class FingerprintTemplate
 	{
 		const int Prime = 1610612741;
 
-		public static readonly ImmutableTemplate Empty = new ImmutableTemplate();
+		public static readonly FingerprintTemplate Empty = new FingerprintTemplate();
 
-		public readonly IntPoint Size;
-		public readonly ImmutableMinutia[] Minutiae;
-		public readonly NeighborEdge[][] Edges;
+		internal readonly IntPoint Size;
+		internal readonly ImmutableMinutia[] Minutiae;
+		internal readonly NeighborEdge[][] Edges;
 
-		ImmutableTemplate() {
+		FingerprintTemplate()
+		{
 			Size = new IntPoint(1, 1);
 			Minutiae = new ImmutableMinutia[0];
 			Edges = new NeighborEdge[0][];
 		}
-		public ImmutableTemplate(MutableTemplate mutable) {
+		FingerprintTemplate(MutableTemplate mutable)
+		{
 			Size = mutable.Size;
 			var minutiae =
 				from m in mutable.Minutiae
@@ -28,7 +31,10 @@ namespace SourceAFIS
 			Minutiae = minutiae.ToArray();
 			Edges = NeighborEdge.BuildTable(Minutiae);
 		}
-		public MutableTemplate Mutable() {
+		public FingerprintTemplate(FingerprintImage image) : this(FeatureExtractor.Extract(image.Matrix, image.Dpi)) { }
+
+		MutableTemplate Mutable()
+		{
 			var mutable = new MutableTemplate();
 			mutable.Size = Size;
 			mutable.Minutiae = (from m in Minutiae select m.Mutable()).ToList();

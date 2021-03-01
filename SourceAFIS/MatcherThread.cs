@@ -9,9 +9,9 @@ namespace SourceAFIS
 		[ThreadStatic]
 		static MatcherThread CurrentInstance;
 
-		public ImmutableTemplate Probe;
+		public FingerprintTemplate Probe;
 		Dictionary<int, List<IndexedEdge>> EdgeHash;
-		public ImmutableTemplate Candidate;
+		public FingerprintTemplate Candidate;
 		MinutiaPair[] Pool = new MinutiaPair[1];
 		int Pooled;
 		PriorityQueue<MinutiaPair> Queue = new PriorityQueue<MinutiaPair>(Comparer<MinutiaPair>.Create((a, b) => a.Distance.CompareTo(b.Distance)));
@@ -25,7 +25,7 @@ namespace SourceAFIS
 		readonly List<MinutiaPair> SupportEdges = new List<MinutiaPair>();
 		bool ReportSupport;
 
-		static MatcherThread Current
+		public static MatcherThread Current
 		{
 			get
 			{
@@ -35,7 +35,7 @@ namespace SourceAFIS
 			}
 		}
 
-		public void SelectMatcher(ImmutableMatcher matcher)
+		public void SelectMatcher(FingerprintMatcher matcher)
 		{
 			Probe = matcher.Template;
 			if (Probe.Minutiae.Length > Tree.Length)
@@ -45,13 +45,13 @@ namespace SourceAFIS
 			}
 			EdgeHash = matcher.EdgeHash;
 		}
-		public void SelectCandidate(ImmutableTemplate template)
+		public void SelectCandidate(FingerprintTemplate template)
 		{
 			Candidate = template;
 			if (ByCandidate.Length < Candidate.Minutiae.Length)
 				ByCandidate = new MinutiaPair[Candidate.Minutiae.Length];
 		}
-		double Match()
+		public double Match()
 		{
 			try
 			{
