@@ -43,7 +43,7 @@ namespace SourceAFIS
 		public static IntRect Between(int startX, int startY, int endX, int endY) { return new IntRect(startX, startY, endX - startX, endY - startY); }
 		public static IntRect Between(IntPoint start, IntPoint end) { return new IntRect(start.X, start.Y, end.X - start.X, end.Y - start.Y); }
 		public static IntRect Around(int x, int y, int radius) { return Between(x - radius, y - radius, x + radius + 1, y + radius + 1); }
-		public static IntRect Around(IntPoint center, int radius) { return Around(center.x, center.y, radius); }
+		public static IntRect Around(IntPoint center, int radius) { return Around(center.X, center.Y, radius); }
 		public IntRect Intersect(IntRect other)
 		{
 			return Between(

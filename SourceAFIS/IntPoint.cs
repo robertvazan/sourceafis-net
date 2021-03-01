@@ -55,20 +55,20 @@ namespace SourceAFIS
 				result = new IntPoint[Math.Abs(relative.X) + 1];
 				if (relative.X > 0) {
 					for (int i = 0; i <= relative.X; ++i)
-						result[i] = new IntPoint(X + i, Y + Doubles.Round(i * (relative.Y / (double)relative.X)));
+						result[i] = new IntPoint(X + i, Y + Doubles.RoundToInt(i * (relative.Y / (double)relative.X)));
 				} else if (relative.X < 0) {
 					for (int i = 0; i <= -relative.X; ++i)
-						result[i] = new IntPoint(X - i, Y - Doubles.Round(i * (relative.Y / (double)relative.X)));
+						result[i] = new IntPoint(X - i, Y - Doubles.RoundToInt(i * (relative.Y / (double)relative.X)));
 				} else
 					result[0] = this;
 			} else {
 				result = new IntPoint[Math.Abs(relative.Y) + 1];
 				if (relative.Y > 0) {
 					for (int i = 0; i <= relative.Y; ++i)
-						result[i] = new IntPoint(X + Doubles.Round(i * (relative.X / (double)relative.Y)), Y + i);
+						result[i] = new IntPoint(X + Doubles.RoundToInt(i * (relative.X / (double)relative.Y)), Y + i);
 				} else if (relative.Y < 0) {
 					for (int i = 0; i <= -relative.Y; ++i)
-						result[i] = new IntPoint(X - Doubles.Round(i * (relative.X / (double)relative.Y)), Y - i);
+						result[i] = new IntPoint(X - Doubles.RoundToInt(i * (relative.X / (double)relative.Y)), Y - i);
 				} else
 					result[0] = this;
 			}

@@ -21,8 +21,10 @@ namespace SourceAFIS
 
 		public int IndexOf(T item)
 		{
-			int index = Inner.LastIndexOf(item);
-			return index >= 0 ? Count - index - 1 : -1;
+			for (int i = 0; i < Count; ++i)
+				if (EqualityComparer<T>.Default.Equals(this[i], item))
+					return i;
+			return -1;
 		}
 		public void Insert(int position, T item) { Inner.Insert(Count - position, item); }
 		public void RemoveAt(int position) { Inner.RemoveAt(Count - position - 1); }

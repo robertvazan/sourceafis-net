@@ -1,6 +1,7 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SourceAFIS
 {
@@ -10,7 +11,7 @@ namespace SourceAFIS
 		{
 			var template = new MutableTemplate();
 			if (Math.Abs(dpi - 500) > Parameters.DpiTolerance)
-				raw = ScaleImage(image, dpi);
+				raw = ScaleImage(raw, dpi);
 			template.Size = raw.Size;
 			var blocks = new BlockMap(raw.Width, raw.Height, Parameters.BlockSize);
 			var histogram = Histogram(blocks, raw);
@@ -28,18 +29,18 @@ namespace SourceAFIS
 			var inverted = Invert(binary, pixelMask);
 			var innerMask = InnerMask(pixelMask);
 			var ridges = new Skeleton(binary, SkeletonType.Ridges);
-			var valleys = new FingerprintSkeleton(inverted, SkeletonType.Valleys);
+			var valleys = new Skeleton(inverted, SkeletonType.Valleys);
 			template.Minutiae = new List<MutableMinutia>();
-			CollectMinutiae(template.minutiae, ridges, FingerprintMinutiaType.Ending);
-			CollectMinutiae(template.minutiae, valleys, FingerprintMinutiaType.Bifurcation);
-			MaskMinutiae(template.minutiae, innerMask);
-			RemoveMinutiaClouds(template.minutiae);
-			template.minutiae = LimitTemplateSize(template.minutiae);
+			CollectMinutiae(template.Minutiae, ridges, MinutiaType.Ending);
+			CollectMinutiae(template.Minutiae, valleys, MinutiaType.Bifurcation);
+			MaskMinutiae(template.Minutiae, innerMask);
+			RemoveMinutiaClouds(template.Minutiae);
+			template.Minutiae = LimitTemplateSize(template.Minutiae);
 			return template;
 		}
 		static DoubleMatrix ScaleImage(DoubleMatrix input, double dpi)
 		{
-			return ScaleImage(input, (int)Doubles.Round(500.0 / dpi * input.Width), (int)Doubles.Round(500.0 / dpi * input.Height));
+			return ScaleImage(input, Doubles.RoundToInt(500.0 / dpi * input.Width), Doubles.RoundToInt(500.0 / dpi * input.Height));
 		}
 		static DoubleMatrix ScaleImage(DoubleMatrix input, int newWidth, int newHeight)
 		{
@@ -53,13 +54,13 @@ namespace SourceAFIS
 				double y1 = y * descaleY;
 				double y2 = y1 + descaleY;
 				int y1i = (int)y1;
-				int y2i = Math.min((int)Math.Ceiling(y2), input.Height);
+				int y2i = Math.Min((int)Math.Ceiling(y2), input.Height);
 				for (int x = 0; x < newWidth; ++x)
 				{
 					double x1 = x * descaleX;
 					double x2 = x1 + descaleX;
 					int x1i = (int)x1;
-					int x2i = Math.min((int)Math.Ceiling(x2), input.Width);
+					int x2i = Math.Min((int)Math.Ceiling(x2), input.Width);
 					double sum = 0;
 					for (int oy = y1i; oy < y2i; ++oy)
 					{
@@ -85,7 +86,7 @@ namespace SourceAFIS
 				{
 					for (int x = area.Left; x < area.Right; ++x)
 					{
-						int depth = (int)(image[x, y] * histogram.bins);
+						int depth = (int)(image[x, y] * histogram.Bins);
 						histogram.Increment(block, histogram.Constrain(depth));
 					}
 				}
@@ -128,8 +129,8 @@ namespace SourceAFIS
 			var result = new DoubleMatrix(blocks.Primary.Blocks);
 			foreach (var block in blocks.Primary.Blocks)
 			{
-				int volume = histogram.sum(block);
-				int clipLimit = (int)Doubles.Round(volume * Parameters.ClippedContrast);
+				int volume = histogram.Sum(block);
+				int clipLimit = Doubles.RoundToInt(volume * Parameters.ClippedContrast);
 				int accumulator = 0;
 				int lowerBound = histogram.Bins - 1;
 				for (int i = 0; i < histogram.Bins; ++i)
@@ -173,8 +174,8 @@ namespace SourceAFIS
 			sortedContrast.Reverse();
 			int pixelsPerBlock = blocks.Pixels.Area / blocks.Primary.Blocks.Area;
 			int sampleCount = Math.Min(sortedContrast.Count, Parameters.RelativeContrastSample / pixelsPerBlock);
-			int consideredBlocks = Math.Max((int)Doubles.Round(sampleCount * Parameters.RelativeContrastPercentile), 1);
-			int averageContrast = 0;
+			int consideredBlocks = Math.Max(Doubles.RoundToInt(sampleCount * Parameters.RelativeContrastPercentile), 1);
+			double averageContrast = 0;
 			for (int i = 0; i < consideredBlocks; ++i)
 				averageContrast += sortedContrast[i];
 			averageContrast /= consideredBlocks;
@@ -188,11 +189,11 @@ namespace SourceAFIS
 		static BooleanMatrix Vote(BooleanMatrix input, BooleanMatrix mask, int radius, double majority, int borderDistance) {
 			var size = input.Size;
 			var rect = new IntRect(borderDistance, borderDistance, size.X - 2 * borderDistance, size.Y - 2 * borderDistance);
-			int[] thresholds = new int[Integers.sq(2 * radius + 1) + 1];
+			int[] thresholds = new int[Integers.Sq(2 * radius + 1) + 1];
 			for (int i = 0; i < thresholds.Length; ++i)
 				thresholds[i] = (int)Math.Ceiling(majority * i);
-			var counts = new IntMatrix(Size);
-			var output = new BooleanMatrix(Size);
+			var counts = new IntMatrix(size);
+			var output = new BooleanMatrix(size);
 			for (int y = rect.Top; y < rect.Bottom; ++y)
 			{
 				int superTop = y - radius - 1;
@@ -240,15 +241,15 @@ namespace SourceAFIS
 		}
 		static BooleanMatrix FilterBlockErrors(BooleanMatrix input)
 		{
-			return Vote(input, null, Parameters.BlockErrorsVoteRadius, Parameters.BlocksErrorsVoteMajority, Parameters.BlockErrorsVoteBorderDistance);
+			return Vote(input, null, Parameters.BlockErrorsVoteRadius, Parameters.BlockErrorsVoteMajority, Parameters.BlockErrorsVoteBorderDistance);
 		}
 		static DoubleMatrix Equalize(BlockMap blocks, DoubleMatrix image, HistogramCube histogram, BooleanMatrix blockMask)
 		{
 			const double rangeMin = -1;
 			const double rangeMax = 1;
 			const double rangeSize = rangeMax - rangeMin;
-			const double widthMax = rangeSize / histogram.Bins * Parameters.MaxEqualizationScaling;
-			const double widthMin = rangeSize / histogram.Bins * Parameters.MinEqualizationScaling;
+			double widthMax = rangeSize / histogram.Bins * Parameters.MaxEqualizationScaling;
+			double widthMin = rangeSize / histogram.Bins * Parameters.MinEqualizationScaling;
 			var limitedMin = new double[histogram.Bins];
 			var limitedMax = new double[histogram.Bins];
 			var dequantized = new double[histogram.Bins];
@@ -286,9 +287,9 @@ namespace SourceAFIS
 			var result = new DoubleMatrix(blocks.Pixels);
 			foreach (var block in blocks.Primary.Blocks)
 			{
+				var area = blocks.Primary.Block(block);
 				if (blockMask[block])
 				{
-					var area = blocks.Primary.Block[block];
 					var topleft = mappings[block];
 					var topright = mappings[new IntPoint(block.X + 1, block.Y)];
 					var bottomleft = mappings[new IntPoint(block.X, block.Y + 1)];
@@ -328,7 +329,7 @@ namespace SourceAFIS
 			const int Bits = 30;
 			const int Mask = (1 << Bits) - 1;
 			const double Scaling = 1.0 / (1 << Bits);
-			long state = Prime * Prime * Prime;
+			long state = unchecked(Prime * Prime * Prime);
 			public double Next() {
 				state *= Prime;
 				return ((state & Mask) + 0.5) * Scaling;
@@ -451,7 +452,7 @@ namespace SourceAFIS
 		static DoubleMatrix OrientationAngles(DoublePointMatrix vectors, BooleanMatrix mask)
 		{
 			var size = mask.Size;
-			var angles = new DOubleMatrix(size);
+			var angles = new DoubleMatrix(size);
 			foreach (var block in size)
 				if (mask[block])
 					angles[block] = DoubleAngle.Atan(vectors[block]);
@@ -526,7 +527,7 @@ namespace SourceAFIS
 			var inverted = new BooleanMatrix(binary);
 			inverted.Invert();
 			var islands = Vote(inverted, mask, Parameters.BinarizedVoteRadius, Parameters.BinarizedVoteMajority, Parameters.BinarizedVoteBorderDistance);
-			var holes = vote(binary, mask, Parameters.BINARIZED_VOTE_RADIUS, Parameters.BINARIZED_VOTE_MAJORITY, Parameters.BINARIZED_VOTE_BORDER_DISTANCE);
+			var holes = Vote(binary, mask, Parameters.BinarizedVoteRadius, Parameters.BinarizedVoteMajority, Parameters.BinarizedVoteBorderDistance);
 			for (int y = 0; y < size.Y; ++y)
 				for (int x = 0; x < size.X; ++x)
 					binary[x, y] = binary[x, y] && !islands[x, y] || holes[x, y];
@@ -604,7 +605,7 @@ namespace SourceAFIS
 		}
 		static void MaskMinutiae(List<MutableMinutia> minutiae, BooleanMatrix mask)
 		{
-			Minutiae.RemoveAll(minutia =>
+			minutiae.RemoveAll(minutia =>
 			{
 				var arrow = (-Parameters.MaskDisplacement * DoubleAngle.ToVector(minutia.Direction)).Round();
 				return !mask.Get(minutia.Position + arrow, false);
@@ -613,12 +614,12 @@ namespace SourceAFIS
 		static void RemoveMinutiaClouds(List<MutableMinutia> minutiae)
 		{
 			var radiusSq = Integers.Sq(Parameters.MinutiaCloudRadius);
-			var removed = new HashSet<>(minutiae.Where(minutia => Parameters.MaxCloudSize < minutiae.Where(neighbor => (neighbor.Position - minutia.Position).LengthSq <= radiusSq).Count() - 1));
+			var removed = new HashSet<MutableMinutia>(minutiae.Where(minutia => Parameters.MaxCloudSize < minutiae.Where(neighbor => (neighbor.Position - minutia.Position).LengthSq <= radiusSq).Count() - 1));
 			minutiae.RemoveAll(minutia => removed.Contains(minutia));
 		}
 		static List<MutableMinutia> LimitTemplateSize(List<MutableMinutia> minutiae)
 		{
-			if (Minutiae.Count <= Parameters.MaxMinutiae)
+			if (minutiae.Count <= Parameters.MaxMinutiae)
 				return minutiae;
 			return
 				(from minutia in minutiae

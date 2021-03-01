@@ -46,7 +46,7 @@ namespace SourceAFIS
 
 		public SkeletonRidge()
 		{
-			Points = new CircularArray<IntPoint>();
+			Points = new CircularList<IntPoint>();
 			Reversed = new SkeletonRidge(this);
 		}
 		SkeletonRidge(SkeletonRidge reversed)

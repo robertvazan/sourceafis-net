@@ -13,15 +13,15 @@ namespace SourceAFIS
 		public BlockGrid(IntPoint size)
 		{
 			Blocks = size;
-			Corners = new IntPoint(size.x + 1, size.y + 1);
-			X = new int[size.x + 1];
-			Y = new int[size.y + 1];
+			Corners = new IntPoint(size.X + 1, size.Y + 1);
+			X = new int[size.X + 1];
+			Y = new int[size.Y + 1];
 		}
 		public BlockGrid(int width, int height) : this(new IntPoint(width, height)) { }
 
 		public IntPoint Corner(int atX, int atY) { return new IntPoint(X[atX], Y[atY]); }
-		public IntPoint Corner(IntPoint at) { return Corner(at.x, at.y); }
+		public IntPoint Corner(IntPoint at) { return Corner(at.X, at.Y); }
 		public IntRect Block(int atX, int atY) { return IntRect.Between(Corner(atX, atY), Corner(atX + 1, atY + 1)); }
-		public IntRect Block(IntPoint at) { return Block(at.x, at.y); }
+		public IntRect Block(IntPoint at) { return Block(at.X, at.Y); }
 	}
 }

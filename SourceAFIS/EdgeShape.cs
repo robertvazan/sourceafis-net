@@ -21,9 +21,9 @@ namespace SourceAFIS
 			{
 				for (int x = 0; x < PolarCacheRadius; ++x)
 				{
-					PolarDistanceCache[y * PolarCacheRadius + x] = (int)Doubles.Round(Math.Sqrt(Doubles.Sq(x) + Doubles.Sq(y)));
+					PolarDistanceCache[y * PolarCacheRadius + x] = Doubles.RoundToInt(Math.Sqrt(Doubles.Sq(x) + Doubles.Sq(y)));
 					if (y > 0 || x > 0)
-						PolarAngleCache[y * PolarCacheRadius + x] = Angle.Atan(x, y);
+						PolarAngleCache[y * PolarCacheRadius + x] = DoubleAngle.Atan(x, y);
 					else
 						PolarAngleCache[y * PolarCacheRadius + x] = 0;
 				}
@@ -53,7 +53,7 @@ namespace SourceAFIS
 				y = tmp;
 				quadrant += DoubleAngle.HalfPi;
 			}
-			int shift = 32 - Integers.LeadingZeros(((uint)x | (uint)y) >> PolarCacheBits);
+			int shift = 32 - (int)Integers.LeadingZeros(((uint)x | (uint)y) >> PolarCacheBits);
 			int offset = (y >> shift) * PolarCacheRadius + (x >> shift);
 			Length = PolarDistanceCache[offset] << shift;
 			double angle = PolarAngleCache[offset] + quadrant;

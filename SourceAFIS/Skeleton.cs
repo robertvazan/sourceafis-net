@@ -6,7 +6,7 @@ namespace SourceAFIS
 {
 	class Skeleton
 	{
-		public readonly SkeletonType type;
+		public readonly SkeletonType Type;
 		public readonly IntPoint Size;
 		public readonly List<SkeletonMinutia> Minutiae = new List<SkeletonMinutia>();
 
@@ -32,10 +32,10 @@ namespace SourceAFIS
 		BooleanMatrix Thin(BooleanMatrix input)
 		{
 			var neighborhoodTypes = NeighborhoodTypes();
-			var partial = new BooleanMatrix(Size);
+			var mutable = new BooleanMatrix(Size);
 			for (int y = 1; y < Size.Y - 1; ++y)
 				for (int x = 1; x < Size.X - 1; ++x)
-					partial[x, y] = input[x, y];
+					mutable[x, y] = input[x, y];
 			var thinned = new BooleanMatrix(Size);
 			bool removedAnything = true;
 			for (int i = 0; i < Parameters.ThinningIterations && removedAnything; ++i)
@@ -45,22 +45,22 @@ namespace SourceAFIS
 					for (int evenX = 0; evenX < 2; ++evenX)
 						for (int y = 1 + evenY; y < Size.Y - 1; y += 2)
 							for (int x = 1 + evenX; x < Size.X - 1; x += 2)
-								if (partial[x, y] && !thinned[x, y] && !(partial[x, y - 1] && partial[x, y + 1] && partial[x - 1, y] && partial[x + 1, y]))
+								if (mutable[x, y] && !thinned[x, y] && !(mutable[x, y - 1] && mutable[x, y + 1] && mutable[x - 1, y] && mutable[x + 1, y]))
 								{
-									uint neighbors = (partial[y + 1, x + 1] ? 128u : 0u)
-										| (partial[y + 1, x] ? 64u : 0u)
-										| (partial[y + 1, x - 1] ? 32u : 0u)
-										| (partial[y, x + 1] ? 16u : 0u)
-										| (partial[y, x - 1] ? 8u : 0u)
-										| (partial[y - 1, x + 1] ? 4u : 0u)
-										| (partial[y - 1, x] ? 2u : 0u)
-										| (partial[y - 1, x - 1] ? 1u : 0u);
+									uint neighbors = (mutable[y + 1, x + 1] ? 128u : 0u)
+										| (mutable[y + 1, x] ? 64u : 0u)
+										| (mutable[y + 1, x - 1] ? 32u : 0u)
+										| (mutable[y, x + 1] ? 16u : 0u)
+										| (mutable[y, x - 1] ? 8u : 0u)
+										| (mutable[y - 1, x + 1] ? 4u : 0u)
+										| (mutable[y - 1, x] ? 2u : 0u)
+										| (mutable[y - 1, x - 1] ? 1u : 0u);
 									if (neighborhoodTypes[neighbors] == NeighborhoodType.Removable
 										|| neighborhoodTypes[neighbors] == NeighborhoodType.Ending
-										&& IsFalseEnding(partial, new Point(x, y)))
+										&& IsFalseEnding(mutable, new IntPoint(x, y)))
 									{
 										removedAnything = true;
-										partial[x, y] = false;
+										mutable[x, y] = false;
 									}
 									else
 										thinned[x, y] = true;
@@ -81,7 +81,7 @@ namespace SourceAFIS
 				bool BL = (mask & 32) != 0;
 				bool BC = (mask & 64) != 0;
 				bool BR = (mask & 128) != 0;
-				int count = Integers.PopulationCount(mask);
+				uint count = Integers.PopulationCount(mask);
 				bool diagonal = !TC && !CL && TL || !CL && !BC && BL || !BC && !CR && BR || !CR && !TC && TR;
 				bool horizontal = !TC && !BC && (TR || CR || BR) && (TL || CL || BL);
 				bool vertical = !CL && !CR && (TL || TC || TR) && (BL || BC || BR);
@@ -280,22 +280,22 @@ namespace SourceAFIS
 		}
 		class Gap : IComparable<Gap>
 		{
-			int distance;
+			public int Distance;
 			public SkeletonMinutia End1;
 			public SkeletonMinutia End2;
-			public int CompareTo(Gap other) { return distance.CompareTo(other.distance); }
+			public int CompareTo(Gap other) { return Distance.CompareTo(other.Distance); }
 		}
 		void RemoveGaps()
 		{
-			var queue = new PriorityQueueF<Gap>();
+			var queue = new PriorityQueue<Gap>();
 			foreach (var end1 in Minutiae)
 				if (end1.Ridges.Count == 1 && end1.Ridges[0].Points.Count >= Parameters.ShortestJoinedEnding)
 					foreach (var end2 in Minutiae)
 						if (end2 != end1 && end2.Ridges.Count == 1 && end1.Ridges[0].End != end2
-							&& end2.Ridges[0].Points.Count >= minEndingLength && IsWithinGapLimits(end1, end2))
+							&& end2.Ridges[0].Points.Count >= Parameters.ShortestJoinedEnding && IsWithinGapLimits(end1, end2))
 						{
 							var gap = new Gap();
-							gap.distance = (end1.Position - end2.Position).LengthSq;
+							gap.Distance = (end1.Position - end2.Position).LengthSq;
 							gap.End1 = end1;
 							gap.End2 = end2;
 							queue.Add(gap);
@@ -324,7 +324,7 @@ namespace SourceAFIS
 			double direction1 = DoubleAngle.Atan(end1.Position, AngleSampleForGapRemoval(end1));
 			if (DoubleAngle.Distance(direction1, DoubleAngle.Opposite(gapDirection)) > Parameters.MaxGapAngle)
 				return false;
-			byte direction2 = DoubleAngle.Atan(end2.Position, AngleSampleForGapRemoval(end2));
+			double direction2 = DoubleAngle.Atan(end2.Position, AngleSampleForGapRemoval(end2));
 			if (DoubleAngle.Distance(direction2, gapDirection) > Parameters.MaxGapAngle)
 				return false;
 			return true;

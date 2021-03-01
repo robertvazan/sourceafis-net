@@ -7,24 +7,27 @@ namespace SourceAFIS
 	class NeighborEdge : EdgeShape
 	{
 		public readonly int Neighbor;
-		public NeighborEdge(ImmutableMinutia[] minutiae, int reference, int neighbor) {
-			super(minutiae[reference], minutiae[neighbor]);
-			Neighbor = neighbor;
-		}
-		public static NeighborEdge[][] BuildTable(ImmutableMinutia[] minutiae) {
+
+		public NeighborEdge(ImmutableMinutia[] minutiae, int reference, int neighbor) : base(minutiae[reference], minutiae[neighbor]) { Neighbor = neighbor; }
+
+		public static NeighborEdge[][] BuildTable(ImmutableMinutia[] minutiae)
+		{
 			var edges = new NeighborEdge[minutiae.Length][];
 			var star = new List<NeighborEdge>();
 			var allSqDistances = new int[minutiae.Length];
-			for (int reference = 0; reference < edges.Length; ++reference) {
+			for (int reference = 0; reference < edges.Length; ++reference)
+			{
 				var referencePosition = minutiae[reference].Position;
 				int maxSqDistance = Int32.MaxValue;
-				if (minutiae.Length - 1 > Parameters.EdgeTableNeighbors) {
+				if (minutiae.Length - 1 > Parameters.EdgeTableNeighbors)
+				{
 					for (int neighbor = 0; neighbor < minutiae.Length; ++neighbor)
 						allSqDistances[neighbor] = (referencePosition - minutiae[neighbor].Position).LengthSq;
-					Arrays.Sort(allSqDistances);
+					Array.Sort(allSqDistances);
 					maxSqDistance = allSqDistances[Parameters.EdgeTableNeighbors];
 				}
-				for (int neighbor = 0; neighbor < minutiae.Length; ++neighbor) {
+				for (int neighbor = 0; neighbor < minutiae.Length; ++neighbor)
+				{
 					if (neighbor != reference && (referencePosition - minutiae[neighbor].Position).LengthSq <= maxSqDistance)
 						star.Add(new NeighborEdge(minutiae, reference, neighbor));
 				}

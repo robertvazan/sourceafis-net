@@ -18,7 +18,7 @@ namespace SourceAFIS
 		}
 		public BooleanMatrix(IntPoint size) : this(size.X, size.Y) { }
 		public BooleanMatrix(BooleanMatrix other)
-			: this(other.size())
+			: this(other.Size)
 		{
 			for (int i = 0; i < Cells.Length; ++i)
 				Cells[i] = other.Cells[i];

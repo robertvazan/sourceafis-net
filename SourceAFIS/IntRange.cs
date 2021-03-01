@@ -6,17 +6,17 @@ namespace SourceAFIS
 	readonly struct IntRange
 	{
 		public static readonly IntRange Zero = new IntRange();
-		public readonly int Begin;
+		public readonly int Start;
 		public readonly int End;
 
-		public int Length { get { return End - Begin; } }
+		public int Length { get { return End - Start; } }
 
-		public IntRange(int begin, int end)
+		public IntRange(int start, int end)
 		{
-			Begin = begin;
+			Start = start;
 			End = end;
 		}
 
-		public override string ToString() { return string.Format("{0}..{1}", Begin, End); }
+		public override string ToString() { return string.Format("{0}..{1}", Start, End); }
 	}
 }

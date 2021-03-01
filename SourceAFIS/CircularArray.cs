@@ -27,7 +27,7 @@ namespace SourceAFIS
 
 		public CircularArray(int capacity)
 		{
-			Inner = new T[capacity];
+			Array = new T[capacity];
 		}
 
 		void ValidateItemIndex(int index)
@@ -40,7 +40,7 @@ namespace SourceAFIS
 			if (index < 0 || index > Size)
 				throw new ArgumentOutOfRangeException();
 		}
-		int Location(int index) { return Head + index < Array.length ? Head + index : Head + index - Array.length; }
+		int Location(int index) { return Head + index < Array.Length ? Head + index : Head + index - Array.Length; }
 		void Enlarge()
 		{
 			T[] enlarged = new T[2 * Array.Length];
@@ -66,7 +66,7 @@ namespace SourceAFIS
 			ValidateCursorIndex(index);
 			if (amount < 0)
 				throw new ArgumentOutOfRangeException();
-			while (size + amount > Array.Length)
+			while (Size + amount > Array.Length)
 				Enlarge();
 			if (2 * index >= Size) {
 				Size += amount;
@@ -79,7 +79,7 @@ namespace SourceAFIS
 				Move(amount, 0, index);
 			}
 			for (int i = 0; i < amount; ++i)
-				this[index + i] = null;
+				this[index + i] = default(T);
 		}
 		public void Remove(int index, int amount) {
 			ValidateCursorIndex(index);
@@ -89,16 +89,16 @@ namespace SourceAFIS
 			if (2 * index >= Size - amount) {
 				Move(index + amount, index, Size - amount - index);
 				for (int i = 0; i < amount; ++i)
-					this[size - i - 1] = null;
+					this[Size - i - 1] = default(T);
 				Size -= amount;
 			} else {
 				Move(0, amount, index);
 				for (int i = 0; i < amount; ++i)
-					this[i] = null;
+					this[i] = default(T);
 				Head += amount;
 				Size -= amount;
 				if (Head >= Array.Length)
-					head -= Array.Length;
+					Head -= Array.Length;
 			}
 		}
 	}

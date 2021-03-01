@@ -28,8 +28,8 @@ namespace SourceAFIS
 			set
 			{
 				int i = Offset(x, y);
-				vectors[i] = value.X;
-				vectors[i + 1] = value.Y;
+				Vectors[i] = value.X;
+				Vectors[i + 1] = value.Y;
 			}
 		}
 		public DoublePoint this[IntPoint at]
@@ -51,7 +51,7 @@ namespace SourceAFIS
 			Vectors[i + 1] += py;
 		}
 		public void Add(int x, int y, DoublePoint point) { Add(x, y, point.X, point.Y); }
-		public void Add(IntPoint at, double value) { Add(at.X, at.Y, value); }
+		public void Add(IntPoint at, DoublePoint point) { Add(at.X, at.Y, point); }
 		int Offset(int x, int y) { return 2 * (y * Width + x); }
 	}
 }

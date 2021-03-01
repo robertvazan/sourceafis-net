@@ -47,7 +47,7 @@ namespace SourceAFIS
 			double angle = first - second;
 			return angle >= 0 ? angle : angle + Pi2;
 		}
-		public static double complementary(double angle)
+		public static double Complementary(double angle)
 		{
 			double complement = Pi2 - angle;
 			return complement < Pi2 ? complement : complement - Pi2;

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 namespace SourceAFIS
 {
-	class PriorityQueue<T> where T : new()
+	class PriorityQueue<T>
+		where T : class
 	{
 		readonly Comparer<T> Comparer;
 		T[] Heap;

@@ -31,7 +31,7 @@ namespace SourceAFIS
 		{
 			MinutiaCount = thread.Count;
 			MinutiaScore = Parameters.MinutiaScore * MinutiaCount;
-			MinutiaFractionInProbe = thread.Ccount / (double)thread.Probe.Minutiae.Length;
+			MinutiaFractionInProbe = thread.Count / (double)thread.Probe.Minutiae.Length;
 			MinutiaFractionInCandidate = thread.Count / (double)thread.Candidate.Minutiae.Length;
 			MinutiaFraction = 0.5 * (MinutiaFractionInProbe + MinutiaFractionInCandidate);
 			MinutiaFractionScore = Parameters.MinutiaFractionScore * MinutiaFraction;
@@ -50,7 +50,7 @@ namespace SourceAFIS
 			EdgeScore = Parameters.EdgeScore * EdgeCount;
 			SupportedMinutiaScore = Parameters.SupportedMinutiaScore * SupportedMinutiaCount;
 			MinutiaTypeScore = Parameters.MinutiaTypeScore * MinutiaTypeHits;
-			int innerDistanceRadius = (int)Doubles.Round(Parameters.DistanceErrorFlatness * Parameters.MaxDistanceError);
+			int innerDistanceRadius = Doubles.RoundToInt(Parameters.DistanceErrorFlatness * Parameters.MaxDistanceError);
 			double innerAngleRadius = Parameters.AngleErrorFlatness * Parameters.MaxAngleError;
 			DistanceErrorSum = 0;
 			AngleErrorSum = 0;
@@ -58,7 +58,7 @@ namespace SourceAFIS
 				var pair = thread.Tree[i];
 				var probeEdge = new EdgeShape(thread.Probe.Minutiae[pair.ProbeRef], thread.Probe.Minutiae[pair.Probe]);
 				var candidateEdge = new EdgeShape(thread.Candidate.Minutiae[pair.CandidateRef], thread.Candidate.Minutiae[pair.Candidate]);
-				distanceErrorSum += Math.Max(innerDistanceRadius, Math.Abs(probeEdge.Length - candidateEdge.Length));
+				DistanceErrorSum += Math.Max(innerDistanceRadius, Math.Abs(probeEdge.Length - candidateEdge.Length));
 				AngleErrorSum += Math.Max(innerAngleRadius, DoubleAngle.Distance(probeEdge.ReferenceAngle, candidateEdge.ReferenceAngle));
 				AngleErrorSum += Math.Max(innerAngleRadius, DoubleAngle.Distance(probeEdge.NeighborAngle, candidateEdge.NeighborAngle));
 			}

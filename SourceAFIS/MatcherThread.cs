@@ -14,7 +14,7 @@ namespace SourceAFIS
 		public ImmutableTemplate Candidate;
 		MinutiaPair[] Pool = new MinutiaPair[1];
 		int Pooled;
-		PriorityQueue<MinutiaPair> Queue = new PriorityQueue<MinutiaPair>(Comparer.Create((a, b) => a.Distance.CompareTo(b.Distance)));
+		PriorityQueue<MinutiaPair> Queue = new PriorityQueue<MinutiaPair>(Comparer<MinutiaPair>.Create((a, b) => a.Distance.CompareTo(b.Distance)));
 		public int Count;
 		public MinutiaPair[] Tree = new MinutiaPair[1];
 		MinutiaPair[] ByProbe = new MinutiaPair[1];
@@ -60,7 +60,7 @@ namespace SourceAFIS
 				int best = -1;
 				for (int i = 0; i < totalRoots; ++i)
 				{
-					double score = TryRoot(roots[i]);
+					double score = TryRoot(Roots[i]);
 					if (best < 0 || score > high)
 					{
 						high = score;
@@ -99,8 +99,8 @@ namespace SourceAFIS
 							var candidateEdge = new EdgeShape(Candidate.Minutiae[candidateReference], Candidate.Minutiae[candidateNeighbor]);
 							if ((candidateEdge.Length >= Parameters.MinRootEdgeLength) ^ shortEdges)
 							{
-								var matches = EdgeHash.GetValueOrDefault(HashShape(candidateEdge));
-								if (matches != null)
+								List<IndexedEdge> matches;
+								if (EdgeHash.TryGetValue(HashShape(candidateEdge), out matches))
 								{
 									foreach (var match in matches)
 									{
@@ -158,7 +158,7 @@ namespace SourceAFIS
 		{
 			Queue.Add(root);
 			do {
-				AddPair(queue.Remove());
+				AddPair(Queue.Remove());
 				CollectEdges();
 				SkipPaired();
 			} while (Queue.Count > 0);
@@ -192,12 +192,12 @@ namespace SourceAFIS
 				pair.ProbeRef = reference.Probe;
 				pair.CandidateRef = reference.Candidate;
 				if (ByCandidate[pair.Candidate] == null && ByProbe[pair.Probe] == null)
-					queue.Add(pair);
+					Queue.Add(pair);
 				else
 					Support(pair);
 			}
 		}
-		static List<MinutiaPair> MatchPairs(NeighborEdge[] probeStar, NeighborEdge[] candidateStar)
+		List<MinutiaPair> MatchPairs(NeighborEdge[] probeStar, NeighborEdge[] candidateStar)
 		{
 			double complementaryAngleError = DoubleAngle.Complementary(Parameters.MaxAngleError);
 			var results = new List<MinutiaPair>();

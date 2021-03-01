@@ -23,6 +23,6 @@ namespace SourceAFIS
 		public static DoublePoint operator *(double factor, DoublePoint point) { return new DoublePoint(factor * point.X, factor * point.Y); }
 
 		public override string ToString() { return string.Format("[{0},{1}]", X, Y); }
-		public IntPoint Round() { return new IntPoint(Doubles.Round(X), Doubles.Round(Y)); }
+		public IntPoint Round() { return new IntPoint(Doubles.RoundToInt(X), Doubles.RoundToInt(Y)); }
 	}
 }
