@@ -13,7 +13,9 @@ namespace SourceAFIS.Tests
 		[Test]
 		public void DecodeGray()
 		{
-			new FingerprintTemplate(ProbeGray());
+			double score = new FingerprintMatcher(new FingerprintTemplate(ProbeGray()))
+				.Match(new FingerprintTemplate(MatchingGray()));
+			Assert.That(score, Is.GreaterThan(40));
 		}
 	}
 }

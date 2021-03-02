@@ -53,7 +53,7 @@ namespace SourceAFIS
 						coverage.Add((referenceBin << 24) + (neighborBin << 16) + lengthBin);
 			return coverage;
 		}
-		public double match(FingerprintTemplate candidate)
+		public double Match(FingerprintTemplate candidate)
 		{
 			if (candidate == null)
 				throw new ArgumentNullException(nameof(candidate));
