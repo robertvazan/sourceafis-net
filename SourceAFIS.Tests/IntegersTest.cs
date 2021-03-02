@@ -5,7 +5,7 @@ using SourceAFIS;
 
 namespace SourceAFIS.Tests
 {
-	class IntegersTest
+	public class IntegersTest
 	{
 		[Test]
 		public void Sq()

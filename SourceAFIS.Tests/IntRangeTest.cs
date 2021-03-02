@@ -5,7 +5,7 @@ using SourceAFIS;
 
 namespace SourceAFIS.Tests
 {
-	class IntRangeTest
+	public class IntRangeTest
 	{
 		[Test]
 		public void Constructor()

@@ -7,8 +7,8 @@ namespace SourceAFIS
 {
 	class CircularArray<T>
 	{
-		T[] Array;
-		int Head;
+		internal T[] Array;
+		internal int Head;
 		public int Size;
 
 		public T this[int index]
@@ -30,18 +30,18 @@ namespace SourceAFIS
 			Array = new T[capacity];
 		}
 
-		void ValidateItemIndex(int index)
+		internal void ValidateItemIndex(int index)
 		{
 			if (index < 0 || index >= Size)
 				throw new ArgumentOutOfRangeException();
 		}
-		void ValidateCursorIndex(int index)
+		internal void ValidateCursorIndex(int index)
 		{
 			if (index < 0 || index > Size)
 				throw new ArgumentOutOfRangeException();
 		}
-		int Location(int index) { return Head + index < Array.Length ? Head + index : Head + index - Array.Length; }
-		void Enlarge()
+		internal int Location(int index) { return Head + index < Array.Length ? Head + index : Head + index - Array.Length; }
+		internal void Enlarge()
 		{
 			T[] enlarged = new T[2 * Array.Length];
 			for (int i = 0; i < Size; ++i)
@@ -49,7 +49,7 @@ namespace SourceAFIS
 			Array = enlarged;
 			Head = 0;
 		}
-		void Move(int from, int to, int length)
+		internal void Move(int from, int to, int length)
 		{
 			if (from < to)
 			{

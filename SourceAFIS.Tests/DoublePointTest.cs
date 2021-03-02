@@ -5,7 +5,7 @@ using SourceAFIS;
 
 namespace SourceAFIS.Tests
 {
-	class DoublePointTest
+	public class DoublePointTest
 	{
 		[Test]
 		public void Constructor()
@@ -17,12 +17,12 @@ namespace SourceAFIS.Tests
 		[Test]
 		public void Plus()
 		{
-			assertPointEquals(new DoublePoint(6, 8), new DoublePoint(2, 3) + new DoublePoint(4, 5), 0.001);
+			AssertPointEquals(new DoublePoint(6, 8), new DoublePoint(2, 3) + new DoublePoint(4, 5), 0.001);
 		}
 		[Test]
 		public void Multiply()
 		{
-			assertPointEquals(new DoublePoint(1, 1.5), 0.5 * new DoublePoint(2, 3), 0.001);
+			AssertPointEquals(new DoublePoint(1, 1.5), 0.5 * new DoublePoint(2, 3), 0.001);
 		}
 		[Test]
 		public void Round()
@@ -30,7 +30,7 @@ namespace SourceAFIS.Tests
 			Assert.AreEqual(new IntPoint(2, 3), new DoublePoint(2.4, 2.6).Round());
 			Assert.AreEqual(new IntPoint(-2, -3), new DoublePoint(-2.4, -2.6).Round());
 		}
-		public static void assertPointEquals(DoublePoint expected, DoublePoint actual, double tolerance)
+		internal static void AssertPointEquals(DoublePoint expected, DoublePoint actual, double tolerance)
 		{
 			Assert.AreEqual(expected.X, actual.X, tolerance);
 			Assert.AreEqual(expected.Y, actual.Y, tolerance);

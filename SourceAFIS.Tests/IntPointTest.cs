@@ -6,7 +6,7 @@ using SourceAFIS;
 
 namespace SourceAFIS.Tests
 {
-	class IntPointTest
+	public class IntPointTest
 	{
 		[Test]
 		public void Constructor()

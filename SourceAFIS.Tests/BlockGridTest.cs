@@ -5,7 +5,7 @@ using SourceAFIS;
 
 namespace SourceAFIS.Tests
 {
-	class BlockGridTest
+	public class BlockGridTest
 	{
 		BlockGrid G = new BlockGrid(3, 4);
 

@@ -5,7 +5,7 @@ using SourceAFIS;
 
 namespace SourceAFIS.Tests
 {
-	class BlockMapTest
+	public class BlockMapTest
 	{
 		[Test]
 		public void Constructor()

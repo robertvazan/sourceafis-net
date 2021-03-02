@@ -5,7 +5,7 @@ using SourceAFIS;
 
 namespace SourceAFIS.Tests
 {
-	class DoublesTest
+	public class DoublesTest
 	{
 		[Test]
 		public void RoundToInt()
