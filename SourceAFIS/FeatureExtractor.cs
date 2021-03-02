@@ -79,7 +79,7 @@ namespace SourceAFIS
 		static HistogramCube Histogram(BlockMap blocks, DoubleMatrix image)
 		{
 			var histogram = new HistogramCube(blocks.Primary.Blocks, Parameters.HistogramDepth);
-			foreach (var block in blocks.Primary.Blocks)
+			foreach (var block in blocks.Primary.Blocks.Iterate())
 			{
 				var area = blocks.Primary.Block(block);
 				for (int y = area.Top; y < area.Bottom; ++y)
@@ -97,7 +97,7 @@ namespace SourceAFIS
 		{
 			var blocksAround = new IntPoint[] { new IntPoint(0, 0), new IntPoint(-1, 0), new IntPoint(0, -1), new IntPoint(-1, -1) };
 			var output = new HistogramCube(blocks.Secondary.Blocks, input.Bins);
-			foreach (var corner in blocks.Secondary.Blocks)
+			foreach (var corner in blocks.Secondary.Blocks.Iterate())
 			{
 				foreach (var relative in blocksAround)
 				{
@@ -127,7 +127,7 @@ namespace SourceAFIS
 		static DoubleMatrix ClipContrast(BlockMap blocks, HistogramCube histogram)
 		{
 			var result = new DoubleMatrix(blocks.Primary.Blocks);
-			foreach (var block in blocks.Primary.Blocks)
+			foreach (var block in blocks.Primary.Blocks.Iterate())
 			{
 				int volume = histogram.Sum(block);
 				int clipLimit = Doubles.RoundToInt(volume * Parameters.ClippedContrast);
@@ -160,7 +160,7 @@ namespace SourceAFIS
 		static BooleanMatrix FilterAbsoluteContrast(DoubleMatrix contrast)
 		{
 			var result = new BooleanMatrix(contrast.Size);
-			foreach (var block in contrast.Size)
+			foreach (var block in contrast.Size.Iterate())
 				if (contrast[block] < Parameters.MinAbsoluteContrast)
 					result[block] = true;
 			return result;
@@ -168,7 +168,7 @@ namespace SourceAFIS
 		static BooleanMatrix FilterRelativeContrast(DoubleMatrix contrast, BlockMap blocks)
 		{
 			var sortedContrast = new List<double>();
-			foreach (var block in contrast.Size)
+			foreach (var block in contrast.Size.Iterate())
 				sortedContrast.Add(contrast[block]);
 			sortedContrast.Sort();
 			sortedContrast.Reverse();
@@ -181,7 +181,7 @@ namespace SourceAFIS
 			averageContrast /= consideredBlocks;
 			var limit = averageContrast * Parameters.MinRelativeContrast;
 			var result = new BooleanMatrix(blocks.Primary.Blocks);
-			foreach (var block in blocks.Primary.Blocks)
+			foreach (var block in blocks.Primary.Blocks.Iterate())
 				if (contrast[block] < limit)
 					result[block] = true;
 			return result;
@@ -260,7 +260,7 @@ namespace SourceAFIS
 				dequantized[i] = i / (double)(histogram.Bins - 1);
 			}
 			var mappings = new Dictionary<IntPoint, double[]>();
-			foreach (var corner in blocks.Secondary.Blocks)
+			foreach (var corner in blocks.Secondary.Blocks.Iterate())
 			{
 				double[] mapping = new double[histogram.Bins];
 				mappings[corner] = mapping;
@@ -285,7 +285,7 @@ namespace SourceAFIS
 				}
 			}
 			var result = new DoubleMatrix(blocks.Pixels);
-			foreach (var block in blocks.Primary.Blocks)
+			foreach (var block in blocks.Primary.Blocks.Iterate())
 			{
 				var area = blocks.Primary.Block(block);
 				if (blockMask[block])
@@ -422,7 +422,7 @@ namespace SourceAFIS
 		static DoublePointMatrix BlockOrientations(DoublePointMatrix orientation, BlockMap blocks, BooleanMatrix mask)
 		{
 			var sums = new DoublePointMatrix(blocks.Primary.Blocks);
-			foreach (var block in blocks.Primary.Blocks)
+			foreach (var block in blocks.Primary.Blocks.Iterate())
 			{
 				if (mask[block])
 				{
@@ -438,7 +438,7 @@ namespace SourceAFIS
 		{
 			var size = mask.Size;
 			var smoothed = new DoublePointMatrix(size);
-			foreach (var block in size)
+			foreach (var block in size.Iterate())
 				if (mask[block])
 				{
 					var neighbors = IntRect.Around(block, Parameters.OrientationSmoothingRadius).Intersect(new IntRect(size));
@@ -453,7 +453,7 @@ namespace SourceAFIS
 		{
 			var size = mask.Size;
 			var angles = new DoubleMatrix(size);
-			foreach (var block in size)
+			foreach (var block in size.Iterate())
 				if (mask[block])
 					angles[block] = DoubleAngle.Atan(vectors[block]);
 			return angles;
@@ -482,7 +482,7 @@ namespace SourceAFIS
 		static DoubleMatrix SmoothRidges(DoubleMatrix input, DoubleMatrix orientation, BooleanMatrix mask, BlockMap blocks, double angle, IntPoint[][] lines)
 		{
 			var output = new DoubleMatrix(input.Size);
-			foreach (var block in blocks.Primary.Blocks)
+			foreach (var block in blocks.Primary.Blocks.Iterate())
 			{
 				if (mask[block])
 				{
@@ -508,7 +508,7 @@ namespace SourceAFIS
 		{
 			var size = input.Size;
 			var binarized = new BooleanMatrix(size);
-			foreach (var block in blocks.Primary.Blocks)
+			foreach (var block in blocks.Primary.Blocks.Iterate())
 			{
 				if (mask[block])
 				{
@@ -555,9 +555,9 @@ namespace SourceAFIS
 		static BooleanMatrix FillBlocks(BooleanMatrix mask, BlockMap blocks)
 		{
 			var pixelized = new BooleanMatrix(blocks.Pixels);
-			foreach (var block in blocks.Primary.Blocks)
+			foreach (var block in blocks.Primary.Blocks.Iterate())
 				if (mask[block])
-					foreach (var pixel in blocks.Primary.Block(block))
+					foreach (var pixel in blocks.Primary.Block(block).Iterate())
 						pixelized[pixel] = true;
 			return pixelized;
 		}

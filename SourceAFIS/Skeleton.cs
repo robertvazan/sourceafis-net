@@ -112,7 +112,7 @@ namespace SourceAFIS
 		List<IntPoint> FindMinutiae(BooleanMatrix thinned)
 		{
 			var result = new List<IntPoint>();
-			foreach (var at in Size)
+			foreach (var at in Size.Iterate())
 			{
 				if (thinned[at])
 				{

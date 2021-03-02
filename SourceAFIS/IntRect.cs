@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SourceAFIS
 {
-	readonly struct IntRect : IEnumerable<IntPoint>
+	readonly struct IntRect
 	{
 		public readonly int X;
 		public readonly int Y;
@@ -52,12 +52,11 @@ namespace SourceAFIS
 		}
 		public IntRect Move(IntPoint delta) { return new IntRect(X + delta.X, Y + delta.Y, Width, Height); }
 
-		IEnumerator<IntPoint> IEnumerable<IntPoint>.GetEnumerator()
+		public IEnumerable<IntPoint> Iterate()
 		{
 			for (int y = Top; y < Bottom; ++y)
 				for (int x = Left; x < Right; ++x)
 					yield return new IntPoint(x, y);
 		}
-		IEnumerator IEnumerable.GetEnumerator() { return ((IEnumerable<IntPoint>)this).GetEnumerator(); }
 	}
 }

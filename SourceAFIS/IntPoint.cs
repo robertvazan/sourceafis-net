@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SourceAFIS
 {
-	readonly struct IntPoint : IEnumerable<IntPoint>
+	readonly struct IntPoint
 	{
 		public static readonly IntPoint Zero = new IntPoint();
 		public static readonly IntPoint[] EdgeNeighbors = new IntPoint[] {
@@ -75,12 +75,11 @@ namespace SourceAFIS
 			return result;
 		}
 
-		IEnumerator<IntPoint> IEnumerable<IntPoint>.GetEnumerator()
+		public IEnumerable<IntPoint> Iterate()
 		{
 			for (int y = 0; y < Y; ++y)
 				for (int x = 0; x < X; ++x)
 					yield return new IntPoint(x, y);
 		}
-		IEnumerator IEnumerable.GetEnumerator() { return ((IEnumerable<IntPoint>)this).GetEnumerator(); }
 	}
 }
