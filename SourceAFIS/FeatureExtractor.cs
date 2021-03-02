@@ -341,7 +341,7 @@ namespace SourceAFIS
 			var splits = new ConsideredOrientation[Parameters.OrientationSplit][];
 			for (int i = 0; i < Parameters.OrientationSplit; ++i)
 			{
-				var orientations = new ConsideredOrientation[Parameters.OrientationsChecked];
+				var orientations = splits[i] = new ConsideredOrientation[Parameters.OrientationsChecked];
 				for (int j = 0; j < Parameters.OrientationsChecked; ++j)
 				{
 					var sample = orientations[j] = new ConsideredOrientation();
