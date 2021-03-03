@@ -32,6 +32,7 @@ namespace SourceAFIS
 			Edges = NeighborEdge.BuildTable(Minutiae);
 		}
 		public FingerprintTemplate(FingerprintImage image) : this(FeatureExtractor.Extract(image.Matrix, image.Dpi)) { }
+		public FingerprintTemplate(byte[] serialized) : this(Deserialize(serialized)) { }
 
 		MutableTemplate Mutable()
 		{
@@ -41,5 +42,11 @@ namespace SourceAFIS
 			return mutable;
 		}
 		public byte[] ToByteArray() { return SerializationUtils.Serialize(new PersistentTemplate(Mutable())); }
+		static MutableTemplate Deserialize(byte[] serialized)
+		{
+			var persistent = SerializationUtils.Deserialize<PersistentTemplate>(serialized);
+			persistent.Validate();
+			return persistent.Mutable();
+		}
 	}
 }
