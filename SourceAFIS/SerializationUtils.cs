@@ -21,7 +21,7 @@ namespace SourceAFIS
 				mapping.SetNamingConvention(new CamelCaseNamingConvention());
 				// Do not serialize properties, only fields. Include both public and private fields.
 				foreach (var field in mapping.ObjectType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-					if (field.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
+					if (!field.IsInitOnly && field.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
 						mapping.MapMember(field, field.FieldType);
 			}
 		}
@@ -46,5 +46,6 @@ namespace SourceAFIS
 				return buffer.WrittenSpan.ToArray();
 			}
 		}
+		public static T Deserialize<T>(byte[] bytes) { return Cbor.Deserialize<T>(bytes, Options); }
 	}
 }
