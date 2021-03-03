@@ -1,5 +1,7 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
+using System.Runtime.CompilerServices;
+using System.Reflection;
 using Dahomey.Cbor;
 using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Conventions;
@@ -10,15 +12,17 @@ namespace SourceAFIS
 {
 	static class SerializationUtils
 	{
-		// Field naming convention consistent with Java.
+		// Conventions consistent with Java.
 		class ConsistentConvention : IObjectMappingConvention
 		{
-			static readonly DefaultObjectMappingConvention Defaults = new DefaultObjectMappingConvention();
-
 			public void Apply<T>(SerializationRegistry registry, ObjectMapping<T> mapping)
 			{
-				Defaults.Apply(registry, mapping);
+				// Java field naming convention.
 				mapping.SetNamingConvention(new CamelCaseNamingConvention());
+				// Do not serialize properties, only fields. Include both public and private fields.
+				foreach (var field in mapping.ObjectType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+					if (field.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
+						mapping.MapMember(field, field.FieldType);
 			}
 		}
 
