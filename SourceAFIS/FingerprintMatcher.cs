@@ -33,6 +33,8 @@ namespace SourceAFIS
 							list.Add(edge);
 						}
 					}
+			// https://sourceafis.machinezoo.com/transparency/edge-hash
+			FingerprintTransparency.Current.LogEdgeHash(map);
 			return map;
 		}
 		static List<int> ShapeCoverage(EdgeShape edge)

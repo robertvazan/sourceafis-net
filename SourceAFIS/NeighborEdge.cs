@@ -43,6 +43,8 @@ namespace SourceAFIS
 				edges[reference] = star.ToArray();
 				star.Clear();
 			}
+			// https://sourceafis.machinezoo.com/transparency/edge-table
+			FingerprintTransparency.Current.Log("edge-table", edges);
 			return edges;
 		}
 	}

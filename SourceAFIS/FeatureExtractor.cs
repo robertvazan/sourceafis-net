@@ -10,10 +10,16 @@ namespace SourceAFIS
 		public static MutableTemplate Extract(DoubleMatrix raw, double dpi)
 		{
 			var template = new MutableTemplate();
+			// https://sourceafis.machinezoo.com/transparency/decoded-image
+			FingerprintTransparency.Current.Log("decoded-image", raw);
 			if (Math.Abs(dpi - 500) > Parameters.DpiTolerance)
 				raw = ScaleImage(raw, dpi);
+			// https://sourceafis.machinezoo.com/transparency/scaled-image
+			FingerprintTransparency.Current.Log("scaled-image", raw);
 			template.Size = raw.Size;
 			var blocks = new BlockMap(raw.Width, raw.Height, Parameters.BlockSize);
+			// https://sourceafis.machinezoo.com/transparency/blocks
+			FingerprintTransparency.Current.Log("blocks", blocks);
 			var histogram = Histogram(blocks, raw);
 			var smoothHistogram = SmoothHistogram(blocks, histogram);
 			var mask = Mask(blocks, histogram);
@@ -21,11 +27,17 @@ namespace SourceAFIS
 			var orientation = OrientationMap(equalized, mask, blocks);
 			var smoothedLines = OrientedLines(Parameters.ParallelSmoothingResolution, Parameters.ParallelSmoothingRadius, Parameters.ParallelSmoothingStep);
 			var smoothed = SmoothRidges(equalized, orientation, mask, blocks, 0, smoothedLines);
+			// https://sourceafis.machinezoo.com/transparency/parallel-smoothing
+			FingerprintTransparency.Current.Log("parallel-smoothing", smoothed);
 			var orthogonalLines = OrientedLines(Parameters.OrthogonalSmoothingResolution, Parameters.OrthogonalSmoothingRadius, Parameters.OrthogonalSmoothingStep);
 			var orthogonal = SmoothRidges(smoothed, orientation, mask, blocks, Math.PI, orthogonalLines);
+			// https://sourceafis.machinezoo.com/transparency/orthogonal-smoothing
+			FingerprintTransparency.Current.Log("orthogonal-smoothing", orthogonal);
 			var binary = Binarize(smoothed, orthogonal, mask, blocks);
 			var pixelMask = FillBlocks(mask, blocks);
 			CleanupBinarized(binary, pixelMask);
+			// https://sourceafis.machinezoo.com/transparency/pixel-mask
+			FingerprintTransparency.Current.Log("pixel-mask", pixelMask);
 			var inverted = Invert(binary, pixelMask);
 			var innerMask = InnerMask(pixelMask);
 			var ridges = new Skeleton(binary, SkeletonType.Ridges);
@@ -33,9 +45,17 @@ namespace SourceAFIS
 			template.Minutiae = new List<MutableMinutia>();
 			CollectMinutiae(template.Minutiae, ridges, MinutiaType.Ending);
 			CollectMinutiae(template.Minutiae, valleys, MinutiaType.Bifurcation);
+			// https://sourceafis.machinezoo.com/transparency/skeleton-minutiae
+			FingerprintTransparency.Current.Log("skeleton-minutiae", template);
 			MaskMinutiae(template.Minutiae, innerMask);
+			// https://sourceafis.machinezoo.com/transparency/inner-minutiae
+			FingerprintTransparency.Current.Log("inner-minutiae", template);
 			RemoveMinutiaClouds(template.Minutiae);
+			// https://sourceafis.machinezoo.com/transparency/removed-minutia-clouds
+			FingerprintTransparency.Current.Log("removed-minutia-clouds", template);
 			template.Minutiae = LimitTemplateSize(template.Minutiae);
+			// https://sourceafis.machinezoo.com/transparency/top-minutiae
+			FingerprintTransparency.Current.Log("top-minutiae", template);
 			return template;
 		}
 		static DoubleMatrix ScaleImage(DoubleMatrix input, double dpi)
@@ -91,6 +111,8 @@ namespace SourceAFIS
 					}
 				}
 			}
+			// https://sourceafis.machinezoo.com/transparency/histogram
+			FingerprintTransparency.Current.Log("histogram", histogram);
 			return histogram;
 		}
 		static HistogramCube SmoothHistogram(BlockMap blocks, HistogramCube input)
@@ -109,6 +131,8 @@ namespace SourceAFIS
 					}
 				}
 			}
+			// https://sourceafis.machinezoo.com/transparency/smoothed-histogram
+			FingerprintTransparency.Current.Log("smoothed-histogram", output);
 			return output;
 		}
 		static BooleanMatrix Mask(BlockMap blocks, HistogramCube histogram)
@@ -116,12 +140,16 @@ namespace SourceAFIS
 			var contrast = ClipContrast(blocks, histogram);
 			var mask = FilterAbsoluteContrast(contrast);
 			mask.Merge(FilterRelativeContrast(contrast, blocks));
+			// https://sourceafis.machinezoo.com/transparency/combined-mask
+			FingerprintTransparency.Current.Log("combined-mask", mask);
 			mask.Merge(FilterBlockErrors(mask));
 			mask.Merge(FilterBlockErrors(mask));
 			mask.Invert();
 			mask.Merge(FilterBlockErrors(mask));
 			mask.Merge(FilterBlockErrors(mask));
 			mask.Merge(Vote(mask, null, Parameters.MaskVoteRadius, Parameters.MaskVoteMajority, Parameters.MaskVoteBorderDistance));
+			// https://sourceafis.machinezoo.com/transparency/filtered-mask
+			FingerprintTransparency.Current.Log("filtered-mask", mask);
 			return mask;
 		}
 		static DoubleMatrix ClipContrast(BlockMap blocks, HistogramCube histogram)
@@ -155,6 +183,8 @@ namespace SourceAFIS
 				}
 				result[block] = (upperBound - lowerBound) * (1.0 / (histogram.Bins - 1));
 			}
+			// https://sourceafis.machinezoo.com/transparency/contrast
+			FingerprintTransparency.Current.Log("contrast", result);
 			return result;
 		}
 		static BooleanMatrix FilterAbsoluteContrast(DoubleMatrix contrast)
@@ -163,6 +193,8 @@ namespace SourceAFIS
 			foreach (var block in contrast.Size.Iterate())
 				if (contrast[block] < Parameters.MinAbsoluteContrast)
 					result[block] = true;
+			// https://sourceafis.machinezoo.com/transparency/absolute-contrast-mask
+			FingerprintTransparency.Current.Log("absolute-contrast-mask", result);
 			return result;
 		}
 		static BooleanMatrix FilterRelativeContrast(DoubleMatrix contrast, BlockMap blocks)
@@ -184,6 +216,8 @@ namespace SourceAFIS
 			foreach (var block in blocks.Primary.Blocks.Iterate())
 				if (contrast[block] < limit)
 					result[block] = true;
+			// https://sourceafis.machinezoo.com/transparency/relative-contrast-mask
+			FingerprintTransparency.Current.Log("relative-contrast-mask", result);
 			return result;
 		}
 		static BooleanMatrix Vote(BooleanMatrix input, BooleanMatrix mask, int radius, double majority, int borderDistance) {
@@ -310,6 +344,8 @@ namespace SourceAFIS
 							result[x, y] = -1;
 				}
 			}
+			// https://sourceafis.machinezoo.com/transparency/equalized-image
+			FingerprintTransparency.Current.Log("equalized-image", result);
 			return result;
 		}
 		static DoubleMatrix OrientationMap(DoubleMatrix image, BooleanMatrix mask, BlockMap blocks)
@@ -401,6 +437,8 @@ namespace SourceAFIS
 					}
 				}
 			}
+			// https://sourceafis.machinezoo.com/transparency/pixelwise-orientation
+			FingerprintTransparency.Current.Log("pixelwise-orientation", orientation);
 			return orientation;
 		}
 		static IntRange MaskRange(BooleanMatrix mask, int y)
@@ -432,6 +470,8 @@ namespace SourceAFIS
 							sums.Add(block, orientation[x, y]);
 				}
 			}
+			// https://sourceafis.machinezoo.com/transparency/block-orientation
+			FingerprintTransparency.Current.Log("block-orientation", sums);
 			return sums;
 		}
 		static DoublePointMatrix SmoothOrientation(DoublePointMatrix orientation, BooleanMatrix mask)
@@ -447,6 +487,8 @@ namespace SourceAFIS
 							if (mask[nx, ny])
 								smoothed.Add(block, orientation[nx, ny]);
 				}
+			// https://sourceafis.machinezoo.com/transparency/smoothed-orientation
+			FingerprintTransparency.Current.Log("smoothed-orientation", smoothed);
 			return smoothed;
 		}
 		static DoubleMatrix OrientationAngles(DoublePointMatrix vectors, BooleanMatrix mask)
@@ -519,6 +561,8 @@ namespace SourceAFIS
 								binarized[x, y] = true;
 				}
 			}
+			// https://sourceafis.machinezoo.com/transparency/binarized-image
+			FingerprintTransparency.Current.Log("binarized-image", binarized);
 			return binarized;
 		}
 		static void CleanupBinarized(BooleanMatrix binary, BooleanMatrix mask)
@@ -532,6 +576,8 @@ namespace SourceAFIS
 				for (int x = 0; x < size.X; ++x)
 					binary[x, y] = binary[x, y] && !islands[x, y] || holes[x, y];
 			RemoveCrosses(binary);
+			// https://sourceafis.machinezoo.com/transparency/filtered-binary-image
+			FingerprintTransparency.Current.Log("filtered-binary-image", binary);
 		}
 		static void RemoveCrosses(BooleanMatrix input)
 		{
@@ -586,6 +632,8 @@ namespace SourceAFIS
 			}
 			if (total < Parameters.InnerMaskBorderDistance)
 				inner = ShrinkMask(inner, Parameters.InnerMaskBorderDistance - total);
+			// https://sourceafis.machinezoo.com/transparency/inner-mask
+			FingerprintTransparency.Current.Log("inner-mask", inner);
 			return inner;
 		}
 		static BooleanMatrix ShrinkMask(BooleanMatrix mask, int amount)

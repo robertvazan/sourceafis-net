@@ -29,6 +29,8 @@ namespace SourceAFIS
 				orderby ((m.Position.X * Prime) + m.Position.Y) * Prime, m.Position.X, m.Position.Y, m.Direction, m.Type
 				select new ImmutableMinutia(m);
 			Minutiae = minutiae.ToArray();
+			// https://sourceafis.machinezoo.com/transparency/shuffled-minutiae
+			FingerprintTransparency.Current.Log("shuffled-minutiae", () => Mutable());
 			Edges = NeighborEdge.BuildTable(Minutiae);
 		}
 		public FingerprintTemplate(FingerprintImage image) : this(FeatureExtractor.Extract(image.Matrix, image.Dpi)) { }

@@ -9,6 +9,7 @@ namespace SourceAFIS
 		[ThreadStatic]
 		static MatcherThread CurrentInstance;
 
+		FingerprintTransparency Transparency;
 		public FingerprintTemplate Probe;
 		Dictionary<int, List<IndexedEdge>> EdgeHash;
 		public FingerprintTemplate Candidate;
@@ -55,7 +56,11 @@ namespace SourceAFIS
 		{
 			try
 			{
+				Transparency = FingerprintTransparency.Current;
+				ReportSupport = Transparency.AcceptsPairing();
 				int totalRoots = EnumerateRoots();
+				// https://sourceafis.machinezoo.com/transparency/root-pairs
+				Transparency.LogRootPairs(totalRoots, Roots);
 				double high = 0;
 				int best = -1;
 				for (int i = 0; i < totalRoots; ++i)
@@ -68,6 +73,8 @@ namespace SourceAFIS
 					}
 					ClearPairing();
 				}
+				// https://sourceafis.machinezoo.com/transparency/best-match
+				Transparency.LogBestMatch(best);
 				return high;
 			}
 			catch (Exception)
@@ -77,6 +84,7 @@ namespace SourceAFIS
 			}
 			finally
 			{
+				Transparency = null;
 			}
 		}
 		int EnumerateRoots()
@@ -162,7 +170,11 @@ namespace SourceAFIS
 				CollectEdges();
 				SkipPaired();
 			} while (Queue.Count > 0);
+			// https://sourceafis.machinezoo.com/transparency/pairing
+			Transparency.LogPairing(Count, Tree, SupportEdges);
 			Score.Compute(this);
+			// https://sourceafis.machinezoo.com/transparency/score
+			Transparency.LogScore(Score);
 			return Score.ShapedScore;
 		}
 		void ClearPairing()

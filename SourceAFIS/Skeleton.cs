@@ -13,6 +13,8 @@ namespace SourceAFIS
 		public Skeleton(BooleanMatrix binary, SkeletonType type)
 		{
 			Type = type;
+			// https://sourceafis.machinezoo.com/transparency/binarized-skeleton
+			FingerprintTransparency.Current.Log(Prefix(Type) + "binarized-skeleton", binary);
 			Size = binary.Size;
 			var thinned = Thin(binary);
 			var minutiaPoints = FindMinutiae(thinned);
@@ -20,9 +22,12 @@ namespace SourceAFIS
 			var minutiaMap = MinutiaCenters(linking);
 			TraceRidges(thinned, minutiaMap);
 			FixLinkingGaps();
+			// https://sourceafis.machinezoo.com/transparency/traced-skeleton
+			FingerprintTransparency.Current.LogSkeleton("traced-skeleton", this);
 			Filter();
 		}
 
+		public static string Prefix(SkeletonType type) { return type == SkeletonType.Ridges ? "ridges-" : "valleys-"; }
 		enum NeighborhoodType
 		{
 			Skeleton,
@@ -66,6 +71,8 @@ namespace SourceAFIS
 										thinned[x, y] = true;
 								}
 			}
+			// https://sourceafis.machinezoo.com/transparency/thinned-skeleton
+			FingerprintTransparency.Current.Log(Prefix(Type) + "thinned-skeleton", thinned);
 			return thinned;
 		}
 		static NeighborhoodType[] NeighborhoodTypes()
@@ -233,6 +240,8 @@ namespace SourceAFIS
 		void Filter()
 		{
 			RemoveDots();
+			// https://sourceafis.machinezoo.com/transparency/removed-dots
+			FingerprintTransparency.Current.LogSkeleton("removed-dots", this);
 			RemovePores();
 			RemoveGaps();
 			RemoveTails();
@@ -277,6 +286,8 @@ namespace SourceAFIS
 				}
 			}
 			RemoveKnots();
+			// https://sourceafis.machinezoo.com/transparency/removed-pores
+			FingerprintTransparency.Current.LogSkeleton("removed-pores", this);
 		}
 		class Gap : IComparable<Gap>
 		{
@@ -312,6 +323,8 @@ namespace SourceAFIS
 				}
 			}
 			RemoveKnots();
+			// https://sourceafis.machinezoo.com/transparency/removed-gaps
+			FingerprintTransparency.Current.LogSkeleton("removed-gaps", this);
 		}
 		static bool IsWithinGapLimits(SkeletonMinutia end1, SkeletonMinutia end2)
 		{
@@ -364,6 +377,8 @@ namespace SourceAFIS
 			}
 			RemoveDots();
 			RemoveKnots();
+			// https://sourceafis.machinezoo.com/transparency/removed-tails
+			FingerprintTransparency.Current.LogSkeleton("removed-tails", this);
 		}
 		void RemoveFragments()
 		{
@@ -375,6 +390,8 @@ namespace SourceAFIS
 						ridge.Detach();
 				}
 			RemoveDots();
+			// https://sourceafis.machinezoo.com/transparency/removed-fragments
+			FingerprintTransparency.Current.LogSkeleton("removed-fragments", this);
 		}
 		void RemoveKnots()
 		{

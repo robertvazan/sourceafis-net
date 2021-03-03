@@ -38,11 +38,11 @@ namespace SourceAFIS
 			Options.Registry.ObjectMappingConventionRegistry.RegisterProvider(new ConsistentConventionProvider());
 		}
 
-		public static byte[] Serialize<T>(T data)
+		public static byte[] Serialize(object data)
 		{
 			using (var buffer = new ByteBufferWriter())
 			{
-				Cbor.Serialize(data, buffer, Options);
+				Cbor.Serialize(data, data.GetType(), buffer, Options);
 				return buffer.WrittenSpan.ToArray();
 			}
 		}
