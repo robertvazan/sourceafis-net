@@ -16,6 +16,7 @@ namespace SourceAFIS.Tests
 		public void Serialize()
 		{
 			byte[] serialized = ProbeGray().ToByteArray();
+			Console.WriteLine(serialized.Length);
 			string json = Cbor.ToJson(serialized);
 			Console.WriteLine(json);
 			Assert.Fail();
