@@ -1,7 +1,10 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using Dahomey.Cbor;
+using Dahomey.Cbor.Util;
 
 namespace SourceAFIS
 {
@@ -39,6 +42,15 @@ namespace SourceAFIS
 			mutable.Size = Size;
 			mutable.Minutiae = (from m in Minutiae select m.Mutable()).ToList();
 			return mutable;
+		}
+		public byte[] ToByteArray()
+		{
+			var persistent = new PersistentTemplate(Mutable());
+			using (var buffer = new ByteBufferWriter())
+			{
+				Cbor.Serialize(persistent, buffer);
+				return buffer.WrittenSpan.ToArray();
+			}
 		}
 	}
 }
