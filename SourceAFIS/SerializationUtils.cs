@@ -1,5 +1,7 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Reflection;
 using Dahomey.Cbor;
@@ -12,17 +14,39 @@ namespace SourceAFIS
 {
 	static class SerializationUtils
 	{
+		// Dahomey.Cbor requires default constructor even if we perform only serialization.
+		// We will give it fake object factory to keep it happy.
+		class NoDefaultConstructor : ICreatorMapping
+		{
+			public IReadOnlyCollection<RawString> MemberNames { get { return null; } }
+
+			public void Initialize() { }
+			public object CreateInstance(Dictionary<RawString, object> values) { throw new NotImplementedException(); }
+		}
+
 		// Conventions consistent with Java.
 		class ConsistentConvention : IObjectMappingConvention
 		{
+			static void CollectFields<T>(ObjectMapping<T> mapping, Type type)
+			{
+				// Reflection will not give us private fields of base classes, so walk base classes explicitly.
+				var parent = type.BaseType;
+				if (parent != null)
+					CollectFields(mapping, parent);
+				foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+					if (field.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
+						mapping.MapMember(field, field.FieldType);
+			}
 			public void Apply<T>(SerializationRegistry registry, ObjectMapping<T> mapping)
 			{
 				// Java field naming convention.
 				mapping.SetNamingConvention(new CamelCaseNamingConvention());
 				// Do not serialize properties, only fields. Include both public and private fields.
-				foreach (var field in mapping.ObjectType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-					if (!field.IsInitOnly && field.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
-						mapping.MapMember(field, field.FieldType);
+				CollectFields(mapping, mapping.ObjectType);
+				// Allow serialization of objects without default constructor. We don't need deserialization.
+				var constructors = mapping.ObjectType.GetConstructors(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+				if (!constructors.Any(c => c.GetParameters().Length == 0))
+					mapping.SetCreatorMapping(new NoDefaultConstructor());
 			}
 		}
 

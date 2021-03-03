@@ -8,25 +8,34 @@ namespace SourceAFIS.Tests
 {
 	public class SerializationUtilsTest
 	{
-		class TestClass
+		class BaseClass
 		{
-			public int PublicField = 123;
-			int PrivateField = 456;
+			public int BaseField = 1;
+		}
+		class TestClass : BaseClass
+		{
+			public int PublicField = 2;
+			int PrivateField = 3;
 
-			public readonly int ReadonlyField = 999;
-			const int ConstField = 999;
-			public int PublicProperty { get; set; } = 999;
-			int PrivateProperty { get; set; } = 999;
+			const int ConstField = 9;
+			public int PublicProperty { get; set; } = 9;
+			int PrivateProperty { get; set; } = 9;
 
 			public int GetPrivate() { return PrivateField; }
 			public void SetPrivate(int value) { PrivateField = value; }
+		}
+		class ImmutableClass : TestClass
+		{
+			public readonly int ReadonlyField;
+
+			public ImmutableClass(int value) { ReadonlyField = value; }
 		}
 
 		[Test]
 		public void Serialize()
 		{
-			byte[] cbor = SerializationUtils.Serialize(new TestClass());
-			Assert.AreEqual("{\"publicField\":123,\"privateField\":456}", Cbor.ToJson(cbor));
+			byte[] cbor = SerializationUtils.Serialize(new ImmutableClass(4));
+			Assert.AreEqual("{\"baseField\":1,\"publicField\":2,\"privateField\":3,\"readonlyField\":4}", Cbor.ToJson(cbor));
 		}
 		[Test]
 		public void Deserialize()
