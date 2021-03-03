@@ -13,7 +13,7 @@ namespace SourceAFIS.Tests
 			public int PublicField = 123;
 			int PrivateField = 456;
 
-			readonly int ReadonlyField = 999;
+			public readonly int ReadonlyField = 999;
 			const int ConstField = 999;
 			public int PublicProperty { get; set; } = 999;
 			int PrivateProperty { get; set; } = 999;
