@@ -1,5 +1,6 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 ﻿using System;
+using Serilog;
 
 namespace SourceAFIS.Cmd
 {
@@ -7,7 +8,10 @@ namespace SourceAFIS.Cmd
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine("Hello World!");
+			Log.Logger = new LoggerConfiguration()
+				.WriteTo.Console(outputTemplate: "{Level:u1} {Message}{NewLine}{Exception}")
+				.CreateLogger();
+			Log.Information("Hello World");
 		}
 	}
 }
