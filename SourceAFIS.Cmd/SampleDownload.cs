@@ -28,7 +28,8 @@ namespace SourceAFIS.Cmd
 
 		static string Url(String dataset)
 		{
-			switch (dataset) {
+			switch (dataset)
+			{
 				case "fvc2000-1b":
 					return "https://cdn.machinezoo.com/h/O_mBtWH-PXJ4ETJJe_G-Z9EmJoJLfq4srVw23tTEMZw/fvc2000-1b.zip";
 				case "fvc2000-2b":

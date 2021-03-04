@@ -11,7 +11,14 @@ namespace SourceAFIS.Cmd
 			Log.Logger = new LoggerConfiguration()
 				.WriteTo.Console(outputTemplate: "{Level:u1} {Message:lj}{NewLine}{Exception}")
 				.CreateLogger();
-			SampleDataset.Get("fvc2000-2b");
+			if (args.Length != 1)
+				return;
+			switch (args[0])
+			{
+				case "extractor-transparency-stats":
+					TransparencyStats.Report(TransparencyStats.ExtractorTable());
+					break;
+			}
 		}
 	}
 }
