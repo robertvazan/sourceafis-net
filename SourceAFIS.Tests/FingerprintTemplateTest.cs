@@ -8,12 +8,21 @@ namespace SourceAFIS.Tests
 {
 	public class FingerprintTemplateTest
 	{
+		public static FingerprintTemplate Probe() { return new FingerprintTemplate(FingerprintImageTest.Probe()); }
+		public static FingerprintTemplate Matching() { return new FingerprintTemplate(FingerprintImageTest.Matching()); }
+		public static FingerprintTemplate Nonmatching() { return new FingerprintTemplate(FingerprintImageTest.Nonmatching()); }
 		public static FingerprintTemplate ProbeGray() { return new FingerprintTemplate(FingerprintImageTest.ProbeGray()); }
 		public static FingerprintTemplate MatchingGray() { return new FingerprintTemplate(FingerprintImageTest.MatchingGray()); }
 		public static FingerprintTemplate NonmatchingGray() { return new FingerprintTemplate(FingerprintImageTest.NonmatchingGray()); }
 
 		[Test]
-		public void RoundTripSerialization() {
+		public void Constructor()
+		{
+			Probe();
+		}
+		[Test]
+		public void RoundTripSerialization()
+		{
 			var mt = new MutableTemplate();
 			mt.Size = new IntPoint(800, 600);
 			mt.Minutiae = new List<MutableMinutia>();
