@@ -52,14 +52,14 @@ namespace SourceAFIS
 							for (int x = 1 + evenX; x < Size.X - 1; x += 2)
 								if (mutable[x, y] && !thinned[x, y] && !(mutable[x, y - 1] && mutable[x, y + 1] && mutable[x - 1, y] && mutable[x + 1, y]))
 								{
-									uint neighbors = (mutable[y + 1, x + 1] ? 128u : 0u)
-										| (mutable[y + 1, x] ? 64u : 0u)
-										| (mutable[y + 1, x - 1] ? 32u : 0u)
-										| (mutable[y, x + 1] ? 16u : 0u)
-										| (mutable[y, x - 1] ? 8u : 0u)
-										| (mutable[y - 1, x + 1] ? 4u : 0u)
-										| (mutable[y - 1, x] ? 2u : 0u)
-										| (mutable[y - 1, x - 1] ? 1u : 0u);
+									uint neighbors = (mutable[x + 1, y + 1] ? 128u : 0u)
+										| (mutable[x, y + 1] ? 64u : 0u)
+										| (mutable[x - 1, y + 1] ? 32u : 0u)
+										| (mutable[x + 1, y] ? 16u : 0u)
+										| (mutable[x - 1, y] ? 8u : 0u)
+										| (mutable[x + 1, y - 1] ? 4u : 0u)
+										| (mutable[x, y - 1] ? 2u : 0u)
+										| (mutable[x - 1, y - 1] ? 1u : 0u);
 									if (neighborhoodTypes[neighbors] == NeighborhoodType.Removable
 										|| neighborhoodTypes[neighbors] == NeighborhoodType.Ending
 										&& IsFalseEnding(mutable, new IntPoint(x, y)))
