@@ -29,7 +29,7 @@ namespace SourceAFIS.Cmd
 		}
 		static byte[] Gunzip(byte[] compressed)
 		{
-			using (var buffer = new MemoryStream(compressed))
+			using (var buffer = new MemoryStream())
 			{
 				using (var input = new MemoryStream(compressed))
 					using (var gzip = new GZipStream(buffer, CompressionMode.Decompress))

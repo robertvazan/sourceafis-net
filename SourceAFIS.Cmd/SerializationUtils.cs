@@ -10,7 +10,7 @@ using Dahomey.Cbor.Serialization.Conventions;
 using Dahomey.Cbor.Serialization.Converters.Mappings;
 using Dahomey.Cbor.Util;
 
-namespace SourceAFIS
+namespace SourceAFIS.Cmd
 {
 	static class SerializationUtils
 	{
