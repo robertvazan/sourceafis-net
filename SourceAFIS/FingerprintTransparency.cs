@@ -87,16 +87,7 @@ namespace SourceAFIS
 		{
 			LogVersion();
 			if (Accepts(key))
-			{
-				// TODO: Remove exception handling once the CBOR library is fixed.
-				try
-				{
-					Take(key, mime, supplier());
-				}
-				catch (Exception)
-				{
-				}
-			}
+				Take(key, mime, supplier());
 		}
 		internal void Log<T>(string key, Func<T> supplier) { Log(key, "application/cbor", () => SerializationUtils.Serialize(supplier())); }
 		internal void Log(string key, object data) { Log(key, "application/cbor", () => SerializationUtils.Serialize(data)); }
