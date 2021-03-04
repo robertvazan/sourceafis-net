@@ -5,13 +5,12 @@ using System.IO.Compression;
 using System.Net;
 using System.Threading;
 using Serilog;
-using SourceAFIS;
 
 namespace SourceAFIS.Cmd
 {
 	static class SampleDownload
 	{
-		static readonly string[] Available = new[]
+		public static readonly string[] Available = new[]
 		{
 			"fvc2000-1b",
 			"fvc2000-2b",

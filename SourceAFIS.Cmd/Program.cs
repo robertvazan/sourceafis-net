@@ -11,7 +11,7 @@ namespace SourceAFIS.Cmd
 			Log.Logger = new LoggerConfiguration()
 				.WriteTo.Console(outputTemplate: "{Level:u1} {Message:lj}{NewLine}{Exception}")
 				.CreateLogger();
-			SampleDownload.Unpack("fvc2000-2b");
+			SampleDataset.Get("fvc2000-2b");
 		}
 	}
 }
