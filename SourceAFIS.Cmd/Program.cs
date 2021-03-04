@@ -9,9 +9,9 @@ namespace SourceAFIS.Cmd
 		static void Main(string[] args)
 		{
 			Log.Logger = new LoggerConfiguration()
-				.WriteTo.Console(outputTemplate: "{Level:u1} {Message}{NewLine}{Exception}")
+				.WriteTo.Console(outputTemplate: "{Level:u1} {Message:lj}{NewLine}{Exception}")
 				.CreateLogger();
-			Log.Information("Hello World");
+			SampleDownload.Unpack("fvc2000-2b");
 		}
 	}
 }
