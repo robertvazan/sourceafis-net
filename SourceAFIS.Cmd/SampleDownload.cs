@@ -31,29 +31,29 @@ namespace SourceAFIS.Cmd
 			switch (dataset)
 			{
 				case "fvc2000-1b":
-					return "https://cdn.machinezoo.com/h/O_mBtWH-PXJ4ETJJe_G-Z9EmJoJLfq4srVw23tTEMZw/fvc2000-1b.zip";
+					return "https://cdn.machinezoo.com/h/5JV6zPvfEdLsVByxgQfx8mZzp_GK1uB4gMbpTRVk3vI/fvc2000-1b-png.zip";
 				case "fvc2000-2b":
-					return "https://cdn.machinezoo.com/h/zJB3za1cEccZjZmkV6KfD5Jk_ffegOmOcTZmG4PpaSM/fvc2000-2b.zip";
+					return "https://cdn.machinezoo.com/h/7AnG1QKQFIO_SPE2QfQOOh2niRt5SwIWKTBNMODhy9k/fvc2000-2b-png.zip";
 				case "fvc2000-3b":
-					return "https://cdn.machinezoo.com/h/oGd8JtGpIzDSprQSsGNpbJuAAjNLTZxc_1Rol6t5deA/fvc2000-3b.zip";
+					return "https://cdn.machinezoo.com/h/zYWii7GxCYODyMQXL_0V5XYBAeGDL0ZyAn9ueGJxKWo/fvc2000-3b-png.zip";
 				case "fvc2000-4b":
-					return "https://cdn.machinezoo.com/h/624mM3sTCV8kZy75UilOMkEl-RFjv_9lGXIr9I7dzH8/fvc2000-4b.zip";
+					return "https://cdn.machinezoo.com/h/iJwQy6OqL8GfKmb-8CahSPPe-TSO1Il-84ECZbzH7BU/fvc2000-4b-png.zip";
 				case "fvc2002-1b":
-					return "https://cdn.machinezoo.com/h/ZGusAOeUs8zVmtCtFdUbNCyAqV2qFEtaFw2GWxyrRFo/fvc2002-1b.zip";
+					return "https://cdn.machinezoo.com/h/27Ywz3grZYFSPdVGhdksFPJ7LMLH5XXXzXdLoi6OmO0/fvc2002-1b-png.zip";
 				case "fvc2002-2b":
-					return "https://cdn.machinezoo.com/h/N3FvC0y0dt684GsQkSrKynyj6PUYswCV7ak2xjPZFGI/fvc2002-2b.zip";
+					return "https://cdn.machinezoo.com/h/PN2JaZ2IsHWGcCakDBFXM4bxscockSjqTVmISrFYaes/fvc2002-2b-png.zip";
 				case "fvc2002-3b":
-					return "https://cdn.machinezoo.com/h/46O3Whe353EeJn8aIPCo0zWnddd5fSXsvVXSKTQCrOA/fvc2002-3b.zip";
+					return "https://cdn.machinezoo.com/h/CjrVS4yjjF0EovpOMU6onMAdUbw86LF9Q9ZZAaqbx1A/fvc2002-3b-png.zip";
 				case "fvc2002-4b":
-					return "https://cdn.machinezoo.com/h/GSLM0-GZULWBL2Dc6Lk6QuTs_FcwZgGHi6NiJrZupNc/fvc2002-4b.zip";
+					return "https://cdn.machinezoo.com/h/XMlAqAkmJBOnb-u2EpoASAi4tZv8-06J3YPFyrYD_AM/fvc2002-4b-png.zip";
 				case "fvc2004-1b":
-					return "https://cdn.machinezoo.com/h/Owa1eWSvirTpEQ4NQfdJzKxNsBPfwJftpJjLkaVnoiw/fvc2004-1b.zip";
+					return "https://cdn.machinezoo.com/h/cKRPCJLDup30Q7xpWNcsaKZNp7y8am1zpP3PKZSutto/fvc2004-1b-png.zip";
 				case "fvc2004-2b":
-					return "https://cdn.machinezoo.com/h/S7yLI6vOiFvog-PniaOCSdQ4etoNxGAEH81MfHvl_C8/fvc2004-2b.zip";
+					return "https://cdn.machinezoo.com/h/6XCAX2TZjUZnm2bwBjvxhx4VSOk7D_-q7AO3yXfF9n8/fvc2004-2b-png.zip";
 				case "fvc2004-3b":
-					return "https://cdn.machinezoo.com/h/0zZbQizCzt2eVPE-QdKEz3VaDiKERGc1aFFGPouAirE/fvc2004-3b.zip";
+					return "https://cdn.machinezoo.com/h/5A_W-WTx6R268rRmJJGhknGMbJcB8ik2RUk436e9_BA/fvc2004-3b-png.zip";
 				case "fvc2004-4b":
-					return "https://cdn.machinezoo.com/h/nAFmSXlgm-bbTflylBBn5dRe775haHKgmK1T5tVnHRw/fvc2004-4b.zip";
+					return "https://cdn.machinezoo.com/h/pP7exv5puFbdtkUNXmUucm9TgSbj94-0dEX_Fcj-jkQ/fvc2004-4b-png.zip";
 				default:
 					throw new ArgumentException();
 			}
