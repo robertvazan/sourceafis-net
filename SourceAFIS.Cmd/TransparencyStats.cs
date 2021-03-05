@@ -2,7 +2,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using Serilog;
 
 namespace SourceAFIS.Cmd
@@ -12,101 +11,90 @@ namespace SourceAFIS.Cmd
 		public int Count;
 		public long Size;
 		public byte[] Hash;
-
-		public class Row : TransparencyStats {
-			public string Key;
-		}
-		public class Table {
-			public List<Row> Rows;
-		}
-		class Accumulator {
-			public int Count;
-			public long Size;
-			public readonly IncrementalHash Hasher = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
-
-			public void Add(byte[] data)
-			{
-				++Count;
-				Size += data.Length;
-				Hasher.AppendData(data);
-			}
-			public void Add(TransparencyStats stats)
-			{
-				Count += stats.Count;
-				Size += stats.Size;
-				Hasher.AppendData(stats.Hash);
-			}
-		}
-		class AccumulatorTable
+		public static TransparencyStats Of(byte[] data)
 		{
-			readonly Dictionary<string, Accumulator> Accumulators = new Dictionary<string, Accumulator>();
-			readonly List<string> Order = new List<string>();
-
-			Accumulator Lookup(string key) {
-				Accumulator accumulator;
-				if (!Accumulators.TryGetValue(key, out accumulator)) {
-					Order.Add(key);
-					Accumulators[key] = accumulator = new Accumulator();
-				}
-				return accumulator;
-			}
-			public void Add(string key, byte[] data) { Lookup(key).Add(data); }
-			public void Add(Row row) { Lookup(row.Key).Add(row); }
-			public void Add(Table table)
+			var stats = new TransparencyStats();
+			stats.Count = 1;
+			stats.Size = data.Length;
+			stats.Hash = DataHash.Of(data);
+			return stats;
+		}
+		public static TransparencyStats Sum(List<TransparencyStats> list)
+		{
+			var sum = new TransparencyStats();
+			var hash = new DataHash();
+			foreach (var stats in list)
 			{
-				foreach (var row in table.Rows)
-					Add(row);
+				sum.Count += stats.Count;
+				sum.Size += stats.Size;
+				hash.Add(stats.Hash);
 			}
-			public Table Summarize()
+			sum.Hash = hash.Compute();
+			return sum;
+		}
+		public class Row
+		{
+			public string Key;
+			public TransparencyStats Stats;
+		}
+		public class Table
+		{
+			public List<Row> Rows = new List<Row>();
+			public static Table Of(string key, byte[] data)
 			{
+				var row = new Row();
+				row.Key = key;
+				row.Stats = TransparencyStats.Of(data);
 				var table = new Table();
-				table.Rows = Order
-					.Select(k => {
-						var accumulator = Accumulators[k];
-						var row = new Row();
-						row.Key = k;
-						row.Count = accumulator.Count;
-						row.Size = accumulator.Size;
-						row.Hash = accumulator.Hasher.GetHashAndReset();
-						return row;
-					})
-					.ToList();
+				table.Rows.Add(row);
 				return table;
+			}
+			public static Table Sum(List<Table> list)
+			{
+				var groups = new Dictionary<string, List<TransparencyStats>>();
+				var sum = new Table();
+				foreach (var table in list)
+				{
+					foreach (var row in table.Rows)
+					{
+						List<TransparencyStats> group;
+						if (!groups.TryGetValue(row.Key, out group))
+						{
+							var srow = new Row();
+							srow.Key = row.Key;
+							sum.Rows.Add(srow);
+							groups[row.Key] = group = new List<TransparencyStats>();
+						}
+						group.Add(row.Stats);
+					}
+				}
+				foreach (var row in sum.Rows)
+					row.Stats = TransparencyStats.Sum(groups[row.Key]);
+				return sum;
 			}
 		}
 		class TableCollector : FingerprintTransparency
 		{
-			public readonly AccumulatorTable Accumulator = new AccumulatorTable();
-
-			public override void Take(string key, string mime, byte[] data) { Accumulator.Add(key, data); }
-		}
-
-		static Table SumTables(List<Table> tables)
-		{
-			var accumulator = new AccumulatorTable();
-			foreach (var table in tables)
-				accumulator.Add(table);
-			return accumulator.Summarize();
+			readonly List<Table> Records = new List<Table>();
+			public override void Take(string key, string mime, byte[] data) { Records.Add(Table.Of(key, data)); }
+			public Table Sum() { return Table.Sum(Records); }
 		}
 		public static Table ExtractorTable(SampleFingerprint fp)
 		{
-			return PersistentCache.Get<Table>("extractor-transparency-stats", fp, () =>
+			return PersistentCache.Get<Table>("extractor-transparency-stats", fp.Path, () =>
 			{
-				var image = fp.Load();
 				using (var collector = new TableCollector())
 				{
 					new FingerprintTemplate(fp.Decode());
-					return collector.Accumulator.Summarize();
+					return collector.Sum();
 				}
 			});
 		}
-		public static Table ExtractorTable(SampleDataset dataset) { return SumTables(dataset.Fingerprints.Select(fp => ExtractorTable(fp)).ToList()); }
-		public static Table ExtractorTable() { return SumTables(SampleDataset.All.Select(ds => ExtractorTable(ds)).ToList()); }
-		static string UrlBase64(byte[] data) { return Convert.ToBase64String(data).TrimEnd(new[] { '=' }).Replace('+', '-').Replace('/', '_'); }
+		public static Table ExtractorTable() { return Table.Sum(SampleFingerprint.All.Select(fp => ExtractorTable(fp)).ToList()); }
 		public static void Report(Table table)
 		{
 			foreach (var row in table.Rows)
-				Log.Information("{Key}: {Count}x, {Size} B, hash {Hash}", row.Key, row.Count, row.Size, UrlBase64(row.Hash));
+				Log.Information("Transparency/{Key}: {Count}x, {Size} B, hash {Hash}", row.Key, row.Stats.Count, row.Stats.Size / row.Stats.Count, DataHash.Format(row.Stats.Hash));
 		}
 	}
 }

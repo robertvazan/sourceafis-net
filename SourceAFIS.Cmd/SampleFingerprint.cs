@@ -1,9 +1,12 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using PathApi = System.IO.Path;
 
 namespace SourceAFIS.Cmd
 {
@@ -16,8 +19,10 @@ namespace SourceAFIS.Cmd
 			Dataset = dataset;
 			Id = id;
 		}
-		public String Name { get { return Dataset.Layout.Name(Id); } }
-		public byte[] Load() { return File.ReadAllBytes(Path.Combine(SampleDownload.Location(Dataset.Name), Dataset.Layout.Filename(Id))); }
+		public string Name { get { return Dataset.Layout.Name(Id); } }
+		public string Path { get { return PathApi.Combine(Dataset.Name, Name); } }
+		public static List<SampleFingerprint> All { get { return SampleDataset.All.SelectMany(ds => ds.Fingerprints).ToList(); } }
+		public byte[] Load() { return File.ReadAllBytes(PathApi.Combine(SampleDownload.Location(Dataset.Name), Dataset.Layout.Filename(Id))); }
 		public FingerprintImage Decode()
 		{
 			using (var stream = new MemoryStream(Load()))

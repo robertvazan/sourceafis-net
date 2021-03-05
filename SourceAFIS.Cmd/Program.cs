@@ -15,6 +15,9 @@ namespace SourceAFIS.Cmd
 				return;
 			switch (args[0])
 			{
+				case "footprint":
+					TemplateFootprint.Report();
+					break;
 				case "extractor-transparency-stats":
 					TransparencyStats.Report(TransparencyStats.ExtractorTable());
 					break;
