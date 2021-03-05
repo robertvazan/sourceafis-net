@@ -32,7 +32,7 @@ namespace SourceAFIS.Cmd
 			using (var buffer = new MemoryStream())
 			{
 				using (var input = new MemoryStream(compressed))
-					using (var gzip = new GZipStream(buffer, CompressionMode.Decompress))
+					using (var gzip = new GZipStream(input, CompressionMode.Decompress))
 						gzip.CopyTo(buffer);
 				return buffer.ToArray();
 			}
