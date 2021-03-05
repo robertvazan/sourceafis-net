@@ -40,7 +40,7 @@ namespace SourceAFIS.Tests
 						{
 							bitmap.UnlockBits(locked);
 						}
-						return FingerprintImage.Grayscale(bitmap.Width, bitmap.Height, grayscale);
+						return new FingerprintImage(bitmap.Width, bitmap.Height, grayscale);
 					}
 				}
 			}
@@ -49,9 +49,9 @@ namespace SourceAFIS.Tests
 		public static FingerprintImage Probe() { return Decode(TestResources.Probe()); }
 		public static FingerprintImage Matching() { return Decode(TestResources.Matching()); }
 		public static FingerprintImage Nonmatching() { return Decode(TestResources.Nonmatching()); }
-		public static FingerprintImage ProbeGray() { return FingerprintImage.Grayscale(332, 533, TestResources.ProbeGray()); }
-		public static FingerprintImage MatchingGray() { return FingerprintImage.Grayscale(320, 407, TestResources.MatchingGray()); }
-		public static FingerprintImage NonmatchingGray() { return FingerprintImage.Grayscale(333, 435, TestResources.NonmatchingGray()); }
+		public static FingerprintImage ProbeGray() { return new FingerprintImage(332, 533, TestResources.ProbeGray()); }
+		public static FingerprintImage MatchingGray() { return new FingerprintImage(320, 407, TestResources.MatchingGray()); }
+		public static FingerprintImage NonmatchingGray() { return new FingerprintImage(333, 435, TestResources.NonmatchingGray()); }
 
 		[Test]
 		public void DecodeGray()

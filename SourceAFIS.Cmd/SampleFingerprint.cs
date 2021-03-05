@@ -47,7 +47,7 @@ namespace SourceAFIS.Cmd
 						{
 							bitmap.UnlockBits(locked);
 						}
-						return FingerprintImage.Grayscale(bitmap.Width, bitmap.Height, grayscale, new FingerprintImageOptions() { Dpi = Dataset.Dpi });
+						return new FingerprintImage(bitmap.Width, bitmap.Height, grayscale, new FingerprintImageOptions() { Dpi = Dataset.Dpi });
 					}
 				}
 			}
