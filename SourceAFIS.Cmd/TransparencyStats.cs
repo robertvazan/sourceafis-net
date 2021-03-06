@@ -11,6 +11,7 @@ namespace SourceAFIS.Cmd
 		public string Mime;
 		public int Count;
 		public long Size;
+		public long SizeNormalized;
 		public byte[] Hash;
 		public static TransparencyStats Of(string mime, byte[] data)
 		{
@@ -18,7 +19,9 @@ namespace SourceAFIS.Cmd
 			stats.Mime = mime;
 			stats.Count = 1;
 			stats.Size = data.Length;
-			stats.Hash = DataHash.Of(mime, data);
+			var normalized = SerializationUtils.Normalize(mime, data);
+			stats.SizeNormalized = normalized.Length;
+			stats.Hash = DataHash.Of(normalized);
 			return stats;
 		}
 		public static TransparencyStats Sum(List<TransparencyStats> list)
@@ -30,6 +33,7 @@ namespace SourceAFIS.Cmd
 			{
 				sum.Count += stats.Count;
 				sum.Size += stats.Size;
+				sum.SizeNormalized += stats.SizeNormalized;
 				hash.Add(stats.Hash);
 			}
 			sum.Hash = hash.Compute();
@@ -100,7 +104,8 @@ namespace SourceAFIS.Cmd
 			foreach (var row in table.Rows)
 			{
 				var stats = row.Stats;
-				Log.Information("Transparency/{Key}: {Mime}, {Count}x, {Size} B, hash {Hash}", row.Key, stats.Mime, stats.Count, stats.Size / stats.Count, DataHash.Format(stats.Hash));
+				Log.Information("Transparency/{Key}: {Mime}, {Count}x, {Size} B (normalized {SizeNormalized} B), hash {Hash}",
+					row.Key, stats.Mime, stats.Count, stats.Size / stats.Count, stats.SizeNormalized / stats.Count, DataHash.Format(stats.Hash));
 			}
 		}
 	}
