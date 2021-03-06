@@ -11,6 +11,6 @@
     <!-- TODO: PackageLicenseExpression/PackageLicenseFile, PackageIcon -->
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Dahomey.Cbor" Version="1.14.1" />
+    <PackageReference Include="Dahomey.Cbor" Version="1.15.0" />
   </ItemGroup>
 </Project>
