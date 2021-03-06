@@ -11,7 +11,7 @@ namespace SourceAFIS.Cmd
 			Log.Logger = new LoggerConfiguration()
 				.WriteTo.Console(outputTemplate: "{Level:u1} {Message:lj}{NewLine}{Exception}")
 				.CreateLogger();
-			if (args.Length != 1)
+			if (args.Length < 1)
 				return;
 			switch (args[0])
 			{
@@ -20,6 +20,11 @@ namespace SourceAFIS.Cmd
 					break;
 				case "extractor-transparency-stats":
 					TransparencyStats.Report(TransparencyStats.ExtractorTable());
+					break;
+				case "extractor-transparency-files":
+					if (args.Length < 2)
+						return;
+					TransparencyFile.Extractor(args[1]);
 					break;
 			}
 		}

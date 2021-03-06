@@ -1,7 +1,6 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
 using NUnit.Framework;
-using SourceAFIS;
 using Dahomey.Cbor;
 
 namespace SourceAFIS.Tests

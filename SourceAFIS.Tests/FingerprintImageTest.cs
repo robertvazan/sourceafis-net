@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using NUnit.Framework;
-using SourceAFIS;
 
 namespace SourceAFIS.Tests
 {

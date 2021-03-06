@@ -8,12 +8,14 @@ namespace SourceAFIS.Cmd
 {
 	class TransparencyStats
 	{
+		public string Mime;
 		public int Count;
 		public long Size;
 		public byte[] Hash;
-		public static TransparencyStats Of(byte[] data)
+		public static TransparencyStats Of(string mime, byte[] data)
 		{
 			var stats = new TransparencyStats();
+			stats.Mime = mime;
 			stats.Count = 1;
 			stats.Size = data.Length;
 			stats.Hash = DataHash.Of(data);
@@ -22,6 +24,7 @@ namespace SourceAFIS.Cmd
 		public static TransparencyStats Sum(List<TransparencyStats> list)
 		{
 			var sum = new TransparencyStats();
+			sum.Mime = list[0].Mime;
 			var hash = new DataHash();
 			foreach (var stats in list)
 			{
@@ -40,11 +43,11 @@ namespace SourceAFIS.Cmd
 		public class Table
 		{
 			public List<Row> Rows = new List<Row>();
-			public static Table Of(string key, byte[] data)
+			public static Table Of(string key, string mime, byte[] data)
 			{
 				var row = new Row();
 				row.Key = key;
-				row.Stats = TransparencyStats.Of(data);
+				row.Stats = TransparencyStats.Of(mime, data);
 				var table = new Table();
 				table.Rows.Add(row);
 				return table;
@@ -76,7 +79,7 @@ namespace SourceAFIS.Cmd
 		class TableCollector : FingerprintTransparency
 		{
 			readonly List<Table> Records = new List<Table>();
-			public override void Take(string key, string mime, byte[] data) { Records.Add(Table.Of(key, data)); }
+			public override void Take(string key, string mime, byte[] data) { Records.Add(Table.Of(key, mime, data)); }
 			public Table Sum() { return Table.Sum(Records); }
 		}
 		public static Table ExtractorTable(SampleFingerprint fp)
@@ -90,11 +93,15 @@ namespace SourceAFIS.Cmd
 				}
 			});
 		}
+		public static TransparencyStats ExtractorRow(SampleFingerprint fp, String key) { return ExtractorTable(fp).Rows.Where(r => r.Key == key).First().Stats; }
 		public static Table ExtractorTable() { return Table.Sum(SampleFingerprint.All.Select(fp => ExtractorTable(fp)).ToList()); }
 		public static void Report(Table table)
 		{
 			foreach (var row in table.Rows)
-				Log.Information("Transparency/{Key}: {Count}x, {Size} B, hash {Hash}", row.Key, row.Stats.Count, row.Stats.Size / row.Stats.Count, DataHash.Format(row.Stats.Hash));
+			{
+				var stats = row.Stats;
+				Log.Information("Transparency/{Key}: {Mime}, {Count}x, {Size} B, hash {Hash}", row.Key, stats.Mime, stats.Count, stats.Size / stats.Count, DataHash.Format(stats.Hash));
+			}
 		}
 	}
 }
