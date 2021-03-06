@@ -18,7 +18,7 @@ namespace SourceAFIS.Cmd
 			stats.Mime = mime;
 			stats.Count = 1;
 			stats.Size = data.Length;
-			stats.Hash = DataHash.Of(data);
+			stats.Hash = DataHash.Of(mime, data);
 			return stats;
 		}
 		public static TransparencyStats Sum(List<TransparencyStats> list)

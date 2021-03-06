@@ -27,10 +27,10 @@ namespace SourceAFIS.Cmd
 			public override bool Accepts(string key) { return Key == key; }
 			public override void Take(string key, string mime, byte[] data) { Files.Add(data); }
 		}
+		static string ExtractorPath(string key, SampleFingerprint fp) { return fp.Path + Extension(TransparencyStats.ExtractorRow(fp, key).Mime); }
 		public static byte[] Extractor(string key, SampleFingerprint fp)
 		{
-			var path = fp.Path + Extension(TransparencyStats.ExtractorRow(fp, key).Mime);
-			return PersistentCache.Get(Path.Combine("extractor-transparency-files", key), path, () =>
+			return PersistentCache.Get(Path.Combine("extractor-transparency-files", key), ExtractorPath(key, fp), () =>
 			{
 				using (var collector = new FileCollector(key))
 				{
@@ -43,6 +43,18 @@ namespace SourceAFIS.Cmd
 		{
 			foreach (var fp in SampleFingerprint.All)
 				Extractor(key, fp);
+		}
+		public static byte[] ExtractorNormalized(string key, SampleFingerprint fp)
+		{
+			return PersistentCache.Get(Path.Combine("normalized-extractor-transparency-files", key), ExtractorPath(key, fp), () =>
+			{
+				return SerializationUtils.Normalize(TransparencyStats.ExtractorRow(fp, key).Mime, Extractor(key, fp));
+			});
+		}
+		public static void ExtractorNormalized(string key)
+		{
+			foreach (var fp in SampleFingerprint.All)
+				ExtractorNormalized(key, fp);
 		}
 	}
 }

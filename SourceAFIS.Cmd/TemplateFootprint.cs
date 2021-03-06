@@ -19,7 +19,7 @@ namespace SourceAFIS.Cmd
 				var serialized = NativeTemplate.Serialized(fp);
 				footprint.Count = 1;
 				footprint.Serialized = serialized.Length;
-				footprint.Hash = DataHash.Of(serialized);
+				footprint.Hash = DataHash.Of(SerializationUtils.Normalize(serialized));
 				return footprint;
 			});
 		}

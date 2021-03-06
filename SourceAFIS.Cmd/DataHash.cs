@@ -17,6 +17,7 @@ namespace SourceAFIS.Cmd
 			hash.Add(data);
 			return hash.Compute();
 		}
+		public static byte[] Of(string mime, byte[] data) { return Of(SerializationUtils.Normalize(mime, data)); }
 		public static string Format(byte[] data) { return Convert.ToBase64String(data).TrimEnd(new[] { '=' }).Replace('+', '-').Replace('/', '_'); }
 	}
 }

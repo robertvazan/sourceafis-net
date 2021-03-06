@@ -26,6 +26,11 @@ namespace SourceAFIS.Cmd
 						return;
 					TransparencyFile.Extractor(args[1]);
 					break;
+				case "normalized-extractor-transparency-files":
+					if (args.Length < 2)
+						return;
+					TransparencyFile.ExtractorNormalized(args[1]);
+					break;
 			}
 		}
 	}
