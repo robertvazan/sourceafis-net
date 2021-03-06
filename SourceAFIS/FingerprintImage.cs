@@ -3,6 +3,21 @@ using System;
 
 namespace SourceAFIS
 {
+	/// <summary>Pixels and metadata of the fingerprint image.</summary>
+	/// <remarks>
+	/// <para>
+	/// This class captures all fingerprint information that is available prior to construction of <see cref="T:FingerprintTemplate" />.
+	/// It consists of pixel data and additional information in <see cref="T:FingerprintImageOptions" />.
+	/// </para>
+	/// <para>
+	/// Application should start fingerprint processing by constructing an instance of <c>FingerprintImage</c>
+	/// and then passing it to <see cref="T:FingerprintTemplate" /> constructor.
+	/// </para>
+	/// <para>
+	/// Currently only raw grayscale images are supported.
+	/// </para>
+	/// </remarks>
+	/// <seealso cref="T:FingerprintTemplate" />
 	public class FingerprintImage
 	{
 		internal DoubleMatrix Matrix;

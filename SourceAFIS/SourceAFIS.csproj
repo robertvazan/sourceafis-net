@@ -8,6 +8,7 @@
     <PackageProjectUrl>https://sourceafis.machinezoo.com/net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/robertvazan/sourceafis-net.git</RepositoryUrl>
     <PackageTags>fingerprint; biometrics; minutia; sourceafis</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- TODO: PackageLicenseExpression/PackageLicenseFile, PackageIcon -->
   </PropertyGroup>
   <ItemGroup>
