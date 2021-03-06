@@ -9,6 +9,7 @@ namespace SourceAFIS.Cmd
 	class SampleDataset
 	{
 		public readonly String Name;
+		public readonly SampleDownload.Format Format;
 		public readonly double Dpi;
 		public readonly SampleLayout Layout;
 		static double LookupDpi(string dataset)
@@ -23,15 +24,17 @@ namespace SourceAFIS.Cmd
 					return 500;
 			}
 		}
-		SampleDataset(string name)
+		SampleDataset(string name, SampleDownload.Format format)
 		{
 			Name = name;
+			Format = format;
 			Dpi = LookupDpi(name);
-			Layout = SampleLayout.Scan(name);
+			Layout = new SampleLayout(SampleDownload.Unpack(name, format));
 		}
-		static readonly ConcurrentDictionary<string, SampleDataset> Cache = new ConcurrentDictionary<string, SampleDataset>();
-		public static SampleDataset Get(string name) { return Cache.GetOrAdd(name, n => new SampleDataset(n)); }
-		public static List<SampleDataset> All { get { return SampleDownload.Available.Select(n => Get(n)).ToList(); } }
+		static readonly ConcurrentDictionary<Tuple<string, SampleDownload.Format>, SampleDataset> Cache = new ConcurrentDictionary<Tuple<string, SampleDownload.Format>, SampleDataset>();
+		public static SampleDataset Get(string name, SampleDownload.Format format) { return Cache.GetOrAdd(Tuple.Create(name, format), t => new SampleDataset(t.Item1, t.Item2)); }
+		public static List<SampleDataset> AllInFormat(SampleDownload.Format format) { return SampleDownload.Available.Select(n => Get(n, format)).ToList(); }
+		public static List<SampleDataset> All { get { return AllInFormat(SampleDownload.DefaultFormat); } }
 		public List<SampleFingerprint> Fingerprints { get { return Enumerable.Range(0, Layout.Fingerprints).Select(n => new SampleFingerprint(this, n)).ToList(); } }
 	}
 }

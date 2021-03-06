@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DirectoryApi = System.IO.Directory;
 
 namespace SourceAFIS.Cmd
 {
 	class SampleLayout
 	{
+		public readonly string Directory;
 		readonly int[] OffsetArray;
 		readonly int[] FingerArray;
 		readonly String[] NameArray;
@@ -28,11 +30,12 @@ namespace SourceAFIS.Cmd
 		public string Name(int fp) { return NameArray[fp]; }
 		public string Filename(int fp) { return FilenameArray[fp]; }
 		public string Prefix(int finger) { return PrefixArray[finger]; }
-		static readonly Regex Pattern = new Regex(@"^(.+)_[0-9]+\.(?:tif|tiff|png|bmp|jpg|jpeg|wsq)$");
-		SampleLayout(string directory)
+		static readonly Regex Pattern = new Regex(@"^(.+)_[0-9]+\.(?:tif|tiff|png|bmp|jpg|jpeg|wsq|gray)$");
+		public SampleLayout(string directory)
 		{
+			Directory = directory;
 			var groups = new Dictionary<string, List<string>>();
-			foreach (var path in Directory.GetFiles(directory))
+			foreach (var path in DirectoryApi.GetFiles(directory))
 			{
 				var filename = Path.GetFileName(path);
 				var match = Pattern.Match(filename);
@@ -71,6 +74,5 @@ namespace SourceAFIS.Cmd
 				++finger;
 			}
 		}
-		public static SampleLayout Scan(string dataset) { return new SampleLayout(SampleDownload.Unpack(dataset)); }
 	}
 }
