@@ -36,5 +36,6 @@ namespace SourceAFIS.Cmd
 		public static List<SampleDataset> AllInFormat(SampleDownload.Format format) { return SampleDownload.Available.Select(n => Get(n, format)).ToList(); }
 		public static List<SampleDataset> All { get { return AllInFormat(SampleDownload.DefaultFormat); } }
 		public List<SampleFingerprint> Fingerprints { get { return Enumerable.Range(0, Layout.Fingerprints).Select(n => new SampleFingerprint(this, n)).ToList(); } }
+		public string Path { get { return Name; } }
 	}
 }

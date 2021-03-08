@@ -18,6 +18,9 @@ namespace SourceAFIS.Cmd
 				case "footprint":
 					TemplateFootprint.Report();
 					break;
+				case "accuracy":
+					ScalarAccuracy.Report();
+					break;
 				case "extractor-transparency-stats":
 					TransparencyStats.Report(TransparencyStats.ExtractorTable());
 					break;

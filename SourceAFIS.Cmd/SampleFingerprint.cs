@@ -20,7 +20,8 @@ namespace SourceAFIS.Cmd
 			Id = id;
 		}
 		public string Name { get { return Dataset.Layout.Name(Id); } }
-		public string Path { get { return PathApi.Combine(Dataset.Name, Name); } }
+		public string Path { get { return PathApi.Combine(Dataset.Path, Name); } }
+		public SampleFinger Finger { get { return new SampleFinger(Dataset, Dataset.Layout.Finger(Id)); } }
 		public static List<SampleFingerprint> All { get { return SampleDataset.All.SelectMany(ds => ds.Fingerprints).ToList(); } }
 		public byte[] Load() { return File.ReadAllBytes(PathApi.Combine(Dataset.Layout.Directory, Dataset.Layout.Filename(Id))); }
 		public FingerprintImage Decode()
