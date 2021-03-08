@@ -193,7 +193,16 @@ namespace SourceAFIS
 		{
 			LogVersion();
 			if (Accepts(key))
-				Take(key, mime, supplier());
+			{
+				try
+				{
+					Take(key, mime, supplier());
+				}
+				catch (IndexOutOfRangeException)
+				{
+					// Workaround for a bug in CBOR serializer that throws exceptions when it encounters empty array.
+				}
+			}
 		}
 		internal void Log<T>(string key, Func<T> supplier) { Log(key, "application/cbor", () => SerializationUtils.Serialize(supplier())); }
 		internal void Log(string key, object data) { Log(key, "application/cbor", () => SerializationUtils.Serialize(data)); }

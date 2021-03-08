@@ -50,6 +50,9 @@ namespace SourceAFIS
 			MaskMinutiae(template.Minutiae, innerMask);
 			// https://sourceafis.machinezoo.com/transparency/inner-minutiae
 			FingerprintTransparency.Current.Log("inner-minutiae", template);
+			// Workaround for a bug in CBOR serializer that throws exceptions when it encounters empty array.
+			if (template.Minutiae.Count == 0)
+				template.Minutiae.Add(new MutableMinutia(new IntPoint(raw.Width / 2, raw.Height / 2), 0, MinutiaType.Ending));
 			RemoveMinutiaClouds(template.Minutiae);
 			// https://sourceafis.machinezoo.com/transparency/removed-minutia-clouds
 			FingerprintTransparency.Current.Log("removed-minutia-clouds", template);
