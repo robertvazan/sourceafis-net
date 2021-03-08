@@ -9,7 +9,7 @@ namespace SourceAFIS.Tests
 		[Test]
 		public void Version()
 		{
-			Assert.That(FingerprintCompatibility.Version(), Does.Match("^\\d+\\.\\d+\\.\\d+$"));
+			Assert.That(FingerprintCompatibility.Version, Does.Match("^\\d+\\.\\d+\\.\\d+$"));
 		}
 	}
 }

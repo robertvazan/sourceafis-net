@@ -5,21 +5,22 @@ namespace SourceAFIS
 {
 	/// <summary>Additional information about fingerprint image.</summary>
     /// <remarks>
-    /// <c>FingerprintImageOptions</c> can be passed to <see cref="T:FingerprintImage" /> constructor
+    /// <c>FingerprintImageOptions</c> can be passed to <see cref="FingerprintImage" /> constructor
     /// to provide additional information about fingerprint image that supplements raw pixel data.
-	/// Since SourceAFIS algorithm is not scale-invariant, all images should have DPI configured explicitly by setting <see cref="P:Dpi" />.
+	/// Since SourceAFIS algorithm is not scale-invariant, all images should have DPI configured explicitly by setting <see cref="Dpi" />.
     /// </remarks>
-    /// <seealso cref="T:FingerprintImage" />
+    /// <seealso cref="FingerprintImage" />
 	public class FingerprintImageOptions
 	{
 		double DpiValue = 500;
 
-		/// <summary>Gets or sets image DPI.</summary>
-		/// <value>Image resolution in DPI (dots per inch). Allowed range is 20 to 20,000 DPI. Default is 500 DPI.</value>
+		/// <summary>Gets or sets image resolution.</summary>
+		/// <value>Image resolution in DPI (dots per inch), usually around 500. Default DPI is 500.</value>
 		/// <remarks>
+		/// SourceAFIS algorithm is not scale-invariant. Fingerprints with incorrectly configured DPI may fail to match.
 		/// Check your fingerprint reader specification for correct DPI value.
 		/// </remarks>
-		/// <exception cref="T:ArgumentOutOfRangeException">Thrown when DPI is lower than 20 or higher than 20,000.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown when DPI is non-positive, impossibly low, or impossibly high.</exception>
 		public double Dpi
 		{
 			get { return DpiValue; }

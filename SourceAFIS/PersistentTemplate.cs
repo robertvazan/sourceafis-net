@@ -17,7 +17,7 @@ namespace SourceAFIS
 		public PersistentTemplate() {
 		}
 		public PersistentTemplate(MutableTemplate mutable) {
-			Version = FingerprintCompatibility.Version();
+			Version = FingerprintCompatibility.Version;
 			Width = mutable.Size.X;
 			Height = mutable.Size.Y;
 			int count = mutable.Minutiae.Count;
