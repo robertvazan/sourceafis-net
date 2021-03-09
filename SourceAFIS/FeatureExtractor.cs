@@ -146,7 +146,6 @@ namespace SourceAFIS
 			// https://sourceafis.machinezoo.com/transparency/combined-mask
 			FingerprintTransparency.Current.Log("combined-mask", mask);
 			mask.Merge(FilterBlockErrors(mask));
-			mask.Merge(FilterBlockErrors(mask));
 			mask.Invert();
 			mask.Merge(FilterBlockErrors(mask));
 			mask.Merge(FilterBlockErrors(mask));
