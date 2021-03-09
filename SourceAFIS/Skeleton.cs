@@ -295,7 +295,16 @@ namespace SourceAFIS
 			public int Distance;
 			public SkeletonMinutia End1;
 			public SkeletonMinutia End2;
-			public int CompareTo(Gap other) { return Distance.CompareTo(other.Distance); }
+			public int CompareTo(Gap other)
+			{
+				int distanceCmp = Distance.CompareTo(other.Distance);
+				if (distanceCmp != 0)
+					return distanceCmp;
+				int end1Cmp = End1.Position.CompareTo(other.End1.Position);
+				if (end1Cmp != 0)
+					return end1Cmp;
+				return End2.Position.CompareTo(other.End2.Position);
+			}
 		}
 		void RemoveGaps()
 		{
