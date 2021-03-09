@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SourceAFIS
 {
-	readonly struct IntPoint
+	readonly struct IntPoint : IComparable<IntPoint>
 	{
 		public static readonly IntPoint Zero = new IntPoint();
 		public static readonly IntPoint[] EdgeNeighbors = new IntPoint[] {
@@ -45,6 +45,13 @@ namespace SourceAFIS
 
 		public override int GetHashCode() { return 31 * X + Y; }
 		public override bool Equals(object other) { return other is IntPoint && this == (IntPoint)other; }
+		public int CompareTo(IntPoint other)
+		{
+			int resultY = Y.CompareTo(other.Y);
+			if (resultY != 0)
+				return resultY;
+			return X.CompareTo(other.X);
+		}
 		public override string ToString() { return string.Format("[{0},{1}]", X, Y); }
 		public bool Contains(IntPoint other) { return other.X >= 0 && other.Y >= 0 && other.X < X && other.Y < Y; }
 		public IntPoint[] LineTo(IntPoint to)

@@ -1,6 +1,7 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SourceAFIS
 {
@@ -167,7 +168,7 @@ namespace SourceAFIS
 		Dictionary<IntPoint, SkeletonMinutia> MinutiaCenters(Dictionary<IntPoint, List<IntPoint>> linking)
 		{
 			var centers = new Dictionary<IntPoint, SkeletonMinutia>();
-			foreach (var currentPos in linking.Keys)
+			foreach (var currentPos in linking.Keys.OrderBy(p => p))
 			{
 				var linkedMinutiae = linking[currentPos];
 				var primaryPos = linkedMinutiae[0];
@@ -188,7 +189,7 @@ namespace SourceAFIS
 		static void TraceRidges(BooleanMatrix thinned, Dictionary<IntPoint, SkeletonMinutia> minutiaePoints)
 		{
 			var leads = new Dictionary<IntPoint, SkeletonRidge>();
-			foreach (var minutiaPoint in minutiaePoints.Keys)
+			foreach (var minutiaPoint in minutiaePoints.Keys.OrderBy(p => p))
 			{
 				foreach (var startRelative in IntPoint.CornerNeighbors)
 				{
