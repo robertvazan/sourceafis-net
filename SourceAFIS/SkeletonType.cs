@@ -3,9 +3,9 @@ using System;
 
 namespace SourceAFIS
 {
-	enum SkeletonType
-	{
-		Ridges,
-		Valleys
-	}
+    enum SkeletonType
+    {
+        Ridges,
+        Valleys
+    }
 }

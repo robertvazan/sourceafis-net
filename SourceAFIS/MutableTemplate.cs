@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace SourceAFIS
 {
-	class MutableTemplate
-	{
-		public IntPoint Size;
-		public List<MutableMinutia> Minutiae;
-	}
+    class MutableTemplate
+    {
+        public IntPoint Size;
+        public List<MutableMinutia> Minutiae;
+    }
 }

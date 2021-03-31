@@ -3,9 +3,9 @@ using System;
 
 namespace SourceAFIS
 {
-	enum MinutiaType : byte
-	{
-		Ending = 0,
-		Bifurcation = 1
-	}
+    enum MinutiaType : byte
+    {
+        Ending = 0,
+        Bifurcation = 1
+    }
 }

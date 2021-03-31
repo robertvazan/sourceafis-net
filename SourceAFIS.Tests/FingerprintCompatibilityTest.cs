@@ -4,12 +4,12 @@ using NUnit.Framework;
 
 namespace SourceAFIS.Tests
 {
-	public class FingerprintCompatibilityTest
-	{
-		[Test]
-		public void Version()
-		{
-			Assert.That(FingerprintCompatibility.Version, Does.Match("^\\d+\\.\\d+\\.\\d+$"));
-		}
-	}
+    public class FingerprintCompatibilityTest
+    {
+        [Test]
+        public void Version()
+        {
+            Assert.That(FingerprintCompatibility.Version, Does.Match("^\\d+\\.\\d+\\.\\d+$"));
+        }
+    }
 }
