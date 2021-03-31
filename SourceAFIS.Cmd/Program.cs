@@ -9,7 +9,7 @@ namespace SourceAFIS.Cmd
         static void Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console(outputTemplate: "{Level:u1} {Message:lj}{NewLine}{Exception}")
+                .WriteTo.Console(outputTemplate: "{Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
             if (args.Length < 1)
                 return;
