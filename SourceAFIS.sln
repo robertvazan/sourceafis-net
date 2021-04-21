@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS", "SourceAFIS\So
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Tests", "SourceAFIS.Tests\SourceAFIS.Tests.csproj", "{44D59240-80F0-4DB8-BA7F-233E7AAF01ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Cmd", "SourceAFIS.Cmd\SourceAFIS.Cmd.csproj", "{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,17 +44,5 @@ Global
 		{44D59240-80F0-4DB8-BA7F-233E7AAF01ED}.Release|x64.Build.0 = Release|Any CPU
 		{44D59240-80F0-4DB8-BA7F-233E7AAF01ED}.Release|x86.ActiveCfg = Release|Any CPU
 		{44D59240-80F0-4DB8-BA7F-233E7AAF01ED}.Release|x86.Build.0 = Release|Any CPU
-		{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}.Debug|x64.Build.0 = Debug|Any CPU
-		{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}.Debug|x86.Build.0 = Debug|Any CPU
-		{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}.Release|x64.ActiveCfg = Release|Any CPU
-		{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}.Release|x64.Build.0 = Release|Any CPU
-		{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}.Release|x86.ActiveCfg = Release|Any CPU
-		{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
