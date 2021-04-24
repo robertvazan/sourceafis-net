@@ -7,9 +7,10 @@
     <Description>Fingerprint recognition engine that takes a pair of human fingerprint images and returns their similarity score. Supports efficient 1:N search.</Description>
     <PackageProjectUrl>https://sourceafis.machinezoo.com/net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/robertvazan/sourceafis-net.git</RepositoryUrl>
-    <PackageTags>fingerprint; biometrics; minutia; sourceafis</PackageTags>
+    <PackageTags>fingerprint; biometrics; authentication; sourceafis</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <!-- TODO: PackageLicenseExpression/PackageLicenseFile, PackageIcon -->
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <!-- TODO: PackageIcon -->
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Dahomey.Cbor" Version="1.15.0" />
