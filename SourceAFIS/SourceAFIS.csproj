@@ -10,8 +10,11 @@
     <PackageTags>fingerprint; biometrics; authentication; sourceafis</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <!-- TODO: PackageIcon -->
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath="/" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dahomey.Cbor" Version="1.15.0" />
   </ItemGroup>
