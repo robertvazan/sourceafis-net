@@ -16,6 +16,7 @@ jobs:
     - name: Build
       run: dotnet pack --configuration Release
     - name: NuGet push
+      # Workaround: https://github.com/actions/setup-dotnet/issues/190
       run: dotnet nuget push */bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
