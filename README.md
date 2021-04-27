@@ -1,5 +1,7 @@
 # SourceAFIS for .NET #
 
+[![Nuget](https://img.shields.io/nuget/v/SourceAFIS)](https://www.nuget.org/packages/SourceAFIS/)
+
 SourceAFIS is a fingerprint recognition engine that takes a pair of human fingerprint images and returns their similarity score.
 It can do 1:1 comparisons as well as efficient 1:N search. This is the .NET implementation of the SourceAFIS algorithm.
 
