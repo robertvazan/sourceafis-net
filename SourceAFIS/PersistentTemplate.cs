@@ -6,7 +6,7 @@ namespace SourceAFIS
 {
     class PersistentTemplate
     {
-        public String Version;
+        public string Version;
         public int Width;
         public int Height;
         public int[] PositionsX;
@@ -52,9 +52,7 @@ namespace SourceAFIS
         }
         public void Validate()
         {
-            /*
-			 * Width and height are informative only. Don't validate them. Ditto for version string.
-			 */
+            // Width and height are informative only. Don't validate them. Ditto for version string.
             if (PositionsX == null)
                 throw new NullReferenceException("Null array of X positions.");
             if (PositionsY == null)
