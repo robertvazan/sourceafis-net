@@ -1,7 +1,7 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
 
-namespace SourceAFIS.Tests.Resources
+namespace SourceAFIS
 {
     static class TestResources
     {

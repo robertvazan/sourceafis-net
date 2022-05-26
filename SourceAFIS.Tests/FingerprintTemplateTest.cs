@@ -2,8 +2,11 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using SourceAFIS.Features;
+using SourceAFIS.Primitives;
+using SourceAFIS.Templates;
 
-namespace SourceAFIS.Tests
+namespace SourceAFIS
 {
     public class FingerprintTemplateTest
     {

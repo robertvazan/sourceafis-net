@@ -1,5 +1,6 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
+using SourceAFIS.Primitives;
 
 namespace SourceAFIS
 {

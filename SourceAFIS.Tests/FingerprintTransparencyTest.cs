@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace SourceAFIS.Tests
+namespace SourceAFIS
 {
     public class FingerprintTransparencyTest
     {

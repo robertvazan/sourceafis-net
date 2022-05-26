@@ -1,7 +1,7 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using NUnit.Framework;
 
-namespace SourceAFIS.Tests
+namespace SourceAFIS
 {
     public class FingerprintCompatibilityTest
     {

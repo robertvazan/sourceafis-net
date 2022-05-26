@@ -4,9 +4,8 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using NUnit.Framework;
-using SourceAFIS.Tests.Resources;
 
-namespace SourceAFIS.Tests
+namespace SourceAFIS
 {
     public class FingerprintImageTest
     {

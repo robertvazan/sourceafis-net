@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SourceAFIS.Features;
+using SourceAFIS.Matcher;
+using SourceAFIS.Primitives;
 
 namespace SourceAFIS
 {
