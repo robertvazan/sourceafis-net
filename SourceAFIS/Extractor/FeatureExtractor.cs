@@ -16,8 +16,7 @@ namespace SourceAFIS.Extractor
             var template = new MutableTemplate();
             // https://sourceafis.machinezoo.com/transparency/decoded-image
             FingerprintTransparency.Current.Log("decoded-image", raw);
-            if (Math.Abs(dpi - 500) > Parameters.DpiTolerance)
-                raw = ScaleImage(raw, dpi);
+            raw = ScaleImage(raw, dpi);
             // https://sourceafis.machinezoo.com/transparency/scaled-image
             FingerprintTransparency.Current.Log("scaled-image", raw);
             template.Size = raw.Size;
@@ -71,6 +70,8 @@ namespace SourceAFIS.Extractor
         }
         static DoubleMatrix ScaleImage(DoubleMatrix input, int newWidth, int newHeight)
         {
+            if (newWidth == input.Width && newHeight == input.Height)
+                return input;
             var output = new DoubleMatrix(newWidth, newHeight);
             double scaleX = newWidth / (double)input.Width;
             double scaleY = newHeight / (double)input.Height;

@@ -6,7 +6,6 @@ namespace SourceAFIS.Configuration
     class Parameters
     {
         public const int BlockSize = 15;
-        public const double DpiTolerance = 5;
         public const int HistogramDepth = 256;
         public const double ClippedContrast = 0.08;
         public const double MinAbsoluteContrast = 17 / 255.0;
