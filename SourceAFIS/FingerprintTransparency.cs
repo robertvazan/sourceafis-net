@@ -177,7 +177,7 @@ namespace SourceAFIS
         }
         internal void Log<T>(string key, Func<T> supplier) { Log(key, "application/cbor", () => SerializationUtils.Serialize(supplier())); }
         internal void Log(string key, object data) { Log(key, "application/cbor", () => SerializationUtils.Serialize(data)); }
-        internal void LogSkeleton(string keyword, Skeleton skeleton) { Log(Skeleton.Prefix(skeleton.Type) + keyword, () => new ConsistentSkeleton(skeleton)); }
+        internal void LogSkeleton(string keyword, Skeleton skeleton) { Log(skeleton.Type.Prefix() + keyword, () => new ConsistentSkeleton(skeleton)); }
         // https://sourceafis.machinezoo.com/transparency/edge-hash
         internal void LogEdgeHash(Dictionary<int, List<IndexedEdge>> hash)
         {
