@@ -19,14 +19,14 @@ namespace SourceAFIS.Primitives
             public int PublicProperty { get; set; } = 9;
             int PrivateProperty { get; set; } = 9;
 
-            public int GetPrivate() { return PrivateField; }
-            public void SetPrivate(int value) { PrivateField = value; }
+            public int GetPrivate() => PrivateField;
+            public void SetPrivate(int value) => PrivateField = value;
         }
         class ImmutableClass : TestClass
         {
             public readonly int ReadonlyField;
 
-            public ImmutableClass(int value) { ReadonlyField = value; }
+            public ImmutableClass(int value) => ReadonlyField = value;
         }
 
         [Test]

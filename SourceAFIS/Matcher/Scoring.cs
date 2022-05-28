@@ -6,7 +6,7 @@ using SourceAFIS.Primitives;
 
 namespace SourceAFIS.Matcher
 {
-    class Scoring
+    static class Scoring
     {
         public static void Compute(FingerprintTemplate probe, FingerprintTemplate candidate, PairingGraph pairing, ScoringData score)
         {

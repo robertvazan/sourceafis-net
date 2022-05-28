@@ -16,8 +16,8 @@ namespace SourceAFIS.Features
             Size = size;
         }
 
-        public void AddMinutia(SkeletonMinutia minutia) { Minutiae.Add(minutia); }
-        public void RemoveMinutia(SkeletonMinutia minutia) { Minutiae.Remove(minutia); }
+        public void AddMinutia(SkeletonMinutia minutia) => Minutiae.Add(minutia);
+        public void RemoveMinutia(SkeletonMinutia minutia) => Minutiae.Remove(minutia);
         public BooleanMatrix Shadow()
         {
             var shadow = new BooleanMatrix(Size);

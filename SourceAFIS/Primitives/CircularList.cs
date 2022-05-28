@@ -6,14 +6,14 @@ namespace SourceAFIS.Primitives
 {
     class CircularList<T> : IList<T>
     {
-        readonly CircularArray<T> Inner = new CircularArray<T>(16);
+        readonly CircularArray<T> inner = new CircularArray<T>(16);
 
-        public int Count { get { return Inner.Size; } }
-        public bool IsReadOnly { get { return false; } }
+        public int Count => inner.Size;
+        public bool IsReadOnly => false;
         public T this[int index]
         {
-            get { return Inner[index]; }
-            set { Inner[index] = value; }
+            get => inner[index];
+            set => inner[index] = value;
         }
 
         public int IndexOf(T item)
@@ -25,16 +25,16 @@ namespace SourceAFIS.Primitives
         }
         public void Insert(int index, T item)
         {
-            Inner.Insert(index, 1);
-            Inner[index] = item;
+            inner.Insert(index, 1);
+            inner[index] = item;
         }
-        public void RemoveAt(int index) { Inner.Remove(index, 1); }
+        public void RemoveAt(int index) => inner.Remove(index, 1);
         public void Add(T item)
         {
-            Inner.Insert(Inner.Size, 1);
-            Inner[Inner.Size - 1] = item;
+            inner.Insert(inner.Size, 1);
+            inner[inner.Size - 1] = item;
         }
-        public void Clear() { Inner.Remove(0, Inner.Size); }
+        public void Clear() { inner.Remove(0, inner.Size); }
         public bool Contains(T item)
         {
             for (int i = 0; i < Count; ++i)
@@ -45,7 +45,7 @@ namespace SourceAFIS.Primitives
         public void CopyTo(T[] array, int at)
         {
             for (int i = 0; i < Count; ++i)
-                array[at + i] = Inner[i];
+                array[at + i] = inner[i];
         }
         public bool Remove(T item)
         {
@@ -64,6 +64,6 @@ namespace SourceAFIS.Primitives
             for (int i = 0; i < Count; ++i)
                 yield return this[i];
         }
-        IEnumerator IEnumerable.GetEnumerator() { return ((IEnumerable<T>)this).GetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<T>)this).GetEnumerator();
     }
 }

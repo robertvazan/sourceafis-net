@@ -15,13 +15,13 @@ namespace SourceAFIS.Primitives
             Y = y;
         }
 
-        public static implicit operator DoublePoint(IntPoint point) { return new DoublePoint(point.X, point.Y); }
-        public static DoublePoint operator +(DoublePoint left, DoublePoint right) { return new DoublePoint(left.X + right.X, left.Y + right.Y); }
-        public static DoublePoint operator -(DoublePoint left, DoublePoint right) { return new DoublePoint(left.X - right.X, left.Y - right.Y); }
-        public static DoublePoint operator -(DoublePoint point) { return new DoublePoint(-point.X, -point.Y); }
-        public static DoublePoint operator *(double factor, DoublePoint point) { return new DoublePoint(factor * point.X, factor * point.Y); }
+        public static implicit operator DoublePoint(IntPoint point) => new DoublePoint(point.X, point.Y);
+        public static DoublePoint operator +(DoublePoint left, DoublePoint right) => new DoublePoint(left.X + right.X, left.Y + right.Y);
+        public static DoublePoint operator -(DoublePoint left, DoublePoint right) => new DoublePoint(left.X - right.X, left.Y - right.Y);
+        public static DoublePoint operator -(DoublePoint point) => new DoublePoint(-point.X, -point.Y);
+        public static DoublePoint operator *(double factor, DoublePoint point) => new DoublePoint(factor * point.X, factor * point.Y);
 
-        public override string ToString() { return string.Format("[{0},{1}]", X, Y); }
-        public IntPoint Round() { return new IntPoint(Doubles.RoundToInt(X), Doubles.RoundToInt(Y)); }
+        public override string ToString() => $"[{X},{Y}]";
+        public IntPoint Round() => new IntPoint(Doubles.RoundToInt(X), Doubles.RoundToInt(Y));
     }
 }

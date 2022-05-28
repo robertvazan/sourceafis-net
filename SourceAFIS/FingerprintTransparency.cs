@@ -31,11 +31,13 @@ namespace SourceAFIS
     /// <seealso href="https://sourceafis.machinezoo.com/transparency/">Algorithm transparency in SourceAFIS</seealso>
     public abstract partial class FingerprintTransparency : IDisposable
     {
-        [ThreadStatic]
-        static FingerprintTransparency CurrentInstance;
-        internal static FingerprintTransparency Current { get { return CurrentInstance ?? NoTransparency.Instance; } }
+        FingerprintTransparency outer;
+        bool disposed;
 
-        FingerprintTransparency Outer;
+        [ThreadStatic]
+        static FingerprintTransparency current;
+        internal static FingerprintTransparency Current => current ?? NoTransparency.Instance;
+
         /// <summary>Creates an instance of <c>FingerprintTransparency</c> and activates it.</summary>
         /// <remarks>
         /// <para>
@@ -56,10 +58,10 @@ namespace SourceAFIS
         /// <seealso cref="Dispose()" />
         protected FingerprintTransparency()
         {
-            Outer = CurrentInstance;
-            CurrentInstance = this;
+            outer = current;
+            current = this;
         }
-        bool Disposed;
+
         /// <summary>Deactivates transparency logging and releases system resources held by this instance if any.</summary>
         /// <remarks>
         /// <para>
@@ -79,11 +81,11 @@ namespace SourceAFIS
         /// <seealso cref="FingerprintTransparency()" />
         public void Dispose()
         {
-            if (!Disposed)
+            if (!disposed)
             {
-                Disposed = true;
-                CurrentInstance = Outer;
-                Outer = null;
+                disposed = true;
+                current = outer;
+                outer = null;
             }
         }
 
@@ -101,7 +103,8 @@ namespace SourceAFIS
         /// <param name="key">Transparency data key as used in <see cref="Take(string,string,byte[])" />.</param>
         /// <returns>Boolean status indicating whether transparency data under given key should be logged.</returns>
         /// <seealso cref="Take(string,string,byte[])" />
-        public virtual bool Accepts(string key) { return true; }
+        public virtual bool Accepts(string key) => true;
+
         /// <summary>Records transparency data.</summary>
         /// <remarks>
         /// <para>
@@ -142,17 +145,17 @@ namespace SourceAFIS
         /// <seealso cref="Accepts(string)" />
         public virtual void Take(string key, string mime, byte[] data) { }
 
-        volatile bool VersionOffered;
+        volatile bool versionOffered;
         void LogVersion()
         {
-            if (!VersionOffered)
+            if (!versionOffered)
             {
                 bool offer = false;
                 lock (this)
                 {
-                    if (!VersionOffered)
+                    if (!versionOffered)
                     {
-                        VersionOffered = true;
+                        versionOffered = true;
                         offer = true;
                     }
                 }
@@ -175,9 +178,9 @@ namespace SourceAFIS
                 }
             }
         }
-        internal void Log<T>(string key, Func<T> supplier) { Log(key, "application/cbor", () => SerializationUtils.Serialize(supplier())); }
-        internal void Log(string key, object data) { Log(key, "application/cbor", () => SerializationUtils.Serialize(data)); }
-        internal void LogSkeleton(string keyword, Skeleton skeleton) { Log(skeleton.Type.Prefix() + keyword, () => new ConsistentSkeleton(skeleton)); }
+        internal void Log<T>(string key, Func<T> supplier) => Log(key, "application/cbor", () => SerializationUtils.Serialize(supplier()));
+        internal void Log(string key, object data) => Log(key, "application/cbor", () => SerializationUtils.Serialize(data));
+        internal void LogSkeleton(string keyword, Skeleton skeleton) => Log(skeleton.Type.Prefix() + keyword, () => new ConsistentSkeleton(skeleton));
         // https://sourceafis.machinezoo.com/transparency/edge-hash
         internal void LogEdgeHash(Dictionary<int, List<IndexedEdge>> hash)
         {
@@ -191,24 +194,24 @@ namespace SourceAFIS
                 }).ToList());
         }
 
-        volatile bool MatcherOffered;
-        volatile bool AcceptingRootPairs;
-        volatile bool AcceptingPairing;
-        volatile bool AcceptingBestPairing;
-        volatile bool AcceptingScore;
-        volatile bool AcceptingBestScore;
-        volatile bool AcceptingBestMatch;
+        volatile bool matcherOffered;
+        volatile bool acceptsRootPairs;
+        volatile bool acceptsPairing;
+        volatile bool acceptsBestPairing;
+        volatile bool acceptsScore;
+        volatile bool acceptsBestScore;
+        volatile bool acceptsBestMatch;
         void OfferMatcher()
         {
-            if (!MatcherOffered)
+            if (!matcherOffered)
             {
-                AcceptingRootPairs = Accepts("root-pairs");
-                AcceptingPairing = Accepts("pairing");
-                AcceptingBestPairing = Accepts("best-pairing");
-                AcceptingScore = Accepts("score");
-                AcceptingBestScore = Accepts("best-score");
-                AcceptingBestMatch = Accepts("best-match");
-                MatcherOffered = true;
+                acceptsRootPairs = Accepts("root-pairs");
+                acceptsPairing = Accepts("pairing");
+                acceptsBestPairing = Accepts("best-pairing");
+                acceptsScore = Accepts("score");
+                acceptsBestScore = Accepts("best-score");
+                acceptsBestMatch = Accepts("best-match");
+                matcherOffered = true;
             }
         }
         // Expose fast method to check whether pairing should be logged, so that we can easily skip support edge logging.
@@ -216,56 +219,56 @@ namespace SourceAFIS
         internal bool AcceptsPairing()
         {
             OfferMatcher();
-            return AcceptingPairing;
+            return acceptsPairing;
         }
         internal bool AcceptsBestPairing()
         {
             OfferMatcher();
-            return AcceptingBestPairing;
+            return acceptsBestPairing;
         }
         internal bool AcceptsBestScore()
         {
             OfferMatcher();
-            return AcceptingBestScore;
+            return acceptsBestScore;
         }
         // https://sourceafis.machinezoo.com/transparency/roots
         internal void LogRootPairs(int count, MinutiaPair[] roots)
         {
             OfferMatcher();
-            if (AcceptingRootPairs)
+            if (acceptsRootPairs)
                 Log("roots", () => (from p in roots select new ConsistentMinutiaPair() { Probe = p.Probe, Candidate = p.Candidate }).Take(count).ToList());
         }
         // https://sourceafis.machinezoo.com/transparency/pairing
         internal void LogPairing(PairingGraph pairing)
         {
             OfferMatcher();
-            if (AcceptingPairing)
+            if (acceptsPairing)
                 Log("pairing", new ConsistentPairingGraph(pairing.Count, pairing.Tree, pairing.SupportEdges));
         }
         internal void LogBestPairing(PairingGraph pairing)
         {
             OfferMatcher();
-            if (AcceptingBestPairing)
+            if (acceptsBestPairing)
                 Log("best-pairing", new ConsistentPairingGraph(pairing.Count, pairing.Tree, pairing.SupportEdges));
         }
         // https://sourceafis.machinezoo.com/transparency/score
         internal void LogScore(ScoringData score)
         {
             OfferMatcher();
-            if (AcceptingScore)
+            if (acceptsScore)
                 Log("score", score);
         }
         internal void LogBestScore(ScoringData score)
         {
             OfferMatcher();
-            if (AcceptingBestScore)
+            if (acceptsBestScore)
                 Log("best-score", score);
         }
         // https://sourceafis.machinezoo.com/transparency/best-match
         internal void LogBestMatch(int nth)
         {
             OfferMatcher();
-            if (AcceptingBestMatch)
+            if (acceptsBestMatch)
                 Take("best-match", "text/plain", Encoding.UTF8.GetBytes(nth.ToString()));
         }
     }

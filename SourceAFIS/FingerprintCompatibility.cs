@@ -12,6 +12,6 @@ namespace SourceAFIS
         /// This is useful during upgrades when the application has to deal
         /// with possible template incompatibility between versions.
         /// </remarks>
-        public static String Version { get { return typeof(FingerprintCompatibility).Assembly.GetName().Version.ToString(3); } }
+        public static String Version => typeof(FingerprintCompatibility).Assembly.GetName().Version.ToString(3);
     }
 }

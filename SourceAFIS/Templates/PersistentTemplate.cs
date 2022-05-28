@@ -16,9 +16,7 @@ namespace SourceAFIS.Templates
         public double[] Directions;
         public string Types;
 
-        public PersistentTemplate()
-        {
-        }
+        public PersistentTemplate() { }
         public PersistentTemplate(MutableTemplate mutable)
         {
             Version = FingerprintCompatibility.Version;

@@ -6,17 +6,17 @@ namespace SourceAFIS.Primitives
 {
     public class CircularArrayTest
     {
-        CircularArray<Object> A;
+        CircularArray<Object> a;
 
         [SetUp]
         public void SetUp()
         {
-            A = new CircularArray<Object>(16);
-            A.Insert(0, 16);
-            A.Remove(0, 10);
-            A.Insert(A.Size, 4);
-            for (int i = 0; i < A.Size; ++i)
-                A[i] = i + 1;
+            a = new CircularArray<Object>(16);
+            a.Insert(0, 16);
+            a.Remove(0, 10);
+            a.Insert(a.Size, 4);
+            for (int i = 0; i < a.Size; ++i)
+                a[i] = i + 1;
         }
         [Test]
         public void Constructor()
@@ -29,168 +29,159 @@ namespace SourceAFIS.Primitives
         [Test]
         public void ValidateItemIndex()
         {
-            A.ValidateItemIndex(0);
-            A.ValidateItemIndex(5);
-            A.ValidateItemIndex(9);
-            Assert.Throws<ArgumentOutOfRangeException>(() => A.ValidateItemIndex(-1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => A.ValidateItemIndex(10));
+            a.ValidateItemIndex(0);
+            a.ValidateItemIndex(5);
+            a.ValidateItemIndex(9);
+            Assert.Throws<ArgumentOutOfRangeException>(() => a.ValidateItemIndex(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => a.ValidateItemIndex(10));
         }
         [Test]
         public void ValidateCursorIndex()
         {
-            A.ValidateCursorIndex(0);
-            A.ValidateCursorIndex(4);
-            A.ValidateCursorIndex(10);
-            Assert.Throws<ArgumentOutOfRangeException>(() => A.ValidateCursorIndex(-1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => A.ValidateCursorIndex(11));
+            a.ValidateCursorIndex(0);
+            a.ValidateCursorIndex(4);
+            a.ValidateCursorIndex(10);
+            Assert.Throws<ArgumentOutOfRangeException>(() => a.ValidateCursorIndex(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => a.ValidateCursorIndex(11));
         }
         [Test]
         public void Location()
         {
-            Assert.AreEqual(10, A.Location(0));
-            Assert.AreEqual(14, A.Location(4));
-            Assert.AreEqual(15, A.Location(5));
-            Assert.AreEqual(0, A.Location(6));
-            Assert.AreEqual(2, A.Location(8));
+            Assert.AreEqual(10, a.Location(0));
+            Assert.AreEqual(14, a.Location(4));
+            Assert.AreEqual(15, a.Location(5));
+            Assert.AreEqual(0, a.Location(6));
+            Assert.AreEqual(2, a.Location(8));
         }
         [Test]
         public void Enlarge()
         {
-            A.Enlarge();
-            Assert.AreEqual(0, A.Head);
-            Assert.AreEqual(10, A.Size);
-            Assert.AreEqual(32, A.Array.Length);
+            a.Enlarge();
+            Assert.AreEqual(0, a.Head);
+            Assert.AreEqual(10, a.Size);
+            Assert.AreEqual(32, a.Array.Length);
             for (int i = 0; i < 10; ++i)
-                Assert.AreEqual(i + 1, A[i]);
+                Assert.AreEqual(i + 1, a[i]);
         }
         [Test]
         public void Get()
         {
-            Assert.AreEqual(1, A[0]);
-            Assert.AreEqual(6, A[5]);
-            Assert.AreEqual(10, A[9]);
+            Assert.AreEqual(1, a[0]);
+            Assert.AreEqual(6, a[5]);
+            Assert.AreEqual(10, a[9]);
             Object discarded;
-            Assert.Throws<ArgumentOutOfRangeException>(() => discarded = A[A.Size]);
+            Assert.Throws<ArgumentOutOfRangeException>(() => discarded = a[a.Size]);
         }
         [Test]
         public void Set()
         {
-            A[4] = 100;
-            A[8] = 200;
-            Assert.AreEqual(100, A[4]);
-            Assert.AreEqual(200, A[8]);
-            Assert.AreEqual(100, A.Array[14]);
-            Assert.AreEqual(200, A.Array[2]);
-            Assert.Throws<ArgumentOutOfRangeException>(() => A[A.Size] = 100);
+            a[4] = 100;
+            a[8] = 200;
+            Assert.AreEqual(100, a[4]);
+            Assert.AreEqual(200, a[8]);
+            Assert.AreEqual(100, a.Array[14]);
+            Assert.AreEqual(200, a.Array[2]);
+            Assert.Throws<ArgumentOutOfRangeException>(() => a[a.Size] = 100);
         }
         [Test]
         public void MoveLeft()
         {
-            A.Move(4, 2, 5);
-            Assert.AreEqual(new Object[] { 9, 8, 9, 10, null, null, null, null, null, null, 1, 2, 5, 6, 7, 8 }, A.Array);
+            a.Move(4, 2, 5);
+            Assert.AreEqual(new Object[] { 9, 8, 9, 10, null, null, null, null, null, null, 1, 2, 5, 6, 7, 8 }, a.Array);
         }
         [Test]
         public void MoveRight()
         {
-            A.Move(2, 4, 5);
-            Assert.AreEqual(new Object[] { 5, 6, 7, 10, null, null, null, null, null, null, 1, 2, 3, 4, 3, 4 }, A.Array);
+            a.Move(2, 4, 5);
+            Assert.AreEqual(new Object[] { 5, 6, 7, 10, null, null, null, null, null, null, 1, 2, 3, 4, 3, 4 }, a.Array);
         }
         [Test]
         public void InsertEnd()
         {
-            A.Insert(A.Size, 3);
-            Assert.AreEqual(10, A.Head);
-            Assert.AreEqual(13, A.Size);
-            Assert.AreEqual(new Object[] { 7, 8, 9, 10, null, null, null, null, null, null, 1, 2, 3, 4, 5, 6 }, A.Array);
+            a.Insert(a.Size, 3);
+            Assert.AreEqual(10, a.Head);
+            Assert.AreEqual(13, a.Size);
+            Assert.AreEqual(new Object[] { 7, 8, 9, 10, null, null, null, null, null, null, 1, 2, 3, 4, 5, 6 }, a.Array);
         }
         [Test]
         public void InsertRight()
         {
-            A.Insert(8, 3);
-            Assert.AreEqual(10, A.Head);
-            Assert.AreEqual(13, A.Size);
-            Assert.AreEqual(new Object[] { 7, 8, null, null, null, 9, 10, null, null, null, 1, 2, 3, 4, 5, 6 }, A.Array);
+            a.Insert(8, 3);
+            Assert.AreEqual(10, a.Head);
+            Assert.AreEqual(13, a.Size);
+            Assert.AreEqual(new Object[] { 7, 8, null, null, null, 9, 10, null, null, null, 1, 2, 3, 4, 5, 6 }, a.Array);
         }
         [Test]
         public void InsertLeft()
         {
-            A.Insert(2, 3);
-            Assert.AreEqual(7, A.Head);
-            Assert.AreEqual(13, A.Size);
-            Assert.AreEqual(new Object[] { 7, 8, 9, 10, null, null, null, 1, 2, null, null, null, 3, 4, 5, 6 }, A.Array);
+            a.Insert(2, 3);
+            Assert.AreEqual(7, a.Head);
+            Assert.AreEqual(13, a.Size);
+            Assert.AreEqual(new Object[] { 7, 8, 9, 10, null, null, null, 1, 2, null, null, null, 3, 4, 5, 6 }, a.Array);
         }
         [Test]
         public void InsertFront()
         {
-            A.Insert(0, 3);
-            Assert.AreEqual(7, A.Head);
-            Assert.AreEqual(13, A.Size);
-            Assert.AreEqual(new Object[] { 7, 8, 9, 10, null, null, null, null, null, null, 1, 2, 3, 4, 5, 6 }, A.Array);
+            a.Insert(0, 3);
+            Assert.AreEqual(7, a.Head);
+            Assert.AreEqual(13, a.Size);
+            Assert.AreEqual(new Object[] { 7, 8, 9, 10, null, null, null, null, null, null, 1, 2, 3, 4, 5, 6 }, a.Array);
         }
         [Test]
         public void InsertBounds()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => A.Insert(-1, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => a.Insert(-1, 1));
         }
         [Test]
         public void InsertNegative()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => A.Insert(5, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => a.Insert(5, -1));
         }
         [Test]
         public void InsertEnlarge()
         {
-            A.Insert(A.Size, 200);
-            Assert.AreEqual(0, A.Head);
-            Assert.AreEqual(210, A.Size);
-            Assert.AreEqual(256, A.Array.Length);
+            a.Insert(a.Size, 200);
+            Assert.AreEqual(0, a.Head);
+            Assert.AreEqual(210, a.Size);
+            Assert.AreEqual(256, a.Array.Length);
         }
         [Test]
         public void RemoveEnd()
         {
-            A.Remove(7, 3);
-            Assert.AreEqual(10, A.Head);
-            Assert.AreEqual(7, A.Size);
-            Assert.AreEqual(new Object[] { 7, null, null, null, null, null, null, null, null, null, 1, 2, 3, 4, 5, 6 }, A.Array);
+            a.Remove(7, 3);
+            Assert.AreEqual(10, a.Head);
+            Assert.AreEqual(7, a.Size);
+            Assert.AreEqual(new Object[] { 7, null, null, null, null, null, null, null, null, null, 1, 2, 3, 4, 5, 6 }, a.Array);
         }
         [Test]
         public void RemoveRight()
         {
-            A.Remove(4, 3);
-            Assert.AreEqual(10, A.Head);
-            Assert.AreEqual(7, A.Size);
-            Assert.AreEqual(new Object[] { 10, null, null, null, null, null, null, null, null, null, 1, 2, 3, 4, 8, 9 }, A.Array);
+            a.Remove(4, 3);
+            Assert.AreEqual(10, a.Head);
+            Assert.AreEqual(7, a.Size);
+            Assert.AreEqual(new Object[] { 10, null, null, null, null, null, null, null, null, null, 1, 2, 3, 4, 8, 9 }, a.Array);
         }
         [Test]
         public void RemoveLeft()
         {
-            A.Remove(2, 3);
-            Assert.AreEqual(13, A.Head);
-            Assert.AreEqual(7, A.Size);
-            Assert.AreEqual(new Object[] { 7, 8, 9, 10, null, null, null, null, null, null, null, null, null, 1, 2, 6 }, A.Array);
+            a.Remove(2, 3);
+            Assert.AreEqual(13, a.Head);
+            Assert.AreEqual(7, a.Size);
+            Assert.AreEqual(new Object[] { 7, 8, 9, 10, null, null, null, null, null, null, null, null, null, 1, 2, 6 }, a.Array);
         }
         [Test]
         public void RemoveFront()
         {
-            A.Remove(0, 3);
-            Assert.AreEqual(13, A.Head);
-            Assert.AreEqual(7, A.Size);
-            Assert.AreEqual(new Object[] { 7, 8, 9, 10, null, null, null, null, null, null, null, null, null, 4, 5, 6 }, A.Array);
+            a.Remove(0, 3);
+            Assert.AreEqual(13, a.Head);
+            Assert.AreEqual(7, a.Size);
+            Assert.AreEqual(new Object[] { 7, 8, 9, 10, null, null, null, null, null, null, null, null, null, 4, 5, 6 }, a.Array);
         }
         [Test]
-        public void RemoveBoundsLeft()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => A.Remove(-1, 3));
-        }
+        public void RemoveBoundsLeft() => Assert.Throws<ArgumentOutOfRangeException>(() => a.Remove(-1, 3));
         [Test]
-        public void RemoveBoundsRight()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => A.Remove(8, 3));
-        }
+        public void RemoveBoundsRight() => Assert.Throws<ArgumentOutOfRangeException>(() => a.Remove(8, 3));
         [Test]
-        public void RemoveNegative()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => A.Remove(5, -1));
-        }
+        public void RemoveNegative() => Assert.Throws<ArgumentOutOfRangeException>(() => a.Remove(5, -1));
     }
 }

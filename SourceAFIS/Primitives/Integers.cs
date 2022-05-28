@@ -4,8 +4,8 @@ namespace SourceAFIS.Primitives
 {
     static class Integers
     {
-        public static int Sq(int value) { return value * value; }
-        public static int RoundUpDiv(int dividend, int divisor) { return (dividend + divisor - 1) / divisor; }
+        public static int Sq(int value) => value * value;
+        public static int RoundUpDiv(int dividend, int divisor) => (dividend + divisor - 1) / divisor;
         // https://stackoverflow.com/questions/10439242/count-leading-zeroes-in-an-int32
         // Modified for unsigned values.
         // .NET Core 3 has BitOperations.PopCount() and BitOperations.LeadingZeroCount().

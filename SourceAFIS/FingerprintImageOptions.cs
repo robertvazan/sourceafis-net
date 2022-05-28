@@ -12,7 +12,7 @@ namespace SourceAFIS
     /// <seealso cref="FingerprintImage" />
     public class FingerprintImageOptions
     {
-        double DpiValue = 500;
+        double dpi = 500;
 
         /// <summary>Gets or sets image resolution.</summary>
         /// <value>Image resolution in DPI (dots per inch), usually around 500. Default DPI is 500.</value>
@@ -23,12 +23,12 @@ namespace SourceAFIS
         /// <exception cref="ArgumentOutOfRangeException">Thrown when DPI is non-positive, impossibly low, or impossibly high.</exception>
         public double Dpi
         {
-            get { return DpiValue; }
+            get => dpi;
             set
             {
                 if (value < 20 || value > 20_000)
                     throw new ArgumentOutOfRangeException();
-                DpiValue = value;
+                dpi = value;
             }
         }
     }

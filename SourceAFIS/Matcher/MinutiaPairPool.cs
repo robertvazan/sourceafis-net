@@ -5,15 +5,15 @@ namespace SourceAFIS.Matcher
 {
     class MinutiaPairPool
     {
-        MinutiaPair[] Pool = new MinutiaPair[1];
-        int Pooled;
+        MinutiaPair[] pool = new MinutiaPair[1];
+        int pooled;
         public MinutiaPair Allocate()
         {
-            if (Pooled > 0)
+            if (pooled > 0)
             {
-                --Pooled;
-                var pair = Pool[Pooled];
-                Pool[Pooled] = null;
+                --pooled;
+                var pair = pool[pooled];
+                pool[pooled] = null;
                 return pair;
             }
             else
@@ -21,15 +21,15 @@ namespace SourceAFIS.Matcher
         }
         public void Release(MinutiaPair pair)
         {
-            if (Pooled >= Pool.Length)
-                Array.Resize(ref Pool, 2 * Pool.Length);
+            if (pooled >= pool.Length)
+                Array.Resize(ref pool, 2 * pool.Length);
             pair.Probe = 0;
             pair.Candidate = 0;
             pair.ProbeRef = 0;
             pair.CandidateRef = 0;
             pair.Distance = 0;
             pair.SupportingEdges = 0;
-            Pool[Pooled] = pair;
+            pool[pooled] = pair;
         }
     }
 }

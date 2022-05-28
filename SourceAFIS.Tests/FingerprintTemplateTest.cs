@@ -10,18 +10,15 @@ namespace SourceAFIS
 {
     public class FingerprintTemplateTest
     {
-        public static FingerprintTemplate Probe() { return new FingerprintTemplate(FingerprintImageTest.Probe()); }
-        public static FingerprintTemplate Matching() { return new FingerprintTemplate(FingerprintImageTest.Matching()); }
-        public static FingerprintTemplate Nonmatching() { return new FingerprintTemplate(FingerprintImageTest.Nonmatching()); }
-        public static FingerprintTemplate ProbeGray() { return new FingerprintTemplate(FingerprintImageTest.ProbeGray()); }
-        public static FingerprintTemplate MatchingGray() { return new FingerprintTemplate(FingerprintImageTest.MatchingGray()); }
-        public static FingerprintTemplate NonmatchingGray() { return new FingerprintTemplate(FingerprintImageTest.NonmatchingGray()); }
+        public static FingerprintTemplate Probe() => new FingerprintTemplate(FingerprintImageTest.Probe());
+        public static FingerprintTemplate Matching() => new FingerprintTemplate(FingerprintImageTest.Matching());
+        public static FingerprintTemplate Nonmatching() => new FingerprintTemplate(FingerprintImageTest.Nonmatching());
+        public static FingerprintTemplate ProbeGray() => new FingerprintTemplate(FingerprintImageTest.ProbeGray());
+        public static FingerprintTemplate MatchingGray() => new FingerprintTemplate(FingerprintImageTest.MatchingGray());
+        public static FingerprintTemplate NonmatchingGray() => new FingerprintTemplate(FingerprintImageTest.NonmatchingGray());
 
         [Test]
-        public void Constructor()
-        {
-            Probe();
-        }
+        public void Constructor() => Probe();
         [Test]
         public void RoundTripSerialization()
         {

@@ -14,10 +14,7 @@ namespace SourceAFIS.Primitives
             Assert.AreEqual(3, p.Y);
         }
         [Test]
-        public void Area()
-        {
-            Assert.AreEqual(6, new IntPoint(2, 3).Area);
-        }
+        public void Area() => Assert.AreEqual(6, new IntPoint(2, 3).Area);
         [Test]
         public void LengthSq()
         {
@@ -124,9 +121,6 @@ namespace SourceAFIS.Primitives
             Assert.AreEqual(l, new IntPoint(x1, y1).LineTo(new IntPoint(x2, y2)));
         }
         [Test]
-        public void ToStringReadable()
-        {
-            Assert.AreEqual("[2,3]", new IntPoint(2, 3).ToString());
-        }
+        public void ToStringReadable() => Assert.AreEqual("[2,3]", new IntPoint(2, 3).ToString());
     }
 }

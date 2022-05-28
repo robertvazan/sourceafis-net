@@ -13,9 +13,6 @@ namespace SourceAFIS.Primitives
             Assert.AreEqual(10, r.End);
         }
         [Test]
-        public void Length()
-        {
-            Assert.AreEqual(7, new IntRange(3, 10).Length);
-        }
+        public void Length() => Assert.AreEqual(7, new IntRange(3, 10).Length);
     }
 }

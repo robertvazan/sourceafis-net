@@ -7,54 +7,54 @@ namespace SourceAFIS.Primitives
     {
         public readonly int Width;
         public readonly int Height;
-        readonly bool[] Cells;
+        readonly bool[] cells;
 
-        public IntPoint Size { get { return new IntPoint(Width, Height); } }
+        public IntPoint Size => new IntPoint(Width, Height);
 
         public BooleanMatrix(int width, int height)
         {
             Width = width;
             Height = height;
-            Cells = new bool[width * height];
+            cells = new bool[width * height];
         }
         public BooleanMatrix(IntPoint size) : this(size.X, size.Y) { }
         public BooleanMatrix(BooleanMatrix other)
             : this(other.Size)
         {
-            for (int i = 0; i < Cells.Length; ++i)
-                Cells[i] = other.Cells[i];
+            for (int i = 0; i < cells.Length; ++i)
+                cells[i] = other.cells[i];
         }
 
         public bool this[int x, int y]
         {
-            get { return Cells[Offset(x, y)]; }
-            set { Cells[Offset(x, y)] = value; }
+            get => cells[Offset(x, y)];
+            set => cells[Offset(x, y)] = value;
         }
         public bool this[IntPoint at]
         {
-            get { return this[at.X, at.Y]; }
-            set { this[at.X, at.Y] = value; }
+            get => this[at.X, at.Y];
+            set => this[at.X, at.Y] = value;
         }
 
         public bool Get(int x, int y, bool fallback)
         {
             if (x < 0 || y < 0 || x >= Width || y >= Height)
                 return fallback;
-            return Cells[Offset(x, y)];
+            return cells[Offset(x, y)];
         }
-        public bool Get(IntPoint at, bool fallback) { return Get(at.X, at.Y, fallback); }
+        public bool Get(IntPoint at, bool fallback) => Get(at.X, at.Y, fallback);
         public void Invert()
         {
-            for (int i = 0; i < Cells.Length; ++i)
-                Cells[i] = !Cells[i];
+            for (int i = 0; i < cells.Length; ++i)
+                cells[i] = !cells[i];
         }
         public void Merge(BooleanMatrix other)
         {
             if (other.Width != Width || other.Height != Height)
                 throw new ArgumentException();
-            for (int i = 0; i < Cells.Length; ++i)
-                Cells[i] |= other.Cells[i];
+            for (int i = 0; i < cells.Length; ++i)
+                cells[i] |= other.cells[i];
         }
-        int Offset(int x, int y) { return y * Width + x; }
+        int Offset(int x, int y) => y * Width + x;
     }
 }

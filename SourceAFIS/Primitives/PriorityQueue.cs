@@ -7,53 +7,53 @@ namespace SourceAFIS.Primitives
     class PriorityQueue<T>
         where T : class
     {
-        readonly Comparer<T> Comparer;
-        T[] Heap;
-        int Size;
+        readonly Comparer<T> comparer;
+        T[] heap;
+        int size;
 
-        public int Count { get { return Size; } }
+        public int Count => size;
 
         public PriorityQueue(Comparer<T> comparer)
         {
-            Comparer = comparer;
-            Heap = new T[1];
+            this.comparer = comparer;
+            heap = new T[1];
         }
         public PriorityQueue() : this(Comparer<T>.Default) { }
 
         public void Clear()
         {
-            for (int i = 0; i < Size; ++i)
-                Heap[i] = null;
-            Size = 0;
+            for (int i = 0; i < size; ++i)
+                heap[i] = null;
+            size = 0;
         }
         void Enlarge()
         {
-            T[] larger = new T[2 * Heap.Length];
-            Array.Copy(Heap, larger, Heap.Length);
-            Heap = larger;
+            T[] larger = new T[2 * heap.Length];
+            Array.Copy(heap, larger, heap.Length);
+            heap = larger;
         }
-        static int Left(int parent) { return 2 * parent + 1; }
-        static int Right(int parent) { return 2 * parent + 2; }
-        static int Parent(int child) { return child - 1 >> 1; }
+        static int Left(int parent) => 2 * parent + 1;
+        static int Right(int parent) => 2 * parent + 2;
+        static int Parent(int child) => child - 1 >> 1;
         void BubbleUp(int bottom)
         {
             for (int child = bottom; child > 0; child = Parent(child))
             {
                 int parent = Parent(child);
-                if (Comparer.Compare(Heap[parent], Heap[child]) < 0)
+                if (comparer.Compare(heap[parent], heap[child]) < 0)
                     break;
-                T tmp = Heap[child];
-                Heap[child] = Heap[parent];
-                Heap[parent] = tmp;
+                T tmp = heap[child];
+                heap[child] = heap[parent];
+                heap[parent] = tmp;
             }
         }
         public void Add(T item)
         {
-            if (Size >= Heap.Length)
+            if (size >= heap.Length)
                 Enlarge();
-            Heap[Size] = item;
-            BubbleUp(Size);
-            ++Size;
+            heap[size] = item;
+            BubbleUp(size);
+            ++size;
         }
         void BubbleDown()
         {
@@ -62,34 +62,34 @@ namespace SourceAFIS.Primitives
             {
                 int left = Left(parent);
                 int right = Right(parent);
-                if (left >= Size)
+                if (left >= size)
                     break;
                 int child;
-                if (right >= Size || Comparer.Compare(Heap[left], Heap[right]) < 0)
+                if (right >= size || comparer.Compare(heap[left], heap[right]) < 0)
                     child = left;
                 else
                     child = right;
-                if (Comparer.Compare(Heap[parent], Heap[child]) < 0)
+                if (comparer.Compare(heap[parent], heap[child]) < 0)
                     break;
-                T tmp = Heap[parent];
-                Heap[parent] = Heap[child];
-                Heap[child] = tmp;
+                T tmp = heap[parent];
+                heap[parent] = heap[child];
+                heap[child] = tmp;
                 parent = child;
             }
         }
         public T Peek()
         {
-            if (Size <= 0)
+            if (size <= 0)
                 throw new InvalidOperationException();
-            return Heap[0];
+            return heap[0];
         }
         public T Remove()
         {
-            if (Size <= 0)
+            if (size <= 0)
                 throw new InvalidOperationException();
-            T result = Heap[0];
-            Heap[0] = Heap[Size - 1];
-            --Size;
+            T result = heap[0];
+            heap[0] = heap[size - 1];
+            --size;
             BubbleDown();
             return result;
         }

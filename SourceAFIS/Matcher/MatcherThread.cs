@@ -8,7 +8,7 @@ namespace SourceAFIS.Matcher
     class MatcherThread
     {
         [ThreadStatic]
-        static MatcherThread CurrentInstance;
+        static MatcherThread current;
         public readonly MinutiaPairPool Pool = new MinutiaPairPool();
         public readonly RootList Roots;
         public readonly PairingGraph Pairing;
@@ -18,9 +18,9 @@ namespace SourceAFIS.Matcher
         {
             get
             {
-                if (CurrentInstance == null)
-                    CurrentInstance = new MatcherThread();
-                return CurrentInstance;
+                if (current == null)
+                    current = new MatcherThread();
+                return current;
             }
         }
         public MatcherThread()
@@ -28,9 +28,6 @@ namespace SourceAFIS.Matcher
             Roots = new RootList(Pool);
             Pairing = new PairingGraph(Pool);
         }
-        public static void Kill()
-        {
-            CurrentInstance = null;
-        }
+        public static void Kill() => current = null;
     }
 }

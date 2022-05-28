@@ -25,50 +25,23 @@ namespace SourceAFIS.Primitives
             Assert.AreEqual(3, r.Height);
         }
         [Test]
-        public void Left()
-        {
-            Assert.AreEqual(2, new IntRect(2, 3, 4, 5).Left);
-        }
+        public void Left() => Assert.AreEqual(2, new IntRect(2, 3, 4, 5).Left);
         [Test]
-        public void Right()
-        {
-            Assert.AreEqual(6, new IntRect(2, 3, 4, 5).Right);
-        }
+        public void Right() => Assert.AreEqual(6, new IntRect(2, 3, 4, 5).Right);
         [Test]
-        public void Bottom()
-        {
-            Assert.AreEqual(3, new IntRect(2, 3, 4, 5).Top);
-        }
+        public void Bottom() => Assert.AreEqual(3, new IntRect(2, 3, 4, 5).Top);
         [Test]
-        public void Top()
-        {
-            Assert.AreEqual(8, new IntRect(2, 3, 4, 5).Bottom);
-        }
+        public void Top() => Assert.AreEqual(8, new IntRect(2, 3, 4, 5).Bottom);
         [Test]
-        public void Area()
-        {
-            Assert.AreEqual(20, new IntRect(2, 3, 4, 5).Area);
-        }
+        public void Area() => Assert.AreEqual(20, new IntRect(2, 3, 4, 5).Area);
         [Test]
-        public void BetweenCoordinates()
-        {
-            Assert.AreEqual(new IntRect(2, 3, 4, 5), IntRect.Between(2, 3, 6, 8));
-        }
+        public void BetweenCoordinates() => Assert.AreEqual(new IntRect(2, 3, 4, 5), IntRect.Between(2, 3, 6, 8));
         [Test]
-        public void BetweenPoints()
-        {
-            Assert.AreEqual(new IntRect(2, 3, 4, 5), IntRect.Between(new IntPoint(2, 3), new IntPoint(6, 8)));
-        }
+        public void BetweenPoints() => Assert.AreEqual(new IntRect(2, 3, 4, 5), IntRect.Between(new IntPoint(2, 3), new IntPoint(6, 8)));
         [Test]
-        public void AroundCoordinates()
-        {
-            Assert.AreEqual(new IntRect(2, 3, 5, 5), IntRect.Around(4, 5, 2));
-        }
+        public void AroundCoordinates() => Assert.AreEqual(new IntRect(2, 3, 5, 5), IntRect.Around(4, 5, 2));
         [Test]
-        public void AroundPoint()
-        {
-            Assert.AreEqual(new IntRect(2, 3, 5, 5), IntRect.Around(new IntPoint(4, 5), 2));
-        }
+        public void AroundPoint() => Assert.AreEqual(new IntRect(2, 3, 5, 5), IntRect.Around(new IntPoint(4, 5), 2));
         [Test]
         public void Center()
         {
@@ -77,10 +50,7 @@ namespace SourceAFIS.Primitives
             Assert.AreEqual(new IntPoint(2, 3), new IntRect(2, 3, 0, 0).Center);
         }
         [Test]
-        public void Move()
-        {
-            Assert.AreEqual(new IntRect(12, 23, 4, 5), new IntRect(2, 3, 4, 5).Move(new IntPoint(10, 20)));
-        }
+        public void Move() => Assert.AreEqual(new IntRect(12, 23, 4, 5), new IntRect(2, 3, 4, 5).Move(new IntPoint(10, 20)));
         [Test]
         public void Intersect()
         {
@@ -105,9 +75,6 @@ namespace SourceAFIS.Primitives
                 Assert.Fail();
         }
         [Test]
-        public void ToStringReadable()
-        {
-            Assert.AreEqual("10x20 @ [2,3]", new IntRect(2, 3, 10, 20).ToString());
-        }
+        public void ToStringReadable() => Assert.AreEqual("10x20 @ [2,3]", new IntRect(2, 3, 10, 20).ToString());
     }
 }

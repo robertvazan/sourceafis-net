@@ -10,10 +10,7 @@ namespace SourceAFIS.Matcher
         public int Count;
         public readonly MinutiaPair[] Pairs = new MinutiaPair[Parameters.MaxTriedRoots];
         public readonly HashSet<int> Duplicates = new HashSet<int>();
-        public RootList(MinutiaPairPool pool)
-        {
-            Pool = pool;
-        }
+        public RootList(MinutiaPairPool pool) => Pool = pool;
         public void Add(MinutiaPair pair)
         {
             Pairs[Count] = pair;

@@ -6,9 +6,9 @@ using SourceAFIS.Primitives;
 
 namespace SourceAFIS.Matcher
 {
-    class EdgeSpider
+    static class EdgeSpider
     {
-        static readonly double COMPLEMENTARY_MAX_ANGLE_ERROR = DoubleAngle.Complementary(Parameters.MaxAngleError);
+        static readonly double ComplementaryMaxAngleError = DoubleAngle.Complementary(Parameters.MaxAngleError);
         static List<MinutiaPair> MatchPairs(NeighborEdge[] pstar, NeighborEdge[] cstar, MinutiaPairPool pool)
         {
             var results = new List<MinutiaPair>();
@@ -27,10 +27,10 @@ namespace SourceAFIS.Matcher
                 {
                     var pedge = pstar[pindex];
                     double rdiff = DoubleAngle.Difference(pedge.ReferenceAngle, cedge.ReferenceAngle);
-                    if (rdiff <= Parameters.MaxAngleError || rdiff >= COMPLEMENTARY_MAX_ANGLE_ERROR)
+                    if (rdiff <= Parameters.MaxAngleError || rdiff >= ComplementaryMaxAngleError)
                     {
                         double ndiff = DoubleAngle.Difference(pedge.NeighborAngle, cedge.NeighborAngle);
-                        if (ndiff <= Parameters.MaxAngleError || ndiff >= COMPLEMENTARY_MAX_ANGLE_ERROR)
+                        if (ndiff <= Parameters.MaxAngleError || ndiff >= ComplementaryMaxAngleError)
                         {
                             var pair = pool.Allocate();
                             pair.Probe = pedge.Neighbor;

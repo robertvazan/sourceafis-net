@@ -11,6 +11,6 @@ namespace SourceAFIS.Matcher
         public int Distance;
         public int SupportingEdges;
 
-        public override string ToString() { return string.Format("{0}<->{1} @ {2}<->{3} #{4}", Probe, Candidate, ProbeRef, CandidateRef, SupportingEdges); }
+        public override string ToString() => string.Format("{0}<->{1} @ {2}<->{3} #{4}", Probe, Candidate, ProbeRef, CandidateRef, SupportingEdges);
     }
 }

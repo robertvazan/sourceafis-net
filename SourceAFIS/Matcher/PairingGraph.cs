@@ -12,10 +12,7 @@ namespace SourceAFIS.Matcher
         public MinutiaPair[] ByCandidate = new MinutiaPair[1];
         public readonly List<MinutiaPair> SupportEdges = new List<MinutiaPair>();
         public bool SupportEnabled;
-        public PairingGraph(MinutiaPairPool pool)
-        {
-            Pool = pool;
-        }
+        public PairingGraph(MinutiaPairPool pool) => Pool = pool;
         public void ReserveProbe(FingerprintMatcher matcher)
         {
             int capacity = matcher.Template.Minutiae.Length;

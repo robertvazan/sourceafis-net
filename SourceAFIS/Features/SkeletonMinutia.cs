@@ -9,7 +9,7 @@ namespace SourceAFIS.Features
         public readonly IntPoint Position;
         public readonly List<SkeletonRidge> Ridges = new List<SkeletonRidge>();
 
-        public SkeletonMinutia(IntPoint position) { Position = position; }
+        public SkeletonMinutia(IntPoint position) => Position = position;
 
         public void AttachStart(SkeletonRidge ridge)
         {

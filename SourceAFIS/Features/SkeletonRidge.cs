@@ -9,37 +9,37 @@ namespace SourceAFIS.Features
     {
         public readonly SkeletonRidge Reversed;
         public readonly IList<IntPoint> Points;
-        SkeletonMinutia StartMinutia;
-        SkeletonMinutia EndMinutia;
+        SkeletonMinutia start;
+        SkeletonMinutia end;
 
         public SkeletonMinutia Start
         {
-            get { return StartMinutia; }
+            get => start;
             set
             {
-                if (StartMinutia != value)
+                if (start != value)
                 {
-                    if (StartMinutia != null)
+                    if (start != null)
                     {
-                        SkeletonMinutia detachFrom = StartMinutia;
-                        StartMinutia = null;
+                        SkeletonMinutia detachFrom = start;
+                        start = null;
                         detachFrom.DetachStart(this);
                     }
-                    StartMinutia = value;
-                    if (StartMinutia != null)
-                        StartMinutia.AttachStart(this);
-                    Reversed.EndMinutia = value;
+                    start = value;
+                    if (start != null)
+                        start.AttachStart(this);
+                    Reversed.end = value;
                 }
             }
         }
         public SkeletonMinutia End
         {
-            get { return EndMinutia; }
+            get => end;
             set
             {
-                if (EndMinutia != value)
+                if (end != value)
                 {
-                    EndMinutia = value;
+                    end = value;
                     Reversed.Start = value;
                 }
             }

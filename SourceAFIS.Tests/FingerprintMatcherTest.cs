@@ -17,9 +17,9 @@ namespace SourceAFIS
                 .Match(candidate);
             Assert.Less(score, 20);
         }
-        [Test] public void MatchingPair() { Matching(FingerprintTemplateTest.Probe(), FingerprintTemplateTest.Matching()); }
-        [Test] public void NonmatchingPair() { Nonmatching(FingerprintTemplateTest.Probe(), FingerprintTemplateTest.Nonmatching()); }
-        [Test] public void MatchingGray() { Matching(FingerprintTemplateTest.ProbeGray(), FingerprintTemplateTest.MatchingGray()); }
-        [Test] public void NonmatchingGray() { Nonmatching(FingerprintTemplateTest.ProbeGray(), FingerprintTemplateTest.NonmatchingGray()); }
+        [Test] public void MatchingPair() => Matching(FingerprintTemplateTest.Probe(), FingerprintTemplateTest.Matching());
+        [Test] public void NonmatchingPair() => Nonmatching(FingerprintTemplateTest.Probe(), FingerprintTemplateTest.Nonmatching());
+        [Test] public void MatchingGray() => Matching(FingerprintTemplateTest.ProbeGray(), FingerprintTemplateTest.MatchingGray());
+        [Test] public void NonmatchingGray() => Nonmatching(FingerprintTemplateTest.ProbeGray(), FingerprintTemplateTest.NonmatchingGray());
     }
 }

@@ -3,7 +3,7 @@ using System;
 
 namespace SourceAFIS.Configuration
 {
-    class Parameters
+    static class Parameters
     {
         public const int BlockSize = 15;
         public const int HistogramDepth = 256;

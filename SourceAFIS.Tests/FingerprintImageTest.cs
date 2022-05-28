@@ -44,12 +44,12 @@ namespace SourceAFIS
             }
         }
 
-        public static FingerprintImage Probe() { return Decode(TestResources.Probe()); }
-        public static FingerprintImage Matching() { return Decode(TestResources.Matching()); }
-        public static FingerprintImage Nonmatching() { return Decode(TestResources.Nonmatching()); }
-        public static FingerprintImage ProbeGray() { return new FingerprintImage(332, 533, TestResources.ProbeGray()); }
-        public static FingerprintImage MatchingGray() { return new FingerprintImage(320, 407, TestResources.MatchingGray()); }
-        public static FingerprintImage NonmatchingGray() { return new FingerprintImage(333, 435, TestResources.NonmatchingGray()); }
+        public static FingerprintImage Probe() => Decode(TestResources.Probe());
+        public static FingerprintImage Matching() => Decode(TestResources.Matching());
+        public static FingerprintImage Nonmatching() => Decode(TestResources.Nonmatching());
+        public static FingerprintImage ProbeGray() => new FingerprintImage(332, 533, TestResources.ProbeGray());
+        public static FingerprintImage MatchingGray() => new FingerprintImage(320, 407, TestResources.MatchingGray());
+        public static FingerprintImage NonmatchingGray() => new FingerprintImage(333, 435, TestResources.NonmatchingGray());
 
         [Test]
         public void DecodeGray()

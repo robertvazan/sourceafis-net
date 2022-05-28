@@ -8,7 +8,7 @@ namespace SourceAFIS.Primitives
         public readonly int Start;
         public readonly int End;
 
-        public int Length { get { return End - Start; } }
+        public int Length => End - Start;
 
         public IntRange(int start, int end)
         {
@@ -16,6 +16,6 @@ namespace SourceAFIS.Primitives
             End = end;
         }
 
-        public override string ToString() { return string.Format("{0}..{1}", Start, End); }
+        public override string ToString() => $"{Start}..{End}";
     }
 }

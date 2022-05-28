@@ -15,9 +15,6 @@ namespace SourceAFIS.Features
             Direction = mutable.Direction;
             Type = mutable.Type;
         }
-        public MutableMinutia Mutable()
-        {
-            return new MutableMinutia(Position, Direction, Type);
-        }
+        public MutableMinutia Mutable() => new MutableMinutia(Position, Direction, Type);
     }
 }

@@ -13,15 +13,9 @@ namespace SourceAFIS.Primitives
             Assert.AreEqual(3.5, p.Y, 0.001);
         }
         [Test]
-        public void Plus()
-        {
-            AssertPointEquals(new DoublePoint(6, 8), new DoublePoint(2, 3) + new DoublePoint(4, 5), 0.001);
-        }
+        public void Plus() => AssertPointEquals(new DoublePoint(6, 8), new DoublePoint(2, 3) + new DoublePoint(4, 5), 0.001);
         [Test]
-        public void Multiply()
-        {
-            AssertPointEquals(new DoublePoint(1, 1.5), 0.5 * new DoublePoint(2, 3), 0.001);
-        }
+        public void Multiply() => AssertPointEquals(new DoublePoint(1, 1.5), 0.5 * new DoublePoint(2, 3), 0.001);
         [Test]
         public void Round()
         {

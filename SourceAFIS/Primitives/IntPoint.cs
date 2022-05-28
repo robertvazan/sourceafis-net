@@ -27,8 +27,8 @@ namespace SourceAFIS.Primitives
         public readonly int X;
         public readonly int Y;
 
-        public int Area { get { return X * Y; } }
-        public int LengthSq { get { return Integers.Sq(X) + Integers.Sq(Y); } }
+        public int Area => X * Y;
+        public int LengthSq => Integers.Sq(X) + Integers.Sq(Y);
 
         public IntPoint(int x, int y)
         {
@@ -36,15 +36,15 @@ namespace SourceAFIS.Primitives
             Y = y;
         }
 
-        public static IntPoint operator +(IntPoint left, IntPoint right) { return new IntPoint(left.X + right.X, left.Y + right.Y); }
-        public static IntPoint operator -(IntPoint left, IntPoint right) { return new IntPoint(left.X - right.X, left.Y - right.Y); }
-        public static IntPoint operator -(IntPoint point) { return new IntPoint(-point.X, -point.Y); }
-        public static bool operator ==(IntPoint left, IntPoint right) { return left.X == right.X && left.Y == right.Y; }
-        public static bool operator !=(IntPoint left, IntPoint right) { return left.X != right.X || left.Y != right.Y; }
+        public static IntPoint operator +(IntPoint left, IntPoint right) => new IntPoint(left.X + right.X, left.Y + right.Y);
+        public static IntPoint operator -(IntPoint left, IntPoint right) => new IntPoint(left.X - right.X, left.Y - right.Y);
+        public static IntPoint operator -(IntPoint point) => new IntPoint(-point.X, -point.Y);
+        public static bool operator ==(IntPoint left, IntPoint right) => left.X == right.X && left.Y == right.Y;
+        public static bool operator !=(IntPoint left, IntPoint right) => left.X != right.X || left.Y != right.Y;
 
-        public override int GetHashCode() { return 31 * X + Y; }
-        public bool Equals(IntPoint other) { return X == other.X && Y == other.Y; }
-        public override bool Equals(object other) { return other is IntPoint && Equals((IntPoint)other); }
+        public override int GetHashCode() => 31 * X + Y;
+        public bool Equals(IntPoint other) => X == other.X && Y == other.Y;
+        public override bool Equals(object other) => other is IntPoint p && Equals(p);
         public int CompareTo(IntPoint other)
         {
             int resultY = Y.CompareTo(other.Y);
@@ -52,8 +52,8 @@ namespace SourceAFIS.Primitives
                 return resultY;
             return X.CompareTo(other.X);
         }
-        public override string ToString() { return string.Format("[{0},{1}]", X, Y); }
-        public bool Contains(IntPoint other) { return other.X >= 0 && other.Y >= 0 && other.X < X && other.Y < Y; }
+        public override string ToString() => $"[{X},{Y}]";
+        public bool Contains(IntPoint other) => other.X >= 0 && other.Y >= 0 && other.X < X && other.Y < Y;
         public IntPoint[] LineTo(IntPoint to)
         {
             IntPoint[] result;

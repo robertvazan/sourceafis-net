@@ -23,10 +23,7 @@ namespace SourceAFIS.Primitives
             }
         }
 
-        public CircularArray(int capacity)
-        {
-            Array = new T[capacity];
-        }
+        public CircularArray(int capacity) => Array = new T[capacity];
 
         internal void ValidateItemIndex(int index)
         {
@@ -38,7 +35,7 @@ namespace SourceAFIS.Primitives
             if (index < 0 || index > Size)
                 throw new ArgumentOutOfRangeException();
         }
-        internal int Location(int index) { return Head + index < Array.Length ? Head + index : Head + index - Array.Length; }
+        internal int Location(int index) => Head + index < Array.Length ? Head + index : Head + index - Array.Length;
         internal void Enlarge()
         {
             T[] enlarged = new T[2 * Array.Length];

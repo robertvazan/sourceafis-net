@@ -1,8 +1,4 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
-using System;
-using SourceAFIS.Configuration;
-using SourceAFIS.Features;
-using SourceAFIS.Primitives;
 
 namespace SourceAFIS.Matcher
 {

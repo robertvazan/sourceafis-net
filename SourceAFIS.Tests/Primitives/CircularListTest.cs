@@ -92,9 +92,6 @@ namespace SourceAFIS.Primitives
             Assert.Throws<ArgumentOutOfRangeException>(() => l[5] = 10);
         }
         [Test]
-        public void Count()
-        {
-            Assert.AreEqual(5, l.Count);
-        }
+        public void Count() => Assert.AreEqual(5, l.Count);
     }
 }

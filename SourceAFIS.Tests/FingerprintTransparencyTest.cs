@@ -20,7 +20,7 @@ namespace SourceAFIS
 
         class TransparencyFilter : TransparencyChecker
         {
-            public override bool Accepts(string key) { return false; }
+            public override bool Accepts(string key) => false;
         }
 
         [Test]

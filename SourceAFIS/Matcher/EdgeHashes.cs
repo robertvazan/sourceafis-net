@@ -7,7 +7,7 @@ using SourceAFIS.Primitives;
 
 namespace SourceAFIS.Matcher
 {
-    class EdgeHashes
+    static class EdgeHashes
     {
         public static int Hash(EdgeShape edge)
         {

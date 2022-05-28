@@ -5,7 +5,7 @@ using SourceAFIS.Features;
 
 namespace SourceAFIS.Matcher
 {
-    class RootEnumerator
+    static class RootEnumerator
     {
         public static void Enumerate(FingerprintMatcher probe, FingerprintTemplate candidate, RootList roots)
         {

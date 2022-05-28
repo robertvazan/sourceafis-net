@@ -35,15 +35,9 @@ namespace SourceAFIS.Primitives
             Assert.AreEqual(1.75 * Math.PI, DoubleAngle.Atan(new DoublePoint(1, -1)), 0.001);
         }
         [Test]
-        public void AtanPoint()
-        {
-            Assert.AreEqual(0.5 * Math.PI, DoubleAngle.Atan(new IntPoint(0, 2)), 0.001);
-        }
+        public void AtanPoint() => Assert.AreEqual(0.5 * Math.PI, DoubleAngle.Atan(new IntPoint(0, 2)), 0.001);
         [Test]
-        public void AtanCenter()
-        {
-            Assert.AreEqual(0.25 * Math.PI, DoubleAngle.Atan(new IntPoint(2, 3), new IntPoint(4, 5)), 0.001);
-        }
+        public void AtanCenter() => Assert.AreEqual(0.25 * Math.PI, DoubleAngle.Atan(new IntPoint(2, 3), new IntPoint(4, 5)), 0.001);
         [Test]
         public void ToOrientation()
         {

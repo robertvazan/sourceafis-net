@@ -40,6 +40,10 @@ namespace SourceAFIS
     {
         const int Prime = 1610612741;
 
+        internal readonly IntPoint Size;
+        internal readonly ImmutableMinutia[] Minutiae;
+        internal readonly NeighborEdge[][] Edges;
+
         /// <summary>Gets the empty fallback template with no biometric data.</summary>
         /// <value>Empty template.</value>
         /// <remarks>
@@ -49,16 +53,13 @@ namespace SourceAFIS
         /// </remarks>
         public static readonly FingerprintTemplate Empty = new FingerprintTemplate();
 
-        internal readonly IntPoint Size;
-        internal readonly ImmutableMinutia[] Minutiae;
-        internal readonly NeighborEdge[][] Edges;
-
         FingerprintTemplate()
         {
             Size = new IntPoint(1, 1);
             Minutiae = new ImmutableMinutia[0];
             Edges = new NeighborEdge[0][];
         }
+
         FingerprintTemplate(MutableTemplate mutable)
         {
             Size = mutable.Size;
@@ -71,6 +72,7 @@ namespace SourceAFIS
             FingerprintTransparency.Current.Log("shuffled-minutiae", () => Mutable());
             Edges = NeighborEdge.BuildTable(Minutiae);
         }
+
         /// <summary>Creates fingerprint template from fingerprint image.</summary>
         /// <remarks>
         /// This constructor runs an expensive feature extractor algorithm,
@@ -79,6 +81,14 @@ namespace SourceAFIS
         /// <param name="image">Fingerprint image to process.</param>
         /// <exception cref="NullReferenceException">Thrown when <paramref name="image" /> is <c>null</c>.</exception>
         public FingerprintTemplate(FingerprintImage image) : this(FeatureExtractor.Extract(image.Matrix, image.Dpi)) { }
+
+        static MutableTemplate Deserialize(byte[] serialized)
+        {
+            var persistent = SerializationUtils.Deserialize<PersistentTemplate>(serialized);
+            persistent.Validate();
+            return persistent.Mutable();
+        }
+
         /// <summary>Deserializes fingerprint template from byte array.</summary>
         /// <remarks>
         /// <para>
@@ -104,6 +114,7 @@ namespace SourceAFIS
             mutable.Minutiae = (from m in Minutiae select m.Mutable()).ToList();
             return mutable;
         }
+
         /// <summary>Serializes fingerprint template into byte array.</summary>
         /// <remarks>
         /// <para>
@@ -126,12 +137,6 @@ namespace SourceAFIS
         /// <returns>Serialized fingerprint template in <see href="https://cbor.io/">CBOR</see> format.</returns>
         /// <seealso cref="FingerprintTemplate(byte[])" />
         /// <seealso href="https://sourceafis.machinezoo.com/template">Template format</seealso>
-        public byte[] ToByteArray() { return SerializationUtils.Serialize(new PersistentTemplate(Mutable())); }
-        static MutableTemplate Deserialize(byte[] serialized)
-        {
-            var persistent = SerializationUtils.Deserialize<PersistentTemplate>(serialized);
-            persistent.Validate();
-            return persistent.Mutable();
-        }
+        public byte[] ToByteArray() => SerializationUtils.Serialize(new PersistentTemplate(Mutable()));
     }
 }

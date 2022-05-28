@@ -9,9 +9,7 @@ namespace SourceAFIS.Features
         public IntPoint Position;
         public double Direction;
         public MinutiaType Type;
-        public MutableMinutia()
-        {
-        }
+        public MutableMinutia() { }
         public MutableMinutia(IntPoint position, double direction, MinutiaType type)
         {
             Position = position;

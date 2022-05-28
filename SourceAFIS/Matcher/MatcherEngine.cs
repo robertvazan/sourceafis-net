@@ -3,7 +3,7 @@ using System;
 
 namespace SourceAFIS.Matcher
 {
-    class MatcherEngine
+    static class MatcherEngine
     {
         public static double Match(FingerprintMatcher probe, FingerprintTemplate candidate)
         {

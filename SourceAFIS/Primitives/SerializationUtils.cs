@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Dahomey.Cbor;
 using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Conventions;
@@ -18,10 +18,10 @@ namespace SourceAFIS.Primitives
         // We will give it fake object factory to keep it happy.
         class NoDefaultConstructor : ICreatorMapping
         {
-            public IReadOnlyCollection<RawString> MemberNames { get { return null; } }
+            public IReadOnlyCollection<RawString> MemberNames => null;
 
             public void Initialize() { }
-            public object CreateInstance(Dictionary<RawString, object> values) { throw new NotImplementedException(); }
+            public object CreateInstance(Dictionary<RawString, object> values) => throw new NotImplementedException();
         }
 
         // Conventions consistent with Java.
@@ -52,7 +52,7 @@ namespace SourceAFIS.Primitives
 
         class ConsistentConventionProvider : IObjectMappingConventionProvider
         {
-            public IObjectMappingConvention GetConvention(Type type) { return new ConsistentConvention(); }
+            public IObjectMappingConvention GetConvention(Type type) => new ConsistentConvention();
         }
 
         static readonly CborOptions Options = new CborOptions();
@@ -70,6 +70,6 @@ namespace SourceAFIS.Primitives
                 return buffer.WrittenSpan.ToArray();
             }
         }
-        public static T Deserialize<T>(byte[] bytes) { return Cbor.Deserialize<T>(bytes, Options); }
+        public static T Deserialize<T>(byte[] bytes) => Cbor.Deserialize<T>(bytes, Options);
     }
 }

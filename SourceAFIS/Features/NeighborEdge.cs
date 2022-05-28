@@ -9,7 +9,7 @@ namespace SourceAFIS.Features
     {
         public readonly int Neighbor;
 
-        public NeighborEdge(ImmutableMinutia[] minutiae, int reference, int neighbor) : base(minutiae[reference], minutiae[neighbor]) { Neighbor = neighbor; }
+        public NeighborEdge(ImmutableMinutia[] minutiae, int reference, int neighbor) : base(minutiae[reference], minutiae[neighbor]) => Neighbor = neighbor;
 
         public static NeighborEdge[][] BuildTable(ImmutableMinutia[] minutiae)
         {
