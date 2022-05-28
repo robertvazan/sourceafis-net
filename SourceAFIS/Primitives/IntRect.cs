@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SourceAFIS.Primitives
 {
-    readonly struct IntRect
+    readonly struct IntRect : IEquatable<IntRect>
     {
         public readonly int X;
         public readonly int Y;
@@ -33,10 +33,11 @@ namespace SourceAFIS.Primitives
             Height = size.Y;
         }
 
-        public static bool operator ==(IntRect left, IntRect right) { return left.X == right.X && left.Y == right.Y && left.Width == right.Width && left.Height == right.Height; }
-        public static bool operator !=(IntRect left, IntRect right) { return !(left == right); }
+        public static bool operator ==(IntRect left, IntRect right) => left.Equals(right);
+        public static bool operator !=(IntRect left, IntRect right) => !left.Equals(right);
 
         public override int GetHashCode() { return ((X * 31 + Y) * 31 + Width) * 31 + Height; }
+        public bool Equals(IntRect other) { return X == other.X && Y == other.Y && Width == other.Width && Height == other.Height; }
         public override bool Equals(object other) { return other is IntRect && this == (IntRect)other; }
         public override string ToString() { return string.Format("{0}x{1} @ [{2},{3}]", Width, Height, X, Y); }
         public static IntRect Between(int startX, int startY, int endX, int endY) { return new IntRect(startX, startY, endX - startX, endY - startY); }

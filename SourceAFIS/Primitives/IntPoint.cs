@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SourceAFIS.Primitives
 {
-    readonly struct IntPoint : IComparable<IntPoint>
+    readonly struct IntPoint : IEquatable<IntPoint>, IComparable<IntPoint>
     {
         public static readonly IntPoint Zero = new IntPoint();
         public static readonly IntPoint[] EdgeNeighbors = new IntPoint[] {
@@ -43,7 +43,8 @@ namespace SourceAFIS.Primitives
         public static bool operator !=(IntPoint left, IntPoint right) { return left.X != right.X || left.Y != right.Y; }
 
         public override int GetHashCode() { return 31 * X + Y; }
-        public override bool Equals(object other) { return other is IntPoint && this == (IntPoint)other; }
+        public bool Equals(IntPoint other) { return X == other.X && Y == other.Y; }
+        public override bool Equals(object other) { return other is IntPoint && Equals((IntPoint)other); }
         public int CompareTo(IntPoint other)
         {
             int resultY = Y.CompareTo(other.Y);
