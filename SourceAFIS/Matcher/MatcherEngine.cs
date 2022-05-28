@@ -37,6 +37,17 @@ namespace SourceAFIS.Matcher
                     }
                     thread.Pairing.Clear();
                 }
+                if (best >= 0 && (transparency.AcceptsBestPairing() || transparency.AcceptsBestScore()))
+                {
+                    thread.Pairing.SupportEnabled = transparency.AcceptsBestPairing();
+                    EdgeSpider.Crawl(probe.Template.Edges, candidate.Edges, thread.Pairing, thread.Roots.Pairs[best], thread.Queue);
+                    // https://sourceafis.machinezoo.com/transparency/pairing
+                    transparency.LogBestPairing(thread.Pairing);
+                    Scoring.Compute(probe.Template, candidate, thread.Pairing, thread.Score);
+                    // https://sourceafis.machinezoo.com/transparency/score
+                    transparency.LogBestScore(thread.Score);
+                    thread.Pairing.Clear();
+                }
                 thread.Roots.Discard();
                 // https://sourceafis.machinezoo.com/transparency/best-match
                 transparency.LogBestMatch(best);

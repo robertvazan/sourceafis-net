@@ -192,55 +192,80 @@ namespace SourceAFIS
         }
 
         volatile bool MatcherOffered;
-        volatile bool AcceptsRootPairs;
-        volatile bool AcceptsPairingFlag;
-        volatile bool AcceptsScore;
-        volatile bool AcceptsBestMatch;
+        volatile bool AcceptingRootPairs;
+        volatile bool AcceptingPairing;
+        volatile bool AcceptingBestPairing;
+        volatile bool AcceptingScore;
+        volatile bool AcceptingBestScore;
+        volatile bool AcceptingBestMatch;
         void OfferMatcher()
         {
             if (!MatcherOffered)
             {
-                AcceptsRootPairs = Accepts("root-pairs");
-                AcceptsPairingFlag = Accepts("pairing");
-                AcceptsScore = Accepts("score");
-                AcceptsBestMatch = Accepts("best-match");
+                AcceptingRootPairs = Accepts("root-pairs");
+                AcceptingPairing = Accepts("pairing");
+                AcceptingBestPairing = Accepts("best-pairing");
+                AcceptingScore = Accepts("score");
+                AcceptingBestScore = Accepts("best-score");
+                AcceptingBestMatch = Accepts("best-match");
                 MatcherOffered = true;
             }
+        }
+        // Expose fast method to check whether pairing should be logged, so that we can easily skip support edge logging.
+        // Do the same for best score, so that we can skip reevaluation of the best pairing.
+        internal bool AcceptsPairing()
+        {
+            OfferMatcher();
+            return AcceptingPairing;
+        }
+        internal bool AcceptsBestPairing()
+        {
+            OfferMatcher();
+            return AcceptingBestPairing;
+        }
+        internal bool AcceptsBestScore()
+        {
+            OfferMatcher();
+            return AcceptingBestScore;
         }
         // https://sourceafis.machinezoo.com/transparency/roots
         internal void LogRootPairs(int count, MinutiaPair[] roots)
         {
             OfferMatcher();
-            if (AcceptsRootPairs)
+            if (AcceptingRootPairs)
                 Log("roots", () => (from p in roots select new ConsistentMinutiaPair() { Probe = p.Probe, Candidate = p.Candidate }).Take(count).ToList());
-        }
-
-        internal bool AcceptsPairing()
-        {
-            OfferMatcher();
-            return AcceptsPairingFlag;
         }
         // https://sourceafis.machinezoo.com/transparency/pairing
         internal void LogPairing(PairingGraph pairing)
         {
             OfferMatcher();
-            if (AcceptsPairingFlag)
+            if (AcceptingPairing)
                 Log("pairing", new ConsistentPairingGraph(pairing.Count, pairing.Tree, pairing.SupportEdges));
         }
-
+        internal void LogBestPairing(PairingGraph pairing)
+        {
+            OfferMatcher();
+            if (AcceptingBestPairing)
+                Log("best-pairing", new ConsistentPairingGraph(pairing.Count, pairing.Tree, pairing.SupportEdges));
+        }
         // https://sourceafis.machinezoo.com/transparency/score
         internal void LogScore(ScoringData score)
         {
             OfferMatcher();
-            if (AcceptsScore)
+            if (AcceptingScore)
                 Log("score", score);
         }
-
+        internal void LogBestScore(ScoringData score)
+        {
+            OfferMatcher();
+            if (AcceptingBestScore)
+                Log("best-score", score);
+        }
         // https://sourceafis.machinezoo.com/transparency/best-match
         internal void LogBestMatch(int nth)
         {
             OfferMatcher();
-            if (AcceptsBestMatch)
+            if (AcceptingBestMatch)
                 Take("best-match", "text/plain", Encoding.UTF8.GetBytes(nth.ToString()));
         }
     }
