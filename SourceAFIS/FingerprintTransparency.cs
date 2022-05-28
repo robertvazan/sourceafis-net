@@ -221,15 +221,15 @@ namespace SourceAFIS
             return AcceptsPairingFlag;
         }
         // https://sourceafis.machinezoo.com/transparency/pairing
-        internal void LogPairing(int count, MinutiaPair[] pairs, List<MinutiaPair> support)
+        internal void LogPairing(PairingGraph pairing)
         {
             OfferMatcher();
             if (AcceptsPairingFlag)
-                Log("pairing", new ConsistentPairingGraph(count, pairs, support));
+                Log("pairing", new ConsistentPairingGraph(pairing.Count, pairing.Tree, pairing.SupportEdges));
         }
 
         // https://sourceafis.machinezoo.com/transparency/score
-        internal void LogScore(Score score)
+        internal void LogScore(ScoringData score)
         {
             OfferMatcher();
             if (AcceptsScore)

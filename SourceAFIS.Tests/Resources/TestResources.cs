@@ -7,7 +7,7 @@ namespace SourceAFIS
     {
         static byte[] Load(String name)
         {
-            using (var stream = typeof(TestResources).Assembly.GetManifestResourceStream(typeof(TestResources), name))
+            using (var stream = typeof(TestResources).Assembly.GetManifestResourceStream($"SourceAFIS.Resources.{name}"))
             {
                 var data = new byte[stream.Length];
                 stream.Read(data, 0, data.Length);
