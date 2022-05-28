@@ -16,6 +16,6 @@
     <None Include="icon.png" Pack="true" PackagePath="/" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dahomey.Cbor" Version="1.15.0" />
+    <PackageReference Include="Dahomey.Cbor" Version="1.16.1" />
   </ItemGroup>
 </Project>
