@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using SourceAFIS.Features;
-using SourceAFIS.Primitives;
-using SourceAFIS.Templates;
+using SourceAFIS.Engine.Features;
+using SourceAFIS.Engine.Primitives;
+using SourceAFIS.Engine.Templates;
 
 namespace SourceAFIS
 {

@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SourceAFIS.Features;
-using SourceAFIS.Matcher;
-using SourceAFIS.Primitives;
-using SourceAFIS.Transparency;
+using SourceAFIS.Engine.Features;
+using SourceAFIS.Engine.Matcher;
+using SourceAFIS.Engine.Primitives;
+using SourceAFIS.Engine.Transparency;
 
 namespace SourceAFIS
 {

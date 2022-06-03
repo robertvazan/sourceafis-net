@@ -1,10 +1,10 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
 using System.Linq;
-using SourceAFIS.Extractor;
-using SourceAFIS.Features;
-using SourceAFIS.Primitives;
-using SourceAFIS.Templates;
+using SourceAFIS.Engine.Extractor;
+using SourceAFIS.Engine.Features;
+using SourceAFIS.Engine.Primitives;
+using SourceAFIS.Engine.Templates;
 
 namespace SourceAFIS
 {
