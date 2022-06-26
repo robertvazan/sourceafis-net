@@ -1,12 +1,17 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
+using System.Runtime.InteropServices;
 
 namespace SourceAFIS.Engine.Primitives
 {
+    // Explicitly request sequential layout for predictable memory usage.
+    [StructLayout(LayoutKind.Sequential)]
     readonly struct ShortPoint : IEquatable<ShortPoint>, IComparable<ShortPoint>
     {
         public readonly short X;
         public readonly short Y;
+
+        public const int Memory = 2 * sizeof(short);
 
         public int LengthSq => Integers.Sq(X) + Integers.Sq(Y);
 

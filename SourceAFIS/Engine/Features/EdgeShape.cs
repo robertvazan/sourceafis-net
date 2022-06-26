@@ -1,9 +1,12 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
+using System.Runtime.InteropServices;
 using SourceAFIS.Engine.Primitives;
 
 namespace SourceAFIS.Engine.Features
 {
+    // No padding, so that edge structs can put fields where padding would otherwise be.
+    [StructLayout(LayoutKind.Sequential, Pack = 2)]
     readonly struct EdgeShape
     {
         const int PolarCacheBits = 8;
@@ -12,9 +15,13 @@ namespace SourceAFIS.Engine.Features
         static readonly short[] PolarDistanceCache = new short[Integers.Sq(PolarCacheRadius)];
         static readonly float[] PolarAngleCache = new float[Integers.Sq(PolarCacheRadius)];
 
-        public readonly short Length;
+        // Mind the field order. Floats first to ensure they are aligned despite 2-byte struct packing.
         public readonly float ReferenceAngle;
         public readonly float NeighborAngle;
+        public readonly short Length;
+
+        // This will only be the case with sequential layout and 2-byte packing.
+        public const int Memory = 2 * sizeof(float) + sizeof(short);
 
         static EdgeShape()
         {

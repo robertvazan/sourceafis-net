@@ -132,5 +132,26 @@ namespace SourceAFIS
         /// <seealso cref="FingerprintTemplate(byte[])" />
         /// <seealso href="https://sourceafis.machinezoo.com/template">Template format</seealso>
         public byte[] ToByteArray() => SerializationUtils.Serialize(new PersistentTemplate(ToFeatureTemplate()));
+
+        /// <summary>
+        /// Estimates memory consumed by this template.
+        /// </summary>
+        /// <returns>Memory footprint estimate in bytes.</returns>
+        /// <remarks>
+        /// .NET does not have any convenient mechanism to measure RAM footprint of objects.
+        /// This method calculates best effort estimate based on documentation of CLR memory layout.
+        /// It will return estimate appropriate for bitness of the current process.
+        /// </remarks>
+        public int Memory()
+        {
+            // ShortPoint will consume 8 bytes in 64-bit runtime due to alignment.
+            int self = 5 * IntPtr.Size;
+            int minutiae = 3 * IntPtr.Size + Minutiae.Length * Minutia.Memory;
+            // First level of edge array.
+            int edges1 = 3 * IntPtr.Size + Edges.Length * IntPtr.Size;
+            // Second level of edge array.
+            int edges2 = Edges.Sum(star => 3 * IntPtr.Size + star.Length * NeighborEdge.Memory);
+            return self + minutiae + edges1 + edges2;
+        }
     }
 }
