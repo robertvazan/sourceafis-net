@@ -8,7 +8,7 @@ namespace SourceAFIS.Engine.Matcher
 {
     static class EdgeSpider
     {
-        static readonly double ComplementaryMaxAngleError = DoubleAngle.Complementary(Parameters.MaxAngleError);
+        static readonly float ComplementaryMaxAngleError = FloatAngle.Complementary(Parameters.MaxAngleError);
         static List<MinutiaPair> MatchPairs(NeighborEdge[] pstar, NeighborEdge[] cstar, MinutiaPairPool pool)
         {
             var results = new List<MinutiaPair>();
@@ -26,10 +26,10 @@ namespace SourceAFIS.Engine.Matcher
                 for (int pindex = start; pindex < end; ++pindex)
                 {
                     var pedge = pstar[pindex];
-                    double rdiff = DoubleAngle.Difference(pedge.Shape.ReferenceAngle, cedge.Shape.ReferenceAngle);
+                    float rdiff = FloatAngle.Difference(pedge.Shape.ReferenceAngle, cedge.Shape.ReferenceAngle);
                     if (rdiff <= Parameters.MaxAngleError || rdiff >= ComplementaryMaxAngleError)
                     {
-                        double ndiff = DoubleAngle.Difference(pedge.Shape.NeighborAngle, cedge.Shape.NeighborAngle);
+                        float ndiff = FloatAngle.Difference(pedge.Shape.NeighborAngle, cedge.Shape.NeighborAngle);
                         if (ndiff <= Parameters.MaxAngleError || ndiff >= ComplementaryMaxAngleError)
                         {
                             var pair = pool.Allocate();

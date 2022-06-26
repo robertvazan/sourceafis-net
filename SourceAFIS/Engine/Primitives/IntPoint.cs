@@ -53,6 +53,7 @@ namespace SourceAFIS.Engine.Primitives
             return X.CompareTo(other.X);
         }
         public override string ToString() => $"[{X},{Y}]";
+        public ShortPoint ToShort() => new(X, Y);
         public bool Contains(IntPoint other) => other.X >= 0 && other.Y >= 0 && other.X < X && other.Y < Y;
         public IntPoint[] LineTo(IntPoint to)
         {

@@ -1,5 +1,6 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
+using SourceAFIS.Engine.Primitives;
 
 namespace SourceAFIS.Engine.Configuration
 {
@@ -51,7 +52,7 @@ namespace SourceAFIS.Engine.Configuration
         public const int MinTailLength = 21;
         public const int MinFragmentLength = 22;
         public const int MaxDistanceError = 13;
-        public const double MaxAngleError = Math.PI / 180 * 10;
+        public const float MaxAngleError = FloatAngle.Pi / 180 * 10;
         public const double MaxGapAngle = Math.PI / 180 * 45;
         public const int RidgeDirectionSample = 21;
         public const int RidgeDirectionSkip = 1;

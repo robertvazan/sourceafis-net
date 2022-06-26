@@ -5,10 +5,10 @@ namespace SourceAFIS.Engine.Features
 {
     readonly struct Minutia
     {
-        public readonly IntPoint Position;
-        public readonly double Direction;
+        public readonly ShortPoint Position;
+        public readonly float Direction;
         public readonly MinutiaType Type;
-        public Minutia(IntPoint position, double direction, MinutiaType type)
+        public Minutia(ShortPoint position, float direction, MinutiaType type)
         {
             Position = position;
             Direction = direction;

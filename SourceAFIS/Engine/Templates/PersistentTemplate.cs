@@ -9,27 +9,27 @@ namespace SourceAFIS.Engine.Templates
     class PersistentTemplate
     {
         public string Version;
-        public int Width;
-        public int Height;
-        public int[] PositionsX;
-        public int[] PositionsY;
-        public double[] Directions;
+        public short Width;
+        public short Height;
+        public short[] PositionsX;
+        public short[] PositionsY;
+        public float[] Directions;
         public string Types;
 
         public PersistentTemplate() { }
-        public PersistentTemplate(FeatureTemplate mutable)
+        public PersistentTemplate(FeatureTemplate template)
         {
             Version = FingerprintCompatibility.Version;
-            Width = mutable.Size.X;
-            Height = mutable.Size.Y;
-            int count = mutable.Minutiae.Count;
-            PositionsX = new int[count];
-            PositionsY = new int[count];
-            Directions = new double[count];
+            Width = template.Size.X;
+            Height = template.Size.Y;
+            int count = template.Minutiae.Count;
+            PositionsX = new short[count];
+            PositionsY = new short[count];
+            Directions = new float[count];
             var chars = new char[count];
             for (int i = 0; i < count; ++i)
             {
-                var minutia = mutable.Minutiae[i];
+                var minutia = template.Minutiae[i];
                 PositionsX[i] = minutia.Position.X;
                 PositionsY[i] = minutia.Position.Y;
                 Directions[i] = minutia.Direction;
@@ -65,7 +65,7 @@ namespace SourceAFIS.Engine.Templates
             {
                 if (Math.Abs(PositionsX[i]) > 10_000 || Math.Abs(PositionsY[i]) > 10_000)
                     throw new ArgumentException("Minutia position out of range.");
-                if (!DoubleAngle.Normalized(Directions[i]))
+                if (!FloatAngle.Normalized(Directions[i]))
                     throw new ArgumentException("Denormalized minutia direction.");
                 if (Types[i] != 'E' && Types[i] != 'B')
                     throw new ArgumentException("Unknown minutia type.");

@@ -40,7 +40,7 @@ namespace SourceAFIS
     {
         const int Prime = 1610612741;
 
-        internal readonly IntPoint Size;
+        internal readonly ShortPoint Size;
         internal readonly Minutia[] Minutiae;
         internal readonly NeighborEdge[][] Edges;
 
@@ -55,7 +55,7 @@ namespace SourceAFIS
 
         FingerprintTemplate()
         {
-            Size = new IntPoint(1, 1);
+            Size = new(1, 1);
             Minutiae = new Minutia[0];
             Edges = new NeighborEdge[0][];
         }

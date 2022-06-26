@@ -13,7 +13,7 @@ namespace SourceAFIS.Engine.Extractor.Minutiae
             minutiae.RemoveAll(minutia =>
             {
                 var arrow = (-Parameters.MaskDisplacement * DoubleAngle.ToVector(minutia.Direction)).Round();
-                return !mask.Get(minutia.Position + arrow, false);
+                return !mask.Get(minutia.Position.ToInt() + arrow, false);
             });
         }
     }

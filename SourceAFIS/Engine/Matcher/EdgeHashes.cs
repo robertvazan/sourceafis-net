@@ -9,6 +9,7 @@ namespace SourceAFIS.Engine.Matcher
 {
     static class EdgeHashes
     {
+        static readonly float ComplementaryMaxAngleError = FloatAngle.Complementary(Parameters.MaxAngleError);
         public static int Hash(EdgeShape edge)
         {
             int lengthBin = edge.Length / Parameters.MaxDistanceError;
@@ -21,12 +22,11 @@ namespace SourceAFIS.Engine.Matcher
             int lengthDelta = probe.Length - candidate.Length;
             if (lengthDelta >= -Parameters.MaxDistanceError && lengthDelta <= Parameters.MaxDistanceError)
             {
-                double complementaryAngleError = DoubleAngle.Complementary(Parameters.MaxAngleError);
-                double referenceDelta = DoubleAngle.Difference(probe.ReferenceAngle, candidate.ReferenceAngle);
-                if (referenceDelta <= Parameters.MaxAngleError || referenceDelta >= complementaryAngleError)
+                float referenceDelta = FloatAngle.Difference(probe.ReferenceAngle, candidate.ReferenceAngle);
+                if (referenceDelta <= Parameters.MaxAngleError || referenceDelta >= ComplementaryMaxAngleError)
                 {
-                    double neighborDelta = DoubleAngle.Difference(probe.NeighborAngle, candidate.NeighborAngle);
-                    if (neighborDelta <= Parameters.MaxAngleError || neighborDelta >= complementaryAngleError)
+                    float neighborDelta = FloatAngle.Difference(probe.NeighborAngle, candidate.NeighborAngle);
+                    if (neighborDelta <= Parameters.MaxAngleError || neighborDelta >= ComplementaryMaxAngleError)
                         return true;
                 }
             }
@@ -37,11 +37,11 @@ namespace SourceAFIS.Engine.Matcher
             int minLengthBin = (edge.Length - Parameters.MaxDistanceError) / Parameters.MaxDistanceError;
             int maxLengthBin = (edge.Length + Parameters.MaxDistanceError) / Parameters.MaxDistanceError;
             int angleBins = (int)Math.Ceiling(2 * Math.PI / Parameters.MaxAngleError);
-            int minReferenceBin = (int)(DoubleAngle.Difference(edge.ReferenceAngle, Parameters.MaxAngleError) / Parameters.MaxAngleError);
-            int maxReferenceBin = (int)(DoubleAngle.Add(edge.ReferenceAngle, Parameters.MaxAngleError) / Parameters.MaxAngleError);
+            int minReferenceBin = (int)(FloatAngle.Difference(edge.ReferenceAngle, Parameters.MaxAngleError) / Parameters.MaxAngleError);
+            int maxReferenceBin = (int)(FloatAngle.Add(edge.ReferenceAngle, Parameters.MaxAngleError) / Parameters.MaxAngleError);
             int endReferenceBin = (maxReferenceBin + 1) % angleBins;
-            int minNeighborBin = (int)(DoubleAngle.Difference(edge.NeighborAngle, Parameters.MaxAngleError) / Parameters.MaxAngleError);
-            int maxNeighborBin = (int)(DoubleAngle.Add(edge.NeighborAngle, Parameters.MaxAngleError) / Parameters.MaxAngleError);
+            int minNeighborBin = (int)(FloatAngle.Difference(edge.NeighborAngle, Parameters.MaxAngleError) / Parameters.MaxAngleError);
+            int maxNeighborBin = (int)(FloatAngle.Add(edge.NeighborAngle, Parameters.MaxAngleError) / Parameters.MaxAngleError);
             int endNeighborBin = (maxNeighborBin + 1) % angleBins;
             var coverage = new List<int>();
             for (int lengthBin = minLengthBin; lengthBin <= maxLengthBin; ++lengthBin)

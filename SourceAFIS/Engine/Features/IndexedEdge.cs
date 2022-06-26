@@ -5,14 +5,14 @@ namespace SourceAFIS.Engine.Features
     readonly struct IndexedEdge
     {
         public readonly EdgeShape Shape;
-        public readonly int Reference;
-        public readonly int Neighbor;
+        public readonly byte Reference;
+        public readonly byte Neighbor;
 
         public IndexedEdge(Minutia[] minutiae, int reference, int neighbor)
         {
             Shape = new(minutiae[reference], minutiae[neighbor]);
-            Reference = reference;
-            Neighbor = neighbor;
+            Reference = (byte)reference;
+            Neighbor = (byte)neighbor;
         }
     }
 }

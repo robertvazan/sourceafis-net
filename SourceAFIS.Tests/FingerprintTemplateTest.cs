@@ -23,18 +23,18 @@ namespace SourceAFIS
         public void RoundTripSerialization()
         {
             var mt = new FeatureTemplate(new(800, 600), new());
-            mt.Minutiae.Add(new(new(100, 200), Math.PI, MinutiaType.Bifurcation));
-            mt.Minutiae.Add(new(new(300, 400), 0.5 * Math.PI, MinutiaType.Ending));
+            mt.Minutiae.Add(new(new(100, 200), FloatAngle.Pi, MinutiaType.Bifurcation));
+            mt.Minutiae.Add(new(new(300, 400), FloatAngle.HalfPi, MinutiaType.Ending));
             var pt = new PersistentTemplate(mt);
             var t = new FingerprintTemplate(SerializationUtils.Serialize(pt));
             t = new FingerprintTemplate(t.ToByteArray());
             Assert.AreEqual(2, t.Minutiae.Length);
             var a = t.Minutiae[0];
             var b = t.Minutiae[1];
-            Assert.AreEqual(new IntPoint(100, 200), a.Position);
+            Assert.AreEqual(new ShortPoint(100, 200), a.Position);
             Assert.AreEqual(Math.PI, a.Direction, 0.0000001);
             Assert.AreEqual(MinutiaType.Bifurcation, a.Type);
-            Assert.AreEqual(new IntPoint(300, 400), b.Position);
+            Assert.AreEqual(new ShortPoint(300, 400), b.Position);
             Assert.AreEqual(0.5 * Math.PI, b.Direction, 0.0000001);
             Assert.AreEqual(MinutiaType.Ending, b.Type);
         }

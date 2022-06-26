@@ -8,12 +8,12 @@ namespace SourceAFIS.Engine.Features
     readonly struct NeighborEdge
     {
         public readonly EdgeShape Shape;
-        public readonly int Neighbor;
+        public readonly byte Neighbor;
 
         public NeighborEdge(Minutia[] minutiae, int reference, int neighbor)
         {
             Shape = new(minutiae[reference], minutiae[neighbor]);
-            Neighbor = neighbor;
+            Neighbor = (byte)neighbor;
         }
 
         public static NeighborEdge[][] BuildTable(Minutia[] minutiae)

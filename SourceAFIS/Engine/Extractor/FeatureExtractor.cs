@@ -36,7 +36,7 @@ namespace SourceAFIS.Engine.Extractor
             var innerMask = SegmentationMask.Inner(pixelMask);
             var ridges = SkeletonGraphs.Create(binary, SkeletonType.Ridges);
             var valleys = SkeletonGraphs.Create(inverted, SkeletonType.Valleys);
-            var template = new FeatureTemplate(raw.Size, MinutiaCollector.Collect(ridges, valleys));
+            var template = new FeatureTemplate(raw.Size.ToShort(), MinutiaCollector.Collect(ridges, valleys));
             // https://sourceafis.machinezoo.com/transparency/skeleton-minutiae
             FingerprintTransparency.Current.Log("skeleton-minutiae", template);
             InnerMinutiaeFilter.Apply(template.Minutiae, innerMask);

@@ -44,8 +44,8 @@ namespace SourceAFIS.Engine.Matcher
                 var probeEdge = new EdgeShape(pminutiae[pair.ProbeRef], pminutiae[pair.Probe]);
                 var candidateEdge = new EdgeShape(cminutiae[pair.CandidateRef], cminutiae[pair.Candidate]);
                 score.DistanceErrorSum += Math.Max(innerDistanceRadius, Math.Abs(probeEdge.Length - candidateEdge.Length));
-                score.AngleErrorSum += Math.Max(innerAngleRadius, DoubleAngle.Distance(probeEdge.ReferenceAngle, candidateEdge.ReferenceAngle));
-                score.AngleErrorSum += Math.Max(innerAngleRadius, DoubleAngle.Distance(probeEdge.NeighborAngle, candidateEdge.NeighborAngle));
+                score.AngleErrorSum += Math.Max(innerAngleRadius, FloatAngle.Distance(probeEdge.ReferenceAngle, candidateEdge.ReferenceAngle));
+                score.AngleErrorSum += Math.Max(innerAngleRadius, FloatAngle.Distance(probeEdge.NeighborAngle, candidateEdge.NeighborAngle));
             }
             score.DistanceAccuracyScore = 0;
             score.AngleAccuracyScore = 0;

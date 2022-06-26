@@ -61,7 +61,7 @@ namespace SourceAFIS.Engine.Features
             Start = null;
             End = null;
         }
-        public double Direction()
+        public float Direction()
         {
             int first = Parameters.RidgeDirectionSkip;
             int last = Parameters.RidgeDirectionSkip + Parameters.RidgeDirectionSample - 1;
@@ -73,7 +73,7 @@ namespace SourceAFIS.Engine.Features
             }
             if (first < 0)
                 first = 0;
-            return DoubleAngle.Atan(Points[first], Points[last]);
+            return (float)DoubleAngle.Atan(Points[first], Points[last]);
         }
     }
 }
