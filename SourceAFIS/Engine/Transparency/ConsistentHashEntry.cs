@@ -4,9 +4,7 @@ using SourceAFIS.Engine.Features;
 
 namespace SourceAFIS.Engine.Transparency
 {
-    class ConsistentHashEntry
+    record ConsistentHashEntry(int Key, List<IndexedEdge> Edges)
     {
-        public int Key;
-        public List<IndexedEdge> Edges;
     }
 }

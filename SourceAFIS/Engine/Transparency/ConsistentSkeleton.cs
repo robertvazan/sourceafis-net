@@ -6,30 +6,21 @@ using SourceAFIS.Engine.Primitives;
 
 namespace SourceAFIS.Engine.Transparency
 {
-    class ConsistentSkeleton
+    record ConsistentSkeleton(int Width, int Height, List<IntPoint> Minutiae, List<ConsistentSkeletonRidge> Ridges)
     {
-        public int Width;
-        public int Height;
-        public List<IntPoint> Minutiae;
-        public List<ConsistentSkeletonRidge> Ridges;
-        public ConsistentSkeleton(Skeleton skeleton)
+        public static ConsistentSkeleton Of(Skeleton skeleton)
         {
-            Width = skeleton.Size.X;
-            Height = skeleton.Size.Y;
             var offsets = new Dictionary<SkeletonMinutia, int>();
             for (int i = 0; i < skeleton.Minutiae.Count; ++i)
                 offsets[skeleton.Minutiae[i]] = i;
-            Minutiae = (from m in skeleton.Minutiae select m.Position).ToList();
-            Ridges = (
-                from m in skeleton.Minutiae
-                from r in m.Ridges
-                where r.Points is CircularList<IntPoint>
-                select new ConsistentSkeletonRidge
-                {
-                    Start = offsets[r.Start],
-                    End = offsets[r.End],
-                    Points = r.Points
-                }).ToList();
+            return new(
+                skeleton.Size.X,
+                skeleton.Size.Y,
+                (from m in skeleton.Minutiae select m.Position).ToList(),
+                (from m in skeleton.Minutiae
+                 from r in m.Ridges
+                 where r.Points is CircularList<IntPoint>
+                 select new ConsistentSkeletonRidge(offsets[r.Start], offsets[r.End], r.Points)).ToList());
         }
     }
 }

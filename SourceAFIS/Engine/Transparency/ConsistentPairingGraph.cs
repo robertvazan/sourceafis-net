@@ -5,16 +5,14 @@ using SourceAFIS.Engine.Matcher;
 
 namespace SourceAFIS.Engine.Transparency
 {
-    class ConsistentPairingGraph
+    record ConsistentPairingGraph(ConsistentMinutiaPair Root, List<ConsistentEdgePair> Tree, List<ConsistentEdgePair> Support)
     {
-        public ConsistentMinutiaPair Root;
-        public List<ConsistentEdgePair> Tree;
-        public List<ConsistentEdgePair> Support;
         public ConsistentPairingGraph(int count, MinutiaPair[] pairs, List<MinutiaPair> support)
+            : this(
+                new ConsistentMinutiaPair(pairs[0].Probe, pairs[0].Candidate),
+                (from p in pairs select new ConsistentEdgePair(p)).Take(count).ToList(),
+                (from p in support select new ConsistentEdgePair(p)).ToList())
         {
-            Root = new ConsistentMinutiaPair() { Probe = pairs[0].Probe, Candidate = pairs[0].Candidate };
-            Tree = (from p in pairs select new ConsistentEdgePair(p)).Take(count).ToList();
-            Support = (from p in support select new ConsistentEdgePair(p)).ToList();
         }
     }
 }

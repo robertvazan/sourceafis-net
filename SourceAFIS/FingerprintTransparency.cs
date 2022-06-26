@@ -180,18 +180,15 @@ namespace SourceAFIS
         }
         internal void Log<T>(string key, Func<T> supplier) => Log(key, "application/cbor", () => SerializationUtils.Serialize(supplier()));
         internal void Log(string key, object data) => Log(key, "application/cbor", () => SerializationUtils.Serialize(data));
-        internal void LogSkeleton(string keyword, Skeleton skeleton) => Log(skeleton.Type.Prefix() + keyword, () => new ConsistentSkeleton(skeleton));
+        internal void LogSkeleton(string keyword, Skeleton skeleton) => Log(skeleton.Type.Prefix() + keyword, () => ConsistentSkeleton.Of(skeleton));
         // https://sourceafis.machinezoo.com/transparency/edge-hash
         internal void LogEdgeHash(Dictionary<int, List<IndexedEdge>> hash)
         {
             Log("edge-hash", () => (
                 from k in hash.Keys
                 orderby k
-                select new ConsistentHashEntry()
-                {
-                    Key = k,
-                    Edges = hash[k]
-                }).ToList());
+                select new ConsistentHashEntry(k, hash[k])
+            ).ToList());
         }
 
         volatile bool matcherOffered;
@@ -236,7 +233,7 @@ namespace SourceAFIS
         {
             OfferMatcher();
             if (acceptsRootPairs)
-                Log("roots", () => (from p in roots select new ConsistentMinutiaPair() { Probe = p.Probe, Candidate = p.Candidate }).Take(count).ToList());
+                Log("roots", () => (from p in roots select new ConsistentMinutiaPair(p.Probe, p.Candidate)).Take(count).ToList());
         }
         // https://sourceafis.machinezoo.com/transparency/pairing
         internal void LogPairing(PairingGraph pairing)
