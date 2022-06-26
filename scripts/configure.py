@@ -14,7 +14,7 @@ homepage = lambda: website() + 'net'
 inception_year = lambda: 2009
 nuget_description = lambda: 'Fingerprint recognition engine that takes a pair of human fingerprint images and returns their similarity score. Supports efficient 1:N search.'
 nuget_tags = lambda: 'fingerprint; biometrics; authentication; sourceafis'
-test_resources = lambda: ['Resources/*.dat', 'Resources/*.png']
+test_resources = lambda: ['Resources/*.dat', 'Resources/*.png', 'Resources/*.jpeg', 'Resources/*.bmp']
 
 def documentation_links():
     yield 'SourceAFIS for .NET', homepage()
@@ -24,6 +24,7 @@ def documentation_links():
 
 def dependencies():
     use('Dahomey.Cbor:1.16.1')
+    use('SixLabors.ImageSharp:2.1.3')
 def test_dependencies():
     standard_test_dependencies()
     use('System.Drawing.Common:5.0.1')

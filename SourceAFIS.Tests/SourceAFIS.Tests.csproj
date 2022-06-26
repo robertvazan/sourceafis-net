@@ -17,5 +17,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources/*.dat" />
     <EmbeddedResource Include="Resources/*.png" />
+    <EmbeddedResource Include="Resources/*.jpeg" />
+    <EmbeddedResource Include="Resources/*.bmp" />
   </ItemGroup>
 </Project>

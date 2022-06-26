@@ -1,52 +1,43 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Runtime.InteropServices;
+using System;
 using NUnit.Framework;
+using SourceAFIS.Engine.Primitives;
 
 namespace SourceAFIS
 {
     public class FingerprintImageTest
     {
-        static FingerprintImage Decode(byte[] bytes)
+        [Test]
+        public void DecodePng() => new FingerprintImage(TestResources.Png());
+
+        void AssertSimilar(DoubleMatrix matrix, DoubleMatrix reference)
         {
-            using (var stream = new MemoryStream(bytes))
+            Assert.AreEqual(reference.Width, matrix.Width);
+            Assert.AreEqual(reference.Height, matrix.Height);
+            double delta = 0, max = -1, min = 1;
+            for (int x = 0; x < matrix.Width; ++x)
             {
-                using (var image = Image.FromStream(stream))
+                for (int y = 0; y < matrix.Height; ++y)
                 {
-                    using (var bitmap = new Bitmap(image))
-                    {
-                        var grayscale = new byte[bitmap.Width * bitmap.Height];
-                        var locked = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-                        try
-                        {
-                            var pixels = new byte[locked.Stride * locked.Height];
-                            Marshal.Copy(locked.Scan0, pixels, 0, pixels.Length);
-                            for (int y = 0; y < bitmap.Height; ++y)
-                            {
-                                for (int x = 0; x < bitmap.Width; ++x)
-                                {
-                                    int sum = 0;
-                                    for (int c = 0; c < 3; ++c)
-                                        sum += pixels[y * locked.Stride + x * 3 + c];
-                                    grayscale[y * bitmap.Width + x] = (byte)(sum / 3);
-                                }
-                            }
-                        }
-                        finally
-                        {
-                            bitmap.UnlockBits(locked);
-                        }
-                        return new FingerprintImage(bitmap.Width, bitmap.Height, grayscale);
-                    }
+                    delta += Math.Abs(matrix[x, y] - reference[x, y]);
+                    max = Math.Max(max, matrix[x, y]);
+                    min = Math.Min(min, matrix[x, y]);
                 }
             }
+            Assert.IsTrue(max > 0.75);
+            Assert.IsTrue(min < 0.1);
+            Assert.IsTrue(delta / (matrix.Width * matrix.Height) < 0.01);
         }
+        void AssertSimilar(byte[] image, byte[] reference) => AssertSimilar(new FingerprintImage(image).Matrix, new FingerprintImage(reference).Matrix);
 
-        public static FingerprintImage Probe() => Decode(TestResources.Probe());
-        public static FingerprintImage Matching() => Decode(TestResources.Matching());
-        public static FingerprintImage Nonmatching() => Decode(TestResources.Nonmatching());
+        [Test]
+        public void DecodeJpeg() => AssertSimilar(TestResources.Jpeg(), TestResources.Png());
+        [Test]
+        public void DecodeBmp() => AssertSimilar(TestResources.Bmp(), TestResources.Png());
+
+        public static FingerprintImage Probe() => new FingerprintImage(TestResources.Probe());
+        public static FingerprintImage Matching() => new FingerprintImage(TestResources.Matching());
+        public static FingerprintImage Nonmatching() => new FingerprintImage(TestResources.Nonmatching());
         public static FingerprintImage ProbeGray() => new FingerprintImage(332, 533, TestResources.ProbeGray());
         public static FingerprintImage MatchingGray() => new FingerprintImage(320, 407, TestResources.MatchingGray());
         public static FingerprintImage NonmatchingGray() => new FingerprintImage(333, 435, TestResources.NonmatchingGray());

@@ -1,5 +1,7 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using SourceAFIS.Engine.Primitives;
 
 namespace SourceAFIS
@@ -59,6 +61,57 @@ namespace SourceAFIS
             for (int y = 0; y < height; ++y)
                 for (int x = 0; x < width; ++x)
                     Matrix[x, y] = 1 - pixels[y * width + x] / 255.0;
+            if (options == null)
+                options = new FingerprintImageOptions();
+            Dpi = options.Dpi;
+        }
+
+        /// <summary>
+        /// Decodes fingerprint image in standard format.
+        /// </summary>
+        /// <param name="image">Fingerprint image in one of the supported formats.</param>
+        /// <param name="options">Additional information about the image or null for default options.</param>
+        /// <exception cref="ArgumentNullException">Thrown when image is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when image cannot be decoded.</exception>
+        /// <remarks>
+        /// <para>
+        /// The image must contain black fingerprint on white background
+        /// in resolution specified by setting <see cref="FingerprintImageOptions.Dpi" />.
+        /// </para>
+        /// <para>
+        /// The image may be in any format commonly used to store fingerprint images, including PNG, JPEG, BMP, and TIFF.
+        /// SourceAFIS will try to decode the image using <a href="https://sixlabors.com/products/imagesharp/">ImageSharp</a> library.
+        /// Note that ImageSharp might not support all versions and variations of the mentioned formats.
+        /// </para>
+        /// </remarks>
+        public FingerprintImage(byte[] image, FingerprintImageOptions options = null)
+        {
+            if (image == null)
+                throw new ArgumentNullException(nameof(image));
+            try
+            {
+                using (var decoded = Image.Load<Argb32>(image))
+                {
+                    Matrix = new DoubleMatrix(decoded.Width, decoded.Height);
+                    decoded.ProcessPixelRows(accessor =>
+                    {
+                        for (int y = 0; y < Matrix.Height; ++y)
+                        {
+                            var span = accessor.GetRowSpan(y);
+                            for (int x = 0; x < Matrix.Width; ++x)
+                            {
+                                var pixel = span[x];
+                                var color = pixel.R + pixel.G + pixel.B;
+                                Matrix[x, y] = 1 - color * (1.0 / (3.0 * 255.0));
+                            }
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Failed to decode fingerprint image.", ex);
+            }
             if (options == null)
                 options = new FingerprintImageOptions();
             Dpi = options.Dpi;

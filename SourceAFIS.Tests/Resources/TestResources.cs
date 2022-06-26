@@ -14,11 +14,14 @@ namespace SourceAFIS
                 return data;
             }
         }
-        public static byte[] Probe() { return Load("probe.png"); }
-        public static byte[] Matching() { return Load("matching.png"); }
-        public static byte[] Nonmatching() { return Load("nonmatching.png"); }
-        public static byte[] ProbeGray() { return Load("gray-probe.dat"); }
-        public static byte[] MatchingGray() { return Load("gray-matching.dat"); }
-        public static byte[] NonmatchingGray() { return Load("gray-nonmatching.dat"); }
+        public static byte[] Png() => Load("probe.png");
+        public static byte[] Jpeg() => Load("probe.jpeg");
+        public static byte[] Bmp() => Load("probe.bmp");
+        public static byte[] Probe() => Load("probe.png");
+        public static byte[] Matching() => Load("matching.png");
+        public static byte[] Nonmatching() => Load("nonmatching.png");
+        public static byte[] ProbeGray() => Load("gray-probe.dat");
+        public static byte[] MatchingGray() => Load("gray-matching.dat");
+        public static byte[] NonmatchingGray() => Load("gray-nonmatching.dat");
     }
 }
