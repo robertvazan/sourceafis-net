@@ -2,14 +2,15 @@
 
 namespace SourceAFIS.Engine.Features
 {
-    class IndexedEdge : EdgeShape
+    readonly struct IndexedEdge
     {
+        public readonly EdgeShape Shape;
         public readonly int Reference;
         public readonly int Neighbor;
 
-        public IndexedEdge(ImmutableMinutia[] minutiae, int reference, int neighbor)
-            : base(minutiae[reference], minutiae[neighbor])
+        public IndexedEdge(Minutia[] minutiae, int reference, int neighbor)
         {
+            Shape = new(minutiae[reference], minutiae[neighbor]);
             Reference = reference;
             Neighbor = neighbor;
         }

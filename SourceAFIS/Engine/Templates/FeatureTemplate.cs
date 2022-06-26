@@ -5,9 +5,7 @@ using SourceAFIS.Engine.Primitives;
 
 namespace SourceAFIS.Engine.Templates
 {
-    class MutableTemplate
+    record FeatureTemplate(IntPoint Size, List<Minutia> Minutiae)
     {
-        public IntPoint Size;
-        public List<MutableMinutia> Minutiae;
     }
 }

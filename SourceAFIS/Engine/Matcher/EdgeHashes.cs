@@ -58,7 +58,7 @@ namespace SourceAFIS.Engine.Matcher
                     if (reference != neighbor)
                     {
                         var edge = new IndexedEdge(template.Minutiae, reference, neighbor);
-                        foreach (int hash in Coverage(edge))
+                        foreach (int hash in Coverage(edge.Shape))
                         {
                             List<IndexedEdge> list;
                             if (!map.TryGetValue(hash, out list))

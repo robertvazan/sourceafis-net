@@ -41,7 +41,7 @@ namespace SourceAFIS
         const int Prime = 1610612741;
 
         internal readonly IntPoint Size;
-        internal readonly ImmutableMinutia[] Minutiae;
+        internal readonly Minutia[] Minutiae;
         internal readonly NeighborEdge[][] Edges;
 
         /// <summary>Gets the empty fallback template with no biometric data.</summary>
@@ -56,20 +56,20 @@ namespace SourceAFIS
         FingerprintTemplate()
         {
             Size = new IntPoint(1, 1);
-            Minutiae = new ImmutableMinutia[0];
+            Minutiae = new Minutia[0];
             Edges = new NeighborEdge[0][];
         }
 
-        FingerprintTemplate(MutableTemplate mutable)
+        FingerprintTemplate(FeatureTemplate mutable)
         {
             Size = mutable.Size;
             var minutiae =
                 from m in mutable.Minutiae
                 orderby ((m.Position.X * Prime) + m.Position.Y) * Prime, m.Position.X, m.Position.Y, m.Direction, m.Type
-                select new ImmutableMinutia(m);
+                select m;
             Minutiae = minutiae.ToArray();
             // https://sourceafis.machinezoo.com/transparency/shuffled-minutiae
-            FingerprintTransparency.Current.Log("shuffled-minutiae", () => Mutable());
+            FingerprintTransparency.Current.Log("shuffled-minutiae", () => ToFeatureTemplate());
             Edges = NeighborEdge.BuildTable(Minutiae);
         }
 
@@ -82,7 +82,7 @@ namespace SourceAFIS
         /// <exception cref="NullReferenceException">Thrown when <paramref name="image" /> is <c>null</c>.</exception>
         public FingerprintTemplate(FingerprintImage image) : this(FeatureExtractor.Extract(image.Matrix, image.Dpi)) { }
 
-        static MutableTemplate Deserialize(byte[] serialized)
+        static FeatureTemplate Deserialize(byte[] serialized)
         {
             var persistent = SerializationUtils.Deserialize<PersistentTemplate>(serialized);
             persistent.Validate();
@@ -107,13 +107,7 @@ namespace SourceAFIS
         /// <exception cref="Exception">Thrown when <paramref name="serialized" /> is not in the correct format or it is corrupted.</exception>
         public FingerprintTemplate(byte[] serialized) : this(Deserialize(serialized)) { }
 
-        MutableTemplate Mutable()
-        {
-            var mutable = new MutableTemplate();
-            mutable.Size = Size;
-            mutable.Minutiae = (from m in Minutiae select m.Mutable()).ToList();
-            return mutable;
-        }
+        FeatureTemplate ToFeatureTemplate() => new FeatureTemplate(Size, Minutiae.ToList());
 
         /// <summary>Serializes fingerprint template into byte array.</summary>
         /// <remarks>
@@ -137,6 +131,6 @@ namespace SourceAFIS
         /// <returns>Serialized fingerprint template in <see href="https://cbor.io/">CBOR</see> format.</returns>
         /// <seealso cref="FingerprintTemplate(byte[])" />
         /// <seealso href="https://sourceafis.machinezoo.com/template">Template format</seealso>
-        public byte[] ToByteArray() => SerializationUtils.Serialize(new PersistentTemplate(Mutable()));
+        public byte[] ToByteArray() => SerializationUtils.Serialize(new PersistentTemplate(ToFeatureTemplate()));
     }
 }

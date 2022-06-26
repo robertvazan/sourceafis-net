@@ -9,11 +9,12 @@ namespace SourceAFIS.Engine.Extractor.Minutiae
 {
     static class MinutiaCloudFilter
     {
-        public static void Apply(List<MutableMinutia> minutiae)
+        public static void Apply(List<Minutia> minutiae)
         {
             var radiusSq = Integers.Sq(Parameters.MinutiaCloudRadius);
-            var removed = new HashSet<MutableMinutia>(minutiae.Where(minutia => Parameters.MaxCloudSize < minutiae.Where(neighbor => (neighbor.Position - minutia.Position).LengthSq <= radiusSq).Count() - 1));
-            minutiae.RemoveAll(minutia => removed.Contains(minutia));
+            var kept = minutiae.Where(m => Parameters.MaxCloudSize >= minutiae.Where(n => (n.Position - m.Position).LengthSq <= radiusSq).Count() - 1).ToList();
+            minutiae.Clear();
+            minutiae.AddRange(kept);
         }
     }
 }

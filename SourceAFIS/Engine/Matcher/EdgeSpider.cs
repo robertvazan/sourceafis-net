@@ -17,25 +17,25 @@ namespace SourceAFIS.Engine.Matcher
             for (int cindex = 0; cindex < cstar.Length; ++cindex)
             {
                 var cedge = cstar[cindex];
-                while (start < pstar.Length && pstar[start].Length < cedge.Length - Parameters.MaxDistanceError)
+                while (start < pstar.Length && pstar[start].Shape.Length < cedge.Shape.Length - Parameters.MaxDistanceError)
                     ++start;
                 if (end < start)
                     end = start;
-                while (end < pstar.Length && pstar[end].Length <= cedge.Length + Parameters.MaxDistanceError)
+                while (end < pstar.Length && pstar[end].Shape.Length <= cedge.Shape.Length + Parameters.MaxDistanceError)
                     ++end;
                 for (int pindex = start; pindex < end; ++pindex)
                 {
                     var pedge = pstar[pindex];
-                    double rdiff = DoubleAngle.Difference(pedge.ReferenceAngle, cedge.ReferenceAngle);
+                    double rdiff = DoubleAngle.Difference(pedge.Shape.ReferenceAngle, cedge.Shape.ReferenceAngle);
                     if (rdiff <= Parameters.MaxAngleError || rdiff >= ComplementaryMaxAngleError)
                     {
-                        double ndiff = DoubleAngle.Difference(pedge.NeighborAngle, cedge.NeighborAngle);
+                        double ndiff = DoubleAngle.Difference(pedge.Shape.NeighborAngle, cedge.Shape.NeighborAngle);
                         if (ndiff <= Parameters.MaxAngleError || ndiff >= ComplementaryMaxAngleError)
                         {
                             var pair = pool.Allocate();
                             pair.Probe = pedge.Neighbor;
                             pair.Candidate = cedge.Neighbor;
-                            pair.Distance = cedge.Length;
+                            pair.Distance = cedge.Shape.Length;
                             results.Add(pair);
                         }
                     }

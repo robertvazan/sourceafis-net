@@ -5,13 +5,18 @@ using SourceAFIS.Engine.Configuration;
 
 namespace SourceAFIS.Engine.Features
 {
-    class NeighborEdge : EdgeShape
+    readonly struct NeighborEdge
     {
+        public readonly EdgeShape Shape;
         public readonly int Neighbor;
 
-        public NeighborEdge(ImmutableMinutia[] minutiae, int reference, int neighbor) : base(minutiae[reference], minutiae[neighbor]) => Neighbor = neighbor;
+        public NeighborEdge(Minutia[] minutiae, int reference, int neighbor)
+        {
+            Shape = new(minutiae[reference], minutiae[neighbor]);
+            Neighbor = neighbor;
+        }
 
-        public static NeighborEdge[][] BuildTable(ImmutableMinutia[] minutiae)
+        public static NeighborEdge[][] BuildTable(Minutia[] minutiae)
         {
             var edges = new NeighborEdge[minutiae.Length][];
             var star = new List<NeighborEdge>();
@@ -34,7 +39,7 @@ namespace SourceAFIS.Engine.Features
                 }
                 star.Sort((a, b) =>
                 {
-                    int lengthCmp = a.Length.CompareTo(b.Length);
+                    int lengthCmp = a.Shape.Length.CompareTo(b.Shape.Length);
                     if (lengthCmp != 0)
                         return lengthCmp;
                     return a.Neighbor.CompareTo(b.Neighbor);

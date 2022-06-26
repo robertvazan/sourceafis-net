@@ -17,7 +17,7 @@ namespace SourceAFIS.Engine.Templates
         public string Types;
 
         public PersistentTemplate() { }
-        public PersistentTemplate(MutableTemplate mutable)
+        public PersistentTemplate(FeatureTemplate mutable)
         {
             Version = FingerprintCompatibility.Version;
             Width = mutable.Size.X;
@@ -38,17 +38,15 @@ namespace SourceAFIS.Engine.Templates
             Types = new string(chars);
         }
 
-        public MutableTemplate Mutable()
+        public FeatureTemplate Mutable()
         {
-            var mutable = new MutableTemplate();
-            mutable.Size = new IntPoint(Width, Height);
-            mutable.Minutiae = new List<MutableMinutia>();
+            var minutiae = new List<Minutia>();
             for (int i = 0; i < Types.Length; ++i)
             {
                 var type = Types[i] == 'B' ? MinutiaType.Bifurcation : MinutiaType.Ending;
-                mutable.Minutiae.Add(new MutableMinutia(new IntPoint(PositionsX[i], PositionsY[i]), Directions[i], type));
+                minutiae.Add(new(new(PositionsX[i], PositionsY[i]), Directions[i], type));
             }
-            return mutable;
+            return new FeatureTemplate(new(Width, Height), minutiae);
         }
         public void Validate()
         {

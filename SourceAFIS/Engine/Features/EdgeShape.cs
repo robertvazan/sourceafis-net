@@ -4,7 +4,7 @@ using SourceAFIS.Engine.Primitives;
 
 namespace SourceAFIS.Engine.Features
 {
-    class EdgeShape
+    readonly struct EdgeShape
     {
         const int PolarCacheBits = 8;
         const int PolarCacheRadius = 1 << PolarCacheBits;
@@ -37,7 +37,7 @@ namespace SourceAFIS.Engine.Features
             ReferenceAngle = referenceAngle;
             NeighborAngle = neighborAngle;
         }
-        public EdgeShape(ImmutableMinutia reference, ImmutableMinutia neighbor)
+        public EdgeShape(Minutia reference, Minutia neighbor)
         {
             IntPoint vector = neighbor.Position - reference.Position;
             double quadrant = 0;

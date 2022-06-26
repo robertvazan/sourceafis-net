@@ -1,16 +1,14 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
-
 using SourceAFIS.Engine.Primitives;
 
 namespace SourceAFIS.Engine.Features
 {
-    class MutableMinutia
+    readonly struct Minutia
     {
-        public IntPoint Position;
-        public double Direction;
-        public MinutiaType Type;
-        public MutableMinutia() { }
-        public MutableMinutia(IntPoint position, double direction, MinutiaType type)
+        public readonly IntPoint Position;
+        public readonly double Direction;
+        public readonly MinutiaType Type;
+        public Minutia(IntPoint position, double direction, MinutiaType type)
         {
             Position = position;
             Direction = direction;

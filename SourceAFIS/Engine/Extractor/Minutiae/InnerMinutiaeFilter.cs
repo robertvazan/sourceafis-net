@@ -8,7 +8,7 @@ namespace SourceAFIS.Engine.Extractor.Minutiae
 {
     static class InnerMinutiaeFilter
     {
-        public static void Apply(List<MutableMinutia> minutiae, BooleanMatrix mask)
+        public static void Apply(List<Minutia> minutiae, BooleanMatrix mask)
         {
             minutiae.RemoveAll(minutia =>
             {

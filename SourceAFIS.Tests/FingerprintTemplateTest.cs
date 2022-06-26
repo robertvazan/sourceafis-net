@@ -22,11 +22,9 @@ namespace SourceAFIS
         [Test]
         public void RoundTripSerialization()
         {
-            var mt = new MutableTemplate();
-            mt.Size = new IntPoint(800, 600);
-            mt.Minutiae = new List<MutableMinutia>();
-            mt.Minutiae.Add(new MutableMinutia(new IntPoint(100, 200), Math.PI, MinutiaType.Bifurcation));
-            mt.Minutiae.Add(new MutableMinutia(new IntPoint(300, 400), 0.5 * Math.PI, MinutiaType.Ending));
+            var mt = new FeatureTemplate(new(800, 600), new());
+            mt.Minutiae.Add(new(new(100, 200), Math.PI, MinutiaType.Bifurcation));
+            mt.Minutiae.Add(new(new(300, 400), 0.5 * Math.PI, MinutiaType.Ending));
             var pt = new PersistentTemplate(mt);
             var t = new FingerprintTemplate(SerializationUtils.Serialize(pt));
             t = new FingerprintTemplate(t.ToByteArray());

@@ -29,7 +29,7 @@ namespace SourceAFIS.Engine.Matcher
                                 {
                                     foreach (var match in matches)
                                     {
-                                        if (EdgeHashes.Matching(match, cedge))
+                                        if (EdgeHashes.Matching(match.Shape, cedge))
                                         {
                                             int duplicateKey = match.Reference << 16 | creference;
                                             if (roots.Duplicates.Add(duplicateKey))

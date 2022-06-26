@@ -10,15 +10,13 @@ namespace SourceAFIS.Engine.Extractor
 {
     static class FeatureExtractor
     {
-        public static MutableTemplate Extract(DoubleMatrix raw, double dpi)
+        public static FeatureTemplate Extract(DoubleMatrix raw, double dpi)
         {
-            var template = new MutableTemplate();
             // https://sourceafis.machinezoo.com/transparency/decoded-image
             FingerprintTransparency.Current.Log("decoded-image", raw);
             raw = ImageResizer.Resize(raw, dpi);
             // https://sourceafis.machinezoo.com/transparency/scaled-image
             FingerprintTransparency.Current.Log("scaled-image", raw);
-            template.Size = raw.Size;
             var blocks = new BlockMap(raw.Width, raw.Height, Parameters.BlockSize);
             // https://sourceafis.machinezoo.com/transparency/blocks
             FingerprintTransparency.Current.Log("blocks", blocks);
@@ -38,7 +36,7 @@ namespace SourceAFIS.Engine.Extractor
             var innerMask = SegmentationMask.Inner(pixelMask);
             var ridges = SkeletonGraphs.Create(binary, SkeletonType.Ridges);
             var valleys = SkeletonGraphs.Create(inverted, SkeletonType.Valleys);
-            template.Minutiae = MinutiaCollector.Collect(ridges, valleys);
+            var template = new FeatureTemplate(raw.Size, MinutiaCollector.Collect(ridges, valleys));
             // https://sourceafis.machinezoo.com/transparency/skeleton-minutiae
             FingerprintTransparency.Current.Log("skeleton-minutiae", template);
             InnerMinutiaeFilter.Apply(template.Minutiae, innerMask);
@@ -47,7 +45,7 @@ namespace SourceAFIS.Engine.Extractor
             MinutiaCloudFilter.Apply(template.Minutiae);
             // https://sourceafis.machinezoo.com/transparency/removed-minutia-clouds
             FingerprintTransparency.Current.Log("removed-minutia-clouds", template);
-            template.Minutiae = TopMinutiaeFilter.Apply(template.Minutiae);
+            template = new(template.Size, TopMinutiaeFilter.Apply(template.Minutiae));
             // https://sourceafis.machinezoo.com/transparency/top-minutiae
             FingerprintTransparency.Current.Log("top-minutiae", template);
             return template;

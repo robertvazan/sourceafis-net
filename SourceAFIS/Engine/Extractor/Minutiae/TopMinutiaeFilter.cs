@@ -8,7 +8,7 @@ namespace SourceAFIS.Engine.Extractor.Minutiae
 {
     static class TopMinutiaeFilter
     {
-        public static List<MutableMinutia> Apply(List<MutableMinutia> minutiae)
+        public static List<Minutia> Apply(List<Minutia> minutiae)
         {
             if (minutiae.Count <= Parameters.MaxMinutiae)
                 return minutiae;
