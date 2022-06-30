@@ -1,6 +1,5 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using SourceAFIS.Engine.Features;
 using SourceAFIS.Engine.Primitives;
