@@ -19,7 +19,7 @@ namespace SourceAFIS.Engine.Templates
         public PersistentTemplate() { }
         public PersistentTemplate(FeatureTemplate template)
         {
-            Version = FingerprintCompatibility.Version;
+            Version = "SourceAFIS for .NET " + FingerprintCompatibility.Version;
             Width = template.Size.X;
             Height = template.Size.Y;
             int count = template.Minutiae.Count;
@@ -38,7 +38,7 @@ namespace SourceAFIS.Engine.Templates
             Types = new string(chars);
         }
 
-        public FeatureTemplate Mutable()
+        public FeatureTemplate Decode()
         {
             var minutiae = new List<Minutia>();
             for (int i = 0; i < Types.Length; ++i)

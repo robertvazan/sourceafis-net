@@ -86,7 +86,7 @@ namespace SourceAFIS
         {
             var persistent = SerializationUtils.Deserialize<PersistentTemplate>(serialized);
             persistent.Validate();
-            return persistent.Mutable();
+            return persistent.Decode();
         }
 
         /// <summary>Deserializes fingerprint template from byte array.</summary>
