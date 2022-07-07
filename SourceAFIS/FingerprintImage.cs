@@ -18,9 +18,6 @@ namespace SourceAFIS
     /// Application should start fingerprint processing by constructing an instance of <c>FingerprintImage</c>
     /// and then passing it to <see cref="FingerprintTemplate(FingerprintImage)" /> constructor.
     /// </para>
-    /// <para>
-    /// Only raw grayscale images are currently supported.
-    /// </para>
     /// </remarks>
     /// <seealso cref="FingerprintImageOptions" />
     /// <seealso cref="FingerprintTemplate" />
@@ -30,6 +27,15 @@ namespace SourceAFIS
         internal double Dpi;
 
         /// <summary>Reads raw grayscale fingerprint image from byte array.</summary>
+        /// <param name="width">Width of the image.</param>
+        /// <param name="height">Height of the image.</param>
+        /// <param name="pixels">Image pixels ordered from top-left to bottom-right in horizontal rows.</param>
+        /// <param name="options">Additional information about the image or <c>null</c> for default options.</param>
+        /// <exception cref="NullReferenceException">Thrown when <paramref name="pixels" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when <paramref name="width" /> or <paramref name="height" /> is not positive
+        /// or when <paramref name="pixels" /> length is not <c>width * height</c>.
+        /// </exception>
         /// <remarks>
         /// <para>
         /// The image must contain black fingerprint on white background
@@ -41,16 +47,7 @@ namespace SourceAFIS
         /// Size of <paramref name="pixels" /> must be equal to <c>width * height</c>.
         /// </para>
         /// </remarks>
-        /// <param name="width">Width of the image.</param>
-        /// <param name="height">Height of the image.</param>
-        /// <param name="pixels">Image pixels ordered from top-left to bottom-right in horizontal rows.</param>
-        /// <param name="options">Additional information about the image or <c>null</c> for default options.</param>
-        /// <exception cref="NullReferenceException">Thrown when <paramref name="pixels" /> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown when <paramref name="width" /> or <paramref name="height" /> is not positive
-        /// or when <paramref name="pixels" /> length is not <c>width * height</c>.
-        /// </exception>
-        /// <seealso cref="FingerprintTemplate(byte[])" />
+        /// <seealso cref="FingerprintImage(byte[],FingerprintImageOptions)" />
         public FingerprintImage(int width, int height, byte[] pixels, FingerprintImageOptions options = null)
         {
             if (pixels == null)
@@ -84,6 +81,7 @@ namespace SourceAFIS
         /// Note that ImageSharp might not support all versions and variations of the mentioned formats.
         /// </para>
         /// </remarks>
+        /// <seealso cref="FingerprintImage(int,int,byte[],FingerprintImageOptions)" />
         public FingerprintImage(byte[] image, FingerprintImageOptions options = null)
         {
             if (image == null)
