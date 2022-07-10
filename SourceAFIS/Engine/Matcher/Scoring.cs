@@ -35,7 +35,7 @@ namespace SourceAFIS.Engine.Matcher
             score.SupportedMinutiaScore = Parameters.SupportedMinutiaScore * score.SupportedMinutiaCount;
             score.MinutiaTypeScore = Parameters.MinutiaTypeScore * score.MinutiaTypeHits;
             int innerDistanceRadius = Doubles.RoundToInt(Parameters.DistanceErrorFlatness * Parameters.MaxDistanceError);
-            double innerAngleRadius = Parameters.AngleErrorFlatness * Parameters.MaxAngleError;
+            float innerAngleRadius = (float)(Parameters.AngleErrorFlatness * Parameters.MaxAngleError);
             score.DistanceErrorSum = 0;
             score.AngleErrorSum = 0;
             for (int i = 1; i < pairing.Count; ++i)
@@ -52,7 +52,7 @@ namespace SourceAFIS.Engine.Matcher
             int distanceErrorPotential = Parameters.MaxDistanceError * Math.Max(0, pairing.Count - 1);
             score.DistanceAccuracySum = distanceErrorPotential - score.DistanceErrorSum;
             score.DistanceAccuracyScore = Parameters.DistanceAccuracyScore * (distanceErrorPotential > 0 ? score.DistanceAccuracySum / (double)distanceErrorPotential : 0);
-            double angleErrorPotential = Parameters.MaxAngleError * Math.Max(0, pairing.Count - 1) * 2;
+            float angleErrorPotential = Parameters.MaxAngleError * Math.Max(0, pairing.Count - 1) * 2;
             score.AngleAccuracySum = angleErrorPotential - score.AngleErrorSum;
             score.AngleAccuracyScore = Parameters.AngleAccuracyScore * (angleErrorPotential > 0 ? score.AngleAccuracySum / angleErrorPotential : 0);
             score.TotalScore = score.MinutiaScore

@@ -20,8 +20,8 @@ namespace SourceAFIS.Engine.Matcher
         public int DistanceErrorSum;
         public int DistanceAccuracySum;
         public double DistanceAccuracyScore;
-        public double AngleErrorSum;
-        public double AngleAccuracySum;
+        public float AngleErrorSum;
+        public float AngleAccuracySum;
         public double AngleAccuracyScore;
         public double TotalScore;
         public double ShapedScore;
