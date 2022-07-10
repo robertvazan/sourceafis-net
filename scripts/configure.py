@@ -25,8 +25,5 @@ def documentation_links():
 def dependencies():
     use('Dahomey.Cbor:1.16.1')
     use('SixLabors.ImageSharp:2.1.3')
-def test_dependencies():
-    standard_test_dependencies()
-    use('System.Drawing.Common:5.0.1')
 
 generate()

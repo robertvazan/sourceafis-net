@@ -3,16 +3,16 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Version>3.14.0</Version>
-    <Authors>robertvazan</Authors>
     <Title>SourceAFIS for .NET</Title>
+    <Authors>robertvazan</Authors>
+    <RepositoryUrl>https://github.com/robertvazan/sourceafis-net</RepositoryUrl>
     <PackageProjectUrl>https://sourceafis.machinezoo.com/net</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/robertvazan/sourceafis-net.git</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>Fingerprint recognition engine that takes a pair of human fingerprint images and returns their similarity score. Supports efficient 1:N search.</Description>
     <PackageTags>fingerprint; biometrics; authentication; sourceafis</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
       <InternalsVisibleTo Include="SourceAFIS.Tests" />
