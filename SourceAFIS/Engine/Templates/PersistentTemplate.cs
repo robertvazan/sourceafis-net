@@ -19,7 +19,7 @@ namespace SourceAFIS.Engine.Templates
         public PersistentTemplate() { }
         public PersistentTemplate(FeatureTemplate template)
         {
-            Version = "SourceAFIS for .NET " + FingerprintCompatibility.Version;
+            Version = FingerprintCompatibility.Version + "-net";
             Width = template.Size.X;
             Height = template.Size.Y;
             int count = template.Minutiae.Count;
