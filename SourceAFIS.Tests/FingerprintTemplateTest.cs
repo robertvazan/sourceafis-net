@@ -5,6 +5,7 @@ using SourceAFIS.Engine.Features;
 using SourceAFIS.Engine.Primitives;
 using SourceAFIS.Engine.Templates;
 
+// TODO: Port randomScaleMatch() from Java.
 namespace SourceAFIS
 {
     public class FingerprintTemplateTest

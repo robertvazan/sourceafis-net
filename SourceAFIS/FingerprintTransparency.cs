@@ -8,6 +8,11 @@ using SourceAFIS.Engine.Matcher;
 using SourceAFIS.Engine.Primitives;
 using SourceAFIS.Engine.Transparency;
 
+// TODO: Consistent minutia type serialization. Emulate Java serialization using custom serializer.
+// TODO: Port transparency ZIP from Java.
+// TODO: Deterministic build & symbols nuget package. See report here: https://nuget.info/packages/SourceAFIS
+// TODO: Port sourceafis-transparency from Java.
+// TODO: Port sourceafis-visualization from Java.
 namespace SourceAFIS
 {
     /// <summary>Algorithm transparency API that can capture all intermediate data structures produced by SourceAFIS algorithm.</summary>

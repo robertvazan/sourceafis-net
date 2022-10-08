@@ -1,5 +1,6 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 
+// TODO: Port FingerprintIO from Java.
 namespace SourceAFIS
 {
     /// <summary>Collection of methods helping with template compatibility.</summary>

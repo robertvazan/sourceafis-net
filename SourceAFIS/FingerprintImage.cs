@@ -4,6 +4,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SourceAFIS.Engine.Primitives;
 
+// TODO: Research options for WSQ support.
 namespace SourceAFIS
 {
     /// <summary>Pixels and metadata of the fingerprint image.</summary>
