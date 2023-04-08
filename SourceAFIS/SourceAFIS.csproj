@@ -7,15 +7,15 @@
     <Authors>robertvazan</Authors>
     <RepositoryUrl>https://github.com/robertvazan/sourceafis-net</RepositoryUrl>
     <PackageProjectUrl>https://sourceafis.machinezoo.com/net</PackageProjectUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>Fingerprint recognition engine that takes a pair of human fingerprint images and returns their similarity score. Supports efficient 1:N search.</Description>
     <PackageTags>fingerprint; biometrics; authentication; sourceafis</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-      <InternalsVisibleTo Include="SourceAFIS.Tests" />
+    <InternalsVisibleTo Include="SourceAFIS.Tests" />
   </ItemGroup>
   <ItemGroup>
     <None Include="../README.md" Pack="true" PackagePath="/" />

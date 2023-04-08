@@ -1,29 +1,29 @@
 # This script generates and updates project configuration files.
 
-# We are assuming that project-config is available in sibling directory.
-# Checkout from https://github.com/robertvazan/project-config
-import pathlib
-project_directory = lambda: pathlib.Path(__file__).parent.parent
-config_directory = lambda: project_directory().parent/'project-config'
-exec((config_directory()/'src'/'net.py').read_text())
+# Run this script with rvscaffold in PYTHONPATH
+import rvscaffold as scaffold
 
-root_namespace = lambda: 'SourceAFIS'
-pretty_name = lambda: 'SourceAFIS for .NET'
-subdomain = lambda: 'sourceafis'
-homepage = lambda: website() + 'net'
-inception_year = lambda: 2009
-nuget_description = lambda: 'Fingerprint recognition engine that takes a pair of human fingerprint images and returns their similarity score. Supports efficient 1:N search.'
-nuget_tags = lambda: 'fingerprint; biometrics; authentication; sourceafis'
-test_resources = lambda: ['Resources/*.dat', 'Resources/*.png', 'Resources/*.jpeg', 'Resources/*.bmp']
+class Project(scaffold.Net):
+    def script_path_text(self): return __file__
+    def root_namespace(self): return 'SourceAFIS'
+    def pretty_name(self): return 'SourceAFIS for .NET'
+    def subdomain(self): return 'sourceafis'
+    def homepage(self): return self.website() + 'net'
+    def inception_year(self): return 2009
+    def nuget_description(self): return 'Fingerprint recognition engine that takes a pair of human fingerprint images and returns their similarity score. Supports efficient 1:N search.'
+    def nuget_tags(self): return 'fingerprint; biometrics; authentication; sourceafis'
+    def test_resources(self): return ['Resources/*.dat', 'Resources/*.png', 'Resources/*.jpeg', 'Resources/*.bmp']
+    def project_status(self): return self.stable_status()
 
-def documentation_links():
-    yield 'SourceAFIS for .NET', homepage()
-    yield 'XML doc comments', readme_dir_url(root_namespace())
-    yield 'SourceAFIS overview', 'https://sourceafis.machinezoo.com/'
-    yield 'Algorithm', 'https://sourceafis.machinezoo.com/algorithm'
+    def documentation_links(self):
+        yield 'SourceAFIS for .NET', self.homepage()
+        yield 'XML doc comments', self.readme_dir_url(self.root_namespace())
+        yield 'SourceAFIS overview', 'https://sourceafis.machinezoo.com/'
+        yield 'Algorithm', 'https://sourceafis.machinezoo.com/algorithm'
 
-def dependencies():
-    use('Dahomey.Cbor:1.16.1')
-    use('SixLabors.ImageSharp:2.1.3')
+    def dependencies(self):
+        yield from super().dependencies()
+        yield self.use('Dahomey.Cbor:1.16.1')
+        yield self.use('SixLabors.ImageSharp:2.1.3')
 
-generate()
+Project().generate()
