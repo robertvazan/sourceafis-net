@@ -8,6 +8,6 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    uses: robertvazan/project-config/.github/workflows/net-build.yml@master
+    uses: robertvazan/rvscaffold/.github/workflows/net-build.yml@master
     with:
-      dotnet-version: 5.0.x
+      dotnet-version: 6.0

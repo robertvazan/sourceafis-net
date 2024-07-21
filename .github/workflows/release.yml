@@ -3,8 +3,8 @@ name: release
 on: workflow_dispatch
 jobs:
   release:
-    uses: robertvazan/project-config/.github/workflows/net-release.yml@master
+    uses: robertvazan/rvscaffold/.github/workflows/net-release.yml@master
     with:
-      dotnet-version: 5.0.x
+      dotnet-version: 6.0
     secrets:
       nuget-token: ${{ secrets.NUGET_TOKEN }}
