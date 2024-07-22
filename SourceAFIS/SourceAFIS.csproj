@@ -26,6 +26,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dahomey.Cbor" Version="1.16.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.8" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.9" />
   </ItemGroup>
 </Project>
