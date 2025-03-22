@@ -24,6 +24,6 @@ class Project(scaffold.Net):
     def dependencies(self):
         yield from super().dependencies()
         yield self.use('Dahomey.Cbor:1.16.1')
-        yield self.use('SixLabors.ImageSharp:2.1.9')
+        yield self.use('SixLabors.ImageSharp:2.1.10')
 
 Project().generate()
