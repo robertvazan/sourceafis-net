@@ -1,7 +1,6 @@
 // Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
 using System;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using SkiaSharp;
 using SourceAFIS.Engine.Primitives;
 
 // TODO: Research options for WSQ support.
@@ -77,9 +76,11 @@ namespace SourceAFIS
         /// in resolution specified by setting <see cref="FingerprintImageOptions.Dpi" />.
         /// </para>
         /// <para>
-        /// The image may be in any format commonly used to store fingerprint images, including PNG, JPEG, BMP, and TIFF.
-        /// SourceAFIS will try to decode the image using <a href="https://sixlabors.com/products/imagesharp/">ImageSharp</a> library.
-        /// Note that ImageSharp might not support all versions and variations of the mentioned formats.
+        /// The image may be in any format commonly used to store fingerprint images, including PNG, JPEG, and BMP.
+        /// SourceAFIS will try to decode the image using <a href="https://github.com/mono/SkiaSharp">SkiaSharp</a> library.
+        /// Note that SkiaSharp might not support all versions and variations of the mentioned formats.
+        /// TIFF is not supported. Applications can decode such images themselves
+        /// and pass raw pixels to <see cref="FingerprintImage(int,int,byte[],FingerprintImageOptions)" />.
         /// </para>
         /// </remarks>
         /// <seealso cref="FingerprintImage(int,int,byte[],FingerprintImageOptions)" />
@@ -89,22 +90,25 @@ namespace SourceAFIS
                 throw new ArgumentNullException(nameof(image));
             try
             {
-                using (var decoded = Image.Load<Argb32>(image))
+                using (var stream = new SKMemoryStream(image))
+                using (var codec = SKCodec.Create(stream) ?? throw new ArgumentException("Unsupported image format."))
                 {
-                    Matrix = new DoubleMatrix(decoded.Width, decoded.Height);
-                    decoded.ProcessPixelRows(accessor =>
+                    var info = new SKImageInfo(codec.Info.Width, codec.Info.Height, SKColorType.Rgba8888, SKAlphaType.Unpremul);
+                    using (var decoded = SKBitmap.Decode(codec, info) ?? throw new ArgumentException("Corrupted image."))
                     {
+                        var pixels = decoded.GetPixelSpan();
+                        int stride = decoded.RowBytes;
+                        Matrix = new DoubleMatrix(decoded.Width, decoded.Height);
                         for (int y = 0; y < Matrix.Height; ++y)
                         {
-                            var span = accessor.GetRowSpan(y);
                             for (int x = 0; x < Matrix.Width; ++x)
                             {
-                                var pixel = span[x];
-                                var color = pixel.R + pixel.G + pixel.B;
+                                int offset = y * stride + x * 4;
+                                var color = pixels[offset] + pixels[offset + 1] + pixels[offset + 2];
                                 Matrix[x, y] = 1 - color * (1.0 / (3.0 * 255.0));
                             }
                         }
-                    });
+                    }
                 }
             }
             catch (Exception ex)
